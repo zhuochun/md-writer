@@ -1,0 +1,17 @@
+{
+  "name": "md-writer",
+  "main": "./lib/main",
+  "version": "0.0.1",
+  "description": "a markdown helper for jekyll's blog writers",
+  "activationEvents": [
+    "md-writer:new-jekyll-post"
+  ],
+  "repository": "https://github.com/zhuochun/md-writer",
+  "license": "MIT",
+  "engines": {
+    "atom": "*"
+  },
+  "dependencies": {
+    "fs-plus": "2.x"
+  }
+}
