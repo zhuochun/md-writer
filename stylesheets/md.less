@@ -5,4 +5,37 @@
 @import "ui-variables";
 
 .md-writer {
+
+}
+
+.md-writer-selection {
+  .candidates {
+    list-style: none;
+    padding: 0;
+    height: 209px;
+    overflow-y: scroll;
+    font-size: 15px;
+
+    li {
+      display: inline-block;
+      padding: 5px;
+      margin: 0 2px 2px 0;
+      border: 1px solid #bdc3c7;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #7f8c8d;
+        color: #fff;
+      }
+    }
+
+    li.selected {
+      border-color: #d35400;
+      color: #c0392b;
+
+      &:hover {
+        background-color: #f1c40f;
+      }
+    }
+  }
 }

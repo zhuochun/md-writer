@@ -1,10 +1,9 @@
 NewPostView = require "./new-post-view"
+ManagePostTagsView = require "./manage-post-tags-view"
 
 module.exports =
   newPostView: null
-  addTagsView: null
-  addCategoriesView: null
-  addLinkView: null
+  managePostTagsView: null
 
   configDefaults:
     siteLocalDir: "example.github.io/"
@@ -19,7 +18,12 @@ module.exports =
       @newPostView = new NewPostView()
       @newPostView.display()
 
+    atom.workspaceView.command "md-writer:manage-post-tags", =>
+      @managePostTagsView = new ManagePostTagsView()
+      @managePostTagsView.display()
+
   deactivate: ->
     @newPostView?.detach()
+    @managePostTagsView?.detach()
 
   serialize: ->

@@ -10,16 +10,16 @@
           'command': 'md-writer:new-post'
         }
         {
-          'label': 'Add Tags',
-          'command': 'md-writer:add-tags'
+          'label': 'Manage Post Tags',
+          'command': 'md-writer:manage-post-tags'
         }
         {
-          'label': 'Add Categories',
-          'command': 'md-writer:add-categories'
+          'label': 'Manage Post Categories',
+          'command': 'md-writer:manage-post-categories'
         }
         {
-          'label': 'Add A Link',
-          'command': 'md-writer:add-links'
+          'label': 'Add A Web Link',
+          'command': 'md-writer:add-link'
         }
       ]
     ]

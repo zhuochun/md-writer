@@ -1,4 +1,6 @@
+os = require "os"
 path = require "path"
+yaml = require "js-yaml"
 
 getPostsDir = (directory) ->
   date = getDate()
@@ -24,8 +26,25 @@ getDate = ->
   minute: "" + date.getMinutes()
   seconds: "" + date.getSeconds()
 
+FRONT_MATTER_REGEX = /^---\s*\r?\n([^.]*?)---\s*\r?\n/m
+
+hasFrontMatter = (content) ->
+  FRONT_MATTER_REGEX.test(content)
+
+getFrontMatter = (content) ->
+  yamlText = content.match(FRONT_MATTER_REGEX)[1].trim()
+  return yaml.safeLoad(yamlText)
+
+replaceFrontMatter = (content, newFrontMatter) ->
+  yamlText = yaml.safeDump(newFrontMatter)
+  newFrontMatter = ["---", "#{yamlText}---", "", ""].join(os.EOL)
+  return content.replace(FRONT_MATTER_REGEX, newFrontMatter)
+
 module.exports =
   getPostsDir: getPostsDir
   getDate: getDate
   getDateStr: getDateStr
   getTimeStr: getTimeStr
+  hasFrontMatter: hasFrontMatter
+  getFrontMatter: getFrontMatter
+  replaceFrontMatter: replaceFrontMatter
