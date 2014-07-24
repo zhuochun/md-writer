@@ -2,22 +2,24 @@
 utils = require "./utils"
 request = require "request"
 
+# TODO merge categories view and tags view to front matter
+
 module.exports =
-class ManagePostTagsView extends View
+class ManagePostCategoriesView extends View
   editor: null
   frontMatter: null
-  tags: null
+  categories: null
   previouslyFocusedElement: null
 
   @content: ->
     @div class: "md-writer md-writer-selection overlay from-top", =>
-      @label "Manage Post Tags", class: "icon icon-tags"
+      @label "Manage Post Categories", class: "icon icon-file-copy"
       @p class: "error", outlet: "error"
-      @subview "tagsEditor", new EditorView(mini: true)
+      @subview "categoriesEditor", new EditorView(mini: true)
       @ul class: "candidates", outlet: "candidates"
 
   initialize: ->
-    @candidates.on "click", "li", (e) => @appendTag(e)
+    @candidates.on "click", "li", (e) => @appendCategory(e)
     @on "core:confirm", => @updateFrontMatter()
     @on "core:cancel", => @detach()
 
@@ -37,10 +39,10 @@ class ManagePostTagsView extends View
 
     if @isValidMarkdown(@editor.getText())
       @setFrontMatter()
-      @setTagsInFrontMatter()
-      @fetchTags()
+      @setCategoriesInFrontMatter()
+      @fetchCategories()
       atom.workspaceView.append(this)
-      @tagsEditor.focus()
+      @categoriesEditor.focus()
     else
       @detach()
 
@@ -49,38 +51,37 @@ class ManagePostTagsView extends View
 
   setFrontMatter: ->
     @frontMatter = utils.getFrontMatter(@editor.getText())
-    @frontMatter.tags = [] unless @frontMatter.tags
+    @frontMatter.categories = [] unless @frontMatter.categories
 
-  setTagsInFrontMatter: ->
-    @tagsEditor.setText(@frontMatter.tags.join(","))
+  setCategoriesInFrontMatter: ->
+    @categoriesEditor.setText(@frontMatter.categories.join(","))
 
-  fetchTags: ->
-    uri = atom.config.get("md-writer.urlForTags")
+  fetchCategories: ->
+    uri = atom.config.get("md-writer.urlForCategories")
     data = uri: uri, json: true, encoding: 'utf-8', gzip: true
     request data, (error, response, body) =>
       if !error and response.statusCode == 200
-        @tags = body.tags
-        @displayTags(@tags)
+        @categories = body.categories
+        @displayCategories(@categories)
       else
-        @error.text("Error accessing the tags!")
+        @error.text("Error accessing the categories!")
 
-  displayTags: (tags) ->
-    # TODO filter tags based on markdown content
-    tagElems = tags.map (tag) =>
-      if @frontMatter.tags.indexOf(tag) < 0
+  displayCategories: (categories) ->
+    tagElems = categories.map (tag) =>
+      if @frontMatter.categories.indexOf(tag) < 0
         "<li>#{tag}</li>"
       else
         "<li class='selected'>#{tag}</li>"
     @candidates.append(tagElems.join(""))
 
-  appendTag: (e) ->
+  appendCategory: (e) ->
     tag = e.target.textContent
-    idx = @frontMatter.tags.indexOf(tag)
+    idx = @frontMatter.categories.indexOf(tag)
     if idx < 0
-      @frontMatter.tags.push(tag)
+      @frontMatter.categories.push(tag)
       e.target.classList.add("selected")
     else
-      @frontMatter.tags.splice(idx, 1)
+      @frontMatter.categories.splice(idx, 1)
       e.target.classList.remove("selected")
-    @setTagsInFrontMatter()
-    @tagsEditor.focus()
+    @setCategoriesInFrontMatter()
+    @categoriesEditor.focus()
