@@ -1,26 +1,82 @@
-{View} = require 'atom'
+{$, View, EditorView} = require "atom"
+utils = require "./utils"
+path = require "path"
+fs = require "fs-plus"
 
 module.exports =
-class MdWriterView extends View
+class NewPostView extends View
+  previouslyFocusedElement: null
+
   @content: ->
-    @div class: 'md-writer overlay from-top', =>
-      @div "The MdWriter package is Alive! It's ALIVE!", class: "message"
+    @div class: "md-writer md-writer-new-post overlay from-top", =>
+      @label "Add New Post", class: "icon icon-file-add"
+      @p "Path", class: "message"
+      @subview "pathEditor", new EditorView(mini: true)
+      @p "Date", class: "message"
+      @subview "dateEditor", new EditorView(mini: true)
+      @p "Title", class: "message"
+      @subview "titleEditor", new EditorView(mini: true)
+      @p class: "message", outlet: "message"
+      @p class: "error", outlet: "error"
 
-  initialize: (serializeState) ->
-    atom.workspaceView.command "md-writer:new-jekyll-post", => @newJekyllPost()
+  initialize: ->
+    @titleEditor.hiddenInput.on 'keyup', => @updatePath()
+    @pathEditor.hiddenInput.on 'keyup', => @updatePath()
+    @dateEditor.hiddenInput.on 'keyup', => @updatePath()
 
-  # Returns an object that can be retrieved when package is activated
-  serialize: ->
+    @on "core:confirm", => @createPost()
+    @on "core:cancel", => @detach()
 
-  # Tear down any state and detach
-  destroy: ->
-    @detach()
+  detach: ->
+    return unless @hasParent()
+    @previouslyFocusedElement?.focus()
+    super
 
-  toggle: ->
-    console.log "MdWriterView was toggled!"
-    if @hasParent()
-      @detach()
-    else
-      atom.workspaceView.append(this)
+  updatePath: ->
+    @message.text @getFullPath()
 
-  newJekyllPost: ->
+  display: ->
+    @previouslyFocusedElement = $(':focus')
+    atom.workspaceView.append(this)
+    @titleEditor.focus()
+    @dateEditor.setText(utils.getDateStr())
+    @pathEditor.setText(utils.getPostsDir(atom.config.get("md-writer.sitePostsDir")))
+
+  createPost: () ->
+    try
+      post = @getFullPath()
+
+      if fs.existsSync(post)
+        @error.text("Post #{@getFullPath()} already exists!")
+      else
+        fs.writeFileSync(post, @generateFrontMatters())
+        atom.workspaceView.open(post)
+        @detach()
+    catch error
+      @error.text("#{error.message}")
+
+  getFullPath: ->
+    localDir = atom.config.get("md-writer.siteLocalDir")
+    fullPath = path.join(localDir, @getPostPath())
+    return atom.project.resolve(fullPath)
+
+  getPostPath: ->
+    path.join @pathEditor.getText(), @getFileName()
+
+  getFileName: ->
+    date = @dateEditor.getText()
+    title = @convertTitle(@titleEditor.getText())
+    extension = atom.config.get("md-writer.fileExtension")
+    return "#{date}-#{title}#{extension}"
+
+  generateFrontMatters: ->
+    """
+    ---
+    layout: post
+    title: '#{@titleEditor.getText()}'
+    date: '#{@dateEditor.getText()} #{utils.getTimeStr()}'
+    ---
+    """
+
+  convertTitle: (title) ->
+    title.trim().toLowerCase().replace(/[^\w\s]|_/g, "").replace(/\s/g,"-")

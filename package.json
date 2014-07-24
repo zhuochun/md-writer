@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "description": "a markdown helper for jekyll's blog writers",
   "activationEvents": [
-    "md-writer:new-jekyll-post"
+    "md-writer:new-post"
   ],
   "repository": "https://github.com/zhuochun/md-writer",
   "license": "MIT",

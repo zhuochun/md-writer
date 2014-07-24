@@ -1,4 +1,4 @@
-NewPostView = require './new-post-view'
+NewPostView = require "./new-post-view"
 
 module.exports =
   newPostView: null
@@ -7,16 +7,19 @@ module.exports =
   addLinkView: null
 
   configDefaults:
-    jekyllDir: "example.github.io/"
+    siteLocalDir: "example.github.io/"
+    sitePostsDir: '_posts/{year}/'
+    siteUrl: "http://example.github.io/"
     tagUrl: "http://example.github.io/assets/tags.json"
     categoryUrl: "http://example.github.io/assets/tags.json"
-    fileType: ".markdown"
+    fileExtension: ".markdown"
 
   activate: (state) ->
-    @mdWriterView = new MdWriterView(state.mdWriterViewState)
+    atom.workspaceView.command "md-writer:new-post", =>
+      @newPostView = new NewPostView()
+      @newPostView.display()
 
   deactivate: ->
-    @mdWriterView.destroy()
+    @newPostView?.detach()
 
   serialize: ->
-    newPostViewState: @newPostView?.serialize()

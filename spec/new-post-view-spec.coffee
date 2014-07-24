@@ -1,5 +1,12 @@
-MdWriterView = require '../lib/new-jekyll-post-view'
+{WorkspaceView} = require "atom"
+NewPostView = require "../lib/new-post-view"
 
-describe "MdWriterView", ->
-  it "has one valid test", ->
-    expect("life").toBe "easy"
+describe "NewPostView", ->
+  beforeEach ->
+    atom.workspaceView = new WorkspaceView
+    atom.workspace = atom.workspaceView.model
+
+    @view = new NewPostView({})
+
+  it "sound correct", ->
+    expect(true).toBe(true)
