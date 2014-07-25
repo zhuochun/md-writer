@@ -1,7 +1,7 @@
 {
   "name": "md-writer",
   "main": "./lib/main",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Tools to assist blogging in Markdown (e.g. jekyll)",
   "activationEvents": [
     "md-writer:new-post",
