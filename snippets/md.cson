@@ -1,4 +1,4 @@
-'.source.md':
+'.text.md':
   'bold text':
     'prefix': 'b'
     'body': '**$1**$0'

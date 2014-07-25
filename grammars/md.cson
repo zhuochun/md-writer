@@ -1,5 +1,5 @@
 'name': 'Markdown'
-'scopeName': 'source.md'
+'scopeName': 'text.md'
 'firstLineMatch': '^-{3}\\s*$'
 'fileTypes': [
   'markdown'
