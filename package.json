@@ -1,8 +1,8 @@
 {
   "name": "md-writer",
   "main": "./lib/main",
-  "version": "0.0.1",
-  "description": "tools to assist blogging in Markdown (e.g. jekyll)",
+  "version": "0.0.0",
+  "description": "Tools to assist blogging in Markdown (e.g. jekyll)",
   "activationEvents": [
     "md-writer:new-post",
     "md-writer:add-link",
@@ -13,7 +13,7 @@
   "repository": "https://github.com/zhuochun/md-writer",
   "license": "MIT",
   "engines": {
-    "atom": "*"
+    "atom": ">=0.50.0"
   },
   "dependencies": {
     "fs-plus": "2.x",
