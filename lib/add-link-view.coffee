@@ -20,15 +20,15 @@ class AddLinkView extends View
     @div class: "md-writer md-writer-dialog overlay from-top", =>
       @label "Create Link", class: "icon icon-link"
       @div =>
-        @label "Text", class: "message"
+        @label "Text to be displayed", class: "message"
         @subview "textEditor", new EditorView(mini: true)
-        @label "URL", class: "message"
+        @label "Web Address", class: "message"
         @subview "urlEditor", new EditorView(mini: true)
         @label "Title", class: "message"
         @subview "titleEditor", new EditorView(mini: true)
       @p =>
         @input type: "checkbox", outlet: "saveCheckbox"
-        @span "Save this link", class: "cb-label"
+        @span "Automatically link to this text", class: "cb-label"
       @div outlet: "searchBox", =>
         @label "Search Posts", class: "icon icon-search"
         @subview "searchEditor", new EditorView(mini: true)

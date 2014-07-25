@@ -2,7 +2,7 @@
   "name": "md-writer",
   "main": "./lib/main",
   "version": "0.0.1",
-  "description": "a markdown helper for jekyll's blog writers",
+  "description": "tools to assist blogging in Markdown (e.g. jekyll)",
   "activationEvents": [
     "md-writer:new-post",
     "md-writer:add-link",

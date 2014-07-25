@@ -1,14 +1,36 @@
----
-hello: world
-title: hello
----
+# Md-Writer for Atom
 
-```js
-console.log("hello world");
+[Md-Writer](https://github.com/zhuochun/md-writer) is an [Atom](https://atom.io/) package
+that assists blogging in Markdown, e.g. Jekyll.
+
+## Features
+
+- Create post with front matter dialog
+- Manage tags dialog
+- Manage categories dialog
+- Add link dialog and automatically link to text
+- Grammars to recognize YAML font matter
+
+## Setup
+
+To populate tags, categories and posts in dialogs,
+you need to supply `json` files in format:
+
+```json
+{
+  "tags": ["tag"]
+  "categories": ["category"]
+  "posts": [{"title": "title", "url":"url"}]
+}
 ```
 
-# md-writer package
+If you are using Jekyll, [checkout the scripts here](https://gist.github.com/fe127356bcf8c07ae1fb.git).
+Upload the `JSON` files to your website and add the URLs in setting page.
 
-A short description of your package.
+## Known Issues
 
-![A screenshot of your spankin' package](https://f.cloud.github.com/assets/69169/2290250/c35d867a-a017-11e3-86be-cd7c5bf3ff9b.gif)
+The package is still under early development.
+However, I am using it for blogging already.
+
+- Markdown Preview package does not recognize new grammar
+- Remove existing link missing
