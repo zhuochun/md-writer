@@ -10,12 +10,13 @@ class NewPostView extends View
   @content: ->
     @div class: "md-writer md-writer-new-post overlay from-top", =>
       @label "Add New Post", class: "icon icon-file-add"
-      @p "Path", class: "message"
-      @subview "pathEditor", new EditorView(mini: true)
-      @p "Date", class: "message"
-      @subview "dateEditor", new EditorView(mini: true)
-      @p "Title", class: "message"
-      @subview "titleEditor", new EditorView(mini: true)
+      @div =>
+        @label "Path", class: "message"
+        @subview "pathEditor", new EditorView(mini: true)
+        @label "Date", class: "message"
+        @subview "dateEditor", new EditorView(mini: true)
+        @label "Title", class: "message"
+        @subview "titleEditor", new EditorView(mini: true)
       @p class: "message", outlet: "message"
       @p class: "error", outlet: "error"
 
@@ -33,14 +34,15 @@ class NewPostView extends View
     super
 
   updatePath: ->
-    @message.text @getFullPath()
+    @message.text @getPostPath()
 
   display: ->
     @previouslyFocusedElement = $(':focus')
     atom.workspaceView.append(this)
     @titleEditor.focus()
     @dateEditor.setText(utils.getDateStr())
-    @pathEditor.setText(utils.getPostsDir(atom.config.get("md-writer.sitePostsDir")))
+    @pathEditor.setText(utils.getPostsDir(
+      atom.config.get("md-writer.sitePostsDir")))
 
   createPost: () ->
     try
