@@ -10,7 +10,7 @@ class ManagePostTagsView extends View
 
   @content: ->
     @div class: "md-writer md-writer-selection overlay from-top", =>
-      @label "Manage Post Tags", class: "icon icon-tags"
+      @label "Manage Post Tags", class: "icon icon-tag"
       @p class: "error", outlet: "error"
       @subview "tagsEditor", new EditorView(mini: true)
       @ul class: "candidates", outlet: "candidates"
@@ -65,7 +65,8 @@ class ManagePostTagsView extends View
   # rank tags based on the number of times they appear in content
   rankTags: (tags, content) ->
     tags.forEach (tag) ->
-      tagRegex = new RegExp(tag.name, "ig") # TODO handle word boundary
+      # TODO handle word boundary across multi-languages
+      tagRegex = new RegExp(tag.name, "ig")
       tag.count = content.match(tagRegex)?.length || 0
     tags.sort (t1, t2) -> t2.count - t1.count
 
@@ -75,7 +76,7 @@ class ManagePostTagsView extends View
         "<li>#{name}</li>"
       else
         "<li class='selected'>#{name}</li>"
-    @candidates.append(tagElems.join(""))
+    @candidates.empty().append(tagElems.join(""))
 
   appendTag: (e) ->
     tag = e.target.textContent

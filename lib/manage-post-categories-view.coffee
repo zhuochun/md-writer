@@ -72,7 +72,7 @@ class ManagePostCategoriesView extends View
         "<li>#{tag}</li>"
       else
         "<li class='selected'>#{tag}</li>"
-    @candidates.append(tagElems.join(""))
+    @candidates.empty().append(tagElems.join(""))
 
   appendCategory: (e) ->
     tag = e.target.textContent
