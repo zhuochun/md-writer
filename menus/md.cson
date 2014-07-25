@@ -18,8 +18,12 @@
           'command': 'md-writer:manage-post-categories'
         }
         {
-          'label': 'Add A Web Link',
+          'label': 'Add a Link',
           'command': 'md-writer:add-link'
+        }
+        {
+          'label': 'Add an Image',
+          'command': 'md-writer:add-image'
         }
       ]
     ]

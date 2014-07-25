@@ -49,6 +49,19 @@ replaceFrontMatter = (content, newFrontMatter) ->
   newFrontMatter = ["---", "#{yamlText}---", "", ""].join(os.EOL)
   return content.replace(FRONT_MATTER_REGEX, newFrontMatter)
 
+IMG_REGEX  = /!\[(.*?)\]\(([^\)\s]+)\s?[\"\']?([^)]*?)[\"\']?\)/
+LINK_REGEX = /\[(.*?)\]\(([^\)\s]+)\s?[\"\']?([^)]*?)[\"\']?\)/
+
+isImage = (text) -> IMG_REGEX.test(text)
+parseImage = (text) ->
+  image = text.match(IMG_REGEX)
+  return text: link[1], url: link[2], title: link[3]
+
+isLink = (text) -> LINK_REGEX.test(text) and !isImage(text)
+parseLink = (text) ->
+  link = text.match(LINK_REGEX)
+  return text: link[1], url: link[2], title: link[3]
+
 module.exports =
   getJSON: getJSON
   getPostsDir: getPostsDir
@@ -58,3 +71,7 @@ module.exports =
   hasFrontMatter: hasFrontMatter
   getFrontMatter: getFrontMatter
   replaceFrontMatter: replaceFrontMatter
+  isImage: isImage
+  parseImage: parseImage
+  isLink: isLink
+  parseLink: parseLink

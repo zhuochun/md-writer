@@ -5,9 +5,10 @@
   "description": "a markdown helper for jekyll's blog writers",
   "activationEvents": [
     "md-writer:new-post",
+    "md-writer:add-link",
+    "md-writer:add-image",
     "md-writer:manage-post-tags",
-    "md-writer:manage-post-categories",
-    "md-writer:add-link"
+    "md-writer:manage-post-categories"
   ],
   "repository": "https://github.com/zhuochun/md-writer",
   "license": "MIT",
@@ -17,6 +18,7 @@
   "dependencies": {
     "fs-plus": "2.x",
     "request": "2.x",
-    "js-yaml": "3.x"
+    "js-yaml": "3.x",
+    "season": "2.x"
   }
 }

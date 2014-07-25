@@ -13,6 +13,31 @@ describe "utils", ->
     date = utils.getDate()
     expect(utils.getDateStr()).toEqual("#{date.year}-#{date.month}-#{date.day}")
 
+  it "check is text invalid link", ->
+    fixture = "![text](url)"
+    expect(utils.isLink(fixture)).toBe(false)
+    fixture = "[text]()"
+    expect(utils.isLink(fixture)).toBe(false)
+
+  it "check is text valid link", ->
+    fixture = "[text](url)"
+    expect(utils.isLink(fixture)).toBe(true)
+    fixture = "[text](url title)"
+    expect(utils.isLink(fixture)).toBe(true)
+    fixture = "[text](url 'title')"
+    expect(utils.isLink(fixture)).toBe(true)
+
+  it "parse valid link text", ->
+    fixture = "[text](url)"
+    expect(utils.parseLink(fixture)).toEqual(
+      {text: "text", url: "url", title: ""})
+    fixture = "[text](url title)"
+    expect(utils.parseLink(fixture)).toEqual(
+      {text: "text", url: "url", title: "title"})
+    fixture = "[text](url 'title')"
+    expect(utils.parseLink(fixture)).toEqual(
+      {text: "text", url: "url", title: "title"})
+
   it "test whether has front matter", ->
     fixture = "abc\n---\nhello world\n"
     expect(utils.hasFrontMatter(fixture)).toBe(false)
