@@ -1,6 +1,5 @@
 {$, View, EditorView} = require "atom"
 utils = require "./utils"
-request = require "request"
 
 module.exports =
 class ManagePostTagsView extends View
@@ -56,21 +55,26 @@ class ManagePostTagsView extends View
 
   fetchTags: ->
     uri = atom.config.get("md-writer.urlForTags")
-    data = uri: uri, json: true, encoding: 'utf-8', gzip: true
-    request data, (error, response, body) =>
-      if !error and response.statusCode == 200
-        @tags = body.tags
-        @displayTags(@tags)
-      else
-        @error.text("Error accessing the tags!")
+    succeed = (body) =>
+      @tags = body.tags.map((tag) -> name: tag)
+      @rankTags(@tags, @editor.getText())
+      @displayTags(@tags)
+    error = (err) => @error.text(err.message)
+    utils.getJSON(uri, succeed, error)
+
+  # rank tags based on the number of times they appear in content
+  rankTags: (tags, content) ->
+    tags.forEach (tag) ->
+      tagRegex = new RegExp(tag.name, "ig") # TODO handle word boundary
+      tag.count = content.match(tagRegex)?.length || 0
+    tags.sort (t1, t2) -> t2.count - t1.count
 
   displayTags: (tags) ->
-    # TODO filter tags based on markdown content
-    tagElems = tags.map (tag) =>
-      if @frontMatter.tags.indexOf(tag) < 0
-        "<li>#{tag}</li>"
+    tagElems = tags.map ({name}) =>
+      if @frontMatter.tags.indexOf(name) < 0
+        "<li>#{name}</li>"
       else
-        "<li class='selected'>#{tag}</li>"
+        "<li class='selected'>#{name}</li>"
     @candidates.append(tagElems.join(""))
 
   appendTag: (e) ->

@@ -1,6 +1,15 @@
 os = require "os"
 path = require "path"
 yaml = require "js-yaml"
+request = require "request"
+
+getJSON = (uri, succeed, error) ->
+  data = uri: uri, json: true, encoding: 'utf-8', gzip: true
+  request data, (err, res, body) ->
+    if !err and res.statusCode == 200
+      succeed(body)
+    else
+      error(err)
 
 getPostsDir = (directory) ->
   date = getDate()
@@ -41,6 +50,7 @@ replaceFrontMatter = (content, newFrontMatter) ->
   return content.replace(FRONT_MATTER_REGEX, newFrontMatter)
 
 module.exports =
+  getJSON: getJSON
   getPostsDir: getPostsDir
   getDate: getDate
   getDateStr: getDateStr

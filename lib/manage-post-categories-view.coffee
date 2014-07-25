@@ -13,7 +13,7 @@ class ManagePostCategoriesView extends View
 
   @content: ->
     @div class: "md-writer md-writer-selection overlay from-top", =>
-      @label "Manage Post Categories", class: "icon icon-file-copy"
+      @label "Manage Post Categories", class: "icon icon-book"
       @p class: "error", outlet: "error"
       @subview "categoriesEditor", new EditorView(mini: true)
       @ul class: "candidates", outlet: "candidates"
