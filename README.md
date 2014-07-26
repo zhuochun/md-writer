@@ -31,9 +31,9 @@ The `json` file could contain the following information of your blog:
 }
 ```
 
-If you are using Jekyll, [checkout the scripts to generate these files](https://gist.github.com/fe127356bcf8c07ae1fb.git).
+If you are using Jekyll, [add these scripts](https://gist.github.com/zhuochun/fe127356bcf8c07ae1fb) to your site.
 
-Upload the `JSON` files to your website and add the URLs in `Preferences` page (search `Md Writer` package).
+Upload the generated `JSON` files to your website and add the URLs in `Preferences` page (search `Md Writer` package).
 
 ## Progress
 
