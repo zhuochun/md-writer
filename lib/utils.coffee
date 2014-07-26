@@ -54,12 +54,12 @@ LINK_REGEX = /\[(.*?)\]\(([^\)\s]+)\s?[\"\']?([^)]*?)[\"\']?\)/
 
 isImage = (text) -> IMG_REGEX.test(text)
 parseImage = (text) ->
-  image = text.match(IMG_REGEX)
+  image = IMG_REGEX.exec(text)
   return text: link[1], url: link[2], title: link[3]
 
 isLink = (text) -> LINK_REGEX.test(text) and !isImage(text)
 parseLink = (text) ->
-  link = text.match(LINK_REGEX)
+  link = LINK_REGEX.exec(text)
   return text: link[1], url: link[2], title: link[3]
 
 regexpEscape = (s) -> s and s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')

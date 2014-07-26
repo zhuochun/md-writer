@@ -23,34 +23,39 @@ class TextStyleView extends View
   display: ->
     @previouslyFocusedElement = $(':focus')
     @editor = atom.workspace.getActiveEditor()
-    @toggleStyle()
 
-  toggleStyle: ->
     text = @editor.getSelectedText()
+    if text
+      @toggleStyle(text)
+    else
+      @insertEmptyStyle()
+
+  toggleStyle: (text) ->
     if @isStyleOn(text)
       text = @removeStyle(text)
     else
       text = @addStyle(text)
     @editor.insertText(text)
 
+  insertEmptyStyle: ->
+    @editor.insertText(@addStyle(""))
+    pos = @editor.getCursorBufferPosition()
+    @editor.setCursorBufferPosition([pos.row, pos.column - @style.after.length])
+
   isStyleOn: (text) ->
-    return false unless text
-    @getStylePattern().test(text)
+    @getStylePattern().test(text) if text
 
   addStyle: (text) ->
     "#{@style.before}#{text}#{@style.after}"
 
   removeStyle: (text) ->
-    text.match(@getStylePattern())[1]
+    matches = @getStylePattern().exec(text)
+    return matches[1..].join("")
 
   getStylePattern: ->
-    ///
-    ^
-    #{utils.regexpEscape(@style.before)}
-    (.*)
-    #{utils.regexpEscape(@style.after)}
-    $
-    ///
+    before = utils.regexpEscape(@style.before)
+    after = utils.regexpEscape(@style.after)
+    return /// ^(.*?) #{before}(.*)#{after} (.*?)$ ///m
 
   detach: ->
     return unless @hasParent()
