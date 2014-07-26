@@ -2,7 +2,7 @@
 utils = require "./utils"
 request = require "request"
 
-# TODO merge categories view and tags view to front matter
+# TODO merge categories view and tags view to front matter view
 
 module.exports =
 class ManagePostCategoriesView extends View
@@ -26,6 +26,7 @@ class ManagePostCategoriesView extends View
   updateFrontMatter: ->
     content = utils.replaceFrontMatter(@editor.getText(), @frontMatter)
     @editor.setText(content)
+    @editor.moveCursorToTop()
     @detach()
 
   detach: ->
@@ -58,13 +59,11 @@ class ManagePostCategoriesView extends View
 
   fetchCategories: ->
     uri = atom.config.get("md-writer.urlForCategories")
-    data = uri: uri, json: true, encoding: 'utf-8', gzip: true
-    request data, (error, response, body) =>
-      if !error and response.statusCode == 200
-        @categories = body.categories
-        @displayCategories(@categories)
-      else
-        @error.text("Error accessing the categories!")
+    succeed = (body) =>
+      @categories = body.categories
+      @displayCategories(@categories)
+    error = (err) => @error.text(err.message)
+    utils.getJSON(uri, succeed, error)
 
   displayCategories: (categories) ->
     tagElems = categories.map (tag) =>

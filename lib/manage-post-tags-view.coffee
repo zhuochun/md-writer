@@ -23,6 +23,7 @@ class ManagePostTagsView extends View
   updateFrontMatter: ->
     content = utils.replaceFrontMatter(@editor.getText(), @frontMatter)
     @editor.setText(content)
+    @editor.moveCursorToTop()
     @detach()
 
   detach: ->

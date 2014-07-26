@@ -28,7 +28,7 @@ class AddLinkView extends View
         @subview "titleEditor", new EditorView(mini: true)
       @p =>
         @input type: "checkbox", outlet: "saveCheckbox"
-        @span "Automatically link to this text", class: "cb-label"
+        @span "Automatically link to this text next time", class: "cb-label"
       @div outlet: "searchBox", =>
         @label "Search Posts", class: "icon icon-search"
         @subview "searchEditor", new EditorView(mini: true)

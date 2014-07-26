@@ -49,6 +49,11 @@ describe "utils", ->
     result = utils.getFrontMatter(fixture)
     expect(result).toEqual key1: "val1", key2: "val2"
 
+  it "get front matter as empty object", ->
+    fixture = "---\n\n\n---\n"
+    result = utils.getFrontMatter(fixture)
+    expect(result).toEqual {}
+
   it "replace front matter", ->
     fixture = """---
 key1: val1

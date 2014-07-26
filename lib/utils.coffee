@@ -42,7 +42,7 @@ hasFrontMatter = (content) ->
 
 getFrontMatter = (content) ->
   yamlText = content.match(FRONT_MATTER_REGEX)[1].trim()
-  return yaml.safeLoad(yamlText)
+  return yaml.safeLoad(yamlText) || {}
 
 replaceFrontMatter = (content, newFrontMatter) ->
   yamlText = yaml.safeDump(newFrontMatter)
