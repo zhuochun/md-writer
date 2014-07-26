@@ -5,7 +5,6 @@ path = require "path"
 fs = require "fs-plus"
 
 ### TODO
-- Able to remove existing link
 - Support link with id
 ###
 
@@ -36,7 +35,7 @@ class AddLinkView extends View
 
   initialize: ->
     @fetchPosts()
-    @loadLinks()
+    @loadSavedLinks()
     @handleEvents()
     @on "core:confirm", => @onConfirm()
     @on "core:cancel", => @detach()
@@ -47,10 +46,10 @@ class AddLinkView extends View
 
   onConfirm: ->
     text = @textEditor.getText()
-    title = @titleEditor.getText()
     url = @urlEditor.getText()
-    @insertLinkToEditor(text, title, url)
-    @saveLink(text, title, url) if @saveCheckbox.prop("checked")
+    title = @titleEditor.getText()
+    if url then @insertLink(text, title, url) else @removeLink(text)
+    @updateSavedLink(text, title, url)
     @detach()
 
   display: ->
@@ -60,6 +59,7 @@ class AddLinkView extends View
     atom.workspaceView.append(this)
     @searchBox.hide()
     if @textEditor.getText()
+      @urlEditor.getEditor().selectAll()
       @urlEditor.focus()
     else
       @textEditor.focus()
@@ -76,10 +76,13 @@ class AddLinkView extends View
     if utils.isLink(selection)
       link = utils.parseLink(selection)
       @setLink(link.text, link.url, link.title)
+      @saveCheckbox.prop("checked", true) unless @isChangedSavedLink(link)
     else if @getSavedLink(selection)
       link = @getSavedLink(selection)
       @setLink(selection, link.url, link.title)
       @saveCheckbox.prop("checked", true)
+    else
+      @setLink(selection, "", "")
 
   updateSearch: ->
     return unless @posts
@@ -93,30 +96,40 @@ class AddLinkView extends View
     @titleEditor.setText(e.target.textContent)
     @urlEditor.setText(e.target.dataset.url)
 
-  insertLinkToEditor: (text, title, url) ->
+  insertLink: (text, title, url) ->
     if title
       @editor.insertText("[#{text}](#{url} '#{title}')")
     else
       @editor.insertText("[#{text}](#{url})")
 
-  getSavedLink: (text) ->
-    @links?[text.toLowerCase()]
+  removeLink: (text) ->
+    @editor.insertText(text)
 
   setLink: (text, url, title) ->
     @textEditor.setText(text)
     @urlEditor.setText(url)
     @titleEditor.setText(title)
 
-  saveLink: (text, title, url) ->
+  getSavedLink: (text) ->
+    @links?[text.toLowerCase()]
+
+  isChangedSavedLink: (link) ->
+    savedLink = @getSavedLink(link.text)
+    savedLink and (savedLink.title != link.title or savedLink.url != link.url)
+
+  updateSavedLink: (text, title, url) ->
     try
-      @links[text.toLowerCase()] = title: title, url: url
-      CSON.writeFileSync(@getLinkPath(), @links)
+      if @saveCheckbox.prop("checked")
+        @links[text.toLowerCase()] = title: title, url: url if url
+      else if not @isChangedSavedLink(text: text, title: title, url: url)
+        delete @links[text.toLowerCase()]
+      CSON.writeFileSync(@getSavedLinksPath(), @links)
     catch error
       console.log(error.message)
 
-  loadLinks: ->
+  loadSavedLinks: ->
     try
-      file = @getLinkPath()
+      file = @getSavedLinksPath()
       if fs.existsSync(file)
         @links = CSON.readFileSync(file)
       else
@@ -124,7 +137,7 @@ class AddLinkView extends View
     catch error
       console.log(error.message)
 
-  getLinkPath: ->
+  getSavedLinksPath: ->
     atom.project.resolve(atom.config.get("md-writer.siteLinkPath"))
 
   fetchPosts: ->
