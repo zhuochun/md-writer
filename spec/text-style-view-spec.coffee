@@ -16,6 +16,11 @@ describe "TextStyleView", ->
     fixture = "hello **bold** world"
     expect(view.isStyleOn(fixture)).toBe(true)
 
+  it "check multiple styles is in string", ->
+    view = new TextStyleView("italic")
+    fixture = "_italic_ yah _text_"
+    expect(view.isStyleOn(fixture)).toBe(true)
+
   it "check a style is not added", ->
     view = new TextStyleView("bold")
     fixture = "_not bold_"
@@ -30,6 +35,16 @@ describe "TextStyleView", ->
     view = new TextStyleView("italic")
     fixture = "_italic text_ in a string"
     expect(view.removeStyle(fixture)).toEqual("italic text in a string")
+
+  it "remove multiple styles from text", ->
+    view = new TextStyleView("italic")
+    fixture = "_italic_ yah _text_"
+    expect(view.removeStyle(fixture)).toEqual("italic yah text")
+
+  xit "remove multiple invalid styles from text", ->
+    view = new TextStyleView("italic")
+    fixture = "_italic_ _yah_ _text_" # not correctly formated
+    expect(view.removeStyle(fixture)).toEqual("italic yah text")
 
   it "add a style to text", ->
     view = new TextStyleView("bold")

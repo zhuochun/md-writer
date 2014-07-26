@@ -55,7 +55,12 @@ class TextStyleView extends View
   getStylePattern: ->
     before = utils.regexpEscape(@style.before)
     after = utils.regexpEscape(@style.after)
-    return /// ^(.*?) #{before}(.*)#{after} (.*?)$ ///m
+    ///
+    ^(.*?) # random text at head
+    (?:#{before}(.*?)#{after}(.+?))* # the pattern can appear multiple time
+    #{before}(.*?)#{after} # the pattern must appear once
+    (.*)$ # random text at end
+    ///gm
 
   detach: ->
     return unless @hasParent()
