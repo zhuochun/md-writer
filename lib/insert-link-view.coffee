@@ -72,19 +72,14 @@ class AddLinkView extends View
   setLinkFromSelection: ->
     selection = @editor.getSelectedText()
     return unless selection
+
     if utils.isLink(selection)
       link = utils.parseLink(selection)
-      @textEditor.setText(link.text)
-      @urlEditor.setText(link.url)
-      @titleEditor.setText(link.title)
-    else
-      @textEditor.setText(selection)
-      @setLinkUsingText(selection.toLowerCase())
-
-  setLinkUsingText: (text) ->
-    if @links and @links[text]
-      @titleEditor.setText(@links[text].title)
-      @urlEditor.setText(@links[text].url)
+      @setLink(link.text, link.url, link.title)
+    else if @getSavedLink(selection)
+      link = @getSavedLink(selection)
+      @setLink(selection, link.url, link.title)
+      @saveCheckbox.prop("checked", true)
 
   updateSearch: ->
     return unless @posts
@@ -103,6 +98,14 @@ class AddLinkView extends View
       @editor.insertText("[#{text}](#{url} '#{title}')")
     else
       @editor.insertText("[#{text}](#{url})")
+
+  getSavedLink: (text) ->
+    @links?[text.toLowerCase()]
+
+  setLink: (text, url, title) ->
+    @textEditor.setText(text)
+    @urlEditor.setText(url)
+    @titleEditor.setText(title)
 
   saveLink: (text, title, url) ->
     try

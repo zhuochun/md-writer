@@ -23,7 +23,7 @@ module.exports =
 
     # media
     ["link"].forEach (media) =>
-      @registerCommand "add-#{media}", "./add-#{media}-view"
+      @registerCommand "insert-#{media}", "./insert-#{media}-view"
 
   registerCommand: (cmd, view, opts = {}) ->
     atom.workspaceView.command "md-writer:#{cmd}", ->
