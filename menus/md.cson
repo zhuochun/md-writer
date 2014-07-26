@@ -14,8 +14,8 @@
           'command': 'md-writer:insert-link'
         }
         {
-          'label': 'Add an Image',
-          'command': 'md-writer:add-image'
+          'label': 'Toggle Code Text',
+          'command': 'md-writer:toggle-code-text'
         }
         {
           'label': 'Toggle Bold Text',

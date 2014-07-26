@@ -12,4 +12,5 @@
   "cmd-k": "md-writer:insert-link"
   "cmd-i": "md-writer:toggle-italic-text"
   "cmd-b": "md-writer:toggle-bold-text"
+  "cmd-`": "md-writer:toggle-code-text"
   "cmd-h": "md-writer:toggle-strikethrough-text"

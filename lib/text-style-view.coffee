@@ -3,6 +3,7 @@ utils = require "./utils"
 
 # supported styles
 styles =
+  code: before: "`", after: "`"
   bold: before: "**", after: "**"
   italic: before: "_", after: "_"
   strikethrough: before: "~~", after: "~~"

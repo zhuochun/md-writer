@@ -18,7 +18,7 @@ module.exports =
       @registerCommand "manage-post-#{attr}", "./manage-post-#{attr}-view"
 
     # text
-    ["bold", "italic", "strikethrough"].forEach (style) =>
+    ["code", "bold", "italic", "strikethrough"].forEach (style) =>
       @registerCommand "toggle-#{style}-text", "./text-style-view", args: style
 
     # media
