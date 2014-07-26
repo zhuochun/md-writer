@@ -27,6 +27,7 @@
     "fs-plus": "2.x",
     "request": "2.x",
     "js-yaml": "3.x",
+    "guid": "0.0.12",
     "season": "2.x"
   }
 }

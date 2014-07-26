@@ -98,7 +98,12 @@ class AddLinkView extends View
 
   insertLink: (text, title, url) ->
     if title
-      @editor.insertText("[#{text}](#{url} '#{title}')")
+      id = require("guid").raw()[0..7]
+      @editor.insertText("[#{text}][#{id}]")
+      pos = @editor.getCursorBufferPosition()
+      @editor.moveCursorToEndOfLine()
+      @editor.insertText "\n\n[#{id}]: #{url} \"#{title}\"\n"
+      @editor.setCursorBufferPosition(pos)
     else
       @editor.insertText("[#{text}](#{url})")
 
