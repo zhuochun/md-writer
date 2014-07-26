@@ -62,6 +62,8 @@ parseLink = (text) ->
   link = text.match(LINK_REGEX)
   return text: link[1], url: link[2], title: link[3]
 
+regexpEscape = (s) -> s and s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+
 module.exports =
   getJSON: getJSON
   getPostsDir: getPostsDir
@@ -75,3 +77,4 @@ module.exports =
   parseImage: parseImage
   isLink: isLink
   parseLink: parseLink
+  regexpEscape: regexpEscape

@@ -9,4 +9,6 @@
 # https://atom.io/docs/latest/advanced/keymaps
 
 ".editor":
-  "cmd-i": "md-writer:add-link"
+  "cmd-i": "md-writer:toggle-italic-text"
+  "cmd-b": "md-writer:toggle-bold-text"
+  "cmd-h": "md-writer:toggle-strikethrough-text"

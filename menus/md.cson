@@ -10,20 +10,32 @@
           'command': 'md-writer:new-post'
         }
         {
-          'label': 'Manage Post Tags',
-          'command': 'md-writer:manage-post-tags'
-        }
-        {
-          'label': 'Manage Post Categories',
-          'command': 'md-writer:manage-post-categories'
-        }
-        {
           'label': 'Add a Link',
           'command': 'md-writer:add-link'
         }
         {
           'label': 'Add an Image',
           'command': 'md-writer:add-image'
+        }
+        {
+          'label': 'Toggle Bold Text',
+          'command': 'md-writer:toggle-bold-text'
+        }
+        {
+          'label': 'Toggle Italic Text',
+          'command': 'md-writer:toggle-italic-text'
+        }
+        {
+          'label': 'Toggle Strikethrough Text',
+          'command': 'md-writer:toggle-strikethrough-text'
+        }
+        {
+          'label': 'Manage Post Tags',
+          'command': 'md-writer:manage-post-tags'
+        }
+        {
+          'label': 'Manage Post Categories',
+          'command': 'md-writer:manage-post-categories'
         }
       ]
     ]
