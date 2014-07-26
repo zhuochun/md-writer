@@ -4,15 +4,15 @@ Using [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll]
 
 ## Features
 
-![Markdown-Writer Insert Link](http://i.imgur.com/c8dVXWQ.png)
+![Insert Link](http://i.imgur.com/F9dLWsH.png)
 
-- Dialog to create post.
+- Dialog to **create new post**.
   In Command Palette (`shift-cmd-P`), type `Md Writer: New Post`.
-- Dialog to manage tags/categories in front matter.
+- Dialog to **manage tags/categories** in front matter.
   In Command Palette (`shift-cmd-P`), type `Md Writer: Manage Post Tags/Categories`
-- Dialog to insert link (`cmd-k`) and automatically link to the text at next time (my favorite feature from Windows Live Writer).
+- Dialog to **insert link** (`cmd-k`) and automatically link to the text at next time (my favorite feature from Windows Live Writer).
   In Command Palette (`shift-cmd-P`), type `Md Writer: Insert Link`
-- Toggle `code` (`cmd-'`), **bold** (`cmd-b`), _italic_ (`cmd-i`) and ~~strikethrough~~ (`cmd-h`) text style.
+- **Toggle text styles**: `code` (`cmd-'`), **bold** (`cmd-b`), _italic_ (`cmd-i`) and ~~strikethrough~~ (`cmd-h`).
 
 ## Populate Tags/Categories
 
