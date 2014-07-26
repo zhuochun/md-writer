@@ -10,6 +10,11 @@
     "md-writer:toggle-bold-text",
     "md-writer:toggle-italic-text",
     "md-writer:toggle-strikethrough-text",
+    "md-writer:toggle-h1",
+    "md-writer:toggle-h2",
+    "md-writer:toggle-h3",
+    "md-writer:toggle-h4",
+    "md-writer:toggle-h5",
     "md-writer:manage-post-tags",
     "md-writer:manage-post-categories"
   ],

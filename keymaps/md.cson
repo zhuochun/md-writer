@@ -14,3 +14,8 @@
   "cmd-b": "md-writer:toggle-bold-text"
   "cmd-'": "md-writer:toggle-code-text"
   "cmd-h": "md-writer:toggle-strikethrough-text"
+  "alt-1": "md-writer:toggle-h1"
+  "alt-2": "md-writer:toggle-h2"
+  "alt-3": "md-writer:toggle-h3"
+  "alt-4": "md-writer:toggle-h4"
+  "alt-5": "md-writer:toggle-h5"

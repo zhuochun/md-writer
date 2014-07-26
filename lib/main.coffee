@@ -20,6 +20,9 @@ module.exports =
     # text
     ["code", "bold", "italic", "strikethrough"].forEach (style) =>
       @registerCommand "toggle-#{style}-text", "./text-style-view", args: style
+      
+    ["h1", "h2", "h3", "h4", "h5"].forEach (style) =>
+      @registerCommand "toggle-#{style}", "./heading-style-view", args: style
 
     # media
     ["link"].forEach (media) =>

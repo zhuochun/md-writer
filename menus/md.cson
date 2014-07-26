@@ -10,6 +10,14 @@
           'command': 'md-writer:new-post'
         }
         {
+          'label': 'Manage Post Tags',
+          'command': 'md-writer:manage-post-tags'
+        }
+        {
+          'label': 'Manage Post Categories',
+          'command': 'md-writer:manage-post-categories'
+        }
+        {
           'label': 'Insert Link',
           'command': 'md-writer:insert-link'
         }
@@ -30,12 +38,20 @@
           'command': 'md-writer:toggle-strikethrough-text'
         }
         {
-          'label': 'Manage Post Tags',
-          'command': 'md-writer:manage-post-tags'
+          'label': 'Toggle Heading 1'
+          'command': 'md-writer:toggle-h1'
         }
         {
-          'label': 'Manage Post Categories',
-          'command': 'md-writer:manage-post-categories'
+          'label': 'Toggle Heading 2'
+          'command': 'md-writer:toggle-h2'
+        }
+        {
+          'label': 'Toggle Heading 3'
+          'command': 'md-writer:toggle-h3'
+        }
+        {
+          'label': 'Toggle Heading 4'
+          'command': 'md-writer:toggle-h4'
         }
       ]
     ]
