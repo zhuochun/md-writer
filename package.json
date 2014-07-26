@@ -1,8 +1,8 @@
 {
-  "name": "md-writer",
+  "name": "Markdown-Writer",
   "main": "./lib/main",
   "version": "0.1.0",
-  "description": "Tools to assist blogging in Markdown (e.g. jekyll)",
+  "description": "Atom as a Markdown blogging editor",
   "activationEvents": [
     "md-writer:new-post",
     "md-writer:insert-link",

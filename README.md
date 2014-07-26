@@ -1,36 +1,50 @@
-# Md-Writer for Atom
+# Markdown-Writer for Atom
 
-[Md-Writer](https://github.com/zhuochun/md-writer) is an [Atom](https://atom.io/) package
-that assists blogging in Markdown, e.g. Jekyll.
+Using [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](http://jekyllrb.com/) blogging.
 
 ## Features
 
-- Create post with front matter dialog
-- Manage tags dialog
-- Manage categories dialog
-- Add link dialog and automatically link to text
-- Grammars to recognize YAML font matter
+![Markdown-Writer Insert Link](http://i.imgur.com/c8dVXWQ.png)
 
-## Setup
+- Dialog to create post.
+  In Command Palette (`shift-cmd-P`), type `Md Writer: New Post`.
+- Dialog to manage tags/categories in front matter.
+  In Command Palette (`shift-cmd-P`), type `Md Writer: Manage Post Tags/Categories`
+- Dialog to insert link (`cmd-k`) and automatically link to the text at next time (my favorite feature from Windows Live Writer).
+  In Command Palette (`shift-cmd-P`), type `Md Writer: Insert Link`
+- Toggle `code` (`cmd-'`), **bold** (`cmd-b`), _italic_ (`cmd-i`) and ~~strikethrough~~ (`cmd-h`) text style.
 
-To populate tags, categories and posts in dialogs,
-you need to supply `json` files in format:
+## Populate Tags/Categories
+
+![Manage Tags](http://i.imgur.com/amt2m0Y.png)
+
+To populate tags or categories in dialog, you need to setup the `json` file in setting page.
+
+The `json` file could contain the following information of your blog:
 
 ```json
 {
-  "tags": ["tag"]
-  "categories": ["category"]
+  "tags": ["tag a", "tag b"],
+  "categories": ["category a", "category b"],
   "posts": [{"title": "title", "url":"url"}]
 }
 ```
 
-If you are using Jekyll, [checkout the scripts here](https://gist.github.com/fe127356bcf8c07ae1fb.git).
-Upload the `JSON` files to your website and add the URLs in setting page.
+If you are using Jekyll, [checkout the scripts to generate these files](https://gist.github.com/fe127356bcf8c07ae1fb.git).
 
-## Known Issues
+Upload the `JSON` files to your website and add the URLs in `Preferences` page (search `Md Writer` package).
 
-The package is still under early development.
-However, I am using it for blogging already.
+## Progress
 
-- Markdown Preview package does not recognize new grammar
-- Remove existing link missing
+The package is under its early development.
+
+I am already using it when I blog. New features will be added along the way.
+
+### Planning:
+
+- Able to remove link from dialog
+- Insert image
+- Insert table
+- Support multiple Jekyll directory
+
+View [CHANGELOG](https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md)
