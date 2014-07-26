@@ -11,7 +11,7 @@ class NewPostView extends View
     @div class: "md-writer md-writer-new-post overlay from-top", =>
       @label "Add New Post", class: "icon icon-file-add"
       @div =>
-        @label "Path", class: "message"
+        @label "Directory", class: "message"
         @subview "pathEditor", new EditorView(mini: true)
         @label "Date", class: "message"
         @subview "dateEditor", new EditorView(mini: true)
@@ -34,7 +34,7 @@ class NewPostView extends View
     super
 
   updatePath: ->
-    @message.text @getPostPath()
+    @message.text "Create Post: #{@getPostPath()}"
 
   display: ->
     @previouslyFocusedElement = $(':focus')
@@ -59,11 +59,10 @@ class NewPostView extends View
 
   getFullPath: ->
     localDir = atom.config.get("md-writer.siteLocalDir")
-    fullPath = path.join(localDir, @getPostPath())
-    return atom.project.resolve(fullPath)
+    return path.join(localDir, @getPostPath())
 
   getPostPath: ->
-    path.join @pathEditor.getText(), @getFileName()
+    return path.join(@pathEditor.getText(), @getFileName())
 
   getFileName: ->
     date = @dateEditor.getText()
@@ -73,11 +72,11 @@ class NewPostView extends View
 
   generateFrontMatters: ->
     """
-    ---
-    layout: post
-    title: '#{@titleEditor.getText()}'
-    date: '#{@dateEditor.getText()} #{utils.getTimeStr()}'
-    ---
+---
+layout: post
+title: '#{@titleEditor.getText()}'
+date: '#{@dateEditor.getText()} #{utils.getTimeStr()}'
+---
     """
 
   convertTitle: (title) ->
