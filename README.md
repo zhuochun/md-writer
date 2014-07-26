@@ -13,6 +13,7 @@ Using [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll]
 - Dialog to **insert link** (`cmd-k`) and automatically link to the text at next time (my favorite feature from Windows Live Writer).
   In Command Palette (`shift-cmd-P`), type `Md Writer: Insert Link`
 - **Toggle text styles**: `code` (`cmd-'`), **bold** (`cmd-b`), _italic_ (`cmd-i`) and ~~strikethrough~~ (`cmd-h`).
+- **Toggle headings"**: `alt-[1-5]` to switch among `H1` to `H5`.
 
 ## Populate Tags/Categories
 
@@ -40,7 +41,7 @@ The package is under its early development.
 
 I am already using it when I blog. New features will be added along the way.
 
-### Planning:
+### Planning
 
 - Able to remove link from dialog
 - Insert image

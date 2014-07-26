@@ -11,3 +11,8 @@
 * Remove grammars/snippets
 * Clean up code
 * Improve insert link dialog
+
+## 0.3.0
+
+* Enhance toggling text styles
+* Add toggle headings
