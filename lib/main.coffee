@@ -1,14 +1,4 @@
-NewPostView = require "./new-post-view"
-AddLinkView = require "./add-link-view"
-ManagePostTagsView = require "./manage-post-tags-view"
-ManagePostCategoriesView = require "./manage-post-categories-view"
-
 module.exports =
-  newPostView: null
-  addLinkView: null
-  managePostTagsView: null
-  managePostCategoriesView: null
-
   configDefaults:
     siteLocalDir: "example.github.io/"
     siteLinkPath: "example.github.io/_link.cson"
@@ -20,26 +10,27 @@ module.exports =
     fileExtension: ".markdown"
 
   activate: (state) ->
-    atom.workspaceView.command "md-writer:new-post", =>
-      @newPostView = new NewPostView()
-      @newPostView.display()
+    # general
+    @registerCommand "new-post", "./new-post-view"
 
-    atom.workspaceView.command "md-writer:add-link", =>
-      @addLinkView = new AddLinkView()
-      @addLinkView.display()
+    # front-matter
+    ["tags", "categories"].forEach (attr) =>
+      @registerCommand "manage-post-#{attr}", "./manage-post-#{attr}-view"
 
-    atom.workspaceView.command "md-writer:manage-post-tags", =>
-      @managePostTagsView = new ManagePostTagsView()
-      @managePostTagsView.display()
+    # text
+    ["bold", "italic", "strikethrough"].forEach (style) =>
+      @registerCommand "toggle-#{style}-text", "./text-style-view", args: style
 
-    atom.workspaceView.command "md-writer:manage-post-categories", =>
-      @managePostCategoriesView = new ManagePostCategoriesView()
-      @managePostCategoriesView.display()
+    # media
+    ["link"].forEach (media) =>
+      @registerCommand "add-#{media}", "./add-#{media}-view"
+
+  registerCommand: (cmd, view, opts = {}) ->
+    atom.workspaceView.command "md-writer:#{cmd}", ->
+      ViewModule = require(view)
+      viewInstance = new ViewModule(opts.args)
+      viewInstance.display()
 
   deactivate: ->
-    @newPostView?.detach()
-    @addLinkView?.detach()
-    @managePostTagsView?.detach()
-    @managePostCategoriesView?.detach()
 
   serialize: ->
