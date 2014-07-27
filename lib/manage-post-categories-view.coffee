@@ -2,7 +2,9 @@
 utils = require "./utils"
 request = require "request"
 
-# TODO merge categories view and tags view to front matter view
+### TODO
+- merge categories view and tags view to front matter view
+###
 
 module.exports =
 class ManagePostCategoriesView extends View
@@ -24,6 +26,7 @@ class ManagePostCategoriesView extends View
     @on "core:cancel", => @detach()
 
   updateFrontMatter: ->
+    @frontMatter.categories = @getEditorCategories()
     content = utils.replaceFrontMatter(@editor.getText(), @frontMatter)
     @editor.setText(content)
     @editor.moveCursorToTop()
@@ -40,7 +43,7 @@ class ManagePostCategoriesView extends View
 
     if @isValidMarkdown(@editor.getText())
       @setFrontMatter()
-      @setCategoriesInFrontMatter()
+      @setEditorCategories(@frontMatter.categories)
       @fetchCategories()
       atom.workspaceView.append(this)
       @categoriesEditor.focus()
@@ -54,8 +57,11 @@ class ManagePostCategoriesView extends View
     @frontMatter = utils.getFrontMatter(@editor.getText())
     @frontMatter.categories = [] unless @frontMatter.categories
 
-  setCategoriesInFrontMatter: ->
-    @categoriesEditor.setText(@frontMatter.categories.join(","))
+  setEditorCategories: (categories) ->
+    @categoriesEditor.setText(categories.join(","))
+
+  getEditorCategories: ->
+    @categoriesEditor.getText().split(/\s*,\s*/).filter((c) -> !!c.trim())
 
   fetchCategories: ->
     uri = atom.config.get("md-writer.urlForCategories")
@@ -74,13 +80,14 @@ class ManagePostCategoriesView extends View
     @candidates.empty().append(tagElems.join(""))
 
   appendCategory: (e) ->
-    tag = e.target.textContent
-    idx = @frontMatter.categories.indexOf(tag)
+    category = e.target.textContent
+    categories = @getEditorCategories()
+    idx = categories.indexOf(category)
     if idx < 0
-      @frontMatter.categories.push(tag)
+      categories.push(category)
       e.target.classList.add("selected")
     else
-      @frontMatter.categories.splice(idx, 1)
+      categories.splice(idx, 1)
       e.target.classList.remove("selected")
-    @setCategoriesInFrontMatter()
+    @setEditorCategories(categories)
     @categoriesEditor.focus()

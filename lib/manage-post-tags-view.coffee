@@ -21,6 +21,7 @@ class ManagePostTagsView extends View
     @on "core:cancel", => @detach()
 
   updateFrontMatter: ->
+    @frontMatter.tags = @getEditorTags()
     content = utils.replaceFrontMatter(@editor.getText(), @frontMatter)
     @editor.setText(content)
     @editor.moveCursorToTop()
@@ -37,7 +38,7 @@ class ManagePostTagsView extends View
 
     if @isValidMarkdown(@editor.getText())
       @setFrontMatter()
-      @setTagsInFrontMatter()
+      @setEditorTags(@frontMatter.tags)
       @fetchTags()
       atom.workspaceView.append(this)
       @tagsEditor.focus()
@@ -51,8 +52,11 @@ class ManagePostTagsView extends View
     @frontMatter = utils.getFrontMatter(@editor.getText())
     @frontMatter.tags = [] unless @frontMatter.tags
 
-  setTagsInFrontMatter: ->
-    @tagsEditor.setText(@frontMatter.tags.join(","))
+  setEditorTags: (tags) ->
+    @tagsEditor.setText(tags.join(","))
+
+  getEditorTags: ->
+    @tagsEditor.getText().split(/\s*,\s*/).filter((t) -> !!t.trim())
 
   fetchTags: ->
     uri = atom.config.get("md-writer.urlForTags")
@@ -81,12 +85,13 @@ class ManagePostTagsView extends View
 
   appendTag: (e) ->
     tag = e.target.textContent
-    idx = @frontMatter.tags.indexOf(tag)
+    tags = @getEditorTags()
+    idx = tags.indexOf(tag)
     if idx < 0
-      @frontMatter.tags.push(tag)
+      tags.push(tag)
       e.target.classList.add("selected")
     else
-      @frontMatter.tags.splice(idx, 1)
+      tags.splice(idx, 1)
       e.target.classList.remove("selected")
-    @setTagsInFrontMatter()
+    @setEditorTags(tags)
     @tagsEditor.focus()
