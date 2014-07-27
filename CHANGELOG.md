@@ -16,3 +16,9 @@
 
 * Enhance toggling text styles
 * Add toggle headings
+
+## 0.4.0
+
+* Add inline link removal
+* Add reference link insertion
+* Add reference link removal
