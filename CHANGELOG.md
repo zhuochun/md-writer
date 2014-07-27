@@ -28,3 +28,7 @@
 * Improve front matter matching
 * Fix reference link update
 * Fix date/time output
+
+## 0.4.2
+
+* Fix losing manual added tags/categories
