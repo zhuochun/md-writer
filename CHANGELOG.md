@@ -22,3 +22,9 @@
 * Add inline link removal
 * Add reference link insertion
 * Add reference link removal
+
+## 0.4.1
+
+* Improve front matter matching
+* Fix reference link update
+* Fix date/time output
