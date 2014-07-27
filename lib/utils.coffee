@@ -48,10 +48,9 @@ getFrontMatter = (content) ->
   yamlText = content.match(FRONT_MATTER_REGEX)[1].trim()
   return yaml.safeLoad(yamlText) || {}
 
-replaceFrontMatter = (content, newFrontMatter) ->
-  yamlText = yaml.safeDump(newFrontMatter)
-  newFrontMatter = ["---", "#{yamlText}---", ""].join(os.EOL)
-  return content.replace(FRONT_MATTER_REGEX, newFrontMatter)
+getFrontMatterText = (obj) ->
+  yamlText = yaml.safeDump(obj)
+  return ["---", "#{yamlText}---", ""].join(os.EOL)
 
 IMG_REGEX  = ///
   !\[(.+?)\]               # ![text]
@@ -105,7 +104,8 @@ module.exports =
   getTimeStr: getTimeStr
   hasFrontMatter: hasFrontMatter
   getFrontMatter: getFrontMatter
-  replaceFrontMatter: replaceFrontMatter
+  getFrontMatterText: getFrontMatterText
+  frontMatterRegex: FRONT_MATTER_REGEX
   isImage: isImage
   parseImage: parseImage
   isInlineLink: isInlineLink

@@ -6,7 +6,7 @@
 
 ## 0.2.0
 
-* Toggle different text styles
+* Add toggle text styles
 * Add new key maps
 * Remove grammars/snippets
 * Clean up code
@@ -14,8 +14,8 @@
 
 ## 0.3.0
 
-* Enhance toggling text styles
 * Add toggle headings
+* Enhance toggle text styles
 
 ## 0.4.0
 
@@ -32,3 +32,7 @@
 ## 0.4.2
 
 * Fix losing manual added tags/categories
+
+## 0.4.3
+
+* Improve tags/categories update
