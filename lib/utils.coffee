@@ -49,18 +49,32 @@ replaceFrontMatter = (content, newFrontMatter) ->
   newFrontMatter = ["---", "#{yamlText}---", "", ""].join(os.EOL)
   return content.replace(FRONT_MATTER_REGEX, newFrontMatter)
 
-IMG_REGEX  = /!\[(.*?)\]\(([^\)\s]+)\s?[\"\']?([^)]*?)[\"\']?\)/
-LINK_REGEX = /\[(.*?)\]\(([^\)\s]+)\s?[\"\']?([^)]*?)[\"\']?\)/
+IMG_REGEX  = /!\[(.+?)\]\(([^\)\s]+)\s?[\"\']?([^)]*?)[\"\']?\)/
+INLINE_LINK_REGEX = /\[(.+?)\]\(([^\)\s]+)\s?[\"\']?([^)]*?)[\"\']?\)/
+REFERENCE_LINK_REGEX = /\[(.+?)\]\s?\[(.*)\]/
 
-isImage = (text) -> IMG_REGEX.test(text)
-parseImage = (text) ->
-  image = IMG_REGEX.exec(text)
+reference_def_regex = (id, opts = {}) ->
+  id = regexpEscape(id) unless opts.noEscape
+  /// ^ \[#{id}\]: \ + ([^\s]*?) (?:\ +"?(.+?)"?)? $ ///m
+
+isImage = (input) -> IMG_REGEX.test(input)
+parseImage = (input) ->
+  image = IMG_REGEX.exec(input)
+  return text: image[1], url: image[2], title: image[3]
+
+isInlineLink = (input) -> INLINE_LINK_REGEX.test(input) and !isImage(input)
+parseInlineLink = (input) ->
+  link = INLINE_LINK_REGEX.exec(input)
   return text: link[1], url: link[2], title: link[3]
 
-isLink = (text) -> LINK_REGEX.test(text) and !isImage(text)
-parseLink = (text) ->
-  link = LINK_REGEX.exec(text)
-  return text: link[1], url: link[2], title: link[3]
+isReferenceLink = (input) -> REFERENCE_LINK_REGEX.test(input)
+isReferenceDefinition = (input) ->
+  reference_def_regex(".+?", noEscape: true).test(input)
+parseReferenceLink = (input, content) ->
+  refn = REFERENCE_LINK_REGEX.exec(input)
+  text = refn[1]
+  link = reference_def_regex(refn[2] || text).exec(content)
+  return text: text, url: link[1], title: link[2] || ""
 
 regexpEscape = (s) -> s and s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
@@ -75,6 +89,9 @@ module.exports =
   replaceFrontMatter: replaceFrontMatter
   isImage: isImage
   parseImage: parseImage
-  isLink: isLink
-  parseLink: parseLink
+  isInlineLink: isInlineLink
+  parseInlineLink: parseInlineLink
+  isReferenceLink: isReferenceLink
+  isReferenceDefinition: isReferenceDefinition
+  parseReferenceLink: parseReferenceLink
   regexpEscape: regexpEscape

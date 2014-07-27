@@ -13,30 +13,69 @@ describe "utils", ->
     date = utils.getDate()
     expect(utils.getDateStr()).toEqual("#{date.year}-#{date.month}-#{date.day}")
 
-  it "check is text invalid link", ->
+  it "check is text invalid inline link", ->
     fixture = "![text](url)"
-    expect(utils.isLink(fixture)).toBe(false)
+    expect(utils.isInlineLink(fixture)).toBe(false)
     fixture = "[text]()"
-    expect(utils.isLink(fixture)).toBe(false)
+    expect(utils.isInlineLink(fixture)).toBe(false)
+    fixture = "[text][]"
+    expect(utils.isInlineLink(fixture)).toBe(false)
 
-  it "check is text valid link", ->
+  it "check is text valid inline link", ->
     fixture = "[text](url)"
-    expect(utils.isLink(fixture)).toBe(true)
+    expect(utils.isInlineLink(fixture)).toBe(true)
     fixture = "[text](url title)"
-    expect(utils.isLink(fixture)).toBe(true)
+    expect(utils.isInlineLink(fixture)).toBe(true)
     fixture = "[text](url 'title')"
-    expect(utils.isLink(fixture)).toBe(true)
+    expect(utils.isInlineLink(fixture)).toBe(true)
 
-  it "parse valid link text", ->
+  it "parse valid inline link text", ->
     fixture = "[text](url)"
-    expect(utils.parseLink(fixture)).toEqual(
+    expect(utils.parseInlineLink(fixture)).toEqual(
       {text: "text", url: "url", title: ""})
     fixture = "[text](url title)"
-    expect(utils.parseLink(fixture)).toEqual(
+    expect(utils.parseInlineLink(fixture)).toEqual(
       {text: "text", url: "url", title: "title"})
     fixture = "[text](url 'title')"
-    expect(utils.parseLink(fixture)).toEqual(
+    expect(utils.parseInlineLink(fixture)).toEqual(
       {text: "text", url: "url", title: "title"})
+
+  it "check is text invalid reference link", ->
+    fixture = "![text](url)"
+    expect(utils.isReferenceLink(fixture)).toBe(false)
+    fixture = "[text](has)"
+    expect(utils.isReferenceLink(fixture)).toBe(false)
+
+  it "check is text valid reference link", ->
+    fixture = "[text][]"
+    expect(utils.isReferenceLink(fixture)).toBe(true)
+    fixture = "[text][url title]"
+    expect(utils.isReferenceLink(fixture)).toBe(true)
+
+  it "check is text valid reference definition", ->
+    fixture = "[text]: http"
+    expect(utils.isReferenceDefinition(fixture)).toBe(true)
+
+  it "parse valid reference link text", ->
+    content = """
+Transform your plain [text][]
+into static websites and blogs.
+[text]: http://www.jekyll.com
+"""
+    contentWithTitle = """
+Transform your plain [text][id]
+into static websites and blogs.
+
+[id]: http://www.jekyll.com "Jekyll Website"
+
+Markdown (or Textile), Liquid, HTML & CSS go in.
+    """
+    fixture = "[text][]"
+    expect(utils.parseReferenceLink(fixture, content)).toEqual(
+      text: "text", url: "http://www.jekyll.com", title: "")
+    fixture = "[text][id]"
+    expect(utils.parseReferenceLink(fixture, contentWithTitle)).toEqual(
+      text: "text", url: "http://www.jekyll.com", title: "Jekyll Website")
 
   it "test whether has front matter", ->
     fixture = "abc\n---\nhello world\n"

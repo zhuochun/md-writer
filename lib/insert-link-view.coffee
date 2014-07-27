@@ -46,8 +46,8 @@ class AddLinkView extends View
 
   onConfirm: ->
     text = @textEditor.getText()
-    url = @urlEditor.getText()
-    title = @titleEditor.getText()
+    url = @urlEditor.getText().trim()
+    title = @titleEditor.getText().trim()
     if url then @insertLink(text, title, url) else @removeLink(text)
     @updateSavedLink(text, title, url)
     @detach()
@@ -73,7 +73,7 @@ class AddLinkView extends View
     selection = @editor.getSelectedText()
     return unless selection
 
-    if utils.isLink(selection)
+    if utils.isInlineLink(selection)
       link = utils.parseLink(selection)
       @setLink(link.text, link.url, link.title)
       @saveCheckbox.prop("checked", true) unless @isChangedSavedLink(link)
@@ -98,14 +98,23 @@ class AddLinkView extends View
 
   insertLink: (text, title, url) ->
     if title
-      id = require("guid").raw()[0..7]
-      @editor.insertText("[#{text}][#{id}]")
-      pos = @editor.getCursorBufferPosition()
-      @editor.moveCursorToEndOfLine()
-      @editor.insertText "\n\n[#{id}]: #{url} \"#{title}\"\n"
-      @editor.setCursorBufferPosition(pos)
+      @insertReferenceLink(text, title, url)
     else
       @editor.insertText("[#{text}](#{url})")
+
+  insertReferenceLink: (text, title, url) ->
+    @editor.buffer.beginTransaction()
+    id = require("guid").raw()[0..7]
+    @editor.insertText("[#{text}][#{id}]")
+    position = @editor.getCursorBufferPosition()
+    @editor.moveCursorToBeginningOfNextParagraph()
+    line = @editor.selectToEndOfLine()[0].getText()
+    if utils.isReferenceDefinition(line)
+      @editor.insertText("[#{id}]: #{url} \"#{title}\"\n#{line}")
+    else
+      @editor.insertText("[#{id}]: #{url} \"#{title}\"\n\n#{line}")
+    @editor.setCursorBufferPosition(position)
+    @editor.buffer.commitTransaction()
 
   removeLink: (text) ->
     @editor.insertText(text)
