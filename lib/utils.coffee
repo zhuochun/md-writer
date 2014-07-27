@@ -35,7 +35,11 @@ getDate = ->
   minute: ("0" + date.getMinutes()).slice(-2)
   seconds: ("0" + date.getSeconds()).slice(-2)
 
-FRONT_MATTER_REGEX = /^---\s*\r?\n([^.]*?)---\s*\r?\n/m
+FRONT_MATTER_REGEX = ///
+  ^---\s*       # match open ---
+  ([\s\S]*?)\s* # match anything \s and \S
+  ---\s*$       # match ending ---
+  ///m
 
 hasFrontMatter = (content) ->
   FRONT_MATTER_REGEX.test(content)
@@ -46,12 +50,27 @@ getFrontMatter = (content) ->
 
 replaceFrontMatter = (content, newFrontMatter) ->
   yamlText = yaml.safeDump(newFrontMatter)
-  newFrontMatter = ["---", "#{yamlText}---", "", ""].join(os.EOL)
+  newFrontMatter = ["---", "#{yamlText}---", ""].join(os.EOL)
   return content.replace(FRONT_MATTER_REGEX, newFrontMatter)
 
-IMG_REGEX  = /!\[(.+?)\]\(([^\)\s]+)\s?[\"\']?([^)]*?)[\"\']?\)/
-INLINE_LINK_REGEX = /\[(.+?)\]\(([^\)\s]+)\s?[\"\']?([^)]*?)[\"\']?\)/
-REFERENCE_LINK_REGEX = /\[(.+?)\]\s?\[(.*)\]/
+IMG_REGEX  = ///
+  !\[(.+?)\]               # ![text]
+  \(                       # open (
+  ([^\)\s]+)\s?            # a image path
+  [\"\']?([^)]*?)[\"\']?   # any description
+  \)                       # close )
+  ///
+INLINE_LINK_REGEX = ///
+  \[(.+?)\]                # [text]
+  \(                       # open (
+  ([^\)\s]+)\s?            # a url
+  [\"\']?([^)]*?)[\"\']?   # any title
+  \)                       # close )
+  ///
+REFERENCE_LINK_REGEX = ///
+  \[(.+?)\]\s?             # [text]
+  \[(.*)\]                 # [id] or []
+  ///
 
 reference_def_regex = (id, opts = {}) ->
   id = regexpEscape(id) unless opts.noEscape
