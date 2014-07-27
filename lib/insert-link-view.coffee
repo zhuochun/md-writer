@@ -99,10 +99,18 @@ class AddLinkView extends View
     @urlEditor.setText(e.target.dataset.url)
 
   insertLink: (text, title, url) ->
-    if title
+    if @referenceId
+      @updateReferenceLink(text, title, url)
+    else if title
       @insertReferenceLink(text, title, url)
     else
       @editor.insertText("[#{text}](#{url})")
+
+  removeLink: (text) ->
+    if @referenceId
+      @removeReferenceLink(text)
+    else
+      @editor.insertText(text)
 
   insertReferenceLink: (text, title, url) ->
     @editor.buffer.beginTransaction()
@@ -118,11 +126,17 @@ class AddLinkView extends View
     @editor.setCursorBufferPosition(position)
     @editor.buffer.commitTransaction()
 
-  removeLink: (text) ->
-    if @referenceId
-      @removeReferenceLink(text)
+  updateReferenceLink: (text, title, url) ->
+    if title
+      @editor.buffer.beginTransaction()
+      position = @editor.getCursorBufferPosition()
+      @editor.buffer.scan /// ^ \[#{@referenceId}\]: \ + ///, (match) =>
+        @editor.setSelectedBufferRange(match.range)
+        @editor.insertText("[#{id}]: #{url} \"#{title}\"")
+      @editor.setCursorBufferPosition(position)
+      @editor.buffer.commitTransaction()
     else
-      @editor.insertText(text)
+      @removeReferenceLink("[#{text}](#{url})")
 
   removeReferenceLink: (text) ->
     @editor.buffer.beginTransaction()
@@ -131,6 +145,7 @@ class AddLinkView extends View
     @editor.buffer.scan /// ^ \[#{@referenceId}\]: \ + ///, (match) =>
       @editor.setSelectedBufferRange(match.range)
       @editor.deleteLine()
+      @editor.deleteLine() unless @editor.selectToEndOfLine()[0].getText()
     @editor.setCursorBufferPosition(position)
     @editor.buffer.commitTransaction()
 
