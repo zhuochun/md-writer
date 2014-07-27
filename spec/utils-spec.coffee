@@ -66,16 +66,16 @@ into static websites and blogs.
 Transform your plain [text][id]
 into static websites and blogs.
 
-[id]: http://www.jekyll.com "Jekyll Website"
+[id]: http://jekyll.com "Jekyll Website"
 
 Markdown (or Textile), Liquid, HTML & CSS go in.
     """
     fixture = "[text][]"
-    expect(utils.parseReferenceLink(fixture, content)).toEqual(
-      text: "text", url: "http://www.jekyll.com", title: "")
+    expect(utils.parseReferenceLink(fixture, content)).toEqual
+      id: "text", text: "text", url: "http://www.jekyll.com", title: ""
     fixture = "[text][id]"
-    expect(utils.parseReferenceLink(fixture, contentWithTitle)).toEqual(
-      text: "text", url: "http://www.jekyll.com", title: "Jekyll Website")
+    expect(utils.parseReferenceLink(fixture, contentWithTitle)).toEqual
+      id: "id", text: "text", url: "http://jekyll.com", title: "Jekyll Website"
 
   it "test whether has front matter", ->
     fixture = "abc\n---\nhello world\n"

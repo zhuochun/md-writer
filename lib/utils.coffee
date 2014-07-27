@@ -72,9 +72,9 @@ isReferenceDefinition = (input) ->
   reference_def_regex(".+?", noEscape: true).test(input)
 parseReferenceLink = (input, content) ->
   refn = REFERENCE_LINK_REGEX.exec(input)
-  text = refn[1]
-  link = reference_def_regex(refn[2] || text).exec(content)
-  return text: text, url: link[1], title: link[2] || ""
+  id = refn[2] || refn[1]
+  link = reference_def_regex(id).exec(content)
+  return id: id, text: refn[1], url: link[1], title: link[2] || ""
 
 regexpEscape = (s) -> s and s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 

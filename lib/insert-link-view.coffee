@@ -4,15 +4,12 @@ CSON = require "season"
 path = require "path"
 fs = require "fs-plus"
 
-### TODO
-- Support link with id
-###
-
 module.exports =
 class AddLinkView extends View
   editor: null
   posts: null
   links: null
+  referenceId: false
   previouslyFocusedElement: null
 
   @content: ->
@@ -74,7 +71,12 @@ class AddLinkView extends View
     return unless selection
 
     if utils.isInlineLink(selection)
-      link = utils.parseLink(selection)
+      link = utils.parseInlineLink(selection)
+      @setLink(link.text, link.url, link.title)
+      @saveCheckbox.prop("checked", true) unless @isChangedSavedLink(link)
+    else if utils.isReferenceLink(selection)
+      link = utils.parseReferenceLink(selection, @editor.getText())
+      @referenceId = link.id
       @setLink(link.text, link.url, link.title)
       @saveCheckbox.prop("checked", true) unless @isChangedSavedLink(link)
     else if @getSavedLink(selection)
@@ -117,7 +119,20 @@ class AddLinkView extends View
     @editor.buffer.commitTransaction()
 
   removeLink: (text) ->
+    if @referenceId
+      @removeReferenceLink(text)
+    else
+      @editor.insertText(text)
+
+  removeReferenceLink: (text) ->
+    @editor.buffer.beginTransaction()
     @editor.insertText(text)
+    position = @editor.getCursorBufferPosition()
+    @editor.buffer.scan /// ^ \[#{@referenceId}\]: \ + ///, (match) =>
+      @editor.setSelectedBufferRange(match.range)
+      @editor.deleteLine()
+    @editor.setCursorBufferPosition(position)
+    @editor.buffer.commitTransaction()
 
   setLink: (text, url, title) ->
     @textEditor.setText(text)
