@@ -31,9 +31,9 @@ getDate = ->
   year: "" + date.getFullYear()
   month: ("0" + (date.getMonth() + 1)).slice(-2)
   day: ("0" + date.getDate()).slice(-2)
-  hour: "" + date.getHours()
-  minute: "" + date.getMinutes()
-  seconds: "" + date.getSeconds()
+  hour: ("0" + date.getHours()).slice(-2)
+  minute: ("0" + date.getMinutes()).slice(-2)
+  seconds: ("0" + date.getSeconds()).slice(-2)
 
 FRONT_MATTER_REGEX = /^---\s*\r?\n([^.]*?)---\s*\r?\n/m
 
