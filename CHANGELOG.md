@@ -36,3 +36,4 @@
 ## 0.4.3
 
 * Improve tags/categories update
+* Fix reference link insertion position
