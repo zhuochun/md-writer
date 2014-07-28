@@ -117,12 +117,15 @@ class AddLinkView extends View
     id = require("guid").raw()[0..7]
     @editor.insertText("[#{text}][#{id}]")
     position = @editor.getCursorBufferPosition()
-    @editor.moveCursorToBeginningOfNextParagraph()
-    line = @editor.selectToEndOfLine()[0].getText()
+    @editor.moveCursorDown(2)
+    line = @editor.selectLine()[0].getText().trim()
+    @editor.moveCursorToBeginningOfPreviousParagraph()
+    @editor.insertNewlineAbove()
     if utils.isReferenceDefinition(line)
-      @editor.insertText("[#{id}]: #{url} \"#{title}\"\n#{line}")
+      @editor.moveCursorDown()
     else
-      @editor.insertText("[#{id}]: #{url} \"#{title}\"\n\n#{line}")
+      @editor.insertNewlineBelow()
+    @editor.insertText("[#{id}]: #{url} \"#{title}\"")
     @editor.setCursorBufferPosition(position)
     @editor.buffer.commitTransaction()
 
