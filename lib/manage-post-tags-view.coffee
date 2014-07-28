@@ -16,6 +16,7 @@ class ManagePostTagsView extends View
       @ul class: "candidates", outlet: "candidates"
 
   initialize: ->
+    @fetchTags()
     @candidates.on "click", "li", (e) => @appendTag(e)
     @on "core:confirm", => @updateFrontMatter()
     @on "core:cancel", => @detach()
@@ -38,7 +39,6 @@ class ManagePostTagsView extends View
     if @isValidMarkdown(@editor.getText())
       @setFrontMatter()
       @setEditorTags(@frontMatter.tags)
-      @fetchTags()
       atom.workspaceView.append(this)
       @tagsEditor.focus()
     else

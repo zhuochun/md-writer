@@ -21,6 +21,7 @@ class ManagePostCategoriesView extends View
       @ul class: "candidates", outlet: "candidates"
 
   initialize: ->
+    @fetchCategories()
     @candidates.on "click", "li", (e) => @appendCategory(e)
     @on "core:confirm", => @updateFrontMatter()
     @on "core:cancel", => @detach()
@@ -43,7 +44,6 @@ class ManagePostCategoriesView extends View
     if @isValidMarkdown(@editor.getText())
       @setFrontMatter()
       @setEditorCategories(@frontMatter.categories)
-      @fetchCategories()
       atom.workspaceView.append(this)
       @categoriesEditor.focus()
     else
