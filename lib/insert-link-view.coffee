@@ -114,19 +114,23 @@ class AddLinkView extends View
 
   insertReferenceLink: (text, title, url) ->
     @editor.buffer.beginTransaction()
+
+    # modify selection
     id = require("guid").raw()[0..7]
     @editor.insertText("[#{text}][#{id}]")
+
+    # insert reference
     position = @editor.getCursorBufferPosition()
-    @editor.moveCursorDown(2)
-    line = @editor.selectLine()[0].getText().trim()
-    @editor.moveCursorToBeginningOfPreviousParagraph()
-    @editor.insertNewlineAbove()
-    if utils.isReferenceDefinition(line)
-      @editor.moveCursorDown()
-    else
-      @editor.insertNewlineBelow()
+    @editor.insertNewlineBelow()
+    @editor.moveCursorDown()
     @editor.insertText("[#{id}]: #{url} \"#{title}\"")
+    @editor.moveCursorDown()
+    line = @editor.selectLine()[0].getText().trim()
+    unless utils.isReferenceDefinition(line)
+      @editor.moveCursorUp()
+      @editor.insertNewlineBelow()
     @editor.setCursorBufferPosition(position)
+
     @editor.buffer.commitTransaction()
 
   updateReferenceLink: (text, title, url) ->
