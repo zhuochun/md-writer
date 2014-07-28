@@ -94,12 +94,6 @@ Markdown (or Textile), Liquid, HTML & CSS go in.
     expect(result).toEqual {}
 
   it "replace front matter", ->
-    fixture = """---
-key1: val1
-key2: val2
----
-this is dummy content
-1,2,3"""
     expected = """---
 key1: val1
 key2:
@@ -107,7 +101,12 @@ key2:
   - v2
 ---
 
-this is dummy content
-1,2,3"""
-    result = utils.replaceFrontMatter(fixture, key1: "val1", key2: ["v1", "v2"])
+"""
+    result = utils.getFrontMatterText(key1: "val1", key2: ["v1", "v2"])
     expect(result).toEqual(expected)
+
+  it "dashlize title", ->
+    fixture = "hello world!"
+    expect(utils.dashlize(fixture)).toEqual("hello-world")
+    fixture = "hello-world"
+    expect(utils.dashlize(fixture)).toEqual("hello-world")

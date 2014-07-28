@@ -5,6 +5,7 @@
   "description": "Atom as a Markdown blogging editor",
   "activationEvents": [
     "md-writer:new-post",
+    "md-writer:new-draft",
     "md-writer:insert-link",
     "md-writer:toggle-code-text",
     "md-writer:toggle-bold-text",

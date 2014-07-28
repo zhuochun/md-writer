@@ -10,6 +10,10 @@
           'command': 'md-writer:new-post'
         }
         {
+          'label': 'Add New Draft',
+          'command': 'md-writer:new-draft'
+        }
+        {
           'label': 'Manage Post Tags',
           'command': 'md-writer:manage-post-tags'
         }

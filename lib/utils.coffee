@@ -96,6 +96,9 @@ parseReferenceLink = (input, content) ->
 
 regexpEscape = (s) -> s and s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
+dashlize = (str) ->
+  str.trim().toLowerCase().replace(/[^-\w\s]|_/g, "").replace(/\s/g,"-")
+
 module.exports =
   getJSON: getJSON
   getPostsDir: getPostsDir
@@ -114,3 +117,4 @@ module.exports =
   isReferenceDefinition: isReferenceDefinition
   parseReferenceLink: parseReferenceLink
   regexpEscape: regexpEscape
+  dashlize: dashlize

@@ -2,6 +2,7 @@ module.exports =
   configDefaults:
     siteLocalDir: "example.github.io/"
     siteLinkPath: "example.github.io/_link.cson"
+    siteDraftsDir: "_drafts/"
     sitePostsDir: "_posts/{year}/"
     siteUrl: "http://example.github.io/"
     urlForTags: "http://example.github.io/assets/tags.json"
@@ -11,7 +12,8 @@ module.exports =
 
   activate: (state) ->
     # general
-    @registerCommand "new-post", "./new-post-view"
+    ["draft", "post"].forEach (file) =>
+      @registerCommand "new-#{file}", "./new-#{file}-view"
 
     # front-matter
     ["tags", "categories"].forEach (attr) =>

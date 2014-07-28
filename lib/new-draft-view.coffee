@@ -4,27 +4,19 @@ path = require "path"
 fs = require "fs-plus"
 
 module.exports =
-class NewPostView extends View
+class NewDraftView extends View
   previouslyFocusedElement: null
 
   @content: ->
     @div class: "md-writer overlay from-top", =>
-      @label "Add New Post", class: "icon icon-file-add"
-      @div =>
-        @label "Directory", class: "message"
-        @subview "pathEditor", new EditorView(mini: true)
-        @label "Date", class: "message"
-        @subview "dateEditor", new EditorView(mini: true)
-        @label "Title", class: "message"
-        @subview "titleEditor", new EditorView(mini: true)
+      @label "Add New Draft", class: "icon icon-file-add"
+      @label "Title", class: "message"
+      @subview "titleEditor", new EditorView(mini: true)
       @p class: "message", outlet: "message"
       @p class: "error", outlet: "error"
 
   initialize: ->
     @titleEditor.hiddenInput.on 'keyup', => @updatePath()
-    @pathEditor.hiddenInput.on 'keyup', => @updatePath()
-    @dateEditor.hiddenInput.on 'keyup', => @updatePath()
-
     @on "core:confirm", => @createPost()
     @on "core:cancel", => @detach()
 
@@ -34,22 +26,19 @@ class NewPostView extends View
     super
 
   updatePath: ->
-    @message.text "Create Post: #{@getPostPath()}"
+    @message.text "Create Draft: #{@getPostPath()}"
 
   display: ->
     @previouslyFocusedElement = $(':focus')
     atom.workspaceView.append(this)
     @titleEditor.focus()
-    @dateEditor.setText(utils.getDateStr())
-    @pathEditor.setText(utils.getPostsDir(
-      atom.config.get("md-writer.sitePostsDir")))
 
   createPost: () ->
     try
       post = @getFullPath()
 
       if fs.existsSync(post)
-        @error.text("Post #{@getFullPath()} already exists!")
+        @error.text("Draft #{@getFullPath()} already exists!")
       else
         fs.writeFileSync(post, @generateFrontMatters())
 
@@ -68,19 +57,19 @@ class NewPostView extends View
     return path.join(localDir, @getPostPath())
 
   getPostPath: ->
-    return path.join(@pathEditor.getText(), @getFileName())
+    draftsDir = atom.config.get("md-writer.siteDraftsDir")
+    return path.join(draftsDir, @getFileName())
 
   getFileName: ->
-    date = @dateEditor.getText()
-    title = utils.dashlize(@titleEditor.getText())
+    title = utils.dashlize(@titleEditor.getText() || 'draft')
     extension = atom.config.get("md-writer.fileExtension")
-    return "#{date}-#{title}#{extension}"
+    return "#{title}#{extension}"
 
   generateFrontMatters: ->
     """
 ---
 layout: post
 title: '#{@titleEditor.getText()}'
-date: '#{@dateEditor.getText()} #{utils.getTimeStr()}'
+date: '#{utils.getDateStr()} #{utils.getTimeStr()}'
 ---
     """
