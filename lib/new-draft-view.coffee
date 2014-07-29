@@ -61,7 +61,7 @@ class NewDraftView extends View
     return path.join(draftsDir, @getFileName())
 
   getFileName: ->
-    title = utils.dashlize(@titleEditor.getText() || 'draft')
+    title = utils.dashlize(@titleEditor.getText() || "new draft")
     extension = atom.config.get("markdown-writer.fileExtension")
     return "#{title}#{extension}"
 
