@@ -88,8 +88,9 @@ class AddLinkView extends View
 
   updateSearch: ->
     return unless @posts
-    query = @searchEditor.getText().trim()
-    results = @posts.filter (post) -> query and post.title.contains(query)
+    query = @searchEditor.getText().trim().toLowerCase()
+    results = @posts.filter (post) ->
+      query and post.title.toLowerCase().contains(query)
     results = results.map (post) ->
       "<li data-url='#{post.url}'>#{post.title}</li>"
     @searchResult.empty().append(results.join(""))
