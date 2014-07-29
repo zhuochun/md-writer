@@ -46,7 +46,11 @@ class PublishDraft
     return path.join(localDir, postsDir)
 
   getPostName: ->
-    prefix = utils.getDateStr()
-    filename = utils.dashlize(@frontMatter.title || "new post")
+    date = utils.getDateStr()
+    title = @getPostTitle()
     extension = atom.config.get("markdown-writer.fileExtension")
-    return "#{prefix}-#{filename}#{extension}"
+    return "#{date}-#{title}#{extension}"
+
+  getPostTitle: ->
+    utils.dashlize(@frontMatter.title) or
+    path.basename(@draftPath, atom.config.get("markdown-writer.fileExtension"))
