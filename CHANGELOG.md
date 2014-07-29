@@ -37,3 +37,9 @@
 
 * Improve tags/categories update
 * Fix reference link insertion position
+
+## 0.5.0
+
+* Make sure package name is CORRECT! (**Require re-install**)
+* Create new draft dialog
+* Publish draft

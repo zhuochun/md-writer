@@ -2,14 +2,20 @@
 
 Using [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](http://jekyllrb.com/) or static blogs.
 
+> NOTICE: Due to an earlier package name change, there were errors on getting the configurations. **Please re-install the package if you installed before v0.5.0**.
+
 ## Features
 
 ![Insert Link](http://i.imgur.com/F9dLWsH.png)
 
 - Dialog to **create new post**.
-  In Command Palette (`shift-cmd-P`), type `Md Writer: New Post`.
+  In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Post`.
+- Dialog to **create new draft**.
+  In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Draft`.
+- **Publish draft** that move a post from `_drafts` to `_posts`.
+  In Command Palette (`shift-cmd-P`), type `Markdown Writer: Publish Draft`.
 - Dialog to **manage tags/categories in front matter** with selections.
-  In Command Palette (`shift-cmd-P`), type `Md Writer: Manage Post Tags/Categories`
+  In Command Palette (`shift-cmd-P`), type `Markdown Writer: Manage Post Tags/Categories`
 - Dialog to **insert link (`cmd-k`) and automatically link to the text next time** (my favorite feature from Windows Live Writer).
   - Insert inline link by default
   - Insert reference link if title is specified
