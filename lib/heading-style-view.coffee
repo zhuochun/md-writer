@@ -15,7 +15,7 @@ class HeadingStyleView extends View
   previouslyFocusedElement: null
 
   @content: ->
-    @div class: "empty"
+    @div class: "markdown-writer empty"
 
   initialize: (style) ->
     @style = styles[style]
