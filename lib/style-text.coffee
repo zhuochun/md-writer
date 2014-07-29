@@ -1,4 +1,3 @@
-{$, View} = require "atom"
 utils = require "./utils"
 
 # supported styles
@@ -9,23 +8,16 @@ styles =
   strikethrough: before: "~~", after: "~~"
 
 module.exports =
-class TextStyleView extends View
+class StyleText
   editor: null
   style: null
-  previouslyFocusedElement: null
 
-  @content: ->
-    @div class: "markdown-writer empty"
-
-  initialize: (style) ->
+  constructor: (style) ->
     @style = styles[style]
 
   display: ->
-    @previouslyFocusedElement = $(':focus')
     @editor = atom.workspace.getActiveEditor()
-
-    text = @editor.getSelectedText()
-    if text
+    if text = @editor.getSelectedText()
       @toggleStyle(text)
     else
       @insertEmptyStyle()
@@ -61,8 +53,3 @@ class TextStyleView extends View
     #{before}(.*?)#{after} # the pattern must appear once
     (.*)$ # random text at end
     ///gm
-
-  detach: ->
-    return unless @hasParent()
-    @previouslyFocusedElement?.focus()
-    super

@@ -1,4 +1,3 @@
-{$, View} = require "atom"
 utils = require "./utils"
 
 styles =
@@ -9,23 +8,16 @@ styles =
   h5: before: "##### ", after: ""
 
 module.exports =
-class HeadingStyleView extends View
+class StyleHeading
   editor: null
   style: null
-  previouslyFocusedElement: null
 
-  @content: ->
-    @div class: "markdown-writer empty"
-
-  initialize: (style) ->
+  constructor: (style) ->
     @style = styles[style]
 
   display: ->
-    @previouslyFocusedElement = $(':focus')
     @editor = atom.workspace.getActiveEditor()
-
-    line = @getLine()
-    if line
+    if line = @getLine()
       @toggleStyle(line)
     else
       @insertEmptyStyle()
@@ -61,8 +53,3 @@ class HeadingStyleView extends View
     before = utils.regexpEscape(@style.before)
     after = utils.regexpEscape(@style.after)
     /// ^#{before} (.+?) #{after}$ ///
-
-  detach: ->
-    return unless @hasParent()
-    @previouslyFocusedElement?.focus()
-    super
