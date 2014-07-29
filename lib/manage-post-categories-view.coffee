@@ -14,7 +14,7 @@ class ManagePostCategoriesView extends View
   previouslyFocusedElement: null
 
   @content: ->
-    @div class: "md-writer md-writer-selection overlay from-top", =>
+    @div class: "markdown-writer markdown-writer-selection overlay from-top", =>
       @label "Manage Post Categories", class: "icon icon-book"
       @p class: "error", outlet: "error"
       @subview "categoriesEditor", new EditorView(mini: true)
@@ -63,7 +63,7 @@ class ManagePostCategoriesView extends View
     @categoriesEditor.getText().split(/\s*,\s*/).filter((c) -> !!c.trim())
 
   fetchCategories: ->
-    uri = atom.config.get("md-writer.urlForCategories")
+    uri = atom.config.get("markdown-writer.urlForCategories")
     succeed = (body) =>
       @categories = body.categories
       @displayCategories(@categories)

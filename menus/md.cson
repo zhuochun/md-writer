@@ -7,55 +7,55 @@
       'submenu': [
         {
           'label': 'Add New Post',
-          'command': 'md-writer:new-post'
+          'command': 'markdown-writer:new-post'
         }
         {
           'label': 'Add New Draft',
-          'command': 'md-writer:new-draft'
+          'command': 'markdown-writer:new-draft'
         }
         {
           'label': 'Manage Post Tags',
-          'command': 'md-writer:manage-post-tags'
+          'command': 'markdown-writer:manage-post-tags'
         }
         {
           'label': 'Manage Post Categories',
-          'command': 'md-writer:manage-post-categories'
+          'command': 'markdown-writer:manage-post-categories'
         }
         {
           'label': 'Insert Link',
-          'command': 'md-writer:insert-link'
+          'command': 'markdown-writer:insert-link'
         }
         {
           'label': 'Toggle Code Text',
-          'command': 'md-writer:toggle-code-text'
+          'command': 'markdown-writer:toggle-code-text'
         }
         {
           'label': 'Toggle Bold Text',
-          'command': 'md-writer:toggle-bold-text'
+          'command': 'markdown-writer:toggle-bold-text'
         }
         {
           'label': 'Toggle Italic Text',
-          'command': 'md-writer:toggle-italic-text'
+          'command': 'markdown-writer:toggle-italic-text'
         }
         {
           'label': 'Toggle Strikethrough Text',
-          'command': 'md-writer:toggle-strikethrough-text'
+          'command': 'markdown-writer:toggle-strikethrough-text'
         }
         {
           'label': 'Toggle Heading 1'
-          'command': 'md-writer:toggle-h1'
+          'command': 'markdown-writer:toggle-h1'
         }
         {
           'label': 'Toggle Heading 2'
-          'command': 'md-writer:toggle-h2'
+          'command': 'markdown-writer:toggle-h2'
         }
         {
           'label': 'Toggle Heading 3'
-          'command': 'md-writer:toggle-h3'
+          'command': 'markdown-writer:toggle-h3'
         }
         {
           'label': 'Toggle Heading 4'
-          'command': 'md-writer:toggle-h4'
+          'command': 'markdown-writer:toggle-h4'
         }
       ]
     ]

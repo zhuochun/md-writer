@@ -13,7 +13,7 @@ class AddLinkView extends View
   previouslyFocusedElement: null
 
   @content: ->
-    @div class: "md-writer md-writer-dialog overlay from-top", =>
+    @div class: "markdown-writer markdown-writer-dialog overlay from-top", =>
       @label "Create Link", class: "icon icon-link"
       @div =>
         @label "Text to be displayed", class: "message"
@@ -28,7 +28,7 @@ class AddLinkView extends View
       @div outlet: "searchBox", =>
         @label "Search Posts", class: "icon icon-search"
         @subview "searchEditor", new EditorView(mini: true)
-        @ul class: "md-writer-list", outlet: "searchResult"
+        @ul class: "markdown-writer-list", outlet: "searchResult"
 
   initialize: ->
     @fetchPosts()
@@ -189,10 +189,10 @@ class AddLinkView extends View
       console.log(error.message)
 
   getSavedLinksPath: ->
-    atom.project.resolve(atom.config.get("md-writer.siteLinkPath"))
+    atom.project.resolve(atom.config.get("markdown-writer.siteLinkPath"))
 
   fetchPosts: ->
-    uri = atom.config.get("md-writer.urlForPosts")
+    uri = atom.config.get("markdown-writer.urlForPosts")
     succeed = (body) =>
       @searchBox.show()
       @posts = body.posts

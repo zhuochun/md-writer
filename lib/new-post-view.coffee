@@ -8,7 +8,7 @@ class NewPostView extends View
   previouslyFocusedElement: null
 
   @content: ->
-    @div class: "md-writer overlay from-top", =>
+    @div class: "markdown-writer overlay from-top", =>
       @label "Add New Post", class: "icon icon-file-add"
       @div =>
         @label "Directory", class: "message"
@@ -42,7 +42,7 @@ class NewPostView extends View
     @titleEditor.focus()
     @dateEditor.setText(utils.getDateStr())
     @pathEditor.setText(utils.getPostsDir(
-      atom.config.get("md-writer.sitePostsDir")))
+      atom.config.get("markdown-writer.sitePostsDir")))
 
   createPost: () ->
     try
@@ -53,7 +53,7 @@ class NewPostView extends View
       else
         fs.writeFileSync(post, @generateFrontMatters())
 
-        rootDir = atom.config.get("md-writer.siteLocalDir")
+        rootDir = atom.config.get("markdown-writer.siteLocalDir")
         if atom.project.path == rootDir
           atom.workspaceView.open(post)
         else
@@ -64,7 +64,7 @@ class NewPostView extends View
       @error.text("#{error.message}")
 
   getFullPath: ->
-    localDir = atom.config.get("md-writer.siteLocalDir")
+    localDir = atom.config.get("markdown-writer.siteLocalDir")
     return path.join(localDir, @getPostPath())
 
   getPostPath: ->
@@ -73,7 +73,7 @@ class NewPostView extends View
   getFileName: ->
     date = @dateEditor.getText()
     title = utils.dashlize(@titleEditor.getText())
-    extension = atom.config.get("md-writer.fileExtension")
+    extension = atom.config.get("markdown-writer.fileExtension")
     return "#{date}-#{title}#{extension}"
 
   generateFrontMatters: ->

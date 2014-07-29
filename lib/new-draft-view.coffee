@@ -8,7 +8,7 @@ class NewDraftView extends View
   previouslyFocusedElement: null
 
   @content: ->
-    @div class: "md-writer overlay from-top", =>
+    @div class: "markdown-writer overlay from-top", =>
       @label "Add New Draft", class: "icon icon-file-add"
       @label "Title", class: "message"
       @subview "titleEditor", new EditorView(mini: true)
@@ -42,7 +42,7 @@ class NewDraftView extends View
       else
         fs.writeFileSync(post, @generateFrontMatters())
 
-        rootDir = atom.config.get("md-writer.siteLocalDir")
+        rootDir = atom.config.get("markdown-writer.siteLocalDir")
         if atom.project.path == rootDir
           atom.workspaceView.open(post)
         else
@@ -53,16 +53,16 @@ class NewDraftView extends View
       @error.text("#{error.message}")
 
   getFullPath: ->
-    localDir = atom.config.get("md-writer.siteLocalDir")
+    localDir = atom.config.get("markdown-writer.siteLocalDir")
     return path.join(localDir, @getPostPath())
 
   getPostPath: ->
-    draftsDir = atom.config.get("md-writer.siteDraftsDir")
+    draftsDir = atom.config.get("markdown-writer.siteDraftsDir")
     return path.join(draftsDir, @getFileName())
 
   getFileName: ->
     title = utils.dashlize(@titleEditor.getText() || 'draft')
-    extension = atom.config.get("md-writer.fileExtension")
+    extension = atom.config.get("markdown-writer.fileExtension")
     return "#{title}#{extension}"
 
   generateFrontMatters: ->

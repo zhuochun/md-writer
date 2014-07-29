@@ -19,7 +19,7 @@ Using [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll]
 
 ## Setup
 
-Go to `Preferences` page (`cmd-,`), search `md-writer` in packages.
+Go to `Preferences` page (`cmd-,`), search `markdown writer` in packages.
 
 Settings:
 

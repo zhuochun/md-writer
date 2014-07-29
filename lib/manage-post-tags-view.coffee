@@ -9,7 +9,7 @@ class ManagePostTagsView extends View
   previouslyFocusedElement: null
 
   @content: ->
-    @div class: "md-writer md-writer-selection overlay from-top", =>
+    @div class: "markdown-writer markdown-writer-selection overlay from-top", =>
       @label "Manage Post Tags", class: "icon icon-tag"
       @p class: "error", outlet: "error"
       @subview "tagsEditor", new EditorView(mini: true)
@@ -58,7 +58,7 @@ class ManagePostTagsView extends View
     @tagsEditor.getText().split(/\s*,\s*/).filter((t) -> !!t.trim())
 
   fetchTags: ->
-    uri = atom.config.get("md-writer.urlForTags")
+    uri = atom.config.get("markdown-writer.urlForTags")
     succeed = (body) =>
       @tags = body.tags.map((tag) -> name: tag)
       @rankTags(@tags, @editor.getText())

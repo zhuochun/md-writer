@@ -1,21 +1,11 @@
-# Keybindings require three things to be fully defined: A selector that is
-# matched against the focused element, the keystroke and the command to
-# execute.
-#
-# Below is a basic keybinding which registers on all platforms by applying to
-# the root workspace element.
-
-# For more detailed documentation see
-# https://atom.io/docs/latest/advanced/keymaps
-
 ".editor":
-  "cmd-k": "md-writer:insert-link"
-  "cmd-i": "md-writer:toggle-italic-text"
-  "cmd-b": "md-writer:toggle-bold-text"
-  "cmd-'": "md-writer:toggle-code-text"
-  "cmd-h": "md-writer:toggle-strikethrough-text"
-  "alt-1": "md-writer:toggle-h1"
-  "alt-2": "md-writer:toggle-h2"
-  "alt-3": "md-writer:toggle-h3"
-  "alt-4": "md-writer:toggle-h4"
-  "alt-5": "md-writer:toggle-h5"
+  "cmd-k": "markdown-writer:insert-link"
+  "cmd-i": "markdown-writer:toggle-italic-text"
+  "cmd-b": "markdown-writer:toggle-bold-text"
+  "cmd-'": "markdown-writer:toggle-code-text"
+  "cmd-h": "markdown-writer:toggle-strikethrough-text"
+  "alt-1": "markdown-writer:toggle-h1"
+  "alt-2": "markdown-writer:toggle-h2"
+  "alt-3": "markdown-writer:toggle-h3"
+  "alt-4": "markdown-writer:toggle-h4"
+  "alt-5": "markdown-writer:toggle-h5"

@@ -31,7 +31,7 @@ module.exports =
       @registerCommand "insert-#{media}", "./insert-#{media}-view"
 
   registerCommand: (cmd, view, opts = {}) ->
-    atom.workspaceView.command "md-writer:#{cmd}", ->
+    atom.workspaceView.command "markdown-writer:#{cmd}", ->
       ViewModule = require(view)
       viewInstance = new ViewModule(opts.args)
       viewInstance.display()
