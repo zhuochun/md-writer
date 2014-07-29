@@ -6,6 +6,7 @@
   "activationEvents": [
     "markdown-writer:new-post",
     "markdown-writer:new-draft",
+    "markdown-writer:publish-draft",
     "markdown-writer:insert-link",
     "markdown-writer:toggle-code-text",
     "markdown-writer:toggle-bold-text",

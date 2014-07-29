@@ -11,23 +11,22 @@ getJSON = (uri, succeed, error) ->
     else
       error(err)
 
-getPostsDir = (directory) ->
-  date = getDate()
+getPostsDir = (directory, date) ->
+  date = getDate(date)
   tokens = directory.match(/{(.*?)}/g)
   tokens?.forEach (token) ->
     directory = directory.replace(token, date[token[1...-1]])
   return directory
 
-getDateStr = ->
-  date = getDate()
+getDateStr = (date)->
+  date = getDate(date)
   return "#{date.year}-#{date.month}-#{date.day}"
 
-getTimeStr = ->
-  date = getDate()
+getTimeStr = (date) ->
+  date = getDate(date)
   return "#{date.hour}:#{date.minute}"
 
-getDate = ->
-  date = new Date()
+getDate = (date = new Date()) ->
   year: "" + date.getFullYear()
   month: ("0" + (date.getMonth() + 1)).slice(-2)
   day: ("0" + date.getDate()).slice(-2)

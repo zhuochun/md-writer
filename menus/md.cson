@@ -6,12 +6,16 @@
       'label': 'MarkDown Writer'
       'submenu': [
         {
+          'label': 'Add New Draft',
+          'command': 'markdown-writer:new-draft'
+        }
+        {
           'label': 'Add New Post',
           'command': 'markdown-writer:new-post'
         }
         {
-          'label': 'Add New Draft',
-          'command': 'markdown-writer:new-draft'
+          'label': 'Publish Draft',
+          'command': 'markdown-writer:publish-draft'
         }
         {
           'label': 'Manage Post Tags',

@@ -14,6 +14,7 @@ module.exports =
     # general
     ["draft", "post"].forEach (file) =>
       @registerCommand "new-#{file}", "./new-#{file}-view"
+    @registerCommand "publish-draft", "./publish-draft"
 
     # front-matter
     ["tags", "categories"].forEach (attr) =>
