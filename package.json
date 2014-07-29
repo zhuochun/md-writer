@@ -1,7 +1,7 @@
 {
   "name": "markdown-writer",
   "main": "./lib/main",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "Atom as a Markdown blogging editor",
   "activationEvents": [
     "markdown-writer:new-post",
