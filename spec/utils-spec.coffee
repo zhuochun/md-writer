@@ -110,3 +110,5 @@ key2:
     expect(utils.dasherize(fixture)).toEqual("hello-world")
     fixture = "hello-world"
     expect(utils.dasherize(fixture)).toEqual("hello-world")
+    fixture = " hello     World"
+    expect(utils.dasherize(fixture)).toEqual("hello-world")
