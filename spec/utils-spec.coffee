@@ -105,8 +105,8 @@ key2:
     result = utils.getFrontMatterText(key1: "val1", key2: ["v1", "v2"])
     expect(result).toEqual(expected)
 
-  it "dashlize title", ->
+  it "dasherize title", ->
     fixture = "hello world!"
-    expect(utils.dashlize(fixture)).toEqual("hello-world")
+    expect(utils.dasherize(fixture)).toEqual("hello-world")
     fixture = "hello-world"
-    expect(utils.dashlize(fixture)).toEqual("hello-world")
+    expect(utils.dasherize(fixture)).toEqual("hello-world")

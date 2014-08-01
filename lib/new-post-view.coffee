@@ -72,7 +72,7 @@ class NewPostView extends View
 
   getFileName: ->
     date = @dateEditor.getText()
-    title = utils.dashlize(@titleEditor.getText() || "new post")
+    title = utils.dasherize(@titleEditor.getText() || "new post")
     extension = atom.config.get("markdown-writer.fileExtension")
     return "#{date}-#{title}#{extension}"
 

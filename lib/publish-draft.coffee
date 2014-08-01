@@ -52,5 +52,5 @@ class PublishDraft
     return "#{date}-#{title}#{extension}"
 
   getPostTitle: ->
-    utils.dashlize(@frontMatter.title) or
+    utils.dasherize(@frontMatter.title) or
     path.basename(@draftPath, atom.config.get("markdown-writer.fileExtension"))
