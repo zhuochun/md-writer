@@ -9,6 +9,11 @@ module.exports =
     urlForPosts: "http://example.github.io/assets/posts.json"
     urlForCategories: "http://example.github.io/assets/categories.json"
     fileExtension: ".markdown"
+    grammars: [
+      'source.gfm'
+      'text.plain'
+      'text.plain.null-grammar'
+    ]
 
   activate: (state) ->
     # general
@@ -31,11 +36,17 @@ module.exports =
     ["link"].forEach (media) =>
       @registerCommand "insert-#{media}", "./insert-#{media}-view"
 
-  registerCommand: (cmd, view, opts = {}) ->
+  registerCommand: (cmd, path, opts = {}) ->
     atom.workspaceView.command "markdown-writer:#{cmd}", ->
-      ViewModule = require(view)
-      viewInstance = new ViewModule(opts.args)
-      viewInstance.display()
+      editor = atom.workspace.getActiveEditor()
+      return unless editor?
+
+      grammars = atom.config.get('markdown-writer.grammars') ? []
+      return unless editor.getGrammar().scopeName in grammars
+
+      cmdModule = require(path)
+      cmdInstance = new cmdModule(opts.args)
+      cmdInstance.display()
 
   deactivate: ->
 
