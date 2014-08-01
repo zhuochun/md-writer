@@ -12,7 +12,7 @@ Using [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll]
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Post`.
 - Dialog to **create new draft**.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Draft`.
-- **Publish draft** that move a post from `_drafts` to `_posts`.
+- **Publish draft** moves draft to `_posts`. It updates `date` in front matter and rename the post using the `title` in front matter.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: Publish Draft`.
 - Dialog to **manage tags/categories in front matter** with selections.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: Manage Post Tags/Categories`
@@ -65,8 +65,9 @@ I am already using it when I blog. New features will be added along the way.
 ### Planning
 
 - Insert image
+- Insert footnote
 - Insert table
-- Support multiple Jekyll directory
+- Support multiple Jekyll directories
 
 View [CHANGELOG](https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md).
 
@@ -74,5 +75,5 @@ Submit Issues/Pull Requests at [GitHub](https://github.com/zhuochun/md-writer/).
 
 ## Tips
 
-- Jumping among your posts quickly: `Cmd-t` or `Cmd-p`.
+- Jumping among your posts: `Cmd-t` or `Cmd-p`.
 - Markdown Preview: [markdown-preview](https://atom.io/packages/markdown-preview) package.

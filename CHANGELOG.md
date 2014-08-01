@@ -43,3 +43,9 @@
 * Make sure package name is CORRECT! (**Require re-install**)
 * Create new draft dialog
 * Publish draft
+
+## 0.5.1
+
+* Fix consecutive spaces in title
+* Restrict commands in Markdown/Text only
+* Cache fetched posts in memory
