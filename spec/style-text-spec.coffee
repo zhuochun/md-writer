@@ -1,7 +1,7 @@
 {WorkspaceView} = require "atom"
-TextStyleView = require "../lib/text-style-view"
+TextStyleView = require "../lib/style-text"
 
-describe "TextStyleView", ->
+describe "StyleText", ->
   beforeEach ->
     atom.workspaceView = new WorkspaceView
     atom.workspace = atom.workspaceView.model
@@ -39,11 +39,6 @@ describe "TextStyleView", ->
   it "remove multiple styles from text", ->
     view = new TextStyleView("italic")
     fixture = "_italic_ yah _text_"
-    expect(view.removeStyle(fixture)).toEqual("italic yah text")
-
-  xit "remove multiple invalid styles from text", ->
-    view = new TextStyleView("italic")
-    fixture = "_italic_ _yah_ _text_" # not correctly formated
     expect(view.removeStyle(fixture)).toEqual("italic yah text")
 
   it "add a style to text", ->

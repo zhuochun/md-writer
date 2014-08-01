@@ -1,7 +1,7 @@
 {WorkspaceView} = require "atom"
 ManagePostTagsView = require "../lib/manage-post-tags-view"
 
-describe "NewPostView", ->
+describe "FrontMatterView", ->
   beforeEach ->
     atom.workspaceView = new WorkspaceView
     atom.workspace = atom.workspaceView.model
