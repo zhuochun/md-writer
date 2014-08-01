@@ -4,10 +4,11 @@ CSON = require "season"
 path = require "path"
 fs = require "fs-plus"
 
+posts = null # to cache it
+
 module.exports =
 class AddLinkView extends View
   editor: null
-  posts: null
   links: null
   referenceId: false
   previouslyFocusedElement: null
@@ -38,7 +39,7 @@ class AddLinkView extends View
     @on "core:cancel", => @detach()
 
   handleEvents: ->
-    @searchEditor.hiddenInput.on "keyup", => @updateSearch()
+    @searchEditor.hiddenInput.on "keyup", => @updateSearch() if posts
     @searchResult.on "click", "li", (e) => @useSearchResult(e)
 
   onConfirm: ->
@@ -87,9 +88,8 @@ class AddLinkView extends View
       @setLink(selection, "", "")
 
   updateSearch: ->
-    return unless @posts
     query = @searchEditor.getText().trim().toLowerCase()
-    results = @posts.filter (post) ->
+    results = posts.filter (post) ->
       query and post.title.toLowerCase().contains(query)
     results = results.map (post) ->
       "<li data-url='#{post.url}'>#{post.title}</li>"
@@ -193,9 +193,13 @@ class AddLinkView extends View
     atom.project.resolve(atom.config.get("markdown-writer.siteLinkPath"))
 
   fetchPosts: ->
-    uri = atom.config.get("markdown-writer.urlForPosts")
-    succeed = (body) =>
-      @searchBox.show()
-      @posts = body.posts
-    error = (err) => @searchBox.hide()
-    utils.getJSON(uri, succeed, error)
+    if posts
+      @searchBox.show() if posts.length > 0
+    else
+      uri = atom.config.get("markdown-writer.urlForPosts")
+      succeed = (body) =>
+        posts = body.posts
+        @searchBox.show() if posts.length > 0
+      error = (err) =>
+        @searchBox.hide()
+      utils.getJSON(uri, succeed, error)
