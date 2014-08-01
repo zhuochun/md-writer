@@ -18,7 +18,7 @@ module.exports =
   activate: (state) ->
     # general
     ["draft", "post"].forEach (file) =>
-      @registerCommand "new-#{file}", "./new-#{file}-view"
+      @registerCommand "new-#{file}", "./new-#{file}-view", optOutGrammars: true
     @registerCommand "publish-draft", "./publish-draft"
 
     # front-matter
@@ -36,16 +36,17 @@ module.exports =
     ["link"].forEach (media) =>
       @registerCommand "insert-#{media}", "./insert-#{media}-view"
 
-  registerCommand: (cmd, path, opts = {}) ->
+  registerCommand: (cmd, path, options = {}) ->
     atom.workspaceView.command "markdown-writer:#{cmd}", ->
-      editor = atom.workspace.getActiveEditor()
-      return unless editor?
+      unless options.optOutGrammars
+        editor = atom.workspace.getActiveEditor()
+        return unless editor?
 
-      grammars = atom.config.get('markdown-writer.grammars') ? []
-      return unless editor.getGrammar().scopeName in grammars
+        grammars = atom.config.get('markdown-writer.grammars') ? []
+        return unless editor.getGrammar().scopeName in grammars
 
       cmdModule = require(path)
-      cmdInstance = new cmdModule(opts.args)
+      cmdInstance = new cmdModule(options.args)
       cmdInstance.display()
 
   deactivate: ->
