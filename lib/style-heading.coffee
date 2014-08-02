@@ -42,7 +42,7 @@ class StyleHeading
     @getStylePattern().test(text)
 
   addStyle: (text) ->
-    text = /^#*\s?(.+)/.exec(text)[1]
+    text = /^#*\s?(.*)/.exec(text)[1]
     "#{@style.before}#{text}#{@style.after}"
 
   removeStyle: (text) ->
