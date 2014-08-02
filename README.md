@@ -1,20 +1,20 @@
 # Markdown-Writer for Atom
 
-Using [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](http://jekyllrb.com/) or static blogs.
+Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](http://jekyllrb.com/) or static blogs.
 
 > NOTICE: Due to an earlier package name change, there were errors on getting the configurations. **Please re-install the package if you installed before v0.5.0**.
 
-## Features
-
 ![Insert Link](http://i.imgur.com/F9dLWsH.png)
+
+## Features
 
 - Dialog to **create new post**.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Post`.
 - Dialog to **create new draft**.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Draft`.
-- **Publish draft** moves draft to `_posts`. It updates `date` in front matter and rename the post using the `title` in front matter.
+- **Publish draft** moves current draft to `posts` directory. It updates `date` and rename the post using `title` in front matter.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: Publish Draft`.
-- Dialog to **manage tags/categories in front matter** with selections.
+- Dialog to **manage tags/categories in front matter**.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: Manage Post Tags/Categories`
 - Dialog to **insert link (`cmd-k`) and automatically link to the text next time** (my favorite feature from Windows Live Writer).
   - Insert inline link by default
@@ -25,24 +25,39 @@ Using [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll]
 
 ## Setup
 
-Go to `Preferences` page (`cmd-,`), search `markdown writer` in packages.
+You need to setup package to use most of the features.
 
-Settings:
+Go to `Preferences` (`cmd-,`), search `markdown writer` package.
 
-- **fileExtension**: The file extension of post.
-- **siteLinkPath**: The path to a `.cson` file to store all links added for automatic linking next time.
-- **siteLocalDir**: The root directory of your blog/jekyll
-- **sitePostsDir**: The directory of your posts from the root of `localDir`. Default is `_posts/{year}`. You can also use `{year}`, `{month}` and `{day}`.
-- **siteUrl**: The URL of your blog/jekyll. _not in use now_.
-- **urlForTags**: The URL to your tags' `JSON` file. Refer to the next section.
-- **urlForPosts**: The URL to your posts' `JSON` file. Refer to the next section.
-- **urlForCategories**: The URL to your categories' `JSON` file. Refer to the next section.
+### Settings Explained:
+
+- **siteLocalDir**: The root directory of blog/jekyll
+- **siteDraftsDir**: The directory of drafts from the root of `siteLocalDir`. Default is `_draft/`.
+- **sitePostsDir**: The directory of posts from the root of `siteLocalDir`. Default is `_posts/{year}`. You can also use `{year}`, `{month}` and `{day}`.
+- **urlForTags**: The URL to tags `JSON` file. Refer to next section.
+- **urlForPosts**: The URL to posts `JSON` file. Refer to next section.
+- **urlForCategories**: The URL to categories `JSON` file. Refer to next section.
+
+### Advance Settings:
+
+To change these settings, open your Atom config file, find or create `markdown-writer` entry.
+
+- **siteLinkPath**: Path to a `.cson` file that stores all links added for automatic linking next time. Default is `atom-config-directory/markdown-writer-links.cson`.
+- **frontMatter**: String of the front matter generated in new post/draft. You can use `<layout>`, `<title>` and `<date>`. Default is:
+
+```text
+---
+layout: <layout>
+title: "<title>"
+date: "<date>"
+---
+```
 
 ## Populate Tags/Categories/Posts
 
 ![Manage Tags](http://i.imgur.com/amt2m0Y.png)
 
-To populate tags or categories in dialog, you need to provide `JSON` files of the existing tags/categories/posts in your blog and setup them in settings.
+To **manage tags/categories in front matter**, you need to provide `JSON` files that list existing tags/categories/posts in your blog.
 
 The `JSON` files contain following information of your blog:
 
@@ -54,24 +69,20 @@ The `JSON` files contain following information of your blog:
 }
 ```
 
-If you are using Jekyll, [add these scripts](https://gist.github.com/zhuochun/fe127356bcf8c07ae1fb) to your site directory. Upload the generated `JSON` files to your website and update the settings.
+If you are using Jekyll, you can add [these scripts](https://gist.github.com/zhuochun/fe127356bcf8c07ae1fb) to your Jekyll directory. Upload the generated `JSON` files to website and update the settings.
 
-## Progress
-
-The package is under its early development.
-
-I am already using it when I blog. New features will be added along the way.
-
-### Planning
+### TODOs
 
 - Insert image
-- Insert footnote
 - Insert table
-- Support multiple Jekyll directories
+- Insert footnote
+- Support multiple blog directories
 
-View [CHANGELOG](https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md).
+View [CHANGELOG :notebook_with_decorative_cover:](https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md).
 
-Submit Issues/Pull Requests at [GitHub](https://github.com/zhuochun/md-writer/).
+If you found any bug, please submit an issue [here :octocat:](https://github.com/zhuochun/md-writer/issues).
+
+License in [MIT :unlock:](https://github.com/zhuochun/md-writer/blob/master/LICENSE.md).
 
 ## Tips
 

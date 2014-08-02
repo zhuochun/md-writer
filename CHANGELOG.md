@@ -47,5 +47,11 @@
 ## 0.5.1
 
 * Fix consecutive spaces in title
-* Restrict commands in Markdown/Text only
+* Restrict commands in Markdown/Text
 * Cache fetched posts in memory
+
+## 0.5.2
+
+* Fix add headings on empty line
+* Support customising front matter in new post/draft
+* Clean up default settings
