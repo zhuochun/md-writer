@@ -112,3 +112,8 @@ key2:
     expect(utils.dasherize(fixture)).toEqual("hello-world")
     fixture = " hello     World"
     expect(utils.dasherize(fixture)).toEqual("hello-world")
+
+  it "generate templatet", ->
+    fixture = "Hello <title>! -<from>"
+    expect(utils.template(fixture,
+      title: "world", from: "ZC")).toEqual("Hello world! -ZC")

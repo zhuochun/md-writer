@@ -51,7 +51,7 @@ class NewPostView extends View
       if fs.existsSync(post)
         @error.text("Post #{@getFullPath()} already exists!")
       else
-        fs.writeFileSync(post, @generateFrontMatters())
+        fs.writeFileSync(post, @generateFrontMatter(@getFrontMatter()))
 
         rootDir = atom.config.get("markdown-writer.siteLocalDir")
         if atom.project.path == rootDir
@@ -76,11 +76,18 @@ class NewPostView extends View
     extension = atom.config.get("markdown-writer.fileExtension")
     return "#{date}-#{title}#{extension}"
 
-  generateFrontMatters: ->
-    """
+  getFrontMatter: ->
+    layout: "post"
+    title: @titleEditor.getText()
+    date: "#{@dateEditor.getText()} #{utils.getTimeStr()}"
+
+  generateFrontMatter: (data) ->
+    frontMatter = atom.config.get("markdown-writer.frontMatter") || """
 ---
-layout: post
-title: '#{@titleEditor.getText()}'
-date: '#{@dateEditor.getText()} #{utils.getTimeStr()}'
+layout: <layout>
+title: "<title>"
+date: "<date>"
 ---
     """
+    
+    return utils.template(frontMatter, data)

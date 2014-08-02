@@ -8,5 +8,25 @@ describe "NewPostView", ->
 
     @view = new NewPostView({})
 
-  it "sound correct", ->
-    expect(true).toBe(true)
+  it "generate front matter", ->
+    frontMatter =
+      layout: "test"
+      title: "the actual title"
+      date: "2014-11-19"
+
+    expect(@view.generateFrontMatter(frontMatter)).toEqual """
+---
+layout: test
+title: "the actual title"
+date: "2014-11-19"
+---
+"""
+
+  it "generate front matter from setting", ->
+    frontMatter =
+      layout: "test"
+      title: "the actual title"
+      date: "2014-11-19"
+    atom.config.set("markdown-writer.frontMatter", "title: <title>")
+    expect(@view.generateFrontMatter(frontMatter))
+      .toEqual("title: the actual title")

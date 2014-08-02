@@ -13,7 +13,8 @@ describe "FrontMatterView", ->
     tags = ["ab", "cd", "ef", "ij"].map (t) -> name: t
     @view.rankTags(tags, fixture)
     expect(tags).toEqual [
-      {name:"ab", count:3}
-      {name:"ef", count:2}
-      {name:"cd", count:1}
-      {name:"ij", count:0}]
+      { name:"ab", count:3 }
+      { name:"ef", count:2 }
+      { name:"cd", count:1 }
+      { name:"ij", count:0 }
+    ]

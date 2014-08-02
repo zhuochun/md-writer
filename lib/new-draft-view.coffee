@@ -40,7 +40,7 @@ class NewDraftView extends View
       if fs.existsSync(post)
         @error.text("Draft #{@getFullPath()} already exists!")
       else
-        fs.writeFileSync(post, @generateFrontMatters())
+        fs.writeFileSync(post, @generateFrontMatter(@getFrontMatter()))
 
         rootDir = atom.config.get("markdown-writer.siteLocalDir")
         if atom.project.path == rootDir
@@ -65,11 +65,18 @@ class NewDraftView extends View
     extension = atom.config.get("markdown-writer.fileExtension")
     return "#{title}#{extension}"
 
-  generateFrontMatters: ->
+  getFrontMatter: ->
+    layout: "post"
+    title: @titleEditor.getText()
+    date: "#{utils.getDateStr()} #{utils.getTimeStr()}"
+
+  generateFrontMatter: (data) ->
+    frontMatter = atom.config.get("markdown-writer.frontMatter") || """
+  ---
+  layout: <layout>
+  title: "<title>"
+  date: "<date>"
+  ---
     """
----
-layout: post
-title: '#{@titleEditor.getText()}'
-date: '#{utils.getDateStr()} #{utils.getTimeStr()}'
----
-    """
+
+    return utils.template(frontMatter, data)
