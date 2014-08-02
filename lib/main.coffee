@@ -1,19 +1,12 @@
 module.exports =
   configDefaults:
-    siteLocalDir: "example.github.io/"
-    siteLinkPath: "example.github.io/_link.cson"
+    siteLocalDir: "/GitHub/example.github.io/"
     siteDraftsDir: "_drafts/"
     sitePostsDir: "_posts/{year}/"
-    siteUrl: "http://example.github.io/"
     urlForTags: "http://example.github.io/assets/tags.json"
     urlForPosts: "http://example.github.io/assets/posts.json"
     urlForCategories: "http://example.github.io/assets/categories.json"
     fileExtension: ".markdown"
-    grammars: [
-      'source.gfm'
-      'text.plain'
-      'text.plain.null-grammar'
-    ]
 
   activate: (state) ->
     # general
@@ -42,7 +35,11 @@ module.exports =
         editor = atom.workspace.getActiveEditor()
         return unless editor?
 
-        grammars = atom.config.get('markdown-writer.grammars') ? []
+        grammars = atom.config.get('markdown-writer.grammars') || [
+          'source.gfm'
+          'text.plain'
+          'text.plain.null-grammar'
+        ]
         return unless editor.getGrammar().scopeName in grammars
 
       cmdModule = require(path)

@@ -190,7 +190,8 @@ class AddLinkView extends View
       console.log(error.message)
 
   getSavedLinksPath: ->
-    atom.project.resolve(atom.config.get("markdown-writer.siteLinkPath"))
+    atom.config.get("markdown-writer.siteLinkPath") ||
+      path.join(atom.getConfigDirPath(), "markdown-writer-links.cson")
 
   fetchPosts: ->
     if posts
