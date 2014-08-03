@@ -121,8 +121,8 @@ class AddLinkView extends View
 
     # insert reference
     position = @editor.getCursorBufferPosition()
-    @editor.insertNewlineBelow()
-    @editor.moveCursorDown()
+    @editor.moveCursorToBeginningOfNextParagraph()
+    @editor.insertNewline()
     @editor.insertText("[#{id}]: #{url} \"#{title}\"")
     @editor.moveCursorDown()
     line = @editor.selectLine()[0].getText().trim()
