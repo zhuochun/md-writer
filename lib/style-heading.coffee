@@ -52,4 +52,4 @@ class StyleHeading
   getStylePattern: ->
     before = utils.regexpEscape(@style.before)
     after = utils.regexpEscape(@style.after)
-    /// ^#{before} (.+?) #{after}$ ///
+    /// ^#{before} (.*?) #{after}$ ///
