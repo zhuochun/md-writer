@@ -152,7 +152,10 @@ class AddLinkView extends View
     @editor.buffer.scan /// ^ \[#{@referenceId}\]: \ + ///, (match) =>
       @editor.setSelectedBufferRange(match.range)
       @editor.deleteLine()
-      @editor.deleteLine() unless @editor.selectToEndOfLine()[0].getText()
+      emptyLine = !@editor.selectLine()[0].getText().trim()
+      @editor.moveCursorUp()
+      emptyLineAbove = !@editor.selectLine()[0].getText().trim()
+      @editor.deleteLine() if emptyLine and emptyLineAbove
     @editor.setCursorBufferPosition(position)
     @editor.buffer.commitTransaction()
 
