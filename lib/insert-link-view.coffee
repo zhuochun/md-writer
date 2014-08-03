@@ -55,7 +55,6 @@ class AddLinkView extends View
     @editor = atom.workspace.getActiveEditor()
     @setLinkFromSelection()
     atom.workspaceView.append(this)
-    @searchBox.hide()
     if @textEditor.getText()
       @urlEditor.getEditor().selectAll()
       @urlEditor.focus()
@@ -195,7 +194,7 @@ class AddLinkView extends View
 
   fetchPosts: ->
     if posts
-      @searchBox.show() if posts.length > 0
+      @searchBox.hide() unless posts.length > 0
     else
       uri = atom.config.get("markdown-writer.urlForPosts")
       succeed = (body) =>
