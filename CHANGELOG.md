@@ -55,3 +55,8 @@
 * Fix add headings on empty line
 * Support customising front matter in new post/draft
 * Clean up default settings
+
+## 0.5.3
+
+* Fix toggle empty headings
+* Fix link search box not shown up
