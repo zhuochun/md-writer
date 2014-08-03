@@ -73,12 +73,12 @@ class AddLinkView extends View
     if utils.isInlineLink(selection)
       link = utils.parseInlineLink(selection)
       @setLink(link.text, link.url, link.title)
-      @saveCheckbox.prop("checked", true) unless @isChangedSavedLink(link)
+      @saveCheckbox.prop("checked", true) if @isInSavedLink(link)
     else if utils.isReferenceLink(selection)
       link = utils.parseReferenceLink(selection, @editor.getText())
       @referenceId = link.id
       @setLink(link.text, link.url, link.title)
-      @saveCheckbox.prop("checked", true) unless @isChangedSavedLink(link)
+      @saveCheckbox.prop("checked", true) if @isInSavedLink(link)
     else if @getSavedLink(selection)
       link = @getSavedLink(selection)
       @setLink(selection, link.url, link.title)
@@ -164,15 +164,15 @@ class AddLinkView extends View
   getSavedLink: (text) ->
     @links?[text.toLowerCase()]
 
-  isChangedSavedLink: (link) ->
+  isInSavedLink: (link) ->
     savedLink = @getSavedLink(link.text)
-    savedLink and (savedLink.title != link.title or savedLink.url != link.url)
+    savedLink and savedLink.title == link.title and savedLink.url == link.url
 
   updateSavedLink: (text, title, url) ->
     try
       if @saveCheckbox.prop("checked")
         @links[text.toLowerCase()] = title: title, url: url if url
-      else if not @isChangedSavedLink(text: text, title: title, url: url)
+      else if @isInSavedLink(text: text, title: title, url: url)
         delete @links[text.toLowerCase()]
       CSON.writeFileSync(@getSavedLinksPath(), @links)
     catch error
