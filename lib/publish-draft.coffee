@@ -42,7 +42,7 @@ class PublishDraft
   getPostDir: ->
     localDir = atom.config.get("markdown-writer.siteLocalDir")
     postsDir = atom.config.get("markdown-writer.sitePostsDir")
-    postsDir = utils.getPostsDir(postsDir) # replace tokens
+    postsDir = utils.dirTemplate(postsDir) # replace tokens
     return path.join(localDir, postsDir)
 
   getPostName: ->

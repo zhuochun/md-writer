@@ -2,11 +2,11 @@ utils = require "../lib/utils"
 
 describe "utils", ->
   it "get posts path without token", ->
-    expect(utils.getPostsDir("_posts/")).toEqual("_posts/")
+    expect(utils.dirTemplate("_posts/")).toEqual("_posts/")
 
   it "get posts path with tokens", ->
     date = utils.getDate()
-    result = utils.getPostsDir("_posts/{year}/{month}")
+    result = utils.dirTemplate("_posts/{year}/{month}")
     expect(result).toEqual("_posts/#{date.year}/#{date.month}")
 
   it "get date dashed string", ->

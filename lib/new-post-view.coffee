@@ -41,7 +41,7 @@ class NewPostView extends View
     atom.workspaceView.append(this)
     @titleEditor.focus()
     @dateEditor.setText(utils.getDateStr())
-    @pathEditor.setText(utils.getPostsDir(
+    @pathEditor.setText(utils.dirTemplate(
       atom.config.get("markdown-writer.sitePostsDir")))
 
   createPost: () ->

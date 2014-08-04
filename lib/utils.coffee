@@ -11,9 +11,6 @@ getJSON = (uri, succeed, error) ->
     else
       error(err)
 
-getPostsDir = (directory, date) ->
-  return template(directory, getDate(date), /{(.+?)}/g)
-
 getDateStr = (date)->
   date = getDate(date)
   return "#{date.year}-#{date.month}-#{date.day}"
@@ -94,12 +91,14 @@ regexpEscape = (s) -> s and s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 dasherize = (str) ->
   str.trim().toLowerCase().replace(/[^-\w\s]|_/g, "").replace(/\s+/g,"-")
 
+dirTemplate = (directory, date) ->
+  return template(directory, getDate(date), /{(.+?)}/g)
+
 template = (text, data, matcher = /<(\S+?)>/g) ->
   text.replace matcher, (match, attr) -> data[attr]
 
 module.exports =
   getJSON: getJSON
-  getPostsDir: getPostsDir
   getDate: getDate
   getDateStr: getDateStr
   getTimeStr: getTimeStr
@@ -116,4 +115,5 @@ module.exports =
   parseReferenceLink: parseReferenceLink
   regexpEscape: regexpEscape
   dasherize: dasherize
+  dirTemplate: dirTemplate
   template: template
