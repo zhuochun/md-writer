@@ -7,7 +7,7 @@ fs = require "fs-plus"
 posts = null # to cache it
 
 module.exports =
-class AddLinkView extends View
+class InsertLinkView extends View
   editor: null
   links: null
   referenceId: false
@@ -15,7 +15,7 @@ class AddLinkView extends View
 
   @content: ->
     @div class: "markdown-writer markdown-writer-dialog overlay from-top", =>
-      @label "Create Link", class: "icon icon-link"
+      @label "Insert Link", class: "icon icon-link"
       @div =>
         @label "Text to be displayed", class: "message"
         @subview "textEditor", new EditorView(mini: true)

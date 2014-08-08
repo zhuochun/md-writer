@@ -60,3 +60,9 @@
 
 * Fix toggle empty headings
 * Fix link search box not shown up
+
+## 0.5.4
+
+* Fix auto link check
+* Improve reference link insertion position
+* Fix last reference link removal
