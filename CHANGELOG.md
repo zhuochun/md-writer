@@ -66,3 +66,9 @@
 * Fix auto link check
 * Improve reference link insertion position
 * Fix last reference link removal
+
+## 0.5.5
+
+* Support Hexo frontmatter format
+* Fix single tag/category in frontmatter
+* Add Hexo generator description in README
