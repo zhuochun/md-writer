@@ -2,8 +2,6 @@
 
 Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](http://jekyllrb.com/), [Hexo](http://hexo.io/) and other static blogs.
 
-> NOTICE: Due to an earlier package name change, there were errors on getting the configurations. **Please re-install the package if you installed before v0.5.0**.
-
 ![Insert Link](http://i.imgur.com/F9dLWsH.png)
 
 ## Features
@@ -20,10 +18,15 @@ Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](h
   - Insert inline link by default
   - Insert reference link if title is specified
   - Remove link (and its reference) after URL is deleted
-- Dialog to insert **image**.
+- Dialog to insert **image** with width, height auto-detected.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: Insert Image`
-- **Toggle text styles**: `code` (`cmd-'`), **bold** (`cmd-b`), _italic_ (`cmd-i`) and ~~strikethrough~~ (`cmd-h`).
-- **Toggle headings"**: `alt-[1-5]` to switch among `H1` to `H5`.
+- **Toggle text styles**:
+  - `code` (`cmd-'`)
+  - **bold** (`cmd-b`)
+  - _italic_ (`cmd-i`)
+  - ~~strikethrough~~ (`cmd-h`)
+  - `` ```codeblock``` `` (no default mapping, in Command Palette, type `Markdown Writer: Toggle Codeblock Text`)
+- **Toggle headings**: `alt-[1-5]` to switch among `H1` to `H5`.
 
 ## Setup
 
@@ -42,17 +45,37 @@ Go to `Preferences` (`cmd-,`), search `markdown writer` package.
 
 ### Advance Settings:
 
-To change these settings, open your Atom config file, find or create `markdown-writer` entry.
+To change these settings, open your Atom config file, find `markdown-writer` entry.
 
-- **siteLinkPath**: Path to a `.cson` file that stores all links added for automatic linking next time. Default is `atom-config-directory/markdown-writer-links.cson`.
-- **frontMatter**: String of the front matter generated in new post/draft. You can use `<layout>`, `<title>` and `<date>`. Default is:
+- **siteLinkPath**: Path to a `.cson` file that stores all links added for automatic linking next time.
+  Default uses `markdown-writer-links.cson` in Atom's config directory.
+- **frontMatter**: String of front matter generated in new post/draft.
+- **codeblock**: Define the code block fences. Default uses GitHub's fenced code block.
+- **imageTag**: Define the image tag inserted. Default uses `![alt](img-url)`.
 
-```text
----
-layout: <layout>
-title: "<title>"
-date: "<date>"
----
+This is an example of advance settings configuration:
+
+```coffee
+'markdown-writer':
+  # sync the links in dropbox
+  'siteLinkPath': '/Users/zhuochun/Dropbox/blog/links.cson'
+  # add an author field in front matter
+  'frontMatter': """
+  ---
+  layout: <layout>
+  title: "<title>"
+  author: zhuochun
+  date: "<date>"
+  ---
+  """
+  # use jekyll highlight code block, change this requires to reload plugin
+  'codeblock':
+    'before': '{% highlight %}\n'
+    'after': '\n{% endhighlight %}'
+    'regexBefore': '{% highlight(?: .+)? %}\n'
+    'regexAfter': '\n{% endhighlight %}'
+  # use img html tag
+  'imageTag': '<img alt="<alt>" src="<src>" width="<width>" height="<height>" class="aligncenter" />'
 ```
 
 ## Populate Tags/Categories/Posts
@@ -77,7 +100,6 @@ For **Hexo** users, you can install [hexo-generator-atom-markdown-writer-meta](h
 
 ### TODOs
 
-- Insert image
 - Insert table
 - Insert footnote
 - Support multiple blog directories

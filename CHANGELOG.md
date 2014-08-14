@@ -72,3 +72,8 @@
 * Support Hexo frontmatter format
 * Fix single tag/category in frontmatter
 * Add Hexo generator description in README
+
+## 0.6.0
+
+* Insert image dialog
+* Add toggle code blocks
