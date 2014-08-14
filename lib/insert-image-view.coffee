@@ -5,11 +5,11 @@ dialog = remote.require "dialog"
 path = require "path"
 fs = require "fs-plus"
 
-imageExtensions = [".jpg", ".png", ".gif", ".bmp"]
+imageExtensions = [".jpg", ".png", ".gif"]
 
 module.exports =
 class InsertImageView extends View
-  imageOnPreview: null
+  imageOnPreview: ""
   editor: null
   previouslyFocusedElement: null
 
@@ -38,17 +38,17 @@ class InsertImageView extends View
 
   handleEvents: ->
     @imgEditor.hiddenInput.on "focusout", =>
-      @displayImagePreview(@imgEditor.getText())
+      @displayImagePreview(@imgEditor.getText().trim())
     @openImg.on "click", => @openImageDialog()
 
   onConfirm: ->
     img =
-      src: @imgEditor.getText()
+      src: @generateImageUrl(@imgEditor.getText().trim())
       alt: @titleEditor.getText()
       width: @widthEditor.getText()
       height: @heightEditor.getText()
-
-    @editor.insertText(@generateImageTag(img))
+    text = if img.src then @generateImageTag(img) else img.alt
+    @editor.insertText(text)
     @detach()
 
   detach: ->
@@ -60,23 +60,41 @@ class InsertImageView extends View
     @previouslyFocusedElement = $(':focus')
     @editor = atom.workspace.getActiveEditor()
     atom.workspaceView.append(this)
-    @titleEditor.setText(@editor.getSelectedText())
+    @setFieldsFromSelection()
     @imgEditor.focus()
 
+  setFieldsFromSelection: ->
+    selection = @editor.getSelectedText()
+    if utils.isImage(selection)
+      img = utils.parseImage(selection)
+      @imgEditor.setText(img.src)
+      @titleEditor.setText(img.alt)
+      @displayImagePreview(img.src)
+    else if utils.isRawImage(selection)
+      img = utils.parseRawImage(selection)
+      @imgEditor.setText(img.src)
+      @titleEditor.setText(img.alt)
+      @widthEditor.setText(img.width || "")
+      @heightEditor.setText(img.height || "")
+      @displayImagePreview(img.src)
+    else
+      @titleEditor.setText(selection)
+
   displayImagePreview: (file) ->
-    return unless file and file.trim()
     return if @imageOnPreview == file
 
     if @isValidImageFile(file)
       @imageOnPreview = file
-      @message.text("Open Preview ...")
+      @message.text("Opening Image Preview ...")
       @imagePreview.attr("src", file)
       @imagePreview.load =>
         @message.text("")
         @widthEditor.setText("" + @imagePreview.context.naturalWidth)
         @heightEditor.setText("" + @imagePreview.context.naturalHeight)
+      @imagePreview.error =>
+        @message.text("Error: Failed to Load Image.")
     else
-      @message.text("Error: Invalid Image File.")
+      @message.text("Error: Invalid Image File.") if file
       @imagePreview.attr("src", "")
       @widthEditor.setText("")
       @heightEditor.setText("")
@@ -90,6 +108,15 @@ class InsertImageView extends View
 
   isValidImageFile: (file) ->
     path.extname(file).toLowerCase() in imageExtensions
+
+  generateImageUrl: (file) ->
+    return file if utils.isUrl(file)
+    localDir = atom.project.getPath()
+    if file.startsWith(localDir)
+      return file.replace(localDir, "")
+    else
+      template = atom.config.get("markdown-writer.siteImageUrl") || "/"
+      return utils.dirTemplate(template) + path.basename(file)
 
   generateImageTag: (data) ->
     template = atom.config.get("markdown-writer.imageTag") || "![<alt>](<src>)"

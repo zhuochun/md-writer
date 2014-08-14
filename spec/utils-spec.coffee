@@ -5,6 +5,31 @@ describe "utils", ->
     date = utils.getDate()
     expect(utils.getDateStr()).toEqual("#{date.year}-#{date.month}-#{date.day}")
 
+  it "check is valid image", ->
+    fixture = "![text](url)"
+    expect(utils.isImage(fixture)).toBe(true)
+    fixture = "[text](url)"
+    expect(utils.isImage(fixture)).toBe(false)
+
+  it "parse valid image", ->
+    fixture = "![text](url)"
+    expect(utils.parseImage(fixture)).toEqual
+      alt: "text", src: "url", title: ""
+
+  it "check is valid raw image", ->
+    fixture = """
+<img alt="alt" src="src.png" class="aligncenter" height="304" width="520">
+"""
+    expect(utils.isRawImage(fixture)).toBe(true)
+
+  it "check parse valid raw image", ->
+    fixture = """
+  <img alt="alt" src="src.png" class="aligncenter" height="304" width="520">
+  """
+    expect(utils.parseRawImage(fixture)).toEqual
+      alt: "alt", src: "src.png",
+      class: "aligncenter", height: "304", width: "520"
+
   it "check is text invalid inline link", ->
     fixture = "![text](url)"
     expect(utils.isInlineLink(fixture)).toBe(false)

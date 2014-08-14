@@ -44,6 +44,8 @@ getFrontMatterText = (obj) ->
   yamlText = yaml.safeDump(obj)
   return ["---", "#{yamlText}---", ""].join(os.EOL)
 
+IMG_RAW_REGEX = /// <img (.*?)\/?> ///i
+IMG_RAW_ATTRIBUTE = /// ([a-z]+?) = ('|")(.+?)\2 ///ig
 IMG_REGEX  = ///
   !\[(.+?)\]               # ![text]
   \(                       # open (
@@ -67,10 +69,20 @@ reference_def_regex = (id, opts = {}) ->
   id = regexpEscape(id) unless opts.noEscape
   /// ^ \[#{id}\]: \ + ([^\s]*?) (?:\ +"?(.+?)"?)? $ ///m
 
+isRawImage = (input) -> IMG_RAW_REGEX.test(input)
+parseRawImage = (input) ->
+  img = {}
+  attributes = IMG_RAW_REGEX.exec(input)[1].match(IMG_RAW_ATTRIBUTE)
+  pattern = /// #{IMG_RAW_ATTRIBUTE.source} ///i
+  attributes.forEach (attr) ->
+    elem = pattern.exec(attr)
+    img[elem[1]] = elem[3] if elem
+  return img
+
 isImage = (input) -> IMG_REGEX.test(input)
 parseImage = (input) ->
   image = IMG_REGEX.exec(input)
-  return text: image[1], url: image[2], title: image[3]
+  return alt: image[1], src: image[2], title: image[3]
 
 isInlineLink = (input) -> INLINE_LINK_REGEX.test(input) and !isImage(input)
 parseInlineLink = (input) ->
@@ -114,6 +126,8 @@ module.exports =
   getFrontMatter: getFrontMatter
   getFrontMatterText: getFrontMatterText
   frontMatterRegex: FRONT_MATTER_REGEX
+  isRawImage: isRawImage
+  parseRawImage: parseRawImage
   isImage: isImage
   parseImage: parseImage
   isInlineLink: isInlineLink
