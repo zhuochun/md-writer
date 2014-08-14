@@ -77,22 +77,34 @@ Markdown (or Textile), Liquid, HTML & CSS go in.
     expect(utils.parseReferenceLink(fixture, contentWithTitle)).toEqual
       id: "id", text: "text", url: "http://jekyll.com", title: "Jekyll Website"
 
-  it "test whether has front matter", ->
+  it "test not has front matter", ->
     fixture = "title\n---\nhello world\n"
-    console.log utils.hasFrontMatter(fixture)
     expect(utils.hasFrontMatter(fixture)).toBe(false)
-    fixture = "---\nkey1: val1\nkey2: val2\n---\n"
+
+  it "test has front matter", ->
+    fixture = "---\nkey1: val1\nkey2: val2\n---\n" # jeykll
     expect(utils.hasFrontMatter(fixture)).toBe(true)
-    fixture = "key1: val1\nkey2: val2\n---\n"
+    fixture = "key1: val1\nkey2: val2\n---\n" # hexo
     expect(utils.hasFrontMatter(fixture)).toBe(true)
 
-  it "get front matter as js object", ->
+  it "get front matter as js object (jekyll)", ->
     fixture = "---\nkey1: val1\nkey2: val2\n---\n"
+    result = utils.getFrontMatter(fixture)
+    expect(result).toEqual key1: "val1", key2: "val2"
+
+  it "get front matter as js object (hexo)", ->
+    fixture = "key1: val1\nkey2: val2\n---\n"
     result = utils.getFrontMatter(fixture)
     expect(result).toEqual key1: "val1", key2: "val2"
 
   it "get front matter as empty object", ->
     fixture = "---\n\n\n---\n"
+    result = utils.getFrontMatter(fixture)
+    expect(result).toEqual {}
+    fixture = "\n\n\n---\n"
+    result = utils.getFrontMatter(fixture)
+    expect(result).toEqual {}
+    fixture = "this is content\nwith no front matters\n"
     result = utils.getFrontMatter(fixture)
     expect(result).toEqual {}
 
