@@ -113,9 +113,9 @@ class InsertImageView extends View
     return file if utils.isUrl(file)
     localDir = atom.project.getPath()
     if file.startsWith(localDir)
-      return file.replace(localDir, "")
+      return file.replace(localDir, ".")
     else
-      template = atom.config.get("markdown-writer.siteImageUrl") || "/"
+      template = atom.config.get("markdown-writer.siteImageUrl") || "./"
       return utils.dirTemplate(template) + path.basename(file)
 
   generateImageTag: (data) ->
