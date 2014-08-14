@@ -78,9 +78,12 @@ Markdown (or Textile), Liquid, HTML & CSS go in.
       id: "id", text: "text", url: "http://jekyll.com", title: "Jekyll Website"
 
   it "test whether has front matter", ->
-    fixture = "abc\n---\nhello world\n"
+    fixture = "title\n---\nhello world\n"
+    console.log utils.hasFrontMatter(fixture)
     expect(utils.hasFrontMatter(fixture)).toBe(false)
     fixture = "---\nkey1: val1\nkey2: val2\n---\n"
+    expect(utils.hasFrontMatter(fixture)).toBe(true)
+    fixture = "key1: val1\nkey2: val2\n---\n"
     expect(utils.hasFrontMatter(fixture)).toBe(true)
 
   it "get front matter as js object", ->

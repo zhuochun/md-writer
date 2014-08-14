@@ -28,16 +28,19 @@ getDate = (date = new Date()) ->
   seconds: ("0" + date.getSeconds()).slice(-2)
 
 FRONT_MATTER_REGEX = ///
-  ^---\s*       # match open ---
+  ^(---\s*)?    # match open ---
   ([\s\S]*?)\s* # match anything \s and \S
   ---\s*$       # match ending ---
   ///m
 
 hasFrontMatter = (content) ->
-  FRONT_MATTER_REGEX.test(content)
+  matchResult = content.match(FRONT_MATTER_REGEX)
+  return false unless matchResult?
+  frontMatter = yaml.safeLoad(matchResult[2].trim())
+  frontMatter? and typeof frontMatter is 'object'
 
 getFrontMatter = (content) ->
-  yamlText = content.match(FRONT_MATTER_REGEX)[1].trim()
+  yamlText = content.match(FRONT_MATTER_REGEX)[2].trim()
   return yaml.safeLoad(yamlText) || {}
 
 getFrontMatterText = (obj) ->
