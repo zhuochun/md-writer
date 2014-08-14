@@ -29,7 +29,8 @@ class ManagePostCategoriesView extends View
   updateFrontMatter: ->
     @frontMatter.categories = @getEditorCategories()
     @editor.buffer.scan utils.frontMatterRegex, (match) =>
-      match.replace utils.getFrontMatterText(@frontMatter)
+      noLeadingFence = !match.matchText.startsWith("---")
+      match.replace utils.getFrontMatterText(@frontMatter, noLeadingFence)
     @detach()
 
   detach: ->
