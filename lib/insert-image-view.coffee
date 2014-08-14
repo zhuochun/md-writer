@@ -19,7 +19,7 @@ class InsertImageView extends View
       @div =>
         @label "Image Path", class: "message"
         @subview "imgEditor", new EditorView(mini: true)
-        @div =>
+        @div class: "dialog-row", =>
           @button "Choose Local Image", outlet: "openImg", class: "btn"
           @label outlet: "message", class: "side-label"
         @label "Title (Alt)", class: "message"
