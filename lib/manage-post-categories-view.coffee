@@ -55,7 +55,10 @@ class ManagePostCategoriesView extends View
 
   setFrontMatter: ->
     @frontMatter = utils.getFrontMatter(@editor.getText())
-    @frontMatter.categories = [] unless @frontMatter.categories
+    if !@frontMatter.categories
+      @frontMatter.categories = []
+    else if typeof @frontMatter.categories == "string"
+      @frontMatter.categories = [@frontMatter.categories]
 
   setEditorCategories: (categories) ->
     @categoriesEditor.setText(categories.join(","))
