@@ -20,6 +20,8 @@ Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](h
   - Insert inline link by default
   - Insert reference link if title is specified
   - Remove link (and its reference) after URL is deleted
+- Dialog to insert **image**.
+  In Command Palette (`shift-cmd-P`), type `Markdown Writer: Insert Image`
 - **Toggle text styles**: `code` (`cmd-'`), **bold** (`cmd-b`), _italic_ (`cmd-i`) and ~~strikethrough~~ (`cmd-h`).
 - **Toggle headings"**: `alt-[1-5]` to switch among `H1` to `H5`.
 

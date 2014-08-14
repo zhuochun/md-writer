@@ -8,6 +8,7 @@
     "markdown-writer:new-draft",
     "markdown-writer:publish-draft",
     "markdown-writer:insert-link",
+    "markdown-writer:insert-image",
     "markdown-writer:toggle-code-text",
     "markdown-writer:toggle-bold-text",
     "markdown-writer:toggle-italic-text",

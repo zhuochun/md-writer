@@ -30,6 +30,10 @@
           'command': 'markdown-writer:insert-link'
         }
         {
+          'label': 'Insert Image',
+          'command': 'markdown-writer:insert-image'
+        }
+        {
           'label': 'Toggle Code Text',
           'command': 'markdown-writer:toggle-code-text'
         }

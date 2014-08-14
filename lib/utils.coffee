@@ -86,7 +86,15 @@ parseReferenceLink = (input, content) ->
   link = reference_def_regex(id).exec(content)
   return id: id, text: refn[1], url: link[1], title: link[2] || ""
 
-regexpEscape = (s) -> s and s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+URL_REGEX = ///
+  ^(https?|ftp):\/\/
+  [^\s\/$.?#].
+  [^\s]*$
+  ///i
+
+isUrl = (url) -> URL_REGEX.test(url)
+
+regexpEscape = (str) -> str and str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
 dasherize = (str) ->
   str.trim().toLowerCase().replace(/[^-\w\s]|_/g, "").replace(/\s+/g,"-")
@@ -113,6 +121,7 @@ module.exports =
   isReferenceLink: isReferenceLink
   isReferenceDefinition: isReferenceDefinition
   parseReferenceLink: parseReferenceLink
+  isUrl: isUrl
   regexpEscape: regexpEscape
   dasherize: dasherize
   dirTemplate: dirTemplate

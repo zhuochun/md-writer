@@ -26,7 +26,7 @@ module.exports =
       @registerCommand "toggle-#{style}", "./style-heading", args: style
 
     # media
-    ["link"].forEach (media) =>
+    ["link", "image"].forEach (media) =>
       @registerCommand "insert-#{media}", "./insert-#{media}-view"
 
   registerCommand: (cmd, path, options = {}) ->

@@ -1,14 +1,6 @@
 utils = require "../lib/utils"
 
 describe "utils", ->
-  it "get posts path without token", ->
-    expect(utils.dirTemplate("_posts/")).toEqual("_posts/")
-
-  it "get posts path with tokens", ->
-    date = utils.getDate()
-    result = utils.dirTemplate("_posts/{year}/{month}")
-    expect(result).toEqual("_posts/#{date.year}/#{date.month}")
-
   it "get date dashed string", ->
     date = utils.getDate()
     expect(utils.getDateStr()).toEqual("#{date.year}-#{date.month}-#{date.day}")
@@ -105,6 +97,12 @@ key2:
     result = utils.getFrontMatterText(key1: "val1", key2: ["v1", "v2"])
     expect(result).toEqual(expected)
 
+  it "check is url", ->
+    fixture = "https://github.com/zhuochun/md-writer"
+    expect(utils.isUrl(fixture)).toBe(true)
+    fixture = "/Users/zhuochun/md-writer"
+    expect(utils.isUrl(fixture)).toBe(false)
+
   it "dasherize title", ->
     fixture = "hello world!"
     expect(utils.dasherize(fixture)).toEqual("hello-world")
@@ -113,7 +111,15 @@ key2:
     fixture = " hello     World"
     expect(utils.dasherize(fixture)).toEqual("hello-world")
 
-  it "generate templatet", ->
+  it "generate posts directory without token", ->
+    expect(utils.dirTemplate("_posts/")).toEqual("_posts/")
+
+  it "generate posts directory with tokens", ->
+    date = utils.getDate()
+    result = utils.dirTemplate("_posts/{year}/{month}")
+    expect(result).toEqual("_posts/#{date.year}/#{date.month}")
+
+  it "generate template", ->
     fixture = "Hello <title>! -<from>"
     expect(utils.template(fixture,
       title: "world", from: "ZC")).toEqual("Hello world! -ZC")
