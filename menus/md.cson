@@ -34,6 +34,10 @@
           'command': 'markdown-writer:toggle-code-text'
         }
         {
+          'label': 'Toggle CodeBlock Text',
+          'command': 'markdown-writer:toggle-codeblock-text'
+        }
+        {
           'label': 'Toggle Bold Text',
           'command': 'markdown-writer:toggle-bold-text'
         }

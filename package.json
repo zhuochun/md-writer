@@ -9,6 +9,7 @@
     "markdown-writer:publish-draft",
     "markdown-writer:insert-link",
     "markdown-writer:toggle-code-text",
+    "markdown-writer:toggle-codeblock-text",
     "markdown-writer:toggle-bold-text",
     "markdown-writer:toggle-italic-text",
     "markdown-writer:toggle-strikethrough-text",

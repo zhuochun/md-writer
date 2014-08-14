@@ -141,6 +141,12 @@ key2:
     fixture = " hello     World"
     expect(utils.dasherize(fixture)).toEqual("hello-world")
 
+  it "escape regex characters", ->
+    fixture = "abc\n"
+    expect(utils.regexpEscape(fixture)).toEqual("abc\\n")
+    fixture = "***"
+    expect(utils.regexpEscape(fixture)).toEqual("\\*\\*\\*")
+
   it "generate templatet", ->
     fixture = "Hello <title>! -<from>"
     expect(utils.template(fixture,
