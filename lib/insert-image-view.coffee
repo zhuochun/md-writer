@@ -5,10 +5,11 @@ dialog = remote.require "dialog"
 path = require "path"
 fs = require "fs-plus"
 
-imageExtensions = [".jpg", ".png", ".gif"]
+imageExtensions = [".jpg", ".png", ".gif", ".bmp"]
 
 module.exports =
 class InsertImageView extends View
+  imageOnPreview: null
   editor: null
   previouslyFocusedElement: null
 
@@ -21,14 +22,14 @@ class InsertImageView extends View
         @div =>
           @button "Choose Local Image", outlet: "openImg", class: "btn"
           @label outlet: "message", class: "side-label"
-        @label "Title", class: "message"
+        @label "Title (Alt)", class: "message"
         @subview "titleEditor", new EditorView(mini: true)
         @label "Width", class: "message"
         @subview "widthEditor", new EditorView(mini: true)
         @label "Height", class: "message"
         @subview "heightEditor", new EditorView(mini: true)
       @div class: "image-container", =>
-        @img outlet: 'image'
+        @img outlet: 'imagePreview'
 
   initialize: ->
     @handleEvents()
@@ -36,14 +37,18 @@ class InsertImageView extends View
     @on "core:cancel", => @detach()
 
   handleEvents: ->
-    @imgEditor.hiddenInput.on "focusout", => @setImage(@imgEditor.getText())
+    @imgEditor.hiddenInput.on "focusout", =>
+      @displayImagePreview(@imgEditor.getText())
     @openImg.on "click", => @openImageDialog()
 
   onConfirm: ->
-    imgPath = @imgEditor.getText()
-    imgTitle = @titleEditor.getText()
-    if @isValidImageFile(imgPath)
-      @editor.insertText("![#{imgTitle}][#{imgPath}]")
+    img =
+      src: @imgEditor.getText()
+      alt: @titleEditor.getText()
+      width: @widthEditor.getText()
+      height: @heightEditor.getText()
+
+    @editor.insertText(@generateImageTag(img))
     @detach()
 
   detach: ->
@@ -55,30 +60,37 @@ class InsertImageView extends View
     @previouslyFocusedElement = $(':focus')
     @editor = atom.workspace.getActiveEditor()
     atom.workspaceView.append(this)
+    @titleEditor.setText(@editor.getSelectedText())
     @imgEditor.focus()
+
+  displayImagePreview: (file) ->
+    return unless file and file.trim()
+    return if @imageOnPreview == file
+
+    if @isValidImageFile(file)
+      @imageOnPreview = file
+      @message.text("Open Preview ...")
+      @imagePreview.attr("src", file)
+      @imagePreview.load =>
+        @message.text("")
+        @widthEditor.setText("" + @imagePreview.context.naturalWidth)
+        @heightEditor.setText("" + @imagePreview.context.naturalHeight)
+    else
+      @message.text("Error: Invalid Image File.")
+      @imagePreview.attr("src", "")
+      @widthEditor.setText("")
+      @heightEditor.setText("")
 
   openImageDialog: ->
     files = dialog.showOpenDialog(properties: ['openFile'])
     return unless files
-
     file = files[0]
-    if @isValidImageFile(file)
-      @imgEditor.setText(file)
-      @setImage(file)
-      @message.text("Image: #{@imageWidth} x #{@imageHeight}")
-    else
-      @message.text("Error: Invalid Image File.")
-
-  setImage: (file) ->
-    return unless @isValidImageFile(file)
-    @imageSrc = file
-    @image.attr("src", file)
-    @image.load =>
-      @imageWidth = @image.context.naturalWidth
-      @imageHeight = @image.context.naturalHeight
-
-  moveLocalImage: (file) ->
-    return unless isLocalImageFile(file)
+    @imgEditor.setText(file)
+    @displayImagePreview(file)
 
   isValidImageFile: (file) ->
-    path.extname(file) in imageExtensions
+    path.extname(file).toLowerCase() in imageExtensions
+
+  generateImageTag: (data) ->
+    template = atom.config.get("markdown-writer.imageTag") || "![<alt>](<src>)"
+    return utils.template(template, data)
