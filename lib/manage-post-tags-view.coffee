@@ -24,7 +24,8 @@ class ManagePostTagsView extends View
   updateFrontMatter: ->
     @frontMatter.tags = @getEditorTags()
     @editor.buffer.scan utils.frontMatterRegex, (match) =>
-      match.replace utils.getFrontMatterText(@frontMatter)
+      noLeadingFence = !match.matchText.startsWith("---")
+      match.replace utils.getFrontMatterText(@frontMatter, noLeadingFence)
     @detach()
 
   detach: ->
@@ -49,7 +50,10 @@ class ManagePostTagsView extends View
 
   setFrontMatter: ->
     @frontMatter = utils.getFrontMatter(@editor.getText())
-    @frontMatter.tags = [] unless @frontMatter.tags
+    if !@frontMatter.tags
+      @frontMatter.tags = []
+    else if typeof @frontMatter.tags == "string"
+      @frontMatter.tags = [@frontMatter.tags]
 
   setEditorTags: (tags) ->
     @tagsEditor.setText(tags.join(","))

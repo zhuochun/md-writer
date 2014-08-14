@@ -28,8 +28,9 @@ getDate = (date = new Date()) ->
   seconds: ("0" + date.getSeconds()).slice(-2)
 
 FRONT_MATTER_REGEX = ///
-  ^---\s*       # match open ---
-  ([\s\S]*?)\s* # match anything \s and \S
+  ^(?:---\s*)?  # match open --- (if any)
+  ([^:]+:       # match at least 1 open key
+  [\s\S]*?)\s*  # match the rest
   ---\s*$       # match ending ---
   ///m
 
@@ -37,12 +38,17 @@ hasFrontMatter = (content) ->
   FRONT_MATTER_REGEX.test(content)
 
 getFrontMatter = (content) ->
-  yamlText = content.match(FRONT_MATTER_REGEX)[1].trim()
+  matches = content.match(FRONT_MATTER_REGEX)
+  return {} unless matches
+  yamlText = matches[1].trim()
   return yaml.safeLoad(yamlText) || {}
 
-getFrontMatterText = (obj) ->
+getFrontMatterText = (obj, noLeadingFence) ->
   yamlText = yaml.safeDump(obj)
-  return ["---", "#{yamlText}---", ""].join(os.EOL)
+  if noLeadingFence
+    return ["#{yamlText}---", ""].join(os.EOL)
+  else
+    return ["---", "#{yamlText}---", ""].join(os.EOL)
 
 IMG_RAW_REGEX = /// <img (.*?)\/?> ///i
 IMG_RAW_ATTRIBUTE = /// ([a-z]+?) = ('|")(.+?)\2 ///ig

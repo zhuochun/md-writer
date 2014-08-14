@@ -1,7 +1,7 @@
 {
   "name": "markdown-writer",
   "main": "./lib/main",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Atom as a Markdown blogging editor",
   "activationEvents": [
     "markdown-writer:new-post",
@@ -10,6 +10,7 @@
     "markdown-writer:insert-link",
     "markdown-writer:insert-image",
     "markdown-writer:toggle-code-text",
+    "markdown-writer:toggle-codeblock-text",
     "markdown-writer:toggle-bold-text",
     "markdown-writer:toggle-italic-text",
     "markdown-writer:toggle-strikethrough-text",
