@@ -120,6 +120,19 @@ key2:
     result = utils.getFrontMatterText(key1: "val1", key2: ["v1", "v2"])
     expect(result).toEqual(expected)
 
+  it "replace front matter (no leading fence)", ->
+    expected = """
+key1: val1
+key2:
+  - v1
+  - v2
+---
+
+"""
+    result = utils.getFrontMatterText(
+      {key1: "val1", key2: ["v1", "v2"]}, true)
+    expect(result).toEqual(expected)
+
   it "dasherize title", ->
     fixture = "hello world!"
     expect(utils.dasherize(fixture)).toEqual("hello-world")

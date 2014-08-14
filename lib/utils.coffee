@@ -43,9 +43,12 @@ getFrontMatter = (content) ->
   yamlText = matches[1].trim()
   return yaml.safeLoad(yamlText) || {}
 
-getFrontMatterText = (obj) ->
+getFrontMatterText = (obj, noLeadingFence) ->
   yamlText = yaml.safeDump(obj)
-  return ["---", "#{yamlText}---", ""].join(os.EOL)
+  if noLeadingFence
+    return ["#{yamlText}---", ""].join(os.EOL)
+  else
+    return ["---", "#{yamlText}---", ""].join(os.EOL)
 
 IMG_REGEX  = ///
   !\[(.+?)\]               # ![text]
