@@ -1,6 +1,6 @@
 # Markdown-Writer for Atom
 
-Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](http://jekyllrb.com/) or static blogs.
+Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](http://jekyllrb.com/), [Hexo](http://hexo.io/) and other static blogs.
 
 > NOTICE: Due to an earlier package name change, there were errors on getting the configurations. **Please re-install the package if you installed before v0.5.0**.
 
@@ -25,7 +25,7 @@ Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](h
 
 ## Setup
 
-You need to setup package to use most of the features.
+You need to config markdown-writer to use most of the features.
 
 Go to `Preferences` (`cmd-,`), search `markdown writer` package.
 
@@ -63,13 +63,15 @@ The `JSON` files contain following information of your blog:
 
 ```json
 {
-  "tags": ["tag a", "tag b"],
-  "categories": ["category a", "category b"],
-  "posts": [{"title": "title", "url":"url"}]
+  "tags": ["tag a", "tag b", "..."],
+  "categories": ["category a", "category b", "..."],
+  "posts": [{"title": "title", "url": "url"}]
 }
 ```
 
-If you are using Jekyll, you can add [these scripts](https://gist.github.com/zhuochun/fe127356bcf8c07ae1fb) to your Jekyll directory. Upload the generated `JSON` files to website and update the settings.
+For **Jekyll** users, you can add [these scripts](https://gist.github.com/zhuochun/fe127356bcf8c07ae1fb) to your Jekyll directory and upload the generated `JSON` files.
+
+For **Hexo** users, you can install [hexo-generator-atom-markdown-writer-meta](https://github.com/timnew/hexo-generator-atom-markdown-writer-meta) (Thanks to [@timnew](https://github.com/timnew)).
 
 ### TODOs
 
