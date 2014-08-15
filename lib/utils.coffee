@@ -73,7 +73,7 @@ REFERENCE_LINK_REGEX = ///
 
 reference_def_regex = (id, opts = {}) ->
   id = regexpEscape(id) unless opts.noEscape
-  /// ^ \[#{id}\]: \ + ([^\s]*?) (?:\ +"?(.+?)"?)? $ ///m
+  /// ^ \ * \[#{id}\]: \ + ([^\s]*?) (?:\ +"?(.+?)"?)? $ ///m
 
 isRawImage = (input) -> IMG_RAW_REGEX.test(input)
 parseRawImage = (input) ->

@@ -123,7 +123,7 @@ class InsertLinkView extends View
     position = @editor.getCursorBufferPosition()
     @editor.moveCursorToBeginningOfNextParagraph()
     @editor.insertNewline()
-    @editor.insertText("[#{id}]: #{url} \"#{title}\"")
+    @editor.insertText("  [#{id}]: #{url} \"#{title}\"")
     @editor.moveCursorDown()
     line = @editor.selectLine()[0].getText().trim()
     unless utils.isReferenceDefinition(line)
@@ -137,9 +137,9 @@ class InsertLinkView extends View
     if title
       @editor.buffer.beginTransaction()
       position = @editor.getCursorBufferPosition()
-      @editor.buffer.scan /// ^ \[#{@referenceId}\]: \ + ///, (match) =>
+      @editor.buffer.scan /// ^\ * \[#{@referenceId}\]: \ +(.+)$ ///, (match) =>
         @editor.setSelectedBufferRange(match.range)
-        @editor.insertText("[#{id}]: #{url} \"#{title}\"")
+        @editor.insertText("  [#{@referenceId}]: #{url} \"#{title}\"")
       @editor.setCursorBufferPosition(position)
       @editor.buffer.commitTransaction()
     else
@@ -149,7 +149,7 @@ class InsertLinkView extends View
     @editor.buffer.beginTransaction()
     @editor.insertText(text)
     position = @editor.getCursorBufferPosition()
-    @editor.buffer.scan /// ^ \[#{@referenceId}\]: \ + ///, (match) =>
+    @editor.buffer.scan /// ^\ * \[#{@referenceId}\]: \ + ///, (match) =>
       @editor.setSelectedBufferRange(match.range)
       @editor.deleteLine()
       emptyLine = !@editor.selectLine()[0].getText().trim()
