@@ -6,6 +6,8 @@ styles =
   h3: before: "### ", after: ""
   h4: before: "#### ", after: ""
   h5: before: "##### ", after: ""
+  ul: before: "- ", after: ""
+  ol: before: "0. ", after: ""
   blockquote: before: "> ", after: ""
 
 module.exports =

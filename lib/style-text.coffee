@@ -5,6 +5,7 @@ styles =
   code: before: "`", after: "`"
   bold: before: "**", after: "**"
   italic: before: "_", after: "_"
+  keystroke: before: "<kbd>", after: "</kbd>"
   strikethrough: before: "~~", after: "~~"
   codeblock:
     before: atom.config.get("markdown-writer.codeblock.before") || "```\n"

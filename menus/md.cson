@@ -50,6 +50,10 @@
           'command': 'markdown-writer:toggle-italic-text'
         }
         {
+          'label': 'Toggle Keystroke Text',
+          'command': 'markdown-writer:toggle-keystroke-text'
+        }
+        {
           'label': 'Toggle Strikethrough Text',
           'command': 'markdown-writer:toggle-strikethrough-text'
         }
@@ -71,6 +75,14 @@
         }
         {
           'label': 'Toggle Heading 5'
+          'command': 'markdown-writer:toggle-h5'
+        }
+        {
+          'label': 'Toggle Unordered List'
+          'command': 'markdown-writer:toggle-ul'
+        }
+        {
+          'label': 'Toggle Ordered List'
           'command': 'markdown-writer:toggle-h5'
         }
         {
