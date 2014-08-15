@@ -1,10 +1,12 @@
 ".platform-darwin .editor":
-  "cmd-k": "markdown-writer:insert-link"
-  "shift-cmd-k": "markdown-writer:insert-image"
+  "shift-cmd-K": "markdown-writer:insert-link"
+  "shift-cmd-I": "markdown-writer:insert-image"
   "cmd-i": "markdown-writer:toggle-italic-text"
   "cmd-b": "markdown-writer:toggle-bold-text"
   "cmd-'": "markdown-writer:toggle-code-text"
+  "cmd-k": "markdown-writer:toggle-keystroke-text"
   "cmd-h": "markdown-writer:toggle-strikethrough-text"
+  "shift-cmd-\"": "markdown-writer:toggle-codeblock-text"
   "alt-1": "markdown-writer:toggle-h1"
   "alt-2": "markdown-writer:toggle-h2"
   "alt-3": "markdown-writer:toggle-h3"
@@ -13,11 +15,10 @@
   "shift-cmd-O": "markdown-writer:toggle-ol"
   "shift-cmd-U": "markdown-writer:toggle-ul"
   "shift-cmd->": "markdown-writer:toggle-blockquote"
-  "shift-cmd-K": "markdown-writer:toggle-keystroke-text"
-  "shift-cmd-\"": "markdown-writer:toggle-codeblock-text"
 
 ".platform-win32 .editor":
-  "ctrl-k": "markdown-writer:insert-link"
+  "shift-ctrl-K": "markdown-writer:insert-link"
+  "shift-ctrl-I": "markdown-writer:insert-image"
   "ctrl-i": "markdown-writer:toggle-italic-text"
   "ctrl-b": "markdown-writer:toggle-bold-text"
   "ctrl-'": "markdown-writer:toggle-code-text"
@@ -29,7 +30,8 @@
   "ctrl-5": "markdown-writer:toggle-h5"
 
 ".platform-linux .editor":
-  "ctrl-k": "markdown-writer:insert-link"
+  "shift-ctrl-K": "markdown-writer:insert-link"
+  "shift-ctrl-I": "markdown-writer:insert-image"
   "ctrl-i": "markdown-writer:toggle-italic-text"
   "ctrl-b": "markdown-writer:toggle-bold-text"
   "ctrl-'": "markdown-writer:toggle-code-text"

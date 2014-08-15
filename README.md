@@ -14,20 +14,24 @@ Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](h
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: Publish Draft`.
 - Dialog to **manage tags/categories in front matter**.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: Manage Post Tags/Categories`
-- Dialog to **insert link (`cmd-k`) and automatically link to the text next time** (my favorite feature from Windows Live Writer).
+- Dialog to **insert link (`shift-cmd-k`) and automatically link to the text next time** (my favorite feature from Windows Live Writer).
   - Insert inline link by default
   - Insert reference link if title is specified
   - Remove link (and its reference) after URL is deleted
-- Dialog to **insert image (`shift-cmd-k`), with width/height auto-detected**.
+- Dialog to **insert image (`shift-cmd-i`), with width/height auto-detected**.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: Insert Image`
 - **Toggle text styles**:
   - `code` (`cmd-'`)
   - **bold** (`cmd-b`)
   - _italic_ (`cmd-i`)
   - ~~strikethrough~~ (`cmd-h`)
-  - `fenced codeblock` (`shift-cmd-"`)
+  - `'''codeblock'''` (`shift-cmd-"`)
+  - `<kbd>key</kbd>` (<kbd>cmd</kbd> + <kbd>k</kbd>)
+  - `- unordered list` (`shift-cmd-U`)
+  - `0. ordered list` (`shift-cmd-O`)
+shift-cmd-I
+  - `> blockquote` (`shift-cmd->`)
 - **Toggle headings**: `alt-[1-5]` to switch among `H1` to `H5`.
-- **Toggle blockquote**: `shift-cmd->` to toggle block quote.
 
 ## Setup
 

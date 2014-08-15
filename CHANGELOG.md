@@ -1,6 +1,14 @@
+## 0.6.2
+
+* Modify some key mappings
+* Improve toggle headings/blockquote on selection
+* Async load links.cson in insert link dialog
+* Indent link reference by 2 spaces
+* Add toggle ul, ol, task list and keystroke styles
+
 ## 0.6.1
 
-* Fix keymaps not working
+* Fix key mappings not working
 * Add settings for publish draft
 * Add toggle block quote
 * Support multiple cursors
