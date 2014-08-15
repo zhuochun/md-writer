@@ -22,7 +22,7 @@ class PublishDraft
     atom.workspaceView.open(@postPath)
 
   updateFrontMatter: ->
-    @frontMatter.published = true if @frontMatter.published
+    @frontMatter.published = true if @frontMatter.published?
     @frontMatter.date = "#{utils.getDateStr()} #{utils.getTimeStr()}"
     @editor.buffer.scan utils.frontMatterRegex, (match) =>
       match.replace utils.getFrontMatterText(@frontMatter)
@@ -49,9 +49,15 @@ class PublishDraft
   getPostName: ->
     date = utils.getDateStr()
     title = @getPostTitle()
-    extension = atom.config.get("markdown-writer.fileExtension")
+    extension = @getPostExtension()
     return "#{date}-#{title}#{extension}"
 
   getPostTitle: ->
-    utils.dasherize(@frontMatter.title) or
-    path.basename(@draftPath, atom.config.get("markdown-writer.fileExtension"))
+    if atom.config.get("markdown-writer.publishRenameBasedOnTitle")
+      title = utils.dasherize(@frontMatter.title)
+    return title || path.basename(@draftPath, path.extname(@draftPath))
+
+  getPostExtension: ->
+    if atom.config.get("markdown-writer.publishKeepFileExtname")
+      extname = path.extname(@draftPath)
+    return extname || atom.config.get("markdown-writer.fileExtension")
