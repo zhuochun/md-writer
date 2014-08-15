@@ -22,11 +22,13 @@ class StyleText
 
   display: ->
     @editor = atom.workspace.getActiveEditor()
+    @editor.buffer.beginTransaction()
     @editor.getSelections().forEach (selection) =>
       if text = selection.getText()
         @toggleStyle(selection, text)
       else
         @insertEmptyStyle(selection)
+    @editor.buffer.commitTransaction()
 
   toggleStyle: (selection, text) ->
     if @isStyleOn(text)
