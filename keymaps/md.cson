@@ -11,7 +11,7 @@
   "alt-3": "markdown-writer:toggle-h3"
   "alt-4": "markdown-writer:toggle-h4"
   "alt-5": "markdown-writer:toggle-h5"
-  "alt-`": "markdown-writer:toggle-blockquote"
+  "shift-alt->": "markdown-writer:toggle-blockquote"
 
 ".platform-win32 .editor":
   "ctrl-k": "markdown-writer:insert-link"

@@ -18,26 +18,29 @@ class StyleHeading
 
   display: ->
     @editor = atom.workspace.getActiveEditor()
-    if line = @getLine()
-      @toggleStyle(line)
-    else
-      @insertEmptyStyle()
+    @cursors = @editor.getCursors()
+    @cursors.forEach (cursor) =>
+      if line = @getLine(cursor)
+        @toggleStyle(cursor, line)
+      else
+        @insertEmptyStyle(cursor)
 
-  getLine: ->
-    @editor.moveCursorToBeginningOfLine()
-    return @editor.selectToEndOfLine()[0].getText()
+  getLine: (cursor) ->
+    cursor.moveToBeginningOfLine()
+    cursor.selection.selectToEndOfLine()
+    return cursor.selection.getText()
 
-  toggleStyle: (text) ->
+  toggleStyle: (cursor, text) ->
     if @isStyleOn(text)
       text = @removeStyle(text)
     else
       text = @addStyle(text)
-    @editor.insertText(text)
+    cursor.selection.insertText(text)
 
-  insertEmptyStyle: ->
-    @editor.insertText(@addStyle(""))
-    pos = @editor.getCursorBufferPosition()
-    @editor.setCursorBufferPosition([pos.row, pos.column - @style.after.length])
+  insertEmptyStyle: (cursor) ->
+    cursor.selection.insertText(@addStyle(""))
+    pos = cursor.getBufferPosition()
+    cursor.setBufferPosition([pos.row, pos.column - @style.after.length])
 
   isStyleOn: (text) ->
     @getStylePattern().test(text)
