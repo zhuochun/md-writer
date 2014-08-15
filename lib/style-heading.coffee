@@ -49,8 +49,8 @@ class StyleHeading
     @getStylePattern().test(text)
 
   addStyle: (text) ->
-    text = /// ^ #{@style.before[0]}* \s? (.*) $ ///.exec(text)[1]
-    "#{@style.before}#{text}#{@style.after}"
+    match = /// ^ (\s*) #{@style.before[0]}* \s? (.*) $ ///.exec(text)
+    "#{match[1]}#{@style.before}#{match[2]}#{@style.after}"
 
   removeStyle: (text) ->
     matches = @getStylePattern().exec(text)
@@ -59,4 +59,4 @@ class StyleHeading
   getStylePattern: ->
     before = utils.regexpEscape(@style.before)
     after = utils.regexpEscape(@style.after)
-    /// ^#{before} (.*?) #{after}$ ///
+    /// ^ (\s*) #{before} (.*?) #{after}$ ///
