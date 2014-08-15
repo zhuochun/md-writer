@@ -32,15 +32,6 @@ class InsertLinkView extends View
         @ul class: "markdown-writer-list", outlet: "searchResult"
 
   initialize: ->
-    @editor = atom.workspace.getActiveEditor()
-    @fetchPosts()
-    @loadSavedLinks =>
-      @setLinkFromSelection()
-      if @textEditor.getText()
-        @urlEditor.getEditor().selectAll()
-        @urlEditor.focus()
-      else
-        @textEditor.focus()
     @handleEvents()
     @on "core:confirm", => @onConfirm()
     @on "core:cancel", => @detach()
@@ -59,7 +50,16 @@ class InsertLinkView extends View
 
   display: ->
     @previouslyFocusedElement = $(':focus')
+    @editor = atom.workspace.getActiveEditor()
     atom.workspaceView.append(this)
+    @fetchPosts()
+    @loadSavedLinks =>
+      @setLinkFromSelection()
+      if @textEditor.getText()
+        @urlEditor.getEditor().selectAll()
+        @urlEditor.focus()
+      else
+        @textEditor.focus()
 
   detach: ->
     return unless @hasParent()
