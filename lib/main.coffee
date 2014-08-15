@@ -22,7 +22,7 @@ module.exports =
     ["code", "codeblock", "bold", "italic", "strikethrough"].forEach (style) =>
       @registerCommand "toggle-#{style}-text", "./style-text", args: style
 
-    ["h1", "h2", "h3", "h4", "h5"].forEach (style) =>
+    ["h1", "h2", "h3", "h4", "h5", "blockquote"].forEach (style) =>
       @registerCommand "toggle-#{style}", "./style-heading", args: style
 
     # media

@@ -6,6 +6,7 @@ styles =
   h3: before: "### ", after: ""
   h4: before: "#### ", after: ""
   h5: before: "##### ", after: ""
+  blockquote: before: "> ", after: ""
 
 module.exports =
 class StyleHeading
@@ -42,7 +43,7 @@ class StyleHeading
     @getStylePattern().test(text)
 
   addStyle: (text) ->
-    text = /^#*\s?(.*)/.exec(text)[1]
+    text = /// ^ #{@style.before[0]}* \s? (.*) $ ///.exec(text)[1]
     "#{@style.before}#{text}#{@style.after}"
 
   removeStyle: (text) ->

@@ -69,6 +69,14 @@
           'label': 'Toggle Heading 4'
           'command': 'markdown-writer:toggle-h4'
         }
+        {
+          'label': 'Toggle Heading 5'
+          'command': 'markdown-writer:toggle-h5'
+        }
+        {
+          'label': 'Toggle Blockquote'
+          'command': 'markdown-writer:toggle-blockquote'
+        }
       ]
     ]
   }
