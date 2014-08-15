@@ -10,8 +10,8 @@ styles =
   codeblock:
     before: atom.config.get("markdown-writer.codeblock.before") || "```\n"
     after: atom.config.get("markdown-writer.codeblock.after") || "\n```"
-    regexBefore: atom.config.get("markdown-writer.codeblock.regexBefore") || "```(?: .+)?\n"
-    regexAfter: atom.config.get("markdown-writer.codeblock.regexAfter") || "\n```"
+    regexBefore: atom.config.get("markdown-writer.codeblock.regexBefore") || "```(?: .+)?\\n"
+    regexAfter: atom.config.get("markdown-writer.codeblock.regexAfter") || "\\n```"
 
 module.exports =
 class StyleText

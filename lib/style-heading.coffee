@@ -6,8 +6,10 @@ styles =
   h3: before: "### ", after: ""
   h4: before: "#### ", after: ""
   h5: before: "##### ", after: ""
-  ul: before: "- ", after: ""
-  ol: before: "0. ", after: ""
+  ul: before: "- ", after: "", prefix: "-|\\*|\\d+\\."
+  ol: before: "0. ", after: "", prefix: "-|\\*|\\d+\\."
+  task: before: "- [ ] ", after: "", prefix: "- \\[ ]|- \\[x]|- \\[X]|-|\\*"
+  taskdone: before: "- [x] ", after: "", prefix: "- \\[ ]|- \\[x]|- \\[X]|-|\\*"
   blockquote: before: "> ", after: ""
 
 module.exports =
@@ -51,14 +53,15 @@ class StyleHeading
     @getStylePattern().test(text)
 
   addStyle: (text) ->
-    match = /// ^ (\s*) #{@style.before[0]}* \s? (.*) $ ///.exec(text)
-    "#{match[1]}#{@style.before}#{match[2]}#{@style.after}"
+    prefix = @style.prefix || @style.before[0]
+    match = @getStylePattern("(?:#{prefix})*\\s?").exec(text)
+    return "#{match[1]}#{@style.before}#{match[2]}#{@style.after}"
 
   removeStyle: (text) ->
     matches = @getStylePattern().exec(text)
     return matches[1..].join("")
 
-  getStylePattern: ->
-    before = utils.regexpEscape(@style.before)
-    after = utils.regexpEscape(@style.after)
-    /// ^ (\s*) #{before} (.*?) #{after}$ ///
+  getStylePattern: (before, after) ->
+    before ?= utils.regexpEscape(@style.before)
+    after  ?= utils.regexpEscape(@style.after)
+    return /// ^ (\s*) #{before} (.*?) #{after}$ ///

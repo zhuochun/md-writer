@@ -86,6 +86,14 @@
           'command': 'markdown-writer:toggle-h5'
         }
         {
+          'label': 'Toggle Task List'
+          'command': 'markdown-writer:toggle-task'
+        }
+        {
+          'label': 'Toggle Task List (Done)'
+          'command': 'markdown-writer:toggle-taskdone'
+        }
+        {
           'label': 'Toggle Blockquote'
           'command': 'markdown-writer:toggle-blockquote'
         }
