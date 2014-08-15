@@ -67,6 +67,7 @@ class NewDraftView extends View
 
   getFrontMatter: ->
     layout: "post"
+    published: false
     title: @titleEditor.getText()
     date: "#{utils.getDateStr()} #{utils.getTimeStr()}"
 

@@ -22,6 +22,7 @@ class PublishDraft
     atom.workspaceView.open(@postPath)
 
   updateFrontMatter: ->
+    @frontMatter.published = true if @frontMatter.published
     @frontMatter.date = "#{utils.getDateStr()} #{utils.getTimeStr()}"
     @editor.buffer.scan utils.frontMatterRegex, (match) =>
       match.replace utils.getFrontMatterText(@frontMatter)

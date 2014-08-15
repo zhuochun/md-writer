@@ -78,6 +78,7 @@ class NewPostView extends View
 
   getFrontMatter: ->
     layout: "post"
+    published: true
     title: @titleEditor.getText()
     date: "#{@dateEditor.getText()} #{utils.getTimeStr()}"
 
@@ -89,5 +90,5 @@ title: "<title>"
 date: "<date>"
 ---
     """
-    
+
     return utils.template(frontMatter, data)
