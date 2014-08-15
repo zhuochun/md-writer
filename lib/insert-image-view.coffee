@@ -15,7 +15,7 @@ class InsertImageView extends View
 
   @content: ->
     @div class: "markdown-writer markdown-writer-dialog overlay from-top", =>
-      @label "Insert Image", class: "icon icon-link"
+      @label "Insert Image", class: "icon icon-device-camera"
       @div =>
         @label "Image Path", class: "message"
         @subview "imgEditor", new EditorView(mini: true)

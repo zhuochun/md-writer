@@ -15,7 +15,7 @@ class InsertLinkView extends View
 
   @content: ->
     @div class: "markdown-writer markdown-writer-dialog overlay from-top", =>
-      @label "Insert Link", class: "icon icon-link"
+      @label "Insert Link", class: "icon icon-globe"
       @div =>
         @label "Text to be displayed", class: "message"
         @subview "textEditor", new EditorView(mini: true)
