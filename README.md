@@ -27,7 +27,7 @@ Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](h
   - ~~strikethrough~~ (`cmd-h`)
   - `fenced codeblock` (`shift-cmd-"`)
 - **Toggle headings**: `alt-[1-5]` to switch among `H1` to `H5`.
-- **Toggle blockquote**: `shift-alt->` to toggle block quote.
+- **Toggle blockquote**: `shift-cmd->` to toggle block quote.
 
 ## Setup
 
