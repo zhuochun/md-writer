@@ -22,22 +22,23 @@ class StyleText
 
   display: ->
     @editor = atom.workspace.getActiveEditor()
-    if text = @editor.getSelectedText()
-      @toggleStyle(text)
-    else
-      @insertEmptyStyle()
+    @editor.getSelections().forEach (selection) =>
+      if text = selection.getText()
+        @toggleStyle(selection, text)
+      else
+        @insertEmptyStyle(selection)
 
-  toggleStyle: (text) ->
+  toggleStyle: (selection, text) ->
     if @isStyleOn(text)
       text = @removeStyle(text)
     else
       text = @addStyle(text)
-    @editor.insertText(text)
+    selection.insertText(text)
 
-  insertEmptyStyle: ->
-    @editor.insertText(@addStyle(""))
-    pos = @editor.getCursorBufferPosition()
-    @editor.setCursorBufferPosition([pos.row, pos.column - @style.after.length])
+  insertEmptyStyle: (selection) ->
+    selection.insertText(@addStyle(""))
+    pos = selection.cursor.getBufferPosition()
+    selection.cursor.setBufferPosition([pos.row, pos.column - @style.after.length])
 
   isStyleOn: (text) ->
     @getStylePattern().test(text) if text

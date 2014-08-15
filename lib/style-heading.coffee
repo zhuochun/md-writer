@@ -18,8 +18,7 @@ class StyleHeading
 
   display: ->
     @editor = atom.workspace.getActiveEditor()
-    @cursors = @editor.getCursors()
-    @cursors.forEach (cursor) =>
+    @editor.getCursors().forEach (cursor) =>
       if line = @getLine(cursor)
         @toggleStyle(cursor, line)
       else
