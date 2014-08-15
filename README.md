@@ -2,7 +2,13 @@
 
 Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](http://jekyllrb.com/), [Hexo](http://hexo.io/) and other static blogs.
 
-![Insert Link](http://i.imgur.com/F9dLWsH.png)
+![Insert Image](http://i.imgur.com/s9ekMns.gif)
+
+More GIFs Here:
+
+- [Create New Post](http://i.imgur.com/BwntxhB.gif)
+- [Insert Reference Link](http://i.imgur.com/L67TqyF.gif)
+- [Remove Reference Link](http://i.imgur.com/TglzeJV.gif)
 
 ## Features
 
