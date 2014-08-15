@@ -173,6 +173,10 @@ key2:
     expect(result).toEqual("_posts/#{date.year}/#{date.month}")
 
   it "generate template", ->
-    fixture = "Hello <title>! -<from>"
-    expect(utils.template(fixture,
-      title: "world", from: "ZC")).toEqual("Hello world! -ZC")
+    fixture = "<a href=''>hello <title>! <from></a>"
+    expect(utils.template(fixture, title: "world", from: "markdown-writer"))
+      .toEqual("<a href=''>hello world! markdown-writer</a>")
+
+  it "generate template with data missing", ->
+    fixture = "<a href='<url>'><img></a>"
+    expect(utils.template(fixture, url: "//")).toEqual("<a href='//'><img></a>")

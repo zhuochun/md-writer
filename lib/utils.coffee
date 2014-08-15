@@ -120,8 +120,8 @@ dasherize = (str) ->
 dirTemplate = (directory, date) ->
   return template(directory, getDate(date), /{(.+?)}/g)
 
-template = (text, data, matcher = /<(\S+?)>/g) ->
-  text.replace matcher, (match, attr) -> data[attr]
+template = (text, data, matcher = /<([\w-]+?)>/g) ->
+  text.replace matcher, (match, attr) -> data[attr] || match
 
 module.exports =
   getJSON: getJSON
