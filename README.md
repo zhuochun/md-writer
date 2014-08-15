@@ -18,15 +18,16 @@ Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](h
   - Insert inline link by default
   - Insert reference link if title is specified
   - Remove link (and its reference) after URL is deleted
-- Dialog to insert **image** with width, height auto-detected.
+- Dialog to **insert image (`shift-cmd-k`), with width/height auto-detected**.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: Insert Image`
 - **Toggle text styles**:
   - `code` (`cmd-'`)
   - **bold** (`cmd-b`)
   - _italic_ (`cmd-i`)
   - ~~strikethrough~~ (`cmd-h`)
-  - `` ```codeblock``` `` (no default mapping, in Command Palette, type `Markdown Writer: Toggle Codeblock Text`)
+  - `fenced codeblock` (`shift-cmd-"`)
 - **Toggle headings**: `alt-[1-5]` to switch among `H1` to `H5`.
+- **Toggle blockquote**: `shift-alt->` to toggle block quote.
 
 ## Setup
 
@@ -47,28 +48,28 @@ Go to `Preferences` (`cmd-,`), search `markdown writer` package.
 
 To change these settings, open your Atom config file, find `markdown-writer` entry.
 
-- **siteLinkPath**: Path to a `.cson` file that stores all links added for automatic linking next time.
+- **siteLinkPath**: Define path (string) to a `.cson` file that stores all links added for automatic linking next time.
   Default uses `markdown-writer-links.cson` in Atom's config directory.
-- **frontMatter**: String of front matter generated in new post/draft.
-- **codeblock**: Define the code block fences. Default uses GitHub's fenced code block.
-- **imageTag**: Define the image tag inserted. Default uses `![alt](img-url)`.
+- **frontMatter**: Define front matter (string) used when create new post/draft.
+- **publishRenameBasedOnTitle**: Determine whether publish rename filename based on title in front matter. Default is `false` (boolean).
+- **publishKeepFileExtname**: Determine whether publish keep draft's extname used. Default is `false` (boolean).
+- **codeblock**: Define fenced code block (object). Default uses GitHub's fenced code block.
+- **imageTag**: Define image tag inserted (string). Default uses `![alt](img-url)`.
 
-This is an example of advance settings configuration:
+This is an example of advance setting's configuration:
 
 ```coffee
 'markdown-writer':
   # sync the links in dropbox
   'siteLinkPath': '/Users/zhuochun/Dropbox/blog/links.cson'
-  # add an author field in front matter
+  # use Hexo front matter format
   'frontMatter': """
-  ---
   layout: <layout>
   title: "<title>"
-  author: zhuochun
   date: "<date>"
   ---
   """
-  # use jekyll highlight code block, change this requires to reload plugin
+  # use jekyll highlight code block, change this requires reload
   'codeblock':
     'before': '{% highlight %}\n'
     'after': '\n{% endhighlight %}'
