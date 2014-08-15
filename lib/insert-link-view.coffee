@@ -32,8 +32,15 @@ class InsertLinkView extends View
         @ul class: "markdown-writer-list", outlet: "searchResult"
 
   initialize: ->
+    @editor = atom.workspace.getActiveEditor()
     @fetchPosts()
-    @loadSavedLinks()
+    @loadSavedLinks =>
+      @setLinkFromSelection()
+      if @textEditor.getText()
+        @urlEditor.getEditor().selectAll()
+        @urlEditor.focus()
+      else
+        @textEditor.focus()
     @handleEvents()
     @on "core:confirm", => @onConfirm()
     @on "core:cancel", => @detach()
@@ -52,14 +59,7 @@ class InsertLinkView extends View
 
   display: ->
     @previouslyFocusedElement = $(':focus')
-    @editor = atom.workspace.getActiveEditor()
-    @setLinkFromSelection()
     atom.workspaceView.append(this)
-    if @textEditor.getText()
-      @urlEditor.getEditor().selectAll()
-      @urlEditor.focus()
-    else
-      @textEditor.focus()
 
   detach: ->
     return unless @hasParent()
@@ -181,15 +181,16 @@ class InsertLinkView extends View
     catch error
       console.log(error.message)
 
-  loadSavedLinks: ->
-    try
-      file = @getSavedLinksPath()
-      if fs.existsSync(file)
-        @links = CSON.readFileSync(file)
+  loadSavedLinks: (callback) ->
+    file = @getSavedLinksPath()
+    setLinks = (data) => @links = data || {}; callback()
+    fs.exists file, (exists) ->
+      if exists
+        CSON.readFile file, (error, data) ->
+          setLinks(data)
+          console.log(error.message) if error
       else
-        @links = {}
-    catch error
-      console.log(error.message)
+        setLinks()
 
   getSavedLinksPath: ->
     atom.config.get("markdown-writer.siteLinkPath") ||
