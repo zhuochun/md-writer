@@ -7,6 +7,7 @@ module.exports =
     urlForPosts: "http://example.github.io/assets/posts.json"
     urlForCategories: "http://example.github.io/assets/categories.json"
     fileExtension: ".markdown"
+    checkedForHexo: false
 
   activate: (state) ->
     # general

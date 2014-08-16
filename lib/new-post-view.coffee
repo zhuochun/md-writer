@@ -71,10 +71,10 @@ class NewPostView extends View
     return path.join(@pathEditor.getText(), @getFileName())
 
   getFileName: ->
-    date = @dateEditor.getText()
+    date = if atom.config.get("markdown-writer.checkedForHexo") then "" else "#{@dateEditor.getText()}-"
     title = utils.dasherize(@titleEditor.getText() || "new post")
     extension = atom.config.get("markdown-writer.fileExtension")
-    return "#{date}-#{title}#{extension}"
+    return "#{date}#{title}#{extension}"
 
   getFrontMatter: ->
     layout: "post"
