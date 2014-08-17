@@ -35,7 +35,6 @@ More GIFs Here:
   - `<kbd>key</kbd>` (<kbd>cmd</kbd> + <kbd>k</kbd>)
   - `- unordered list` (`shift-cmd-U`)
   - `0. ordered list` (`shift-cmd-O`)
-shift-cmd-I
   - `> blockquote` (`shift-cmd->`)
 - **Toggle headings**: `alt-[1-5]` to switch among `H1` to `H5`.
 

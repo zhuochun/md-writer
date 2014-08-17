@@ -1,3 +1,7 @@
+## 0.6.3
+
+* Support customize new post filename
+
 ## 0.6.2
 
 * Modify some key mappings
