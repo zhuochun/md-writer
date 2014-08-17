@@ -16,7 +16,7 @@ More GIFs Here:
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Post`.
 - Dialog to **create new draft**.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Draft`.
-- **Publish draft** moves current draft to `posts` directory. It updates `date` and rename the post using `title` in front matter.
+- **Publish draft** moves current draft to `posts` directory. It updates `date` and rename the filename using `title` in front matter.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: Publish Draft`.
 - Dialog to **manage tags/categories in front matter**.
   In Command Palette (`shift-cmd-P`), type `Markdown Writer: Manage Post Tags/Categories`
@@ -47,9 +47,11 @@ Go to `Preferences` (`cmd-,`), search `markdown writer` package.
 
 ### Settings Explained:
 
-- **siteLocalDir**: The root directory of blog/jekyll
+- **siteLocalDir**: The root directory of blog.
 - **siteDraftsDir**: The directory of drafts from the root of `siteLocalDir`. Default is `_draft/`.
 - **sitePostsDir**: The directory of posts from the root of `siteLocalDir`. Default is `_posts/{year}`. You can also use `{year}`, `{month}` and `{day}`.
+- **newPostFileName**: The filename format of new posts created. Default is `{year}-{month}-{day}-{title}{extension}`.
+- **fileExtension**: The file extension of posts/drafts. Default is `.markdown`.
 - **urlForTags**: The URL to tags `JSON` file. Refer to next section.
 - **urlForPosts**: The URL to posts `JSON` file. Refer to next section.
 - **urlForCategories**: The URL to categories `JSON` file. Refer to next section.

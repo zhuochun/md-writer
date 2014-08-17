@@ -15,13 +15,30 @@ getDateStr = (date)->
   date = getDate(date)
   return "#{date.year}-#{date.month}-#{date.day}"
 
+DATE_REGEX = /// ^
+  (\d{4})[-\/]     # year
+  (\d{1,2})[-\/]   # month
+  (\d{1,2})        # day
+  $ ///g
+
+parseDateStr = (str) ->
+  date = new Date()
+  matches = DATE_REGEX.exec(str)
+  if matches
+    date.setYear(parseInt(matches[1], 10))
+    date.setMonth(parseInt(matches[2], 10) - 1)
+    date.setDate(parseInt(matches[3], 10))
+  return getDate(date)
+
 getTimeStr = (date) ->
   date = getDate(date)
   return "#{date.hour}:#{date.minute}"
 
 getDate = (date = new Date()) ->
   year: "" + date.getFullYear()
+  i_month: "" + (date.getMonth() + 1)
   month: ("0" + (date.getMonth() + 1)).slice(-2)
+  i_day: "" + date.getDate()
   day: ("0" + date.getDate()).slice(-2)
   hour: ("0" + date.getHours()).slice(-2)
   minute: ("0" + date.getMinutes()).slice(-2)
@@ -118,14 +135,15 @@ dasherize = (str) ->
   str.trim().toLowerCase().replace(/[^-\w\s]|_/g, "").replace(/\s+/g,"-")
 
 dirTemplate = (directory, date) ->
-  return template(directory, getDate(date), /{(.+?)}/g)
+  template(directory, getDate(date))
 
-template = (text, data, matcher = /<([\w-]+?)>/g) ->
+template = (text, data, matcher = /[<{]([\w-]+?)[>}]/g) ->
   text.replace matcher, (match, attr) -> data[attr] || match
 
 module.exports =
   getJSON: getJSON
   getDate: getDate
+  parseDateStr: parseDateStr
   getDateStr: getDateStr
   getTimeStr: getTimeStr
   hasFrontMatter: hasFrontMatter

@@ -6,6 +6,7 @@ module.exports =
     urlForTags: "http://example.github.io/assets/tags.json"
     urlForPosts: "http://example.github.io/assets/posts.json"
     urlForCategories: "http://example.github.io/assets/categories.json"
+    newPostFileName: "{year}-{month}-{day}-{title}{extension}"
     fileExtension: ".markdown"
 
   activate: (state) ->

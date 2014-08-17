@@ -8,6 +8,13 @@ describe "NewPostView", ->
 
     @view = new NewPostView({})
 
+  it "get filename in hexo format", ->
+    atom.config.set("markdown-writer.newPostFileName", "{title}{extension}")
+    atom.config.set("markdown-writer.fileExtension", ".markdown")
+    @view.titleEditor.setText("Hexo format")
+    @view.dateEditor.setText("2014-11-19")
+    expect(@view.getFileName()).toEqual "hexo-format.markdown"
+
   it "generate front matter", ->
     frontMatter =
       layout: "test"
