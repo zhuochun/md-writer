@@ -26,7 +26,8 @@
     "markdown-writer:toggle-taskdone",
     "markdown-writer:toggle-blockquote",
     "markdown-writer:manage-post-tags",
-    "markdown-writer:manage-post-categories"
+    "markdown-writer:manage-post-categories",
+    "markdown-writer:cheatsheet"
   ],
   "repository": "https://github.com/zhuochun/md-writer",
   "license": "MIT",

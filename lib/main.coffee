@@ -33,22 +33,37 @@ module.exports =
     ["link", "image"].forEach (media) =>
       @registerCommand "insert-#{media}", "./insert-#{media}-view"
 
-  registerCommand: (cmd, path, options = {}) ->
-    atom.workspaceView.command "markdown-writer:#{cmd}", ->
-      unless options.optOutGrammars
-        editor = atom.workspace.getActiveEditor()
-        return unless editor?
+    # help
+    atom.workspaceView.command "markdown-writer:cheatsheet", =>
+      @openCheatSheet()
 
-        grammars = atom.config.get('markdown-writer.grammars') || [
-          'source.gfm'
-          'text.plain'
-          'text.plain.null-grammar'
-        ]
-        return unless editor.getGrammar().scopeName in grammars
+  registerCommand: (cmd, path, options = {}) ->
+    atom.workspaceView.command "markdown-writer:#{cmd}", =>
+      return unless options.optOutGrammars or @isMarkdown()
 
       cmdModule = require(path)
       cmdInstance = new cmdModule(options.args)
       cmdInstance.display()
+
+  isMarkdown: ->
+    editor = atom.workspace.getActiveEditor()
+    return false unless editor?
+
+    grammars = atom.config.get('markdown-writer.grammars') || [
+      'source.gfm'
+      'text.plain'
+      'text.plain.null-grammar'
+    ]
+    return true if editor.getGrammar().scopeName in grammars
+
+  openCheatSheet: ->
+    return unless @isMarkdown()
+
+    packageDir = atom.packages.getLoadedPackage("markdown-writer").path
+    cheatsheet = require("path").join packageDir, "CHEATSHEET.md"
+
+    atom.workspace.open "markdown-preview://#{encodeURI(cheatsheet)}",
+      split: 'right', searchAllPanes: true
 
   deactivate: ->
 

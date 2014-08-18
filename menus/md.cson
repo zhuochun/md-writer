@@ -97,6 +97,10 @@
           'label': 'Toggle Blockquote'
           'command': 'markdown-writer:toggle-blockquote'
         }
+        {
+          'label': 'Open Markdown Cheatsheet'
+          'command': 'markdown-writer:cheatsheet'
+        }
       ]
     ]
   }
