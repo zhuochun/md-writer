@@ -37,6 +37,7 @@ More GIFs Here:
   - `0. ordered list` (`shift-cmd-O`)
   - `> blockquote` (`shift-cmd->`)
 - **Toggle headings**: `alt-[1-5]` to switch among `H1` to `H5`.
+- **Markdown Cheatsheet**. In Command Palette (`shift-cmd-P`), type `Markdown Writer: Cheatsheet`.
 
 ## Setup
 

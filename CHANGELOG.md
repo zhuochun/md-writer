@@ -1,3 +1,11 @@
+## 0.6.4
+
+* Markdown cheat sheet
+* Fix insert reference link at EOF buffer position
+* Fix template empty key
+* Fix fenced code block regex
+* Re-focus editor after cursor action in dialogs
+
 ## 0.6.3
 
 * Support customize new post filename
