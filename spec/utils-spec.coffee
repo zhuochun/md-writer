@@ -178,5 +178,6 @@ key2:
       .toEqual("<a href=''>hello world! markdown-writer</a>")
 
   it "generate template with data missing", ->
-    fixture = "<a href='<url>'><img></a>"
-    expect(utils.template(fixture, url: "//")).toEqual("<a href='//'><img></a>")
+    fixture = "<a href='<url>' title='<title>'><img></a>"
+    expect(utils.template(fixture, url: "//", title: ''))
+      .toEqual("<a href='//' title=''><img></a>")

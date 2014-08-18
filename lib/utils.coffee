@@ -138,7 +138,8 @@ dirTemplate = (directory, date) ->
   template(directory, getDate(date))
 
 template = (text, data, matcher = /[<{]([\w-]+?)[>}]/g) ->
-  text.replace matcher, (match, attr) -> data[attr] || match
+  text.replace matcher, (match, attr) ->
+    if data[attr]? then data[attr] else match
 
 module.exports =
   getJSON: getJSON
