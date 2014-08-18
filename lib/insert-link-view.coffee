@@ -121,7 +121,10 @@ class InsertLinkView extends View
 
     # insert reference
     position = @editor.getCursorBufferPosition()
-    @editor.moveCursorToBeginningOfNextParagraph()
+    if position.row == @editor.getLastBufferRow()
+      @editor.insertNewline() # handle last row position
+    else
+      @editor.moveCursorToBeginningOfNextParagraph()
     @editor.insertNewline()
     @editor.insertText("  [#{id}]: #{url} \"#{title}\"")
     @editor.moveCursorDown()
