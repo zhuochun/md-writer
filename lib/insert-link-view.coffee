@@ -97,6 +97,8 @@ class InsertLinkView extends View
   useSearchResult: (e) ->
     @titleEditor.setText(e.target.textContent)
     @urlEditor.setText(e.target.dataset.url)
+    @textEditor.setText(e.target.textContent) unless @textEditor.getText()
+    @titleEditor.focus()
 
   insertLink: (text, title, url) ->
     if @referenceId

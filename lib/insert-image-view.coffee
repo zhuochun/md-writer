@@ -105,6 +105,7 @@ class InsertImageView extends View
     file = files[0]
     @imgEditor.setText(file)
     @displayImagePreview(file)
+    @titleEditor.focus()
 
   isValidImageFile: (file) ->
     path.extname(file).toLowerCase() in imageExtensions
