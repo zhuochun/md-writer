@@ -100,7 +100,9 @@ class InsertImageView extends View
       @heightEditor.setText("")
 
   openImageDialog: ->
-    files = dialog.showOpenDialog(properties: ['openFile'])
+    files = dialog.showOpenDialog
+      properties: ['openFile']
+      defaultPath: atom.project.getPath()
     return unless files
     file = files[0]
     @imgEditor.setText(file)
@@ -112,11 +114,12 @@ class InsertImageView extends View
 
   generateImageUrl: (file) ->
     return file if utils.isUrl(file)
+
     localDir = atom.project.getPath()
-    if file.startsWith(localDir)
-      return file.replace(localDir, ".")
+    if file.startsWith(localDir) # resolve relative to root of site
+      return file.replace(localDir, "").replace(/\\/g, "/")
     else
-      template = atom.config.get("markdown-writer.siteImageUrl") || "./"
+      template = atom.config.get("markdown-writer.siteImageUrl") || ""
       return utils.dirTemplate(template) + path.basename(file)
 
   generateImageTag: (data) ->

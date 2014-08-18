@@ -68,7 +68,7 @@ getFrontMatterText = (obj, noLeadingFence) ->
     return ["---", "#{yamlText}---", ""].join(os.EOL)
 
 IMG_RAW_REGEX = /// <img (.*?)\/?> ///i
-IMG_RAW_ATTRIBUTE = /// ([a-z]+?) = ('|")(.+?)\2 ///ig
+IMG_RAW_ATTRIBUTE = /// ([a-z]+?) = ('|")(.*?)\2 ///ig
 IMG_REGEX  = ///
   !\[(.+?)\]               # ![text]
   \(                       # open (

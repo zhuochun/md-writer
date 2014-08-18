@@ -30,6 +30,14 @@ describe "utils", ->
       alt: "alt", src: "src.png",
       class: "aligncenter", height: "304", width: "520"
 
+  it "check parse valid raw image 2", ->
+    fixture = """
+  <img title="" src="src.png" class="aligncenter" height="304" width="520" />
+  """
+    expect(utils.parseRawImage(fixture)).toEqual
+      title: "", src: "src.png",
+      class: "aligncenter", height: "304", width: "520"
+
   it "check is text invalid inline link", ->
     fixture = "![text](url)"
     expect(utils.isInlineLink(fixture)).toBe(false)
