@@ -1,6 +1,6 @@
 # Markdown-Writer for Atom
 
-Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](http://jekyllrb.com/), [Hexo](http://hexo.io/) and other static blogs.
+Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) and other static blogs.
 
 ![Insert Image](http://i.imgur.com/s9ekMns.gif)
 
@@ -13,35 +13,45 @@ More GIFs Here:
 ## Features
 
 - Dialog to **create new post**.
-  In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Post`.
+  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Post`.
 - Dialog to **create new draft**.
-  In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Draft`.
-- **Publish draft** moves current draft to `posts` directory. It updates `date` and rename the filename using `title` in front matter.
-  In Command Palette (`shift-cmd-P`), type `Markdown Writer: Publish Draft`.
-- Dialog to **manage tags/categories in front matter**.
-  In Command Palette (`shift-cmd-P`), type `Markdown Writer: Manage Post Tags/Categories`
+  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Draft`.
+- **Publish draft** moves current draft to posts directory.
+  - It updates `date` and rename the filename using `title` in front matter.
+  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Publish Draft`.
+- Dialog to **manage tags and categories in front matter**.
+  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Manage Post Tags/Categories`
 - Dialog to **insert link (`shift-cmd-k`) and automatically link to the text next time** (my favorite feature from Windows Live Writer).
   - Insert inline link by default
   - Insert reference link if title is specified
   - Remove link (and its reference) after URL is deleted
-- Dialog to **insert image (`shift-cmd-i`), with width/height auto-detected**.
-  In Command Palette (`shift-cmd-P`), type `Markdown Writer: Insert Image`
+- Dialog to **insert image (`shift-cmd-i`), with height and width auto-detected**.
+  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Insert Image`
+- Dialog to **insert table**.
+  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Insert Table`
 - **Toggle text styles**:
   - `code` (`cmd-'`)
   - **bold** (`cmd-b`)
   - _italic_ (`cmd-i`)
   - ~~strikethrough~~ (`cmd-h`)
   - `'''codeblock'''` (`shift-cmd-"`)
-  - `<kbd>key</kbd>` (<kbd>cmd</kbd> + <kbd>k</kbd>)
+  - `<kbd>key</kbd>` (`cmd + k`)
   - `- unordered list` (`shift-cmd-U`)
   - `0. ordered list` (`shift-cmd-O`)
   - `> blockquote` (`shift-cmd->`)
+  - `- [ ] task list` (`markdown-writer:toggle-task`)
 - **Toggle headings**: `alt-[1-5]` to switch among `H1` to `H5`.
-- **Markdown Cheatsheet**. In Command Palette (`shift-cmd-P`), type `Markdown Writer: Cheatsheet`.
+- **Helper commands:**
+  - `markdown-writer:move-to-previous-heading`
+  - `markdown-writer:move-to-next-heading`
+  - `markdown-writer:move-to-next-table-cell`
+  - `markdown-writer:format-table`
+- **Markdown cheat sheet**.
+  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Open Cheat Sheet`.
 
 ## Setup
 
-You need to config markdown-writer to use most of the features.
+You need to configure markdown-writer to use most of the features.
 
 Go to `Preferences` (`cmd-,`), search `markdown writer` package.
 
@@ -58,7 +68,7 @@ Go to `Preferences` (`cmd-,`), search `markdown writer` package.
 
 ### Advance Settings:
 
-To change these settings, open your Atom config file, find `markdown-writer` entry.
+To change these settings, open your Atom Config file, find `markdown-writer` entry.
 
 - **siteLinkPath**: Define path (string) to a `.cson` file that stores all links added for automatic linking next time.
   Default uses `markdown-writer-links.cson` in Atom's config directory.
@@ -113,9 +123,8 @@ For **Hexo** users, you can install [hexo-generator-atom-markdown-writer-meta](h
 
 ### TODOs
 
-- Insert table
-- Insert footnote
 - Support multiple blog directories
+- Insert footnote
 
 View [CHANGELOG :notebook_with_decorative_cover:](https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md).
 

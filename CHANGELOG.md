@@ -1,3 +1,14 @@
+## 0.7.0
+
+* Insert table dialog
+* Add new commands:
+  * move to previous/next heading
+  * move to next table cell
+  * format table
+* Changed cheat sheet command
+* Re-organize package menus
+* Improve insert local image's path
+
 ## 0.6.4
 
 * Markdown cheat sheet
