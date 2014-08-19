@@ -9,10 +9,10 @@ class InsertTableView extends View
     @div class: "markdown-writer markdown-writer-dialog overlay from-top", =>
       @label "Insert Table", class: "icon icon-diff-added"
       @div =>
-        @label "Rows", class: "message"
-        @subview "rowEditor", new EditorView(mini: true)
         @label "Columns", class: "message"
         @subview "columnEditor", new EditorView(mini: true)
+        @label "Rows", class: "message"
+        @subview "rowEditor", new EditorView(mini: true)
 
   initialize: ->
     @on "core:confirm", => @onConfirm()
@@ -30,7 +30,7 @@ class InsertTableView extends View
     atom.workspaceView.append(this)
     @rowEditor.setText("3")
     @columnEditor.setText("3")
-    @rowEditor.focus()
+    @columnEditor.focus()
 
   detach: ->
     return unless @hasParent()
@@ -56,7 +56,7 @@ class InsertTableView extends View
     table.join("\n")
 
   createTableRow: (col, {beg, mid, end}) ->
-    tr = new Array(col).fill(mid)
+    tr = new Array(col - 1).fill(mid)
     [tr[0], tr[col]] = [beg, end]
     tr.join("")
 
