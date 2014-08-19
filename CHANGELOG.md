@@ -1,3 +1,8 @@
+## 0.7.1
+
+* Update cheat sheet
+* Fix some menu commands not updated
+
 ## 0.7.0
 
 * Insert table dialog

@@ -121,16 +121,17 @@ For **Jekyll** users, you can add [these scripts](https://gist.github.com/zhuoch
 
 For **Hexo** users, you can install [hexo-generator-atom-markdown-writer-meta](https://github.com/timnew/hexo-generator-atom-markdown-writer-meta) (Thanks to [@timnew](https://github.com/timnew)).
 
-### TODOs
+## TODOs
 
 - Support multiple blog directories
 - Insert footnote
 
-View [CHANGELOG :notebook_with_decorative_cover:](https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md).
+## Project
 
-If you found any bug, please submit an issue [here :octocat:](https://github.com/zhuochun/md-writer/issues).
-
-License in [MIT :unlock:](https://github.com/zhuochun/md-writer/blob/master/LICENSE.md).
+- View [CHANGELOG](https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md) :notebook_with_decorative_cover:.
+- If you found any bug, please submit an issue [here](https://github.com/zhuochun/md-writer/issues) :octocat:.
+- License in [MIT](https://github.com/zhuochun/md-writer/blob/master/LICENSE.md) :unlock:.
+- Supported by [褪墨・时间管理](http://www.mifengtd.cn/) :muscle:.
 
 ## Tips
 
