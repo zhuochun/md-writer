@@ -97,6 +97,8 @@ $(function() {
 
 ## Tables
 
+**Command Palette <kbd>shift</kbd> + <kbd>cmd</kbd> + <kbd>P</kbd>:** `Markdown Writer: Insert Table`
+
 ```
 First Header | Second Header
 ------------ | -------------
@@ -106,8 +108,10 @@ Content in the first column | Content in the second column
 
 ## Horizontal Rule
 
+Use three or more hyphens.
+
 ```
-Use three or more hyphens:
+Horizontal rule
 
 ---
 
@@ -137,3 +141,8 @@ You can also use raw HTML in your Markdown, and it'll mostly work pretty well.
   <dd>Does *not* work **very** well. Use HTML <em>tags</em>.</dd>
 </dl>
 ```
+
+## Markdown Writer Commands
+
+- **Command Palette <kbd>shift</kbd> + <kbd>cmd</kbd> + <kbd>P</kbd>:** `Markdown Writer`
+- **Menu Bar -> Packages -> Markdown Writer**
