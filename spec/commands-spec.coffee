@@ -3,9 +3,9 @@ cmds = require "../lib/commands"
 describe "commands", ->
   it "find the first column in table row", ->
     fixture = "hd 1 | hd 2 | hd 3"
-    expect(cmds._findNextTableColumnIdx(fixture,  0)).toEqual(4)
-    expect(cmds._findNextTableColumnIdx(fixture,  6)).toEqual(11)
-    expect(cmds._findNextTableColumnIdx(fixture, 13)).toEqual(19)
+    expect(cmds._findNextTableCellIdx(fixture,  0)).toEqual(4)
+    expect(cmds._findNextTableCellIdx(fixture,  6)).toEqual(11)
+    expect(cmds._findNextTableCellIdx(fixture, 13)).toEqual(19)
 
   it "parse table into vals", ->
     fixture = """

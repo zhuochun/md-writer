@@ -132,8 +132,8 @@
               'command': 'markdown-writer:command-move-to-next-heading'
             }
             {
-              'label': 'Move to Next Table Column'
-              'command': 'markdown-writer:command-move-to-next-table-column'
+              'label': 'Move to Next Table Cell'
+              'command': 'markdown-writer:command-move-to-next-table-cell'
             }
             { 'type': 'separator' }
             {

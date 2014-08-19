@@ -44,7 +44,7 @@ class Commands
       match.stop()
     return found
 
-  moveToNextTableColumn: ->
+  moveToNextTableCell: ->
     editor = atom.workspace.getActiveEditor()
     {row, column} = editor.getCursorBufferPosition()
     line = editor.lineForBufferRow(row)
@@ -54,10 +54,10 @@ class Commands
       row += 1
       line = editor.lineForBufferRow(row)
 
-    column = @_findNextTableColumnIdx(line, column + 1)
+    column = @_findNextTableCellIdx(line, column + 1)
     editor.setCursorBufferPosition([row, column])
 
-  _findNextTableColumnIdx: (line, column) ->
+  _findNextTableCellIdx: (line, column) ->
     if td = TABLE_COL_REGEX.exec(line[column..])
       column + td[1].length
     else

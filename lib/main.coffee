@@ -37,7 +37,7 @@ module.exports =
 
     # helpers
     ["open-cheat-sheet", "move-to-previous-heading", "move-to-next-heading",
-     "move-to-next-table-column", "format-table"].forEach (command) =>
+     "move-to-next-table-cell", "format-table"].forEach (command) =>
       @registerHelper command, "./commands"
 
   registerCommand: (cmd, path, options = {}) ->

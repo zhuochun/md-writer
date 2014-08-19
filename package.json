@@ -30,7 +30,7 @@
     "markdown-writer:manage-post-categories",
     "markdown-writer:move-to-previous-heading",
     "markdown-writer:move-to-next-heading",
-    "markdown-writer:move-to-next-table-column",
+    "markdown-writer:move-to-next-table-cell",
     "markdown-writer:format-table",
     "markdown-writer:open-cheat-sheet"
   ],
