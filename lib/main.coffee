@@ -1,3 +1,5 @@
+CmdModule = {}
+
 module.exports =
   configDefaults:
     siteLocalDir: "/GitHub/example.github.io/"
@@ -33,6 +35,11 @@ module.exports =
     ["link", "image", "table"].forEach (media) =>
       @registerCommand "insert-#{media}", "./insert-#{media}-view"
 
+    # command
+    ["move-to-previous-heading", "move-to-next-heading",
+     "move-to-next-table-column", "format-table"].forEach (command) =>
+      @registerEditorCommand command, "./commands"
+
     # help
     atom.workspaceView.command "markdown-writer:cheatsheet", =>
       @openCheatSheet()
@@ -41,9 +48,14 @@ module.exports =
     atom.workspaceView.command "markdown-writer:#{cmd}", =>
       return unless options.optOutGrammars or @isMarkdown()
 
-      cmdModule = require(path)
-      cmdInstance = new cmdModule(options.args)
+      CmdModule[path] ?= require(path)
+      cmdInstance = new CmdModule[path](options.args)
       cmdInstance.display()
+
+  registerEditorCommand: (cmd, path) ->
+    atom.workspaceView.command "markdown-writer:command-#{cmd}", ->
+      CmdModule[path] ?= require(path)
+      CmdModule[path].trigger(cmd)
 
   isMarkdown: ->
     editor = atom.workspace.getActiveEditor()
@@ -66,5 +78,6 @@ module.exports =
       split: 'right', searchAllPanes: true
 
   deactivate: ->
+    CmdModule = {}
 
   serialize: ->
