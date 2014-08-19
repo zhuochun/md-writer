@@ -125,20 +125,20 @@
           'submenu': [
             {
               'label': 'Move to Previous Heading'
-              'command': 'markdown-writer:command-move-to-previous-heading'
+              'command': 'markdown-writer:move-to-previous-heading'
             }
             {
               'label': 'Move to Next Heading'
-              'command': 'markdown-writer:command-move-to-next-heading'
+              'command': 'markdown-writer:move-to-next-heading'
             }
             {
               'label': 'Move to Next Table Cell'
-              'command': 'markdown-writer:command-move-to-next-table-cell'
+              'command': 'markdown-writer:move-to-next-table-cell'
             }
             { 'type': 'separator' }
             {
               'label': 'Format Table'
-              'command': 'markdown-writer:command-format-table'
+              'command': 'markdown-writer:format-table'
             }
           ]
         }
