@@ -30,7 +30,7 @@ module.exports =
       @registerCommand "toggle-#{style}", "./style-heading", args: style
 
     # media
-    ["link", "image"].forEach (media) =>
+    ["link", "image", "table"].forEach (media) =>
       @registerCommand "insert-#{media}", "./insert-#{media}-view"
 
     # help

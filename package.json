@@ -9,6 +9,7 @@
     "markdown-writer:publish-draft",
     "markdown-writer:insert-link",
     "markdown-writer:insert-image",
+    "markdown-writer:insert-table",
     "markdown-writer:toggle-code-text",
     "markdown-writer:toggle-codeblock-text",
     "markdown-writer:toggle-bold-text",
