@@ -105,4 +105,11 @@ class Commands
         .join(separator)
         .trimRight() # remove trailing spaces
 
+  openCheatSheet: ->
+    packageDir = atom.packages.getLoadedPackage("markdown-writer").path
+    cheatsheet = require("path").join packageDir, "CHEATSHEET.md"
+
+    atom.workspace.open "markdown-preview://#{encodeURI(cheatsheet)}",
+      split: 'right', searchAllPanes: true
+
 module.exports = new Commands()

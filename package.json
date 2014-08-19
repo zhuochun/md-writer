@@ -28,11 +28,11 @@
     "markdown-writer:toggle-blockquote",
     "markdown-writer:manage-post-tags",
     "markdown-writer:manage-post-categories",
-    "markdown-writer:cheatsheet",
-    "markdown-writer:command-move-to-next-table-column",
-    "markdown-writer:command-format-table",
-    "markdown-writer:command-move-to-previous-heading",
-    "markdown-writer:command-move-to-next-heading"
+    "markdown-writer:move-to-previous-heading",
+    "markdown-writer:move-to-next-heading",
+    "markdown-writer:move-to-next-table-column",
+    "markdown-writer:format-table",
+    "markdown-writer:open-cheat-sheet"
   ],
   "repository": "https://github.com/zhuochun/md-writer",
   "license": "MIT",

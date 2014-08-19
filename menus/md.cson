@@ -144,8 +144,8 @@
         }
         { 'type': 'separator' }
         {
-          'label': 'Markdown Cheatsheet'
-          'command': 'markdown-writer:cheatsheet'
+          'label': 'Open Cheat Sheet'
+          'command': 'markdown-writer:open-cheat-sheet'
         }
       ]
     ]

@@ -35,14 +35,10 @@ module.exports =
     ["link", "image", "table"].forEach (media) =>
       @registerCommand "insert-#{media}", "./insert-#{media}-view"
 
-    # command
-    ["move-to-previous-heading", "move-to-next-heading",
+    # helpers
+    ["open-cheat-sheet", "move-to-previous-heading", "move-to-next-heading",
      "move-to-next-table-column", "format-table"].forEach (command) =>
-      @registerEditorCommand command, "./commands"
-
-    # help
-    atom.workspaceView.command "markdown-writer:cheatsheet", =>
-      @openCheatSheet()
+      @registerHelper command, "./commands"
 
   registerCommand: (cmd, path, options = {}) ->
     atom.workspaceView.command "markdown-writer:#{cmd}", =>
@@ -52,8 +48,10 @@ module.exports =
       cmdInstance = new CmdModule[path](options.args)
       cmdInstance.display()
 
-  registerEditorCommand: (cmd, path) ->
-    atom.workspaceView.command "markdown-writer:command-#{cmd}", ->
+  registerHelper: (cmd, path) ->
+    atom.workspaceView.command "markdown-writer:#{cmd}", =>
+      return unless @isMarkdown()
+
       CmdModule[path] ?= require(path)
       CmdModule[path].trigger(cmd)
 
@@ -67,15 +65,6 @@ module.exports =
       'text.plain.null-grammar'
     ]
     return true if editor.getGrammar().scopeName in grammars
-
-  openCheatSheet: ->
-    return unless @isMarkdown()
-
-    packageDir = atom.packages.getLoadedPackage("markdown-writer").path
-    cheatsheet = require("path").join packageDir, "CHEATSHEET.md"
-
-    atom.workspace.open "markdown-preview://#{encodeURI(cheatsheet)}",
-      split: 'right', searchAllPanes: true
 
   deactivate: ->
     CmdModule = {}
