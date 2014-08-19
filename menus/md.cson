@@ -6,103 +6,145 @@
       'label': 'MarkDown Writer'
       'submenu': [
         {
-          'label': 'Add New Draft',
-          'command': 'markdown-writer:new-draft'
+          'label': 'File'
+          'submenu': [
+            {
+              'label': 'Add New Draft',
+              'command': 'markdown-writer:new-draft'
+            }
+            {
+              'label': 'Add New Post',
+              'command': 'markdown-writer:new-post'
+            }
+            {
+              'label': 'Publish Draft',
+              'command': 'markdown-writer:publish-draft'
+            }
+          ]
         }
         {
-          'label': 'Add New Post',
-          'command': 'markdown-writer:new-post'
+          'label': 'Front Matter'
+          'submenu': [
+            {
+              'label': 'Manage Post Tags',
+              'command': 'markdown-writer:manage-post-tags'
+            }
+            {
+              'label': 'Manage Post Categories',
+              'command': 'markdown-writer:manage-post-categories'
+            }
+          ]
         }
         {
-          'label': 'Publish Draft',
-          'command': 'markdown-writer:publish-draft'
+          'label': 'Markup'
+          'submenu': [
+            {
+              'label': 'Insert Link',
+              'command': 'markdown-writer:insert-link'
+            }
+            {
+              'label': 'Insert Image',
+              'command': 'markdown-writer:insert-image'
+            }
+            {
+              'label': 'Insert Table',
+              'command': 'markdown-writer:insert-table'
+            }
+            { 'type': 'separator' }
+            {
+              'label': 'Code',
+              'command': 'markdown-writer:toggle-code-text'
+            }
+            {
+              'label': 'Code Block',
+              'command': 'markdown-writer:toggle-codeblock-text'
+            }
+            {
+              'label': 'Bold',
+              'command': 'markdown-writer:toggle-bold-text'
+            }
+            {
+              'label': 'Italic',
+              'command': 'markdown-writer:toggle-italic-text'
+            }
+            {
+              'label': 'Keystroke',
+              'command': 'markdown-writer:toggle-keystroke-text'
+            }
+            {
+              'label': 'Strikethrough',
+              'command': 'markdown-writer:toggle-strikethrough-text'
+            }
+            { 'type': 'separator' }
+            {
+              'label': 'Heading 1'
+              'command': 'markdown-writer:toggle-h1'
+            }
+            {
+              'label': 'Heading 2'
+              'command': 'markdown-writer:toggle-h2'
+            }
+            {
+              'label': 'Heading 3'
+              'command': 'markdown-writer:toggle-h3'
+            }
+            {
+              'label': 'Heading 4'
+              'command': 'markdown-writer:toggle-h4'
+            }
+            {
+              'label': 'Heading 5'
+              'command': 'markdown-writer:toggle-h5'
+            }
+            { 'type': 'separator' }
+            {
+              'label': 'Unordered List'
+              'command': 'markdown-writer:toggle-ul'
+            }
+            {
+              'label': 'Ordered List'
+              'command': 'markdown-writer:toggle-h5'
+            }
+            {
+              'label': 'Task List'
+              'command': 'markdown-writer:toggle-task'
+            }
+            {
+              'label': 'Task List (Done)'
+              'command': 'markdown-writer:toggle-taskdone'
+            }
+            { 'type': 'separator' }
+            {
+              'label': 'Blockquote'
+              'command': 'markdown-writer:toggle-blockquote'
+            }
+          ]
         }
         {
-          'label': 'Manage Post Tags',
-          'command': 'markdown-writer:manage-post-tags'
+          'label': 'Helpers'
+          'submenu': [
+            {
+              'label': 'Move to Previous Heading'
+              'command': 'markdown-writer:command-move-to-previous-heading'
+            }
+            {
+              'label': 'Move to Next Heading'
+              'command': 'markdown-writer:command-move-to-next-heading'
+            }
+            {
+              'label': 'Move to Next Table Column'
+              'command': 'markdown-writer:command-move-to-next-table-column'
+            }
+            { 'type': 'separator' }
+            {
+              'label': 'Format Table'
+              'command': 'markdown-writer:command-format-table'
+            }
+          ]
         }
+        { 'type': 'separator' }
         {
-          'label': 'Manage Post Categories',
-          'command': 'markdown-writer:manage-post-categories'
-        }
-        {
-          'label': 'Insert Link',
-          'command': 'markdown-writer:insert-link'
-        }
-        {
-          'label': 'Insert Image',
-          'command': 'markdown-writer:insert-image'
-        }
-        {
-          'label': 'Insert Table',
-          'command': 'markdown-writer:insert-table'
-        }
-        {
-          'label': 'Toggle Code Text',
-          'command': 'markdown-writer:toggle-code-text'
-        }
-        {
-          'label': 'Toggle CodeBlock Text',
-          'command': 'markdown-writer:toggle-codeblock-text'
-        }
-        {
-          'label': 'Toggle Bold Text',
-          'command': 'markdown-writer:toggle-bold-text'
-        }
-        {
-          'label': 'Toggle Italic Text',
-          'command': 'markdown-writer:toggle-italic-text'
-        }
-        {
-          'label': 'Toggle Keystroke Text',
-          'command': 'markdown-writer:toggle-keystroke-text'
-        }
-        {
-          'label': 'Toggle Strikethrough Text',
-          'command': 'markdown-writer:toggle-strikethrough-text'
-        }
-        {
-          'label': 'Toggle Heading 1'
-          'command': 'markdown-writer:toggle-h1'
-        }
-        {
-          'label': 'Toggle Heading 2'
-          'command': 'markdown-writer:toggle-h2'
-        }
-        {
-          'label': 'Toggle Heading 3'
-          'command': 'markdown-writer:toggle-h3'
-        }
-        {
-          'label': 'Toggle Heading 4'
-          'command': 'markdown-writer:toggle-h4'
-        }
-        {
-          'label': 'Toggle Heading 5'
-          'command': 'markdown-writer:toggle-h5'
-        }
-        {
-          'label': 'Toggle Unordered List'
-          'command': 'markdown-writer:toggle-ul'
-        }
-        {
-          'label': 'Toggle Ordered List'
-          'command': 'markdown-writer:toggle-h5'
-        }
-        {
-          'label': 'Toggle Task List'
-          'command': 'markdown-writer:toggle-task'
-        }
-        {
-          'label': 'Toggle Task List (Done)'
-          'command': 'markdown-writer:toggle-taskdone'
-        }
-        {
-          'label': 'Toggle Blockquote'
-          'command': 'markdown-writer:toggle-blockquote'
-        }
-        {
-          'label': 'Open Markdown Cheatsheet'
+          'label': 'Markdown Cheatsheet'
           'command': 'markdown-writer:cheatsheet'
         }
       ]
