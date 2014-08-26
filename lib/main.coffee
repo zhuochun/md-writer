@@ -43,16 +43,17 @@ module.exports =
       @registerHelper command, "./commands"
 
   registerCommand: (cmd, path, options = {}) ->
-    atom.workspaceView.command "markdown-writer:#{cmd}", =>
-      return unless options.optOutGrammars or @isMarkdown()
+    atom.workspaceView.command "markdown-writer:#{cmd}", (e) =>
+      unless options.optOutGrammars or @isMarkdown()
+        return e.abortKeyBinding()
 
       CmdModule[path] ?= require(path)
       cmdInstance = new CmdModule[path](options.args)
       cmdInstance.display()
 
   registerHelper: (cmd, path) ->
-    atom.workspaceView.command "markdown-writer:#{cmd}", =>
-      return unless @isMarkdown()
+    atom.workspaceView.command "markdown-writer:#{cmd}", (e) =>
+      return e.abortKeyBinding() unless @isMarkdown()
 
       CmdModule[path] ?= require(path)
       CmdModule[path].trigger(cmd)
