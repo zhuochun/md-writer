@@ -1,3 +1,7 @@
+## 0.7.2
+
+* Publish Draft takes care of date prefix
+
 ## 0.7.1
 
 * Update cheat sheet
