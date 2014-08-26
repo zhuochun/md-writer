@@ -44,6 +44,19 @@ class Commands
       match.stop()
     return found
 
+  # jump between reference marker and reference definition
+  jumpBetweenReferenceDefinition: ->
+    editor = atom.workspace.getActiveEditor()
+    cursor = editor.getCursorBufferPosition()
+    key = editor.getSelectedText() || editor.getWordUnderCursor()
+    key = /// \[? ([^\s\]]+) (?:\] | \]:)? ///.exec(key)[1]
+
+    editor.buffer.scan /// \[ #{key} \] ///g, (match) ->
+      end = match.range.end
+      if end.row != cursor.row
+        editor.setCursorBufferPosition([end.row, end.column - 1])
+        match.stop()
+
   jumpToNextTableCell: ->
     editor = atom.workspace.getActiveEditor()
     {row, column} = editor.getCursorBufferPosition()

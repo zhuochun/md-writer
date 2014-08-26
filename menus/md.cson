@@ -132,6 +132,10 @@
               'command': 'markdown-writer:jump-to-next-heading'
             }
             {
+              'label': 'Jump Between Reference Marker/Definition'
+              'command': 'markdown-writer:jump-between-reference-definition'
+            }
+            {
               'label': 'Jump to Next Table Cell'
               'command': 'markdown-writer:jump-to-next-table-cell'
             }

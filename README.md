@@ -42,6 +42,7 @@ More GIFs Here:
   - `- [ ] task list` (`markdown-writer:toggle-task`)
 - **Toggle headings**: `alt-[1-5]` to switch among `H1` to `H5`.
 - **Helper commands**: you can add custom key mappings or search them in Command Palette (`shift-cmd-P`).
+  - `markdown-writer:jump-between-reference-definition`
   - `markdown-writer:jump-to-previous-heading`
   - `markdown-writer:jump-to-next-heading`
   - `markdown-writer:jump-to-next-table-cell`
@@ -125,7 +126,7 @@ For **Hexo** users, you can install [hexo-generator-atom-markdown-writer-meta](h
 
 - Support multiple blog directories
 - Support default settings for different engines
-- Insert footnote (depends )
+- Insert footnote
 
 ## Project
 
