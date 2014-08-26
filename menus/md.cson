@@ -124,16 +124,16 @@
           'label': 'Helpers'
           'submenu': [
             {
-              'label': 'Move to Previous Heading'
-              'command': 'markdown-writer:move-to-previous-heading'
+              'label': 'Jump to Previous Heading'
+              'command': 'markdown-writer:jump-to-previous-heading'
             }
             {
-              'label': 'Move to Next Heading'
-              'command': 'markdown-writer:move-to-next-heading'
+              'label': 'Jump to Next Heading'
+              'command': 'markdown-writer:jump-to-next-heading'
             }
             {
-              'label': 'Move to Next Table Cell'
-              'command': 'markdown-writer:move-to-next-table-cell'
+              'label': 'Jump to Next Table Cell'
+              'command': 'markdown-writer:jump-to-next-table-cell'
             }
             { 'type': 'separator' }
             {

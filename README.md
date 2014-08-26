@@ -42,9 +42,9 @@ More GIFs Here:
   - `- [ ] task list` (`markdown-writer:toggle-task`)
 - **Toggle headings**: `alt-[1-5]` to switch among `H1` to `H5`.
 - **Helper commands**: you can add custom key mappings or search them in Command Palette (`shift-cmd-P`).
-  - `markdown-writer:move-to-previous-heading`
-  - `markdown-writer:move-to-next-heading`
-  - `markdown-writer:move-to-next-table-cell`
+  - `markdown-writer:jump-to-previous-heading`
+  - `markdown-writer:jump-to-next-heading`
+  - `markdown-writer:jump-to-next-table-cell`
   - `markdown-writer:format-table`
 - **Markdown cheat sheet**.
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Open Cheat Sheet`.

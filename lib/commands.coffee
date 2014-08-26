@@ -8,7 +8,7 @@ class Commands
     fn = command.replace /-[a-z]/ig, (s) -> s[1].toUpperCase()
     @[fn]()
 
-  moveToPreviousHeading: ->
+  jumpToPreviousHeading: ->
     editor = atom.workspace.getActiveEditor()
     {row} = editor.getCursorBufferPosition()
 
@@ -22,7 +22,7 @@ class Commands
       match.stop()
     return found
 
-  moveToNextHeading: ->
+  jumpToNextHeading: ->
     editor = atom.workspace.getActiveEditor()
     curPosition = editor.getCursorBufferPosition()
     eofPosition = editor.getEofBufferPosition()
@@ -44,7 +44,7 @@ class Commands
       match.stop()
     return found
 
-  moveToNextTableCell: ->
+  jumpToNextTableCell: ->
     editor = atom.workspace.getActiveEditor()
     {row, column} = editor.getCursorBufferPosition()
     line = editor.lineForBufferRow(row)
