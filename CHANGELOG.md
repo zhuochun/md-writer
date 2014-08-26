@@ -1,3 +1,9 @@
+## 0.7.3
+
+* Rename move-* commands to jump-*
+* Add jump-between-reference-definition command
+* Fix aborted key bindings
+
 ## 0.7.2
 
 * Publish Draft takes care of date prefix
