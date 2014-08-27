@@ -122,6 +122,21 @@ For **Jekyll** users, you can add [these scripts](https://gist.github.com/zhuoch
 
 For **Hexo** users, you can install [hexo-generator-atom-markdown-writer-meta](https://github.com/timnew/hexo-generator-atom-markdown-writer-meta) (Thanks to [@timnew](https://github.com/timnew)).
 
+## FAQs
+
+### How to disable default key mappings, e.g. Alt-[1-5]?
+
+Go to `Atom -> Open your Keymap`, paste the following:
+
+```coffee
+'.platform-darwin .editor':
+  'alt-1': 'unset!'
+  'alt-2': 'unset!'
+  'alt-3': 'unset!'
+  'alt-4': 'unset!'
+  'alt-5': 'unset!'
+```
+
 ## TODOs
 
 - Support multiple blog directories
