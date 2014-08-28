@@ -16,14 +16,15 @@ More GIFs Here:
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Post`.
 - Dialog to **create new draft**.
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Draft`.
-- **Publish draft** moves current draft to posts directory.
-  - It updates `date` and rename the filename using `title` in front matter.
+- **Publish draft**.
+  - It moves current file to `_posts` directory.
+  - Updates `date` and rename the filename using `title` in front matter.
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Publish Draft`.
 - Dialog to **manage tags and categories in front matter**.
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Manage Post Tags/Categories`
 - Dialog to **insert link (`shift-cmd-k`) and automatically link to the text next time** (my favorite feature from Windows Live Writer).
   - Insert inline link by default
-  - Insert reference link if title is specified
+  - Insert reference link if title is specified, or use `-` to force an empty title
   - Remove link (and its reference) after URL is deleted
 - Dialog to **insert image (`shift-cmd-i`), with height and width auto-detected**.
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Insert Image`
@@ -40,13 +41,13 @@ More GIFs Here:
   - `0. ordered list` (`shift-cmd-O`)
   - `> blockquote` (`shift-cmd->`)
   - `- [ ] task list` (`markdown-writer:toggle-task`)
-- **Toggle headings**: `alt-[1-5]` to switch among `H1` to `H5`.
+- **Toggle headings**: `ctrl-alt-[1-5]` to switch among `H1` to `H5`.
 - **Helper commands**: you can add custom key mappings or search them in Command Palette (`shift-cmd-P`).
-  - `markdown-writer:jump-between-reference-definition`
-  - `markdown-writer:jump-to-previous-heading`
-  - `markdown-writer:jump-to-next-heading`
-  - `markdown-writer:jump-to-next-table-cell`
-  - `markdown-writer:format-table`
+  - Jump between reference marker and definition (`cmd-j cmd-d`)
+  - Jump to previous heading (`markdown-writer:jump-to-previous-heading`)
+  - Jump to next heading (`cmd-j cmd-h`)
+  - Jump to next tabel cell (`cmd-j cmd-t`)
+  - Format selected table with equal width (`markdown-writer:format-table`)
 - **Markdown cheat sheet**.
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Open Cheat Sheet`.
 
@@ -92,7 +93,8 @@ This is an example of advance setting's configuration:
   date: "<date>"
   ---
   """
-  # use jekyll highlight code block, change this requires reload
+  # use jekyll highlight code block
+  # change this requires reload Atom, shift-cmd-P -> Window Reload
   'codeblock':
     'before': '{% highlight %}\n'
     'after': '\n{% endhighlight %}'
@@ -124,18 +126,24 @@ For **Hexo** users, you can install [hexo-generator-atom-markdown-writer-meta](h
 
 ## FAQs
 
-### How to disable default key mappings, e.g. Alt-[1-5]?
+#### How to disable default key mappings, e.g. `ctrl-alt-[1-5]`?
 
 Go to `Atom -> Open your Keymap`, paste the following:
 
 ```coffee
 '.platform-darwin .editor':
-  'alt-1': 'unset!'
-  'alt-2': 'unset!'
-  'alt-3': 'unset!'
-  'alt-4': 'unset!'
-  'alt-5': 'unset!'
+  'ctrl-alt-1': 'unset!'
+  'ctrl-alt-2': 'unset!'
+  'ctrl-alt-3': 'unset!'
+  'ctrl-alt-4': 'unset!'
+  'ctrl-alt-5': 'unset!'
 ```
+
+#### How to change default key mappings?
+
+All default mappings can be found in [keymaps/md.cson](https://github.com/zhuochun/md-writer/blob/master/keymaps/md.cson).
+
+Open your Keymap, `unset!` the default key binding and remap it with a new key binding.
 
 ## TODOs
 

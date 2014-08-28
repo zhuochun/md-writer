@@ -1,3 +1,9 @@
+## 0.7.4
+
+* Change key mappings of headings to `Ctrl-Alt-[1-5]`
+* Add new key mappings for jump-* commands
+* Insert reference link with empty title
+
 ## 0.7.3
 
 * Rename move-* commands to jump-*
