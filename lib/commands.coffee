@@ -1,6 +1,7 @@
 HEADING_REGEX   = /// ^\# {1,6} \ + .+$ ///g
 TABLE_COL_REGEX = ///  ([^\|]*?) \s* \| ///
 TABLE_VAL_REGEX = /// (?:^|\|) ([^\|]+) ///g
+TABLE_LINE_SEPARATOR_REGEX = /// ^ (?:\|?) (?::?-+:?\|)+ (?::?-+:?) \|? $ ///
 
 class Commands
 
@@ -61,14 +62,22 @@ class Commands
     editor = atom.workspace.getActiveEditor()
     {row, column} = editor.getCursorBufferPosition()
     line = editor.lineForBufferRow(row)
-    column = line.indexOf("|", column)
+    cell = line.indexOf("|", column)
 
-    if column == -1 # jump to next line first column
+    if cell == -1
       row += 1
       line = editor.lineForBufferRow(row)
 
-    column = @_findNextTableCellIdx(line, column + 1)
-    editor.setCursorBufferPosition([row, column])
+    if @_isTableLineSeparator(line)
+      row += 1
+      cell = -1
+      line = editor.lineForBufferRow(row)
+
+    cell = @_findNextTableCellIdx(line, cell + 1)
+    editor.setCursorBufferPosition([row, cell])
+
+  _isTableLineSeparator: (line) ->
+    TABLE_LINE_SEPARATOR_REGEX.test(line)
 
   _findNextTableCellIdx: (line, column) ->
     if td = TABLE_COL_REGEX.exec(line[column..])
