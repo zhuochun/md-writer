@@ -128,7 +128,8 @@ class InsertLinkView extends View
     else
       @editor.moveCursorToBeginningOfNextParagraph()
     @editor.insertNewline()
-    @editor.insertText("  [#{id}]: #{url} \"#{title}\"")
+    @editor.insertText("  [#{id}]: #{url}" +
+      if /^[-\*\!]$/.test(title) then "" else " \"#{title}\"")
     @editor.moveCursorDown()
     line = @editor.selectLine()[0].getText().trim()
     unless utils.isReferenceDefinition(line)
