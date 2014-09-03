@@ -1,3 +1,9 @@
+## 0.7.5
+
+* Enhance jump table cell behaviour
+* Change key mappings of jump headings
+* Mention Gist to markdown specific styles
+
 ## 0.7.4
 
 * Change key mappings of headings to `Ctrl-Alt-[1-5]`
