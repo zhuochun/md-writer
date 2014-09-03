@@ -1,7 +1,4 @@
 ".platform-darwin .editor":
-  "cmd-j cmd-h": "markdown-writer:jump-to-next-heading"
-  "cmd-j cmd-d": "markdown-writer:jump-between-reference-definition"
-  "cmd-j cmd-t": "markdown-writer:jump-to-next-table-cell"
   "shift-cmd-K": "markdown-writer:insert-link"
   "shift-cmd-I": "markdown-writer:insert-image"
   "cmd-i":       "markdown-writer:toggle-italic-text"
@@ -18,6 +15,10 @@
   "shift-cmd-U": "markdown-writer:toggle-ul"
   "shift-cmd->": "markdown-writer:toggle-blockquote"
   'shift-cmd-"': "markdown-writer:toggle-codeblock-text"
+  "cmd-j cmd-p": "markdown-writer:jump-to-previous-heading"
+  "cmd-j cmd-n": "markdown-writer:jump-to-next-heading"
+  "cmd-j cmd-d": "markdown-writer:jump-between-reference-definition"
+  "cmd-j cmd-t": "markdown-writer:jump-to-next-table-cell"
 
 ".platform-win32 .editor":
   "shift-ctrl-K": "markdown-writer:insert-link"
