@@ -43,17 +43,17 @@ More GIFs Here:
   - `- [ ] task list` (`markdown-writer:toggle-task`)
 - **Toggle headings**: `ctrl-alt-[1-5]` to switch among `H1` to `H5`.
 - **Helper commands**: you can add custom key mappings or search them in Command Palette (`shift-cmd-P`).
-  - Jump between reference marker and definition (`cmd-j cmd-d`)
-  - Jump to previous heading (`markdown-writer:jump-to-previous-heading`)
-  - Jump to next heading (`cmd-j cmd-h`)
+  - Jump to previous heading (`cmd-j cmd-p`)
+  - Jump to next heading (`cmd-j cmd-n`)
   - Jump to next tabel cell (`cmd-j cmd-t`)
+  - Jump between reference marker and definition (`cmd-j cmd-d`)
   - Format selected table with equal width (`markdown-writer:format-table`)
 - **Markdown cheat sheet**.
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Open Cheat Sheet`.
 
 ## Setup
 
-You need to configure markdown-writer to use most of the features.
+You need to configure markdown-writer to use some of the features.
 
 Go to `Preferences` (`cmd-,`), search `markdown writer` package.
 
@@ -161,4 +161,5 @@ Open your Keymap, `unset!` the default key binding and remap it with a new key b
 ## Tips
 
 - Jumping among your posts: `Cmd-t` or `Cmd-p`.
+- Markdown Styles (Light): Copy [this Gist](https://gist.github.com/zhuochun/b3659bcea98fca56cb43) to your Stylesheet.
 - Markdown Preview: [markdown-preview](https://atom.io/packages/markdown-preview) package.
