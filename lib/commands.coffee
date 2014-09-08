@@ -1,4 +1,7 @@
+utils = require "./utils"
+
 HEADING_REGEX   = /// ^\# {1,6} \ + .+$ ///g
+REFERENCE_REGEX = /// \[? ([^\s\]]+) (?:\] | \]:)? ///
 TABLE_COL_REGEX = ///  ([^\|]*?) \s* \| ///
 TABLE_VAL_REGEX = /// (?:^|\|) ([^\|]+) ///g
 TABLE_LINE_SEPARATOR_REGEX = /// ^ (?:\|?) (?::?-+:?\|)+ (?::?-+:?) \|? $ ///
@@ -45,12 +48,12 @@ class Commands
       match.stop()
     return found
 
-  # jump between reference marker and reference definition
   jumpBetweenReferenceDefinition: ->
     editor = atom.workspace.getActiveEditor()
     cursor = editor.getCursorBufferPosition()
+
     key = editor.getSelectedText() || editor.getWordUnderCursor()
-    key = /// \[? ([^\s\]]+) (?:\] | \]:)? ///.exec(key)[1]
+    key = utils.regexpEscape(REFERENCE_REGEX.exec(key)[1])
 
     editor.buffer.scan /// \[ #{key} \] ///g, (match) ->
       end = match.range.end
