@@ -87,9 +87,26 @@ class Commands
 
   formatTable: ->
     editor = atom.workspace.getActiveEditor()
+
+    unless editor.getSelectedText()
+      editor.moveCursorToBeginningOfPreviousParagraph()
+      editor.selectToBeginningOfNextParagraph()
     lines = editor.getSelectedText().split("\n")
+
+    range = @_findTableRange(lines, editor.getSelectedBufferRange())
     values = @_parseTable(lines)
+
+    editor.setSelectedBufferRange(range)
     editor.insertText(@_createTable(values))
+
+  _findTableRange: (lines, {start, end}) ->
+    head = lines.findIndex (line) -> line != ""
+    tail = lines[..].reverse().findIndex (line) -> line != ""
+
+    return [
+      [start.row + head, 0]
+      [end.row - tail, lines[lines.length - 1 - tail].length]
+    ]
 
   _parseTable: (lines) ->
     table = []
