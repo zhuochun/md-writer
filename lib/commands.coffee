@@ -4,7 +4,6 @@ HEADING_REGEX   = /// ^\# {1,6} \ + .+$ ///g
 REFERENCE_REGEX = /// \[? ([^\s\]]+) (?:\] | \]:)? ///
 TABLE_COL_REGEX = ///  ([^\|]*?) \s* \| ///
 TABLE_VAL_REGEX = /// (?:^|\|) ([^\|]+) ///g
-TABLE_LINE_SEPARATOR_REGEX = /// ^ (?:\|?) (?::?-+:?\|)+ (?::?-+:?) \|? $ ///
 
 class Commands
 
@@ -64,6 +63,7 @@ class Commands
   jumpToNextTableCell: ->
     editor = atom.workspace.getActiveEditor()
     {row, column} = editor.getCursorBufferPosition()
+
     line = editor.lineForBufferRow(row)
     cell = line.indexOf("|", column)
 
@@ -71,16 +71,13 @@ class Commands
       row += 1
       line = editor.lineForBufferRow(row)
 
-    if @_isTableLineSeparator(line)
+    if utils.isTableSeparator(line)
       row += 1
       cell = -1
       line = editor.lineForBufferRow(row)
 
     cell = @_findNextTableCellIdx(line, cell + 1)
     editor.setCursorBufferPosition([row, cell])
-
-  _isTableLineSeparator: (line) ->
-    TABLE_LINE_SEPARATOR_REGEX.test(line)
 
   _findNextTableCellIdx: (line, column) ->
     if td = TABLE_COL_REGEX.exec(line[column..])
@@ -98,13 +95,14 @@ class Commands
     table = []
     maxes = []
 
-    lines.forEach (line, i) ->
-      return if i == 1
+    for line in lines
+      continue if line.trim() == ""
+      continue if utils.isTableSeparator(line)
 
       columns = line.split("|").map (col) -> col.trim()
       table.push(columns)
 
-      columns.forEach (col, j) ->
+      for col, j in columns
         if maxes[j]?
           maxes[j] = col.length if col.length > maxes[j]
         else
@@ -120,8 +118,7 @@ class Commands
     # table head separators
     result.push maxes.map((n) -> '-'.repeat(n)).join("-|-")
     # table body
-    table[1..].forEach (vals) =>
-      result.push @_createTableRow(vals, maxes, " | ")
+    result.push @_createTableRow(vals, maxes, " | ") for vals in table[1..]
 
     return result.join("\n")
 

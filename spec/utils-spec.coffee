@@ -151,6 +151,10 @@ key2:
     fixture = "/Users/zhuochun/md-writer"
     expect(utils.isUrl(fixture)).toBe(false)
 
+  it "check is table separator", ->
+    fixture = "--|------|---"
+    expect(utils.isTableSeparator(fixture)).toBe(true)
+
   it "replace front matter (no leading fence)", ->
     expected = """
 key1: val1

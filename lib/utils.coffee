@@ -129,6 +129,16 @@ URL_REGEX = ///
 
 isUrl = (url) -> URL_REGEX.test(url)
 
+TABLE_LINE_SEPARATOR_REGEX = ///
+  ^(?:\|?)
+  (?::?-+:?\|)+
+  (?::?-+:?)
+  \|? $
+  ///
+
+isTableSeparator = (line) ->
+  TABLE_LINE_SEPARATOR_REGEX.test(line)
+
 regexpEscape = (str) -> str and str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
 dasherize = (str) ->
@@ -161,6 +171,7 @@ module.exports =
   isReferenceDefinition: isReferenceDefinition
   parseReferenceLink: parseReferenceLink
   isUrl: isUrl
+  isTableSeparator: isTableSeparator
   regexpEscape: regexpEscape
   dasherize: dasherize
   dirTemplate: dirTemplate
