@@ -1,6 +1,6 @@
 # Markdown-Writer for Atom
 
-Use [Atom](https://atom.io/) as a Markdown blogging editor. Great for [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) and other static blogs.
+Make [Atom](https://atom.io/) a better Markdown editor for blogs. Work great with [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) and other static blog engines.
 
 ![Insert Image](http://i.imgur.com/s9ekMns.gif)
 
@@ -12,24 +12,25 @@ More GIFs Here:
 
 ## Features
 
-- Dialog to **create new post**.
+- Dialog to **create new post** with front matter.
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Post`.
-- Dialog to **create new draft**.
+- Dialog to **create new draft** with front matter.
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Draft`.
-- **Publish draft**.
-  - It moves current file to `_posts` directory.
-  - Updates `date` and rename the filename using `title` in front matter.
+- **Publish draft** moves current file to `_posts` directory.
+  - It Updates `date` and rename the filename using `title` in front matter (if enabled).
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Publish Draft`.
-- Dialog to **manage tags and categories in front matter**.
+- Dialog to **manage tags and categories in front matter** (configurations required).
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Manage Post Tags/Categories`
-- Dialog to **insert link (`shift-cmd-k`) and automatically link to the text next time** (my favorite feature from Windows Live Writer).
+- Dialog to **insert link** (`shift-cmd-k`) and **automatically link to the text next time** (My favorite feature from Windows Live Writer).
   - Insert inline link by default
-  - Insert reference link if title is specified, or use `-` to force an empty title
+  - Insert reference link if title is specified. To insert with an empty title, enter `-` in title field.
   - Remove link (and its reference) after URL is deleted
-- Dialog to **insert image (`shift-cmd-i`), with height and width auto-detected**.
+  - Search published posts' links by title (configurations required)
+- Dialog to **insert image** (`shift-cmd-i`) and with height and width auto-detected.
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Insert Image`
-- Dialog to **insert table**.
+- Dialog to **insert table** and with commands to jump cell and format table.
   - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Insert Table`
+- **Continue markdown lists** when you press `enter`.
 - **Toggle text styles**:
   - `code` (`cmd-'`)
   - **bold** (`cmd-b`)
@@ -101,14 +102,14 @@ This is an example of advance setting's configuration:
     'regexBefore': '{% highlight(?: .+)? %}\n'
     'regexAfter': '\n{% endhighlight %}'
   # use img html tag
-  'imageTag': '<img alt="<alt>" src="<src>" width="<width>" height="<height>" class="aligncenter" />'
+  'imageTag': '<img alt="<alt>" src="<src>" width="<width>" height="<height>" />'
 ```
 
 ## Populate Tags/Categories/Posts
 
 ![Manage Tags](http://i.imgur.com/amt2m0Y.png)
 
-To **manage tags/categories in front matter**, you need to provide `JSON` files that list existing tags/categories/posts in your blog.
+To **manage tags/categories in front matter** or **search published posts when inserting links**, you need to provide `JSON` files that contains tags/categories/posts in your blog.
 
 The `JSON` files contain following information of your blog:
 
@@ -116,7 +117,7 @@ The `JSON` files contain following information of your blog:
 {
   "tags": ["tag a", "tag b", "..."],
   "categories": ["category a", "category b", "..."],
-  "posts": [{"title": "title", "url": "url"}]
+  "posts": [{"title": "post a", "url": "url/to/post/a"}]
 }
 ```
 
@@ -139,27 +140,24 @@ Go to `Atom -> Open your Keymap`, paste the following:
   'ctrl-alt-5': 'unset!'
 ```
 
-#### How to change default key mappings?
+Default mappings can be found in [keymaps/md.cson](https://github.com/zhuochun/md-writer/blob/master/keymaps/md.cson).
 
-All default mappings can be found in [keymaps/md.cson](https://github.com/zhuochun/md-writer/blob/master/keymaps/md.cson).
-
-Open your Keymap, `unset!` the default key binding and remap it with a new key binding.
+A list of all commands can be found [here](https://github.com/zhuochun/md-writer/blob/master/package.json).
 
 ## TODOs
 
 - Support multiple blog directories
 - Support default settings for different engines
-- Insert footnote
 
 ## Project
 
 - View [CHANGELOG](https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md) :notebook_with_decorative_cover:.
 - If you found any bug, please submit an issue [here](https://github.com/zhuochun/md-writer/issues) :octocat:.
 - License in [MIT](https://github.com/zhuochun/md-writer/blob/master/LICENSE.md) :unlock:.
-- Supported by [褪墨・时间管理](http://www.mifengtd.cn/) :muscle:.
+- Supported by [褪墨・时间管理](http://www.mifengtd.cn/) :clap:.
 
 ## Tips
 
+- A theme targets on Markdown: Copy [this Gist](https://gist.github.com/zhuochun/b3659bcea98fca56cb43) to your Stylesheet.
 - Jumping among your posts: `Cmd-t` or `Cmd-p`.
-- Markdown Styles (Light): Copy [this Gist](https://gist.github.com/zhuochun/b3659bcea98fca56cb43) to your Stylesheet.
 - Markdown Preview: [markdown-preview](https://atom.io/packages/markdown-preview) package.

@@ -1,3 +1,10 @@
+## 0.7.6
+
+* Enhance table format command
+* Add insert new line continue markdown list
+* Set default search query when insert link
+* Change open new post/draft in same window
+
 ## 0.7.5
 
 * Enhance jump table cell behaviour
