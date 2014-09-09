@@ -68,13 +68,14 @@ class NewPostView extends View
     template = atom.config.get("markdown-writer.newPostFileName")
     date = utils.parseDateStr(@dateEditor.getText())
     info =
-      title: utils.dasherize(@titleEditor.getText()) || "new-post"
+      title: utils.dasherize(@titleEditor.getText() || "new post")
       extension: atom.config.get("markdown-writer.fileExtension")
     return utils.template(template, $.extend(info, date))
 
   getFrontMatter: ->
     layout: "post"
     published: true
+    slug: utils.dasherize(@titleEditor.getText() || "new post")
     title: @titleEditor.getText()
     date: "#{@dateEditor.getText()} #{utils.getTimeStr()}"
 

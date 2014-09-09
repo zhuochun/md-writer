@@ -144,6 +144,21 @@ regexpEscape = (str) -> str and str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 dasherize = (str) ->
   str.trim().toLowerCase().replace(/[^-\w\s]|_/g, "").replace(/\s+/g,"-")
 
+SLUG_REGEX = ///
+  ^
+  (\d{1,4}-\d{1,2}-\d{1,4}-)
+  (.+)
+  $
+  ///
+
+getTitleSlug = (str) ->
+  str = path.basename(str, path.extname(str))
+  
+  if matches = SLUG_REGEX.exec(str)
+    matches[2]
+  else
+    str
+
 dirTemplate = (directory, date) ->
   template(directory, getDate(date))
 
@@ -174,5 +189,6 @@ module.exports =
   isTableSeparator: isTableSeparator
   regexpEscape: regexpEscape
   dasherize: dasherize
+  getTitleSlug: getTitleSlug
   dirTemplate: dirTemplate
   template: template

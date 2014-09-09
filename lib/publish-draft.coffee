@@ -57,15 +57,9 @@ class PublishDraft
 
   getPostTitle: ->
     if atom.config.get("markdown-writer.publishRenameBasedOnTitle")
-      title = utils.dasherize(@frontMatter.title)
+      utils.dasherize(@frontMatter.title)
     else
-      title = path.basename(@draftPath, path.extname(@draftPath))
-
-      # remove date prefix if any
-      if matches = /^(\d{1,4}-\d{1,2}-\d{1,4}-)(.+)$/.exec(title)
-        title = matches[2]
-
-    return title
+      utils.getTitleSlug(@draftPath)
 
   getPostExtension: ->
     if atom.config.get("markdown-writer.publishKeepFileExtname")

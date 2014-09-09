@@ -176,6 +176,15 @@ key2:
     fixture = " hello     World"
     expect(utils.dasherize(fixture)).toEqual("hello-world")
 
+  it "get title slug", ->
+    slug = "hello-world"
+    fixture = "abc/hello-world.markdown"
+    expect(utils.getTitleSlug(slug)).toEqual(slug)
+    fixture = "abc/2014-02-12-hello-world.markdown"
+    expect(utils.getTitleSlug(fixture)).toEqual(slug)
+    fixture = "abc/02-12-2014-hello-world.markdown"
+    expect(utils.getTitleSlug(fixture)).toEqual(slug)
+
   it "generate posts directory without token", ->
     expect(utils.dirTemplate("_posts/")).toEqual("_posts/")
 

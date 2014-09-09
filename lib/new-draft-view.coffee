@@ -63,6 +63,7 @@ class NewDraftView extends View
   getFrontMatter: ->
     layout: "post"
     published: false
+    slug: utils.dasherize(@titleEditor.getText() || "new draft")
     title: @titleEditor.getText()
     date: "#{utils.getDateStr()} #{utils.getTimeStr()}"
 

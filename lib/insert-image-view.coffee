@@ -49,6 +49,7 @@ class InsertImageView extends View
       alt: @titleEditor.getText()
       width: @widthEditor.getText()
       height: @heightEditor.getText()
+      slug: utils.getTitleSlug(@editor.getPath())
     text = if img.src then @generateImageTag(img) else img.alt
     @editor.insertText(text)
     @detach()
