@@ -36,7 +36,7 @@ class Commands
     if matches && !matches[3]
       return replaceLine: true, value: matches[1] || "\n"
     else
-      return replaceLine: false, value: value
+      return replaceLine: false, value: value || "\n"
 
   jumpToPreviousHeading: ->
     editor = atom.workspace.getActiveEditor()
