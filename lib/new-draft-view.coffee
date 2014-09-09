@@ -42,13 +42,7 @@ class NewDraftView extends View
         @error.text("Draft #{@getFullPath()} already exists!")
       else
         fs.writeFileSync(post, @generateFrontMatter(@getFrontMatter()))
-
-        rootDir = atom.config.get("markdown-writer.siteLocalDir")
-        if atom.project.path == rootDir
-          atom.workspaceView.open(post)
-        else
-          atom.open(pathsToOpen: [post])
-
+        atom.workspaceView.open(post)
         @detach()
     catch error
       @error.text("#{error.message}")
