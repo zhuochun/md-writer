@@ -36,7 +36,7 @@ module.exports =
       @registerCommand "insert-#{media}", "./insert-#{media}-view"
 
     # helpers
-    ["open-cheat-sheet",
+    ["open-cheat-sheet", "insert-new-line",
      "jump-between-reference-definition",
      "jump-to-previous-heading", "jump-to-next-heading",
      "jump-to-next-table-cell", "format-table"].forEach (command) =>
