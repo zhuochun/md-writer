@@ -1,4 +1,7 @@
-".platform-darwin .editor":
+'.editor[data-grammar~="gfm"]':
+  "enter":       "markdown-writer:insert-new-line"
+
+".platform-darwin .editor:not(.mini)":
   "shift-cmd-K": "markdown-writer:insert-link"
   "shift-cmd-I": "markdown-writer:insert-image"
   "cmd-i":       "markdown-writer:toggle-italic-text"
@@ -20,7 +23,7 @@
   "cmd-j cmd-d": "markdown-writer:jump-between-reference-definition"
   "cmd-j cmd-t": "markdown-writer:jump-to-next-table-cell"
 
-".platform-win32 .editor":
+".platform-win32 .editor:not(.mini)":
   "shift-ctrl-K": "markdown-writer:insert-link"
   "shift-ctrl-I": "markdown-writer:insert-image"
   "ctrl-i":       "markdown-writer:toggle-italic-text"
@@ -33,7 +36,7 @@
   "ctrl-4":       "markdown-writer:toggle-h4"
   "ctrl-5":       "markdown-writer:toggle-h5"
 
-".platform-linux .editor":
+".platform-linux .editor:not(.mini)":
   "shift-ctrl-K": "markdown-writer:insert-link"
   "shift-ctrl-I": "markdown-writer:insert-image"
   "ctrl-i":       "markdown-writer:toggle-italic-text"
