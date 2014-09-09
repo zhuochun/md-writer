@@ -37,7 +37,8 @@ class InsertLinkView extends View
     @on "core:cancel", => @detach()
 
   handleEvents: ->
-    @searchEditor.hiddenInput.on "keyup", => @updateSearch() if posts
+    @searchEditor.hiddenInput.on "keyup", =>
+      @updateSearch(@searchEditor.getText()) if posts
     @searchResult.on "click", "li", (e) => @useSearchResult(e)
 
   onConfirm: ->
@@ -86,8 +87,8 @@ class InsertLinkView extends View
     else
       @setLink(selection, "", "")
 
-  updateSearch: ->
-    query = @searchEditor.getText().trim().toLowerCase()
+  updateSearch: (query) ->
+    query = query.trim().toLowerCase()
     results = posts.filter (post) ->
       query and post.title.toLowerCase().contains(query)
     results = results.map (post) ->
@@ -209,7 +210,11 @@ class InsertLinkView extends View
       uri = atom.config.get("markdown-writer.urlForPosts")
       succeed = (body) =>
         posts = body.posts
-        @searchBox.show() if posts.length > 0
+
+        if posts.length > 0
+          @searchBox.show()
+          @searchEditor.setText(@textEditor.getText())
+          @updateSearch(@textEditor.getText())
       error = (err) =>
         @searchBox.hide()
       utils.getJSON(uri, succeed, error)
