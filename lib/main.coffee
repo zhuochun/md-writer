@@ -29,7 +29,7 @@ module.exports =
     # line-wise
     ["h1", "h2", "h3", "h4", "h5", "ul", "ol",
      "task", "taskdone", "blockquote"].forEach (style) =>
-      @registerCommand "toggle-#{style}", "./style-heading", args: style
+      @registerCommand "toggle-#{style}", "./style-line", args: style
 
     # media
     ["link", "image", "table"].forEach (media) =>

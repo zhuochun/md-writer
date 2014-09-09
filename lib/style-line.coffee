@@ -13,7 +13,7 @@ styles =
   blockquote: before: "> ", after: ""
 
 module.exports =
-class StyleHeading
+class StyleLine
   editor: null
   style: null
 
