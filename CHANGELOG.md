@@ -1,4 +1,9 @@
-## 0.7.6
+## 0.8.1
+
+* Move configurations to a centre class
+* Support alignment in insert image
+
+## 0.8.0
 
 * Enhance table format command
 * Add insert new line continue markdown list
