@@ -33,7 +33,7 @@ class InsertImageView extends View
           @subview "heightEditor", new EditorView(mini: true)
         @div class: "col-2", =>
           @label "Alignment", class: "message"
-          @subview "positionEditor", new EditorView(mini: true)
+          @subview "alignEditor", new EditorView(mini: true)
       @div class: "image-container", =>
         @img outlet: 'imagePreview'
 
@@ -53,7 +53,7 @@ class InsertImageView extends View
       alt: @titleEditor.getText()
       width: @widthEditor.getText()
       height: @heightEditor.getText()
-      position: @positionEditor.getText()
+      align: @alignEditor.getText()
       slug: utils.getTitleSlug(@editor.getPath())
     text = if img.src then @generateImageTag(img) else img.alt
     @editor.insertText(text)
@@ -110,7 +110,7 @@ class InsertImageView extends View
         @widthEditor.setText("" + naturalWidth)
         @heightEditor.setText("" + naturalHeight)
         position = if naturalWidth > 300 then "center" else "right"
-        @positionEditor.setText(position)
+        @alignEditor.setText(position)
       @imagePreview.error =>
         @message.text("Error: Failed to Load Image.")
     else
@@ -118,7 +118,7 @@ class InsertImageView extends View
       @imagePreview.attr("src", "")
       @widthEditor.setText("")
       @heightEditor.setText("")
-      @positionEditor.setText("")
+      @alignEditor.setText("")
 
   isValidImageFile: (file) ->
     path.extname(file).toLowerCase() in imageExtensions
