@@ -1,6 +1,8 @@
 # Markdown-Writer for Atom
 
-Make [Atom](https://atom.io/) a better Markdown editor for blogs. Work great with [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) and other static blog engines.
+Make [Atom](https://atom.io/) a better Markdown editor for blogs.
+
+Work great with [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) and other static blog engines.
 
 ![Insert Image](http://i.imgur.com/s9ekMns.gif)
 
@@ -12,25 +14,18 @@ More GIFs Here:
 
 ## Features
 
-- Dialog to **create new post** with front matter.
-  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Post`.
-- Dialog to **create new draft** with front matter.
-  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: New Draft`.
-- **Publish draft** moves current file to `_posts` directory.
-  - It Updates `date` and rename the filename using `title` in front matter (if enabled).
-  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Publish Draft`.
-- Dialog to **manage tags and categories in front matter** (configurations required).
-  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Manage Post Tags/Categories`
-- Dialog to **insert link** (`shift-cmd-k`) and **automatically link to the text next time** (My favorite feature from Windows Live Writer).
-  - Insert inline link by default
-  - Insert reference link if title is specified. To insert with an empty title, enter `-` in title field.
-  - Remove link (and its reference) after URL is deleted
-  - Search published posts' links by title (configurations required)
-- Dialog to **insert image** (`shift-cmd-i`) and with height and width auto-detected.
-  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Insert Image`
-- Dialog to **insert table** and with commands to jump cell and format table.
-  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Insert Table`
+- **Create new post** with front matter.
+- **Create new draft** with front matter.
+- **Publish draft** moves file to `_posts` directory, updates `date` and optionally renames the filename using `title` in front matter.
+- **Manage tags and categories in front matter** (configuration required).
 - **Continue markdown lists** when you press `enter`.
+- **Insert link** (`shift-cmd-k`) and **automatically link to the text next time** (My favorite feature from Windows Live Writer).
+  - Insert inline link by default
+  - Insert reference link if title is specified. Use `-` for an empty title.
+  - Remove link (and its reference) after URL is deleted
+  - Search published posts by title (configuration required)
+- **Insert image** (`shift-cmd-i`) and its height and width auto-detected.
+- **Insert table** and shortcuts for **jumping to next cell and formatting table**.
 - **Toggle text styles**:
   - `code` (`cmd-'`)
   - **bold** (`cmd-b`)
@@ -43,14 +38,18 @@ More GIFs Here:
   - `> blockquote` (`shift-cmd->`)
   - `- [ ] task list` (`markdown-writer:toggle-task`)
 - **Toggle headings**: `ctrl-alt-[1-5]` to switch among `H1` to `H5`.
-- **Helper commands**: you can add custom key mappings or search them in Command Palette (`shift-cmd-P`).
+- **Helper commands**:
   - Jump to previous heading (`cmd-j cmd-p`)
   - Jump to next heading (`cmd-j cmd-n`)
   - Jump to next tabel cell (`cmd-j cmd-t`)
-  - Jump between reference marker and definition (`cmd-j cmd-d`)
-  - Format selected table with equal width (`markdown-writer:format-table`)
-- **Markdown cheat sheet**.
-  - In Command Palette (`shift-cmd-P`), type `Markdown Writer: Open Cheat Sheet`.
+  - Jump to reference marker/definition (`cmd-j cmd-d`)
+  - Format table (`markdown-writer:format-table`)
+- **Markdown cheat sheet** (`Markdown Writer: Open Cheat Sheet`).
+
+You can trigger these features using:
+
+- Command Palette (`shift-cmd-P`), enter `Markdown Writer`
+- Menu Bar `Packages -> Markdown Writer`.
 
 ## Setup
 
@@ -58,9 +57,11 @@ You need to configure markdown-writer to use some of the features.
 
 Go to `Preferences` (`cmd-,`), search `markdown writer` package.
 
-### Settings Explained:
+Default settings can be found [here](https://github.com/zhuochun/md-writer/blob/master/lib/config.coffee).
 
-- **siteLocalDir**: The root directory of blog.
+### Basic Settings:
+
+- **siteLocalDir**: The root directory of your blog.
 - **siteDraftsDir**: The directory of drafts from the root of `siteLocalDir`. Default is `_draft/`.
 - **sitePostsDir**: The directory of posts from the root of `siteLocalDir`. Default is `_posts/{year}`. You can also use `{year}`, `{month}` and `{day}`.
 - **newPostFileName**: The filename format of new posts created. Default is `{year}-{month}-{day}-{title}{extension}`.
@@ -73,19 +74,18 @@ Go to `Preferences` (`cmd-,`), search `markdown writer` package.
 
 To change these settings, open your Atom Config file, find `markdown-writer` entry.
 
-- **siteLinkPath**: Define path (string) to a `.cson` file that stores all links added for automatic linking next time.
-  Default uses `markdown-writer-links.cson` in Atom's config directory.
+- **siteLinkPath**: Define path (string) to a `.cson` file that stores all links added for automatic linking next time. Default uses `markdown-writer-links.cson` in Atom's config directory.
 - **frontMatter**: Define front matter (string) used when create new post/draft.
 - **publishRenameBasedOnTitle**: Determine whether publish rename filename based on title in front matter. Default is `false` (boolean).
 - **publishKeepFileExtname**: Determine whether publish keep draft's extname used. Default is `false` (boolean).
 - **codeblock**: Define fenced code block (object). Default uses GitHub's fenced code block.
 - **imageTag**: Define image tag inserted (string). Default uses `![alt](img-url)`.
 
-This is an example of advance setting's configuration:
+This is an example of advance configuration:
 
 ```coffee
 'markdown-writer':
-  # sync the links in dropbox
+  # sync the saved links in dropbox
   'siteLinkPath': '/Users/zhuochun/Dropbox/blog/links.cson'
   # use Hexo front matter format
   'frontMatter': """
@@ -95,14 +95,14 @@ This is an example of advance setting's configuration:
   ---
   """
   # use jekyll highlight code block
-  # change this requires reload Atom, shift-cmd-P -> Window Reload
+  # change this requires reload, shift-cmd-P -> Window Reload
   'codeblock':
     'before': '{% highlight %}\n'
     'after': '\n{% endhighlight %}'
     'regexBefore': '{% highlight(?: .+)? %}\n'
     'regexAfter': '\n{% endhighlight %}'
-  # use img html tag
-  'imageTag': '<img alt="<alt>" src="<src>" width="<width>" height="<height>" />'
+  # use octopress img tag
+  'imageTag': "{% img <align> <src> <width> <height> '{alt}' %}"
 ```
 
 ## Populate Tags/Categories/Posts
@@ -111,7 +111,7 @@ This is an example of advance setting's configuration:
 
 To **manage tags/categories in front matter** or **search published posts when inserting links**, you need to provide `JSON` files that contains tags/categories/posts in your blog.
 
-The `JSON` files contain following information of your blog:
+The `JSON` files should contain following information of your blog:
 
 ```json
 {
@@ -121,7 +121,7 @@ The `JSON` files contain following information of your blog:
 }
 ```
 
-For **Jekyll** users, you can add [these scripts](https://gist.github.com/zhuochun/fe127356bcf8c07ae1fb) to your Jekyll directory and upload the generated `JSON` files.
+For **Jekyll/Octopress** users, you can add [these scripts](https://gist.github.com/zhuochun/fe127356bcf8c07ae1fb) to your Jekyll directory and upload the generated `JSON` files.
 
 For **Hexo** users, you can install [hexo-generator-atom-markdown-writer-meta](https://github.com/timnew/hexo-generator-atom-markdown-writer-meta) (Thanks to [@timnew](https://github.com/timnew)).
 
@@ -146,8 +146,8 @@ A list of all commands can be found [here](https://github.com/zhuochun/md-writer
 
 ## TODOs
 
-- Support multiple blog directories
 - Support default settings for different engines
+- Support multiple blog directories
 
 ## Project
 
@@ -158,6 +158,6 @@ A list of all commands can be found [here](https://github.com/zhuochun/md-writer
 
 ## Tips
 
-- A theme targets on Markdown: Copy [this Gist](https://gist.github.com/zhuochun/b3659bcea98fca56cb43) to your Stylesheet.
+- A light theme targets Markdown: Copy [this Gist](https://gist.github.com/zhuochun/b3659bcea98fca56cb43) to your Stylesheet.
 - Jumping among your posts: `Cmd-t` or `Cmd-p`.
 - Markdown Preview: [markdown-preview](https://atom.io/packages/markdown-preview) package.
