@@ -1,4 +1,5 @@
 {$, View, EditorView} = require "atom"
+config = require "./config"
 utils = require "./utils"
 remote = require "remote"
 dialog = remote.require "dialog"
@@ -126,12 +127,11 @@ class InsertImageView extends View
     return file if utils.isUrl(file)
 
     localDir = atom.project.getPath()
+
     if file.startsWith(localDir) # resolve relative to root of site
-      return file.replace(localDir, "").replace(/\\/g, "/")
+      file.replace(localDir, "").replace(/\\/g, "/")
     else
-      template = atom.config.get("markdown-writer.siteImageUrl") || ""
-      return utils.dirTemplate(template) + path.basename(file)
+      utils.dirTemplate(config.get("siteImageUrl")) + path.basename(file)
 
   generateImageTag: (data) ->
-    template = atom.config.get("markdown-writer.imageTag") || "![<alt>](<src>)"
-    return utils.template(template, data)
+    utils.template(config.get("imageTag"), data)

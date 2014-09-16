@@ -1,4 +1,5 @@
 {$, View, EditorView} = require "atom"
+config = require "./config"
 utils = require "./utils"
 path = require "path"
 fs = require "fs-plus"
@@ -41,8 +42,7 @@ class NewPostView extends View
     atom.workspaceView.append(this)
     @titleEditor.focus()
     @dateEditor.setText(utils.getDateStr())
-    @pathEditor.setText(utils.dirTemplate(
-      atom.config.get("markdown-writer.sitePostsDir")))
+    @pathEditor.setText(utils.dirTemplate(config.get("sitePostsDir")))
 
   createPost: () ->
     try
@@ -57,19 +57,16 @@ class NewPostView extends View
     catch error
       @error.text("#{error.message}")
 
-  getFullPath: ->
-    localDir = atom.config.get("markdown-writer.siteLocalDir")
-    return path.join(localDir, @getPostPath())
+  getFullPath: -> path.join(config.get("siteLocalDir"), @getPostPath())
 
-  getPostPath: ->
-    return path.join(@pathEditor.getText(), @getFileName())
+  getPostPath: -> path.join(@pathEditor.getText(), @getFileName())
 
   getFileName: ->
-    template = atom.config.get("markdown-writer.newPostFileName")
+    template = config.get("newPostFileName")
     date = utils.parseDateStr(@dateEditor.getText())
     info =
       title: utils.dasherize(@titleEditor.getText() || "new post")
-      extension: atom.config.get("markdown-writer.fileExtension")
+      extension: config.get("fileExtension")
     return utils.template(template, $.extend(info, date))
 
   getFrontMatter: ->
@@ -80,12 +77,4 @@ class NewPostView extends View
     date: "#{@dateEditor.getText()} #{utils.getTimeStr()}"
 
   generateFrontMatter: (data) ->
-    frontMatter = atom.config.get("markdown-writer.frontMatter") || """
----
-layout: <layout>
-title: "<title>"
-date: "<date>"
----
-    """
-
-    return utils.template(frontMatter, data)
+    utils.template(config.get("frontMatter"), data)

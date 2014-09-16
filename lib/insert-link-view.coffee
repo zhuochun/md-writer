@@ -1,7 +1,7 @@
 {$, View, EditorView} = require "atom"
+config = require "./config"
 utils = require "./utils"
 CSON = require "season"
-path = require "path"
 fs = require "fs-plus"
 
 posts = null # to cache it
@@ -199,15 +199,13 @@ class InsertLinkView extends View
       else
         setLinks()
 
-  getSavedLinksPath: ->
-    atom.config.get("markdown-writer.siteLinkPath") ||
-      path.join(atom.getConfigDirPath(), "markdown-writer-links.cson")
+  getSavedLinksPath: -> config.get("siteLinkPath")
 
   fetchPosts: ->
     if posts
       @searchBox.hide() unless posts.length > 0
     else
-      uri = atom.config.get("markdown-writer.urlForPosts")
+      uri = config.get("urlForPosts")
       succeed = (body) =>
         posts = body.posts
 

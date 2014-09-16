@@ -1,4 +1,5 @@
 {$, View, EditorView} = require "atom"
+config = require "./config"
 utils = require "./utils"
 
 module.exports =
@@ -62,7 +63,7 @@ class ManagePostTagsView extends View
     @tagsEditor.getText().split(/\s*,\s*/).filter((t) -> !!t.trim())
 
   fetchTags: ->
-    uri = atom.config.get("markdown-writer.urlForTags")
+    uri = config.get("urlForTags")
     succeed = (body) =>
       @tags = body.tags.map((tag) -> name: tag)
       @rankTags(@tags, @editor.getText())
@@ -73,7 +74,6 @@ class ManagePostTagsView extends View
   # rank tags based on the number of times they appear in content
   rankTags: (tags, content) ->
     tags.forEach (tag) ->
-      # TODO handle word boundary across multi-languages
       tagRegex = new RegExp(tag.name, "ig")
       tag.count = content.match(tagRegex)?.length || 0
     tags.sort (t1, t2) -> t2.count - t1.count

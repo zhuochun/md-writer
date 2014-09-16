@@ -1,7 +1,8 @@
 {$} = require "atom"
+config = require "./config"
+utils = require "./utils"
 fs = require "fs-plus"
 path = require "path"
-utils = require "./utils"
 
 module.exports =
 class PublishDraft
@@ -42,13 +43,13 @@ class PublishDraft
     path.join(@getPostDir(), @getPostName())
 
   getPostDir: ->
-    localDir = atom.config.get("markdown-writer.siteLocalDir")
-    postsDir = atom.config.get("markdown-writer.sitePostsDir")
+    localDir = config.get("siteLocalDir")
+    postsDir = config.get("sitePostsDir")
     postsDir = utils.dirTemplate(postsDir)
     return path.join(localDir, postsDir)
 
   getPostName: ->
-    template = atom.config.get("markdown-writer.newPostFileName")
+    template = config.get("newPostFileName")
     date = utils.getDate()
     info =
       title: @getPostTitle()
@@ -56,12 +57,12 @@ class PublishDraft
     return utils.template(template, $.extend(info, date))
 
   getPostTitle: ->
-    if atom.config.get("markdown-writer.publishRenameBasedOnTitle")
+    if config.get("publishRenameBasedOnTitle")
       utils.dasherize(@frontMatter.title)
     else
       utils.getTitleSlug(@draftPath)
 
   getPostExtension: ->
-    if atom.config.get("markdown-writer.publishKeepFileExtname")
+    if config.get("publishKeepFileExtname")
       extname = path.extname(@draftPath)
-    return extname || atom.config.get("markdown-writer.fileExtension")
+    return extname || config.get("fileExtension")

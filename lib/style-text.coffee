@@ -1,3 +1,4 @@
+config = require "./config"
 utils = require "./utils"
 
 # supported styles
@@ -7,13 +8,7 @@ styles =
   italic: before: "_", after: "_"
   keystroke: before: "<kbd>", after: "</kbd>"
   strikethrough: before: "~~", after: "~~"
-  codeblock:
-    before: atom.config.get("markdown-writer.codeblock.before") || "```\n"
-    after: atom.config.get("markdown-writer.codeblock.after") || "\n```"
-    regexBefore: atom.config.get("markdown-writer.codeblock.regexBefore") ||
-      "```(?:[\\w- ]+)?\\n"
-    regexAfter: atom.config.get("markdown-writer.codeblock.regexAfter") ||
-      "\\n```"
+  codeblock: config.get("codeblock")
 
 module.exports =
 class StyleText
@@ -42,8 +37,8 @@ class StyleText
 
   insertEmptyStyle: (selection) ->
     selection.insertText(@addStyle(""))
-    pos = selection.cursor.getBufferPosition()
-    selection.cursor.setBufferPosition([pos.row, pos.column - @style.after.length])
+    {row, column} = selection.cursor.getBufferPosition()
+    selection.cursor.setBufferPosition([row, column - @style.after.length])
 
   isStyleOn: (text) ->
     @getStylePattern().test(text) if text

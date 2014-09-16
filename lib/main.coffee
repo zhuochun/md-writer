@@ -1,15 +1,17 @@
+config = require "./config"
+
 CmdModule = {}
 
 module.exports =
   configDefaults:
-    siteLocalDir: "/GitHub/example.github.io/"
-    siteDraftsDir: "_drafts/"
-    sitePostsDir: "_posts/{year}/"
-    urlForTags: "http://example.github.io/assets/tags.json"
-    urlForPosts: "http://example.github.io/assets/posts.json"
-    urlForCategories: "http://example.github.io/assets/categories.json"
-    newPostFileName: "{year}-{month}-{day}-{title}{extension}"
-    fileExtension: ".markdown"
+    siteLocalDir: config.getDefault("siteLocalDir")
+    siteDraftsDir: config.getDefault("siteDraftsDir")
+    sitePostsDir: config.getDefault("sitePostsDir")
+    urlForTags: config.getDefault("urlForTags")
+    urlForPosts: config.getDefault("urlForPosts")
+    urlForCategories: config.getDefault("urlForCategories")
+    newPostFileName: config.getDefault("newPostFileName")
+    fileExtension: config.getDefault("fileExtension")
 
   activate: (state) ->
     # general
@@ -61,13 +63,7 @@ module.exports =
   isMarkdown: ->
     editor = atom.workspace.getActiveEditor()
     return false unless editor?
-
-    grammars = atom.config.get('markdown-writer.grammars') || [
-      'source.gfm'
-      'text.plain'
-      'text.plain.null-grammar'
-    ]
-    return true if editor.getGrammar().scopeName in grammars
+    return editor.getGrammar().scopeName in config.get("grammars")
 
   deactivate: ->
     CmdModule = {}
