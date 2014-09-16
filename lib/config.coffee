@@ -51,13 +51,13 @@ class Config
 
   @engines:
     jekyll:
-      newPostFileName: "{year}-{month}-{day}-{title}{extension}"
-      frontMatter: @defaults.frontMatter
       codeblock:
         before: '{% highlight %}\n'
         after: '\n{% endhighlight %}'
         regexBefore: '{% highlight(?: .+)? %}\n'
         regexAfter: '\n{% endhighlight %}'
+    octopress:
+      imageTag: "{% img {align} {src} {width} {height} '{alt}' %}"
     hexo:
       newPostFileName: "{title}{extension}"
       frontMatter: """
@@ -66,7 +66,6 @@ class Config
         date: "<date>"
         ---
         """
-      codeblock: @defaults.codeblock
 
   keyPath: (key) -> "#{@constructor.prefix}.#{key}"
 

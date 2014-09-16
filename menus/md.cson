@@ -2,7 +2,7 @@
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'MarkDown Writer'
+      'label': 'Markdown Writer'
       'submenu': [
         {
           'label': 'File'
@@ -131,12 +131,12 @@
               'command': 'markdown-writer:jump-to-next-heading'
             }
             {
-              'label': 'Jump Between Reference Marker/Definition'
-              'command': 'markdown-writer:jump-between-reference-definition'
-            }
-            {
               'label': 'Jump to Next Table Cell'
               'command': 'markdown-writer:jump-to-next-table-cell'
+            }
+            {
+              'label': 'Jump to Reference Definition'
+              'command': 'markdown-writer:jump-between-reference-definition'
             }
             { 'type': 'separator' }
             {
