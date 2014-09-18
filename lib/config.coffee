@@ -16,9 +16,10 @@ class Config
     urlForTags: "http://example.github.io/assets/tags.json"
     urlForPosts: "http://example.github.io/assets/posts.json"
     urlForCategories: "http://example.github.io/assets/categories.json"
-    # filetypes markdown-writer commands will apply
+    # filetypes markdown-writer commands apply
     grammars: [
       'source.gfm'
+      'source.litcoffee'
       'text.plain'
       'text.plain.null-grammar'
     ]
