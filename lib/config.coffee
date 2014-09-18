@@ -4,7 +4,9 @@ class Config
   @prefix: "markdown-writer"
 
   @defaults:
-    # root directory of blog
+    # static engine of your blog
+    siteEngine: ""
+    # root directory of your blog
     siteLocalDir: "/GitHub/example.github.io/"
     # directory to drafts from the root of siteLocalDir
     siteDraftsDir: "_drafts/"
@@ -52,10 +54,10 @@ class Config
   @engines:
     jekyll:
       codeblock:
-        before: '{% highlight %}\n'
-        after: '\n{% endhighlight %}'
-        regexBefore: '{% highlight(?: .+)? %}\n'
-        regexAfter: '\n{% endhighlight %}'
+        before: "{% highlight %}\n"
+        after: "\n{% endhighlight %}"
+        regexBefore: "{% highlight(?: .+)? %}\n"
+        regexAfter: "\n{% endhighlight %}"
     octopress:
       imageTag: "{% img {align} {src} {width} {height} '{alt}' %}"
     hexo:
@@ -70,19 +72,32 @@ class Config
   keyPath: (key) -> "#{@constructor.prefix}.#{key}"
 
   get: (key) ->
-    atom.config.get(@keyPath(key)) || @constructor.defaults[key]
+    if atom.config.isDefault(@keyPath(key))
+      @getEngine(key) || @getDefault(key)
+    else
+      atom.config.get(@keyPath(key))
 
   set: (key, val) ->
     atom.config.set(@keyPath(key), val)
 
-  getDefault: (key) -> @constructor.defaults[key]
+  getDefault: (key) ->
+    @_valueForKeyPath(@constructor.defaults, key)
 
   restoreDefault: (key) ->
     atom.config.restoreDefault(@keyPath(key))
 
   engineNames: -> Object.keys(@constructor.engines)
 
-  setEngine: (name) ->
-    @set(key, val) for key, val of @constructor.engines[name]
+  getEngine: (key) ->
+    engine = atom.config.get(@keyPath("siteEngine"))
+    if engine in @engineNames()
+      @_valueForKeyPath(@constructor.engines[engine], key)
+
+  _valueForKeyPath: (object, keyPath) ->
+    keys = keyPath.split('.')
+    for key in keys
+      object = object[key]
+      return unless object?
+    object
 
 module.exports = new Config()

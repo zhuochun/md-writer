@@ -4,6 +4,7 @@ CmdModule = {}
 
 module.exports =
   configDefaults:
+    siteEngine: config.getDefault("siteEngine")
     siteLocalDir: config.getDefault("siteLocalDir")
     siteDraftsDir: config.getDefault("siteDraftsDir")
     sitePostsDir: config.getDefault("sitePostsDir")

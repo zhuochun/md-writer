@@ -6,8 +6,25 @@ describe "config", ->
     atom.workspaceView = new WorkspaceView
     atom.workspace = atom.workspaceView.model
 
-  it "get defaults value", ->
+  it "get default value", ->
     expect(config.get("fileExtension")).toEqual(".markdown")
+
+  it "get engine value", ->
+    config.set("siteEngine", "jekyll")
+    expect(config.getEngine("codeblock.before")).not.toBeNull()
+    expect(config.getEngine("imageTag")).not.toBeDefined()
+
+    config.set("siteEngine", "not-exists")
+    expect(config.getEngine("imageTag")).not.toBeDefined()
+
+  it "get default value from engine or user config", ->
+    config.set("siteEngine", "jekyll")
+    expect(config.get("codeblock.before"))
+      .toEqual(config.getEngine("codeblock.before"))
+
+    config.set("codeblock.before", "changed")
+    expect(config.get("codeblock.before"))
+      .toEqual("changed")
 
   it "get modified value", ->
     atom.config.set("markdown-writer.test", "special")
@@ -16,11 +33,3 @@ describe "config", ->
   it "set key and value", ->
     config.set("test", "value")
     expect(atom.config.get("markdown-writer.test")).toEqual("value")
-
-  it "get engines", ->
-    expect(config.engineNames()).toEqual(["jekyll", "hexo"])
-
-  it "set engine defaults", ->
-    config.setEngine("jekyll")
-    expect(atom.config.get("markdown-writer.codeblock.before"))
-      .toEqual("{% highlight %}\n")
