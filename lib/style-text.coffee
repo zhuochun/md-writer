@@ -8,7 +8,7 @@ styles =
   italic: before: "_", after: "_"
   keystroke: before: "<kbd>", after: "</kbd>"
   strikethrough: before: "~~", after: "~~"
-  codeblock: config.get("codeblock")
+  codeblock: -> config.get("codeblock")
 
 module.exports =
 class StyleText
@@ -17,6 +17,7 @@ class StyleText
 
   constructor: (style) ->
     @style = styles[style]
+    @style = @style() if typeof styles[style] == "function"
 
   display: ->
     @editor = atom.workspace.getActiveEditor()
