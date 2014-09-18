@@ -61,6 +61,7 @@ Default settings can be found [here](https://github.com/zhuochun/md-writer/blob/
 
 ### Basic Settings:
 
+- **siteEngine**: The static engine of your blog. This could alter behaviours as shown [here](https://github.com/zhuochun/md-writer/blob/master/lib/config.coffee#L52).
 - **siteLocalDir**: The root directory of your blog.
 - **siteDraftsDir**: The directory of drafts from the root of `siteLocalDir`. Default is `_draft/`.
 - **sitePostsDir**: The directory of posts from the root of `siteLocalDir`. Default is `_posts/{year}`. You can also use `{year}`, `{month}` and `{day}`.
@@ -74,10 +75,10 @@ Default settings can be found [here](https://github.com/zhuochun/md-writer/blob/
 
 To change these settings, open your Atom Config file, find `markdown-writer` entry.
 
-- **siteLinkPath**: Define path (string) to a `.cson` file that stores all links added for automatic linking next time. Default uses `markdown-writer-links.cson` in Atom's config directory.
-- **frontMatter**: Define front matter (string) used when create new post/draft.
 - **publishRenameBasedOnTitle**: Determine whether publish rename filename based on title in front matter. Default is `false` (boolean).
 - **publishKeepFileExtname**: Determine whether publish keep draft's extname used. Default is `false` (boolean).
+- **siteLinkPath**: Define path (string) to a `.cson` file that stores all links added for automatic linking next time. Default uses `markdown-writer-links.cson` in Atom's config directory.
+- **frontMatter**: Define front matter (string) used when create new post/draft.
 - **codeblock**: Define fenced code block (object). Default uses GitHub's fenced code block.
 - **imageTag**: Define image tag inserted (string). Default uses `![alt](img-url)`.
 
@@ -146,7 +147,6 @@ A list of all commands can be found [here](https://github.com/zhuochun/md-writer
 
 ## TODOs
 
-- Support default settings for different engines
 - Support multiple blog directories
 
 ## Project

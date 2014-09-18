@@ -1,6 +1,12 @@
+## 0.9.0
+
+* Add an option to set static engine
+* Add `litcoffee` to grammars
+* No more reload for `codeblock` style change
+
 ## 0.8.1
 
-* Move configurations to a centre class
+* Move all configurations to a central class
 * Support alignment in insert image
 
 ## 0.8.0
