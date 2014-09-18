@@ -68,7 +68,8 @@ class ManagePostTagsView extends View
       @tags = body.tags.map((tag) -> name: tag)
       @rankTags(@tags, @editor.getText())
       @displayTags(@tags)
-    error = (err) => @error.text(err.message)
+    error = (err) =>
+      @error.text(err?.message || "Tags are not available.")
     utils.getJSON(uri, succeed, error)
 
   # rank tags based on the number of times they appear in content
