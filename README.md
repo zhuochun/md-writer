@@ -1,8 +1,8 @@
 # Markdown-Writer for Atom
 
-Make [Atom](https://atom.io/) a better Markdown editor for blogs.
+Makes [Atom](https://atom.io/) a better Markdown editor!
 
-Work great with [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) and other static blog engines.
+Works great with static blogs. Try it with [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) and any other static blog engines.
 
 ![Insert Image](http://i.imgur.com/s9ekMns.gif)
 
@@ -151,13 +151,18 @@ A list of all commands can be found [here](https://github.com/zhuochun/md-writer
 
 ## Project
 
-- View [CHANGELOG](https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md) :notebook_with_decorative_cover:.
-- If you found any bug, please submit an issue [here](https://github.com/zhuochun/md-writer/issues) :octocat:.
-- License in [MIT](https://github.com/zhuochun/md-writer/blob/master/LICENSE.md) :unlock:.
-- Supported by [褪墨・时间管理](http://www.mifengtd.cn/) :clap:.
+- View [CHANGELOG][e45121fa] :notebook_with_decorative_cover:.
+- Bugs, suggestions & feature requests, [open an issue][e6ad7ed1] :octocat:.
+- License in [MIT][6a9a3773] :unlock:. Copyright (C) 2014 [Zhuochun][41ae693b].
+
+  [e45121fa]: https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md
+  [e6ad7ed1]: https://github.com/zhuochun/md-writer/issues
+  [6a9a3773]: https://github.com/zhuochun/md-writer/blob/master/LICENSE.md
+  [41ae693b]: https://github.com/zhuochun
 
 ## Tips
 
 - A light theme targets Markdown: Copy [this Gist](https://gist.github.com/zhuochun/b3659bcea98fca56cb43) to your Stylesheet.
+  - Better highlights for all syntax in Markdown.
 - Jumping among your posts: `Cmd-t` or `Cmd-p`.
 - Markdown Preview: [markdown-preview](https://atom.io/packages/markdown-preview) package.

@@ -1,3 +1,7 @@
+## 0.9.1
+
+* Improve table separator regexp
+
 ## 0.9.0
 
 * Add an option to set static engine
