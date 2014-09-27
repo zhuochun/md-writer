@@ -15,6 +15,7 @@
               'label': 'Add New Post',
               'command': 'markdown-writer:new-post'
             }
+            { 'type': 'separator' }
             {
               'label': 'Publish Draft',
               'command': 'markdown-writer:publish-draft'
@@ -25,11 +26,11 @@
           'label': 'Front Matter'
           'submenu': [
             {
-              'label': 'Manage Post Tags',
+              'label': 'Manage Tags',
               'command': 'markdown-writer:manage-post-tags'
             }
             {
-              'label': 'Manage Post Categories',
+              'label': 'Manage Categories',
               'command': 'markdown-writer:manage-post-categories'
             }
           ]
@@ -123,25 +124,27 @@
           'label': 'Helpers'
           'submenu': [
             {
-              'label': 'Jump to Previous Heading'
-              'command': 'markdown-writer:jump-to-previous-heading'
-            }
-            {
               'label': 'Jump to Next Heading'
               'command': 'markdown-writer:jump-to-next-heading'
             }
             {
-              'label': 'Jump to Next Table Cell'
-              'command': 'markdown-writer:jump-to-next-table-cell'
+              'label': 'Jump to Previous Heading'
+              'command': 'markdown-writer:jump-to-previous-heading'
             }
+            { 'type': 'separator' }
             {
-              'label': 'Jump to Reference Definition'
+              'label': 'Jump to Definition'
               'command': 'markdown-writer:jump-between-reference-definition'
             }
             { 'type': 'separator' }
             {
               'label': 'Format Table'
               'command': 'markdown-writer:format-table'
+            }
+            { 'type': 'separator' }
+            {
+              'label': 'Jump to Next Table Cell'
+              'command': 'markdown-writer:jump-to-next-table-cell'
             }
           ]
         }
