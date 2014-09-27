@@ -154,6 +154,10 @@ key2:
   it "check is table separator", ->
     fixture = "--|------|---"
     expect(utils.isTableSeparator(fixture)).toBe(true)
+    fixture = "---- |------ | ---"
+    expect(utils.isTableSeparator(fixture)).toBe(true)
+    fixture = "------ | --------|--------"
+    expect(utils.isTableSeparator(fixture)).toBe(true)
 
   it "replace front matter (no leading fence)", ->
     expected = """

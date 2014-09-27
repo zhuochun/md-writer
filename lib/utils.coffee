@@ -130,10 +130,10 @@ URL_REGEX = ///
 isUrl = (url) -> URL_REGEX.test(url)
 
 TABLE_LINE_SEPARATOR_REGEX = ///
-  ^(?:\|?)
-  (?::?-+:?\|)+
-  (?::?-+:?)
-  \|? $
+  ^ \|?             # starts with an optional |
+  (\s*:?-+:?\s*\|)+ # one or more table cell
+  (\s*:?-+:?\s*)    # last table cell
+  \|? $             # ends with an optional |
   ///
 
 isTableSeparator = (line) ->
