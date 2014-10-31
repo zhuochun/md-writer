@@ -1,4 +1,4 @@
-{$, View, EditorView} = require "atom"
+{$, View, TextEditorView} = require "atom"
 config = require "./config"
 utils = require "./utils"
 CSON = require "season"
@@ -18,17 +18,17 @@ class InsertLinkView extends View
       @label "Insert Link", class: "icon icon-globe"
       @div =>
         @label "Text to be displayed", class: "message"
-        @subview "textEditor", new EditorView(mini: true)
+        @subview "textEditor", new TextEditorView(mini: true)
         @label "Web Address", class: "message"
-        @subview "urlEditor", new EditorView(mini: true)
+        @subview "urlEditor", new TextEditorView(mini: true)
         @label "Title", class: "message"
-        @subview "titleEditor", new EditorView(mini: true)
+        @subview "titleEditor", new TextEditorView(mini: true)
       @div class: "dialog-row", =>
         @input type: "checkbox", outlet: "saveCheckbox"
         @span "Automatically link to this text next time", class: "side-label"
       @div outlet: "searchBox", =>
         @label "Search Posts", class: "icon icon-search"
-        @subview "searchEditor", new EditorView(mini: true)
+        @subview "searchEditor", new TextEditorView(mini: true)
         @ul class: "markdown-writer-list", outlet: "searchResult"
 
   initialize: ->

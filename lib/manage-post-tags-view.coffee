@@ -1,4 +1,4 @@
-{$, View, EditorView} = require "atom"
+{$, View, TextEditorView} = require "atom"
 config = require "./config"
 utils = require "./utils"
 
@@ -13,7 +13,7 @@ class ManagePostTagsView extends View
     @div class: "markdown-writer markdown-writer-selection overlay from-top", =>
       @label "Manage Post Tags", class: "icon icon-tag"
       @p class: "error", outlet: "error"
-      @subview "tagsEditor", new EditorView(mini: true)
+      @subview "tagsEditor", new TextEditorView(mini: true)
       @ul class: "candidates", outlet: "candidates"
 
   initialize: ->

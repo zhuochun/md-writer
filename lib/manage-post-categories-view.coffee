@@ -1,4 +1,4 @@
-{$, View, EditorView} = require "atom"
+{$, View, TextEditorView} = require "atom"
 config = require "./config"
 utils = require "./utils"
 request = require "request"
@@ -14,7 +14,7 @@ class ManagePostCategoriesView extends View
     @div class: "markdown-writer markdown-writer-selection overlay from-top", =>
       @label "Manage Post Categories", class: "icon icon-book"
       @p class: "error", outlet: "error"
-      @subview "categoriesEditor", new EditorView(mini: true)
+      @subview "categoriesEditor", new TextEditorView(mini: true)
       @ul class: "candidates", outlet: "candidates"
 
   initialize: ->

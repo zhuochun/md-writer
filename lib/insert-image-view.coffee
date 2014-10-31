@@ -1,4 +1,4 @@
-{$, View, EditorView} = require "atom"
+{$, View, TextEditorView} = require "atom"
 config = require "./config"
 utils = require "./utils"
 remote = require "remote"
@@ -19,21 +19,21 @@ class InsertImageView extends View
       @label "Insert Image", class: "icon icon-device-camera"
       @div =>
         @label "Image Path", class: "message"
-        @subview "imgEditor", new EditorView(mini: true)
+        @subview "imgEditor", new TextEditorView(mini: true)
         @div class: "dialog-row", =>
           @button "Choose Local Image", outlet: "openImg", class: "btn"
           @label outlet: "message", class: "side-label"
         @label "Title (Alt)", class: "message"
-        @subview "titleEditor", new EditorView(mini: true)
+        @subview "titleEditor", new TextEditorView(mini: true)
         @div class: "col-1", =>
           @label "Width (px)", class: "message"
-          @subview "widthEditor", new EditorView(mini: true)
+          @subview "widthEditor", new TextEditorView(mini: true)
         @div class: "col-1", =>
           @label "Height (px)", class: "message"
-          @subview "heightEditor", new EditorView(mini: true)
+          @subview "heightEditor", new TextEditorView(mini: true)
         @div class: "col-2", =>
           @label "Alignment", class: "message"
-          @subview "alignEditor", new EditorView(mini: true)
+          @subview "alignEditor", new TextEditorView(mini: true)
       @div class: "image-container", =>
         @img outlet: 'imagePreview'
 

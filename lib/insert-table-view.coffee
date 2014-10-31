@@ -1,4 +1,4 @@
-{$, View, EditorView} = require "atom"
+{$, View, TextEditorView} = require "atom"
 
 module.exports =
 class InsertTableView extends View
@@ -10,9 +10,9 @@ class InsertTableView extends View
       @label "Insert Table", class: "icon icon-diff-added"
       @div =>
         @label "Columns", class: "message"
-        @subview "columnEditor", new EditorView(mini: true)
+        @subview "columnEditor", new TextEditorView(mini: true)
         @label "Rows", class: "message"
-        @subview "rowEditor", new EditorView(mini: true)
+        @subview "rowEditor", new TextEditorView(mini: true)
 
   initialize: ->
     @on "core:confirm", => @onConfirm()

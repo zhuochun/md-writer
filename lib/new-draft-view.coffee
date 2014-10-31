@@ -1,4 +1,4 @@
-{$, View, EditorView} = require "atom"
+{$, View, TextEditorView} = require "atom"
 config = require "./config"
 utils = require "./utils"
 path = require "path"
@@ -13,7 +13,7 @@ class NewDraftView extends View
       @label "Add New Draft", class: "icon icon-file-add"
       @div =>
         @label "Title", class: "message"
-        @subview "titleEditor", new EditorView(mini: true)
+        @subview "titleEditor", new TextEditorView(mini: true)
       @p class: "message", outlet: "message"
       @p class: "error", outlet: "error"
 
