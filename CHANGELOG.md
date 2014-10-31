@@ -1,3 +1,8 @@
+## 0.10.0
+
+* Use new config API
+* Use `TextEditorView` API
+
 ## 0.9.1
 
 * Improve table separator regexp
