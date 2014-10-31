@@ -5,13 +5,15 @@ class Config
 
   @defaults:
     # static engine of your blog
-    siteEngine: ""
+    siteEngine: "general"
     # root directory of your blog
     siteLocalDir: "/GitHub/example.github.io/"
     # directory to drafts from the root of siteLocalDir
     siteDraftsDir: "_drafts/"
     # directory to posts from the root of siteLocalDir
     sitePostsDir: "_posts/{year}/"
+    # URL to your blog
+    siteUrl: ""
     # URLs to tags/posts/categories JSON file
     urlForTags: "http://example.github.io/assets/tags.json"
     urlForPosts: "http://example.github.io/assets/posts.json"
@@ -53,6 +55,12 @@ class Config
     siteImageUrl: "/assets/{year}/{month}/"
 
   @engines:
+    html:
+      imageTag: """
+        <a href="<site>/<slug>.html" target="_blank">
+          <img class="align<align>" alt="<alt>" src="<src>" width="<width>" height="<height>" />
+        </a>
+        """
     jekyll:
       codeblock:
         before: "{% highlight %}\n"

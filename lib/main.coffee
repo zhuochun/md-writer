@@ -3,16 +3,41 @@ config = require "./config"
 CmdModule = {}
 
 module.exports =
-  configDefaults:
-    siteEngine: config.getDefault("siteEngine")
-    siteLocalDir: config.getDefault("siteLocalDir")
-    siteDraftsDir: config.getDefault("siteDraftsDir")
-    sitePostsDir: config.getDefault("sitePostsDir")
-    urlForTags: config.getDefault("urlForTags")
-    urlForPosts: config.getDefault("urlForPosts")
-    urlForCategories: config.getDefault("urlForCategories")
-    newPostFileName: config.getDefault("newPostFileName")
-    fileExtension: config.getDefault("fileExtension")
+  config:
+    siteEngine:
+      type: "string"
+      default: config.getDefault("siteEngine")
+      enum: [config.getDefault("siteEngine"), config.engineNames()...]
+    siteUrl:
+      type: "string"
+      default: config.getDefault("siteUrl")
+    siteLocalDir:
+      type: "string"
+      default: config.getDefault("siteLocalDir")
+    siteDraftsDir:
+      type: "string"
+      default: config.getDefault("siteDraftsDir")
+    sitePostsDir:
+      type: "string"
+      default: config.getDefault("sitePostsDir")
+    urlForTags:
+      title: "URL to Tags JSON definitions"
+      type: "string"
+      default: config.getDefault("urlForTags")
+    urlForPosts:
+      title: "URL to Posts JSON definitions"
+      type: "string"
+      default: config.getDefault("urlForPosts")
+    urlForCategories:
+      title: "URL to Categories JSON definitions"
+      type: "string"
+      default: config.getDefault("urlForCategories")
+    newPostFileName:
+      type: "string"
+      default: config.getDefault("newPostFileName")
+    fileExtension:
+      type: "string"
+      default: config.getDefault("fileExtension")
 
   activate: (state) ->
     # general
