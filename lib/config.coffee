@@ -70,7 +70,6 @@ class Config
     octopress:
       imageTag: "{% img {align} {src} {width} {height} '{alt}' %}"
     hexo:
-      newPostFileName: "{title}{extension}"
       frontMatter: """
         layout: <layout>
         title: "<title>"
