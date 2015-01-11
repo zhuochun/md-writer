@@ -34,10 +34,10 @@ module.exports =
       default: config.getDefault("urlForCategories")
     newPostFileName:
       type: "string"
-      default: config.getDefault("newPostFileName")
+      default: config.getCurrentDefault("newPostFileName")
     fileExtension:
       type: "string"
-      default: config.getDefault("fileExtension")
+      default: config.getCurrentDefault("fileExtension")
 
   activate: (state) ->
     # general

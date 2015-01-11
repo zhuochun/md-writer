@@ -78,7 +78,7 @@ class Config
         ---
         """
 
-  keyPath: (key) -> "#{@constructor.prefix}.#{key}"
+  engineNames: -> Object.keys(@constructor.engines)
 
   get: (key) ->
     if atom.config.isDefault(@keyPath(key))
@@ -89,18 +89,24 @@ class Config
   set: (key, val) ->
     atom.config.set(@keyPath(key), val)
 
+  # get config.defaults
   getDefault: (key) ->
     @_valueForKeyPath(@constructor.defaults, key)
 
-  restoreDefault: (key) ->
-    atom.config.restoreDefault(@keyPath(key))
-
-  engineNames: -> Object.keys(@constructor.engines)
-
+  # get config.engines based on engine set
   getEngine: (key) ->
     engine = atom.config.get(@keyPath("siteEngine"))
     if engine in @engineNames()
       @_valueForKeyPath(@constructor.engines[engine], key)
+
+  # get config based on engine set or global defaults
+  getCurrentDefault: (key) ->
+    @getEngine(key) || @getDefault(key)
+
+  restoreDefault: (key) ->
+    atom.config.restoreDefault(@keyPath(key))
+
+  keyPath: (key) -> "#{@constructor.prefix}.#{key}"
 
   _valueForKeyPath: (object, keyPath) ->
     keys = keyPath.split('.')
