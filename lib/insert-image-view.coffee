@@ -67,7 +67,7 @@ class InsertImageView extends View
 
   display: ->
     @previouslyFocusedElement = $(':focus')
-    @editor = atom.workspace.getActiveEditor()
+    @editor = atom.workspace.getActiveTextEditor()
     atom.workspaceView.append(this)
     @setFieldsFromSelection()
     @imgEditor.focus()

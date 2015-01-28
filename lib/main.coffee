@@ -34,44 +34,57 @@ module.exports =
       default: config.getDefault("urlForCategories")
     newPostFileName:
       type: "string"
-      default: config.getCurrentDefault("newPostFileName")
+      default: config.getCurrentConfig("newPostFileName")
     fileExtension:
       type: "string"
-      default: config.getCurrentDefault("fileExtension")
+      default: config.getCurrentConfig("fileExtension")
 
   activate: (state) ->
-    # general
+    commands = {}
+    helpers = {}
+
+    # new-posts
     ["draft", "post"].forEach (file) =>
-      @registerCommand "new-#{file}", "./new-#{file}-view", optOutGrammars: true
-    @registerCommand "publish-draft", "./publish-draft"
+      commands["markdown-writer:new-#{file}"] =
+        @createCommand("./new-#{file}-view", optOutGrammars: true)
+
+    # publishing
+    commands["markdown-writer:publish-draft"] = @createCommand("./publish-draft")
 
     # front-matter
     ["tags", "categories"].forEach (attr) =>
-      @registerCommand "manage-post-#{attr}", "./manage-post-#{attr}-view"
+      commands["markdown-writer:manage-post-#{attr}"] =
+        @createCommand("./manage-post-#{attr}-view")
 
     # text
     ["code", "codeblock", "bold", "italic",
      "keystroke", "strikethrough"].forEach (style) =>
-      @registerCommand "toggle-#{style}-text", "./style-text", args: style
+      commands["markdown-writer:toggle-#{style}-text"] =
+        @createCommand("./style-text", args: style)
 
     # line-wise
     ["h1", "h2", "h3", "h4", "h5", "ul", "ol",
      "task", "taskdone", "blockquote"].forEach (style) =>
-      @registerCommand "toggle-#{style}", "./style-line", args: style
+      commands["markdown-writer:toggle-#{style}"] =
+        @createCommand("./style-line", args: style)
 
     # media
     ["link", "image", "table"].forEach (media) =>
-      @registerCommand "insert-#{media}", "./insert-#{media}-view"
+      commands["markdown-writer:insert-#{media}"] =
+        @createCommand("./insert-#{media}-view")
 
     # helpers
     ["open-cheat-sheet", "insert-new-line",
      "jump-between-reference-definition",
      "jump-to-previous-heading", "jump-to-next-heading",
      "jump-to-next-table-cell", "format-table"].forEach (command) =>
-      @registerHelper command, "./commands"
+       helpers["markdown-writer:#{command}"] = @createHelper("./commands", command)
 
-  registerCommand: (cmd, path, options = {}) ->
-    atom.workspaceView.command "markdown-writer:#{cmd}", (e) =>
+    atom.commands.add "atom-workspace", commands
+    atom.commands.add "atom-text-editor", helpers
+
+  createCommand: (path, options = {}) ->
+    (e) =>
       unless options.optOutGrammars or @isMarkdown()
         return e.abortKeyBinding()
 
@@ -79,15 +92,15 @@ module.exports =
       cmdInstance = new CmdModule[path](options.args)
       cmdInstance.display()
 
-  registerHelper: (cmd, path) ->
-    atom.workspaceView.command "markdown-writer:#{cmd}", (e) =>
+  createHelper: (path, cmd) ->
+    (e) =>
       return e.abortKeyBinding() unless @isMarkdown()
 
       CmdModule[path] ?= require(path)
       CmdModule[path].trigger(cmd)
 
   isMarkdown: ->
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     return false unless editor?
     return editor.getGrammar().scopeName in config.get("grammars")
 

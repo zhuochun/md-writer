@@ -1,11 +1,9 @@
-{WorkspaceView} = require "atom"
 NewPostView = require "../lib/new-post-view"
 
 describe "NewPostView", ->
+  workspaceElement = null
   beforeEach ->
-    atom.workspaceView = new WorkspaceView
-    atom.workspace = atom.workspaceView.model
-
+    workspaceElement = atom.views.getView(atom.workspace)
     @view = new NewPostView({})
 
   it "get filename in hexo format", ->

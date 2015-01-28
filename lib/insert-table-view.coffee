@@ -26,7 +26,7 @@ class InsertTableView extends View
 
   display: ->
     @previouslyFocusedElement = $(':focus')
-    @editor = atom.workspace.getActiveEditor()
+    @editor = atom.workspace.getActiveTextEditor()
     atom.workspaceView.append(this)
     @rowEditor.setText("3")
     @columnEditor.setText("3")

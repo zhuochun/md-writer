@@ -1,11 +1,9 @@
-{WorkspaceView} = require "atom"
 InsertLinkView = require "../lib/insert-link-view"
 
 describe "InsertLinkView", ->
+  workspaceElement = null
   beforeEach ->
-    atom.workspaceView = new WorkspaceView
-    atom.workspace = atom.workspaceView.model
-
+    workspaceElement = atom.views.getView(atom.workspace)
     @view = new InsertLinkView({})
 
   it "get saved link path", ->

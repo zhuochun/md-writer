@@ -1,11 +1,6 @@
-{WorkspaceView} = require "atom"
 config = require "../lib/config"
 
 describe "config", ->
-  beforeEach ->
-    atom.workspaceView = new WorkspaceView
-    atom.workspace = atom.workspaceView.model
-
   it "get default value", ->
     expect(config.get("fileExtension")).toEqual(".markdown")
 

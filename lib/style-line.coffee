@@ -21,7 +21,7 @@ class StyleLine
     @style = styles[style]
 
   display: ->
-    @editor = atom.workspace.getActiveEditor()
+    @editor = atom.workspace.getActiveTextEditor()
     @editor.buffer.beginTransaction()
     @editor.getSelections().forEach (selection) =>
       range = selection.getBufferRange()

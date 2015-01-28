@@ -1,4 +1,4 @@
-{$, View, TextEditorView} = require "atom"
+{$, View, TextEditorView} = require "atom-space-pen-views"
 config = require "./config"
 utils = require "./utils"
 request = require "request"
@@ -37,7 +37,7 @@ class ManagePostCategoriesView extends View
 
   display: ->
     @previouslyFocusedElement = $(':focus')
-    @editor = atom.workspace.getActiveEditor()
+    @editor = atom.workspace.getActiveTextEditor()
 
     if @isValidMarkdown(@editor.getText())
       @setFrontMatter()

@@ -1,11 +1,9 @@
-{WorkspaceView} = require "atom"
 ManagePostTagsView = require "../lib/manage-post-tags-view"
 
 describe "FrontMatterView", ->
+  workspaceElement = null
   beforeEach ->
-    atom.workspaceView = new WorkspaceView
-    atom.workspace = atom.workspaceView.model
-
+    workspaceElement = atom.views.getView(atom.workspace)
     @view = new ManagePostTagsView({})
 
   it "rank tags", ->

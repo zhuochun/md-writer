@@ -1,13 +1,13 @@
 path = require "path"
 
-class Config
+class Configuration
   @prefix: "markdown-writer"
 
   @defaults:
     # static engine of your blog
     siteEngine: "general"
     # root directory of your blog
-    siteLocalDir: "/GitHub/example.github.io/"
+    siteLocalDir: "/github/example.github.io/"
     # directory to drafts from the root of siteLocalDir
     siteDraftsDir: "_drafts/"
     # directory to posts from the root of siteLocalDir
@@ -81,10 +81,7 @@ class Config
   engineNames: -> Object.keys(@constructor.engines)
 
   get: (key) ->
-    if atom.config.isDefault(@keyPath(key))
-      @getEngine(key) || @getDefault(key)
-    else
-      atom.config.get(@keyPath(key))
+    @getUserConfig(key) || @getEngine(key) || @getDefault(key)
 
   set: (key, val) ->
     atom.config.set(@keyPath(key), val)
@@ -93,18 +90,22 @@ class Config
   getDefault: (key) ->
     @_valueForKeyPath(@constructor.defaults, key)
 
-  # get config.engines based on engine set
+  # get config.engines based on siteEngine set
   getEngine: (key) ->
     engine = atom.config.get(@keyPath("siteEngine"))
     if engine in @engineNames()
       @_valueForKeyPath(@constructor.engines[engine], key)
 
   # get config based on engine set or global defaults
-  getCurrentDefault: (key) ->
+  getCurrentConfig: (key) ->
     @getEngine(key) || @getDefault(key)
 
+  # get config from user's config file
+  getUserConfig: (key) ->
+    atom.config.get(@keyPath(key), sources: [atom.config.getUserConfigPath()])
+
   restoreDefault: (key) ->
-    atom.config.restoreDefault(@keyPath(key))
+    atom.config.unset(@keyPath(key))
 
   keyPath: (key) -> "#{@constructor.prefix}.#{key}"
 
@@ -115,4 +116,4 @@ class Config
       return unless object?
     object
 
-module.exports = new Config()
+module.exports = new Configuration()

@@ -20,7 +20,7 @@ class StyleText
     @style = @style() if typeof styles[style] == "function"
 
   display: ->
-    @editor = atom.workspace.getActiveEditor()
+    @editor = atom.workspace.getActiveTextEditor()
     @editor.buffer.beginTransaction()
     @editor.getSelections().forEach (selection) =>
       if text = selection.getText()

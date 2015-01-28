@@ -11,13 +11,12 @@ TABLE_COL_REGEX = ///  ([^\|]*?) \s* \| ///
 TABLE_VAL_REGEX = /// (?:^|\|) ([^\|]+) ///g
 
 class Commands
-
   trigger: (command) ->
     fn = command.replace /-[a-z]/ig, (s) -> s[1].toUpperCase()
     @[fn]()
 
   insertNewLine: ->
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     line = editor.lineTextForBufferRow(editor.getCursorBufferPosition().row)
 
     {replaceLine, value} = @_findNewLineValue(line)
@@ -39,7 +38,7 @@ class Commands
       return replaceLine: false, value: value || "\n"
 
   jumpToPreviousHeading: ->
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     {row} = editor.getCursorBufferPosition()
 
     @_executeMoveToPreviousHeading(editor, [[0, 0], [row - 1, 0]])
@@ -53,7 +52,7 @@ class Commands
     return found
 
   jumpToNextHeading: ->
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     curPosition = editor.getCursorBufferPosition()
     eofPosition = editor.getEofBufferPosition()
 
@@ -75,7 +74,7 @@ class Commands
     return found
 
   jumpBetweenReferenceDefinition: ->
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     cursor = editor.getCursorBufferPosition()
 
     key = editor.getSelectedText() || editor.getWordUnderCursor()
@@ -88,7 +87,7 @@ class Commands
         match.stop()
 
   jumpToNextTableCell: ->
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     {row, column} = editor.getCursorBufferPosition()
 
     line = editor.lineForBufferRow(row)
@@ -113,7 +112,7 @@ class Commands
       line.length + 1
 
   formatTable: ->
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
 
     unless editor.getSelectedText()
       editor.moveCursorToBeginningOfPreviousParagraph()

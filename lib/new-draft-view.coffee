@@ -1,4 +1,4 @@
-{$, View, TextEditorView} = require "atom"
+{$, View, TextEditorView} = require "atom-space-pen-views"
 config = require "./config"
 utils = require "./utils"
 path = require "path"

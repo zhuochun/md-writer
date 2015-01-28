@@ -2,7 +2,7 @@
   "name": "markdown-writer",
   "main": "./lib/main",
   "version": "0.10.0",
-  "description": "Make Atom a better Markdown editor for blogs.",
+  "description": "Make Atom a better Markdown editor and an easier static blogging tool.",
   "activationEvents": [
     "markdown-writer:new-post",
     "markdown-writer:new-draft",
@@ -37,18 +37,18 @@
     "markdown-writer:open-cheat-sheet"
   ],
   "author": "Wang Zhuochun <zhuochun@hotmail.com> (http://www.bicrement.com/)",
-  "homepage": "https://github.com/zhuochun/md-writer",
   "repository": "https://github.com/zhuochun/md-writer",
   "bugs": "https://github.com/zhuochun/md-writer/issues",
   "license": "MIT",
   "engines": {
-    "atom": ">=0.50.0"
+    "atom": ">=0.174.0, <2.0.0"
   },
   "dependencies": {
+    "atom-space-pen-views": "^2.0.3",
     "fs-plus": "2.x",
     "request": "2.x",
     "js-yaml": "3.x",
     "guid": "0.0.12",
-    "season": "2.x"
+    "season": "5.x"
   }
 }

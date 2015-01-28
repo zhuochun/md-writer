@@ -1,11 +1,6 @@
-{WorkspaceView} = require "atom"
 TextStyleView = require "../lib/style-text"
 
 describe "StyleText", ->
-  beforeEach ->
-    atom.workspaceView = new WorkspaceView
-    atom.workspace = atom.workspaceView.model
-
   it "check a style is added", ->
     view = new TextStyleView("bold")
     fixture = "**bold**"

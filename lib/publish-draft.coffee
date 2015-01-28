@@ -1,4 +1,4 @@
-{$} = require "atom"
+{$} = require "atom-space-pen-views"
 config = require "./config"
 utils = require "./utils"
 fs = require "fs-plus"
@@ -12,7 +12,7 @@ class PublishDraft
   editor: null
 
   constructor: ->
-    @editor = atom.workspace.getActiveEditor()
+    @editor = atom.workspace.getActiveTextEditor()
     @draftPath = @editor.getPath()
     @frontMatter = utils.getFrontMatter(@editor.getText())
     @postPath = @getPostPath()
