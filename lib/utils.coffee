@@ -115,7 +115,11 @@ parseImage = (input) ->
 isInlineLink = (input) -> INLINE_LINK_REGEX.test(input) and !isImage(input)
 parseInlineLink = (input) ->
   link = INLINE_LINK_REGEX.exec(input)
-  return text: link[1], url: link[2], title: link[3]
+
+  if link && link.length >= 2
+    text: link[1], url: link[2], title: link[3] || ""
+  else
+    throw new Error("Invalid or incomplete inline link")
 
 isReferenceLink = (input) -> REFERENCE_LINK_REGEX.test(input)
 isReferenceDefinition = (input) ->
@@ -124,7 +128,11 @@ parseReferenceLink = (input, content) ->
   refn = REFERENCE_LINK_REGEX.exec(input)
   id = refn[2] || refn[1]
   link = reference_def_regex(id).exec(content)
-  return id: id, text: refn[1], url: link[1], title: link[2] || ""
+
+  if link && link.length >= 2
+    id: id, text: refn[1], url: link[1], title: link[2] || ""
+  else
+    throw new Error("Cannot find reference tag for specified link")
 
 URL_REGEX = ///
   ^(https?|ftp):\/\/
@@ -171,6 +179,16 @@ template = (text, data, matcher = /[<{]([\w-]+?)[>}]/g) ->
   text.replace matcher, (match, attr) ->
     if data[attr]? then data[attr] else match
 
+hasCursorScope = (editor, scope) ->
+  editor.getLastCursor().getScopeDescriptor()
+    .getScopesArray().indexOf(scope) != -1
+
+getCursorScopeRange = (editor, wordRegex) ->
+  if wordRegex
+    editor.getLastCursor().getCurrentWordBufferRange(wordRegex: wordRegex)
+  else
+    editor.getLastCursor().getCurrentWordBufferRange()
+
 module.exports =
   getJSON: getJSON
   getDate: getDate
@@ -198,3 +216,5 @@ module.exports =
   getTitleSlug: getTitleSlug
   dirTemplate: dirTemplate
   template: template
+  hasCursorScope: hasCursorScope
+  getCursorScopeRange: getCursorScopeRange

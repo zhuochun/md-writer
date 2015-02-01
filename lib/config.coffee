@@ -49,6 +49,10 @@ class Configuration
       regexAfter: "\\n```"
     # path to a .cson file that stores links added for automatic linking
     siteLinkPath: path.join(atom.getConfigDirPath(), "#{@prefix}-links.cson")
+    # reference tag insert position (paragraph or article)
+    referenceInsertPosition: "paragraph"
+    # reference tag indent space
+    referenceIndentLength: 2
     # image tag template
     imageTag: "![<alt>](<src>)"
     # image url prefix if you insert image not in blog directory

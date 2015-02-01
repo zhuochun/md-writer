@@ -9,6 +9,7 @@ posts = null # to cache it
 module.exports =
 class InsertLinkView extends View
   editor: null
+  range: null
   links: null
   referenceId: false
   previouslyFocusedElement: null
@@ -24,8 +25,9 @@ class InsertLinkView extends View
         @label "Title", class: "message"
         @subview "titleEditor", new TextEditorView(mini: true)
       @div class: "dialog-row", =>
-        @input type: "checkbox", outlet: "saveCheckbox"
-        @span "Automatically link to this text next time", class: "side-label"
+        @label for: "markdown-writer-save-link-checkbox", =>
+          @input id: "markdown-writer-save-link-checkbox", type:"checkbox", outlet: "saveCheckbox"
+          @span "Automatically link to this text next time", class: "side-label"
       @div outlet: "searchBox", =>
         @label "Search Posts", class: "icon icon-search"
         @subview "searchEditor", new TextEditorView(mini: true)
@@ -44,7 +46,10 @@ class InsertLinkView extends View
     text = @textEditor.getText()
     url = @urlEditor.getText().trim()
     title = @titleEditor.getText().trim()
-    if url then @insertLink(text, title, url) else @removeLink(text)
+
+    @editor.transact =>
+      if url then @insertLink(text, title, url) else @removeLink(text)
+
     @updateSavedLink(text, title, url)
     @detach()
 
@@ -53,6 +58,7 @@ class InsertLinkView extends View
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
     @previouslyFocusedElement = $(document.activeElement)
     @panel.show()
+
     @fetchPosts()
     @loadSavedLinks =>
       @setLinkFromSelection()
@@ -69,9 +75,14 @@ class InsertLinkView extends View
     super
 
   setLinkFromSelection: ->
-    selection = @editor.getSelectedText()
-    return unless selection
+    try
+      @range = @getLinkBufferRange()
+      selection = @editor.getTextInRange(@range)
+      @_setLinkFromSelection(selection) if selection
+    catch
+      @setLink(selection, "", "")
 
+  _setLinkFromSelection: (selection) ->
     if utils.isInlineLink(selection)
       link = utils.parseInlineLink(selection)
       @setLink(link.text, link.url, link.title)
@@ -87,6 +98,14 @@ class InsertLinkView extends View
       @saveCheckbox.prop("checked", true)
     else
       @setLink(selection, "", "")
+
+  getLinkBufferRange: ->
+    if @editor.getSelectedText()
+      @editor.getSelectedBufferRange()
+    else if utils.hasCursorScope(@editor, "link")
+      @editor.bufferRangeForScopeAtCursor("link")
+    else
+      utils.getCursorScopeRange(@editor)
 
   updateSearch: (query) ->
     query = query.trim().toLowerCase()
@@ -108,64 +127,67 @@ class InsertLinkView extends View
     else if title
       @insertReferenceLink(text, title, url)
     else
-      @editor.insertText("[#{text}](#{url})")
+      @editor.setTextInBufferRange(@range, "[#{text}](#{url})")
+
+  updateReferenceLink: (text, title, url) ->
+    if title
+      position = @editor.getCursorBufferPosition()
+      @editor.buffer.scan ///^\ *\[#{@referenceId}\]:\ +([\S\ ]+)$///, (match) =>
+        indent = if config.get("referenceIndentLength") == 2 then "  " else ""
+        title = if /^[-\*\!]$/.test(title) then "" else " \"#{title}\""
+        @editor.setTextInBufferRange(match.range, "#{indent}[#{referenceId}]: #{url}#{title}")
+      @editor.setCursorBufferPosition(position)
+    else
+      @removeReferenceLink("[#{text}](#{url})")
+
+  insertReferenceLink: (text, title, url) ->
+    # modify selection
+    id = require("guid").raw()[0..7]
+    @editor.setTextInBufferRange(@range, "[#{text}][#{id}]")
+
+    # reserve original cursor position
+    position = @editor.getCursorBufferPosition()
+    if position.row == @editor.getLastBufferRow()
+      @editor.insertNewline() # handle last row position
+    else
+      @editor.moveToBeginningOfNextParagraph()
+
+    # handle paragraph is not correct sometimes
+    cursorRow = @editor.getCursorBufferPosition().row
+    if cursorRow == position.row + 1
+      @editor.insertNewline()
+      cursorRow += 1
+
+    # insert text
+    indent = if config.get("referenceIndentLength") == 2 then "  " else ""
+    title = if /^[-\*\!]$/.test(title) then "" else " \"#{title}\""
+    eol = if @editor.lineTextForBufferRow(cursorRow) then "\n" else ""
+    @editor.setTextInBufferRange([[cursorRow, 0], [cursorRow, 0]],
+      "#{indent}[#{id}]: #{url}#{title}#{eol}")
+
+    # check if additional space line required
+    @editor.setCursorBufferPosition([cursorRow + 1, 0])
+    line = @editor.lineTextForBufferRow(cursorRow + 1)
+    @editor.insertNewline() unless utils.isReferenceDefinition(line)
+    @editor.setCursorBufferPosition(position)
 
   removeLink: (text) ->
     if @referenceId
       @removeReferenceLink(text)
     else
-      @editor.insertText(text)
-
-  insertReferenceLink: (text, title, url) ->
-    @editor.buffer.beginTransaction()
-
-    # modify selection
-    id = require("guid").raw()[0..7]
-    @editor.insertText("[#{text}][#{id}]")
-
-    # insert reference
-    position = @editor.getCursorBufferPosition()
-    if position.row == @editor.getLastBufferRow()
-      @editor.insertNewline() # handle last row position
-    else
-      @editor.moveCursorToBeginningOfNextParagraph()
-    @editor.insertNewline()
-    @editor.insertText("  [#{id}]: #{url}" +
-      if /^[-\*\!]$/.test(title) then "" else " \"#{title}\"")
-    @editor.moveCursorDown()
-    line = @editor.selectLine()[0].getText().trim()
-    unless utils.isReferenceDefinition(line)
-      @editor.moveCursorUp()
-      @editor.insertNewlineBelow()
-    @editor.setCursorBufferPosition(position)
-
-    @editor.buffer.commitTransaction()
-
-  updateReferenceLink: (text, title, url) ->
-    if title
-      @editor.buffer.beginTransaction()
-      position = @editor.getCursorBufferPosition()
-      @editor.buffer.scan /// ^\ * \[#{@referenceId}\]: \ +(.+)$ ///, (match) =>
-        @editor.setSelectedBufferRange(match.range)
-        @editor.insertText("  [#{@referenceId}]: #{url} \"#{title}\"")
-      @editor.setCursorBufferPosition(position)
-      @editor.buffer.commitTransaction()
-    else
-      @removeReferenceLink("[#{text}](#{url})")
+      @editor.setTextInBufferRange(@range, text)
 
   removeReferenceLink: (text) ->
-    @editor.buffer.beginTransaction()
-    @editor.insertText(text)
+    @editor.setTextInBufferRange(@range, text)
     position = @editor.getCursorBufferPosition()
     @editor.buffer.scan /// ^\ * \[#{@referenceId}\]: \ + ///, (match) =>
       @editor.setSelectedBufferRange(match.range)
       @editor.deleteLine()
-      emptyLine = !@editor.selectLine()[0].getText().trim()
-      @editor.moveCursorUp()
-      emptyLineAbove = !@editor.selectLine()[0].getText().trim()
+      emptyLine = !@editor.selectLinesContainingCursors()[0].getText().trim()
+      @editor.moveUp()
+      emptyLineAbove = !@editor.selectLinesContainingCursors()[0].getText().trim()
       @editor.deleteLine() if emptyLine and emptyLineAbove
     @editor.setCursorBufferPosition(position)
-    @editor.buffer.commitTransaction()
 
   setLink: (text, url, title) ->
     @textEditor.setText(text)
@@ -180,27 +202,26 @@ class InsertLinkView extends View
     savedLink and savedLink.title == link.title and savedLink.url == link.url
 
   updateSavedLink: (text, title, url) ->
-    try
-      if @saveCheckbox.prop("checked")
-        @links[text.toLowerCase()] = title: title, url: url if url
-      else if @isInSavedLink(text: text, title: title, url: url)
-        delete @links[text.toLowerCase()]
-      CSON.writeFileSync(@getSavedLinksPath(), @links)
-    catch error
-      console.log(error.message)
+    if @saveCheckbox.prop("checked")
+      @links[text.toLowerCase()] = title: title, url: url if url
+    else if @isInSavedLink(text: text, title: title, url: url)
+      delete @links[text.toLowerCase()]
+
+    file = config.get("siteLinkPath")
+    fs.exists file, (exists) ->
+      if exists then CSON.writeFile file, @links, (error) -> console.log(error)
 
   loadSavedLinks: (callback) ->
-    file = @getSavedLinksPath()
     setLinks = (data) => @links = data || {}; callback()
+
+    file = config.get("siteLinkPath")
     fs.exists file, (exists) ->
       if exists
         CSON.readFile file, (error, data) ->
+          console.log(error) if error
           setLinks(data)
-          console.log(error.message) if error
       else
         setLinks()
-
-  getSavedLinksPath: -> config.get("siteLinkPath")
 
   fetchPosts: ->
     if posts
