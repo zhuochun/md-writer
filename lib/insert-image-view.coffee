@@ -1,4 +1,4 @@
-{$, View, TextEditorView} = require "atom"
+{$, View, TextEditorView} = require "atom-space-pen-views"
 config = require "./config"
 utils = require "./utils"
 remote = require "remote"
@@ -18,12 +18,12 @@ class InsertImageView extends View
     @div class: "markdown-writer markdown-writer-dialog", =>
       @label "Insert Image", class: "icon icon-device-camera"
       @div =>
-        @label "Image Path", class: "message"
+        @label "Image Path (src)", class: "message"
         @subview "imageEditor", new TextEditorView(mini: true)
         @div class: "dialog-row", =>
           @button "Choose Local Image", outlet: "openImageButton", class: "btn"
           @label outlet: "message", class: "side-label"
-        @label "Title (Alt)", class: "message"
+        @label "Title (alt)", class: "message"
         @subview "titleEditor", new TextEditorView(mini: true)
         @div class: "col-1", =>
           @label "Width (px)", class: "message"
@@ -93,7 +93,7 @@ class InsertImageView extends View
   openImageDialog: ->
     files = dialog.showOpenDialog
       properties: ['openFile']
-      defaultPath: atom.project.getPath()
+      defaultPath: atom.project.getPaths()[0]
     return unless files
     @imageEditor.setText(files[0])
     @displayImagePreview(files[0])
@@ -131,7 +131,7 @@ class InsertImageView extends View
     else if fs.existsSync(file)
       file
     else
-      "#{atom.project.getPath()}#{file}"
+      "#{atom.project.getPaths()[0]}#{file}"
 
   generateImageUrl: (file) ->
     return file if utils.isUrl(file)
