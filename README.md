@@ -133,7 +133,7 @@ For **Hexo** users, you can install [hexo-generator-atom-markdown-writer-meta](h
 Go to `Atom -> Open your Keymap`, paste the following:
 
 ```coffee
-'.platform-darwin .editor':
+'.platform-darwin atom-text-editor':
   'ctrl-alt-1': 'unset!'
   'ctrl-alt-2': 'unset!'
   'ctrl-alt-3': 'unset!'

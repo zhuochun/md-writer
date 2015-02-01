@@ -1,3 +1,8 @@
+## 0.10.1
+
+* Fix deprecated APIs
+* Improve link reference insertion
+
 ## 0.10.0
 
 * Use new config API
