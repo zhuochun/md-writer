@@ -1,4 +1,4 @@
-{$, View, TextEditorView} = require "atom"
+{$, View, TextEditorView} = require "atom-space-pen-views"
 
 module.exports =
 class InsertTableView extends View
@@ -6,7 +6,7 @@ class InsertTableView extends View
   previouslyFocusedElement: null
 
   @content: ->
-    @div class: "markdown-writer markdown-writer-dialog overlay from-top", =>
+    @div class: "markdown-writer markdown-writer-dialog", =>
       @label "Insert Table", class: "icon icon-diff-added"
       @div =>
         @label "Columns", class: "message"
@@ -15,25 +15,29 @@ class InsertTableView extends View
         @subview "rowEditor", new TextEditorView(mini: true)
 
   initialize: ->
-    @on "core:confirm", => @onConfirm()
-    @on "core:cancel", => @detach()
+    atom.commands.add @element,
+      "core:confirm": => @onConfirm()
+      "core:cancel":  => @detach()
 
   onConfirm: ->
     row = parseInt(@rowEditor.getText(), 10)
     col = parseInt(@columnEditor.getText(), 10)
+
     @insertTable(row, col)
     @detach()
 
   display: ->
-    @previouslyFocusedElement = $(':focus')
     @editor = atom.workspace.getActiveTextEditor()
-    atom.workspaceView.append(this)
+    @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
+    @previouslyFocusedElement = $(document.activeElement)
     @rowEditor.setText("3")
     @columnEditor.setText("3")
+    @panel.show()
     @columnEditor.focus()
 
   detach: ->
-    return unless @hasParent()
+    return unless @panel.isVisible()
+    @panel.hide()
     @previouslyFocusedElement?.focus()
     super
 
@@ -60,11 +64,11 @@ class InsertTableView extends View
     [tr[0], tr[col]] = [beg, end]
     tr.join("")
 
-  # at least 2 rows, 1 column
+  # at least 2 row + 2 columns
   isValidRange: (row, col) ->
     if isNaN(row) or isNaN(col)
       false
-    if row <= 1 or col <= 0
+    if row < 2 or col < 2
       false
     else
       true

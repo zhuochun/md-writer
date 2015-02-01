@@ -90,17 +90,17 @@ class Commands
     editor = atom.workspace.getActiveTextEditor()
     {row, column} = editor.getCursorBufferPosition()
 
-    line = editor.lineForBufferRow(row)
+    line = editor.lineTextForBufferRow(row)
     cell = line.indexOf("|", column)
 
     if cell == -1
       row += 1
-      line = editor.lineForBufferRow(row)
+      line = editor.lineTextForBufferRow(row)
 
     if utils.isTableSeparator(line)
       row += 1
       cell = -1
-      line = editor.lineForBufferRow(row)
+      line = editor.lineTextForBufferRow(row)
 
     cell = @_findNextTableCellIdx(line, cell + 1)
     editor.setCursorBufferPosition([row, cell])

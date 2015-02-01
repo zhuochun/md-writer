@@ -14,7 +14,7 @@ class InsertLinkView extends View
   previouslyFocusedElement: null
 
   @content: ->
-    @div class: "markdown-writer markdown-writer-dialog overlay from-top", =>
+    @div class: "markdown-writer markdown-writer-dialog", =>
       @label "Insert Link", class: "icon icon-globe"
       @div =>
         @label "Text to be displayed", class: "message"
@@ -32,14 +32,13 @@ class InsertLinkView extends View
         @ul class: "markdown-writer-list", outlet: "searchResult"
 
   initialize: ->
-    @handleEvents()
-    @on "core:confirm", => @onConfirm()
-    @on "core:cancel", => @detach()
-
-  handleEvents: ->
-    @searchEditor.hiddenInput.on "keyup", =>
+    @searchEditor.getModel().onDidChange =>
       @updateSearch(@searchEditor.getText()) if posts
     @searchResult.on "click", "li", (e) => @useSearchResult(e)
+
+    atom.commands.add @element,
+      "core:confirm": => @onConfirm()
+      "core:cancel":  => @detach()
 
   onConfirm: ->
     text = @textEditor.getText()
@@ -50,20 +49,22 @@ class InsertLinkView extends View
     @detach()
 
   display: ->
-    @previouslyFocusedElement = $(':focus')
     @editor = atom.workspace.getActiveTextEditor()
-    atom.workspaceView.append(this)
+    @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
+    @previouslyFocusedElement = $(document.activeElement)
+    @panel.show()
     @fetchPosts()
     @loadSavedLinks =>
       @setLinkFromSelection()
       if @textEditor.getText()
-        @urlEditor.getEditor().selectAll()
+        @urlEditor.getModel().selectAll()
         @urlEditor.focus()
       else
         @textEditor.focus()
 
   detach: ->
-    return unless @hasParent()
+    return unless @panel.isVisible()
+    @panel.hide()
     @previouslyFocusedElement?.focus()
     super
 

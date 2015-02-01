@@ -15,13 +15,13 @@ class InsertImageView extends View
   previouslyFocusedElement: null
 
   @content: ->
-    @div class: "markdown-writer markdown-writer-dialog overlay from-top", =>
+    @div class: "markdown-writer markdown-writer-dialog", =>
       @label "Insert Image", class: "icon icon-device-camera"
       @div =>
         @label "Image Path", class: "message"
-        @subview "imgEditor", new TextEditorView(mini: true)
+        @subview "imageEditor", new TextEditorView(mini: true)
         @div class: "dialog-row", =>
-          @button "Choose Local Image", outlet: "openImg", class: "btn"
+          @button "Choose Local Image", outlet: "openImageButton", class: "btn"
           @label outlet: "message", class: "side-label"
         @label "Title (Alt)", class: "message"
         @subview "titleEditor", new TextEditorView(mini: true)
@@ -38,18 +38,17 @@ class InsertImageView extends View
         @img outlet: 'imagePreview'
 
   initialize: ->
-    @handleEvents()
-    @on "core:confirm", => @onConfirm()
-    @on "core:cancel", => @detach()
+    @imageEditor.on "blur", =>
+      @displayImagePreview(@imageEditor.getText().trim())
+    @openImageButton.on "click", => @openImageDialog()
 
-  handleEvents: ->
-    @imgEditor.hiddenInput.on "focusout", =>
-      @displayImagePreview(@imgEditor.getText().trim())
-    @openImg.on "click", => @openImageDialog()
+    atom.commands.add @element,
+      "core:confirm": => @onConfirm()
+      "core:cancel":  => @detach()
 
   onConfirm: ->
     img =
-      src: @generateImageUrl(@imgEditor.getText().trim())
+      src: @generateImageUrl(@imageEditor.getText().trim())
       alt: @titleEditor.getText()
       width: @widthEditor.getText()
       height: @heightEditor.getText()
@@ -60,28 +59,30 @@ class InsertImageView extends View
     @editor.insertText(text)
     @detach()
 
+  display: ->
+    @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
+    @previouslyFocusedElement = $(document.activeElement)
+    @editor = atom.workspace.getActiveTextEditor()
+    @setFieldsFromSelection()
+    @panel.show()
+    @imageEditor.focus()
+
   detach: ->
-    return unless @hasParent()
+    return unless @panel.isVisible()
+    @panel.hide()
     @previouslyFocusedElement?.focus()
     super
-
-  display: ->
-    @previouslyFocusedElement = $(':focus')
-    @editor = atom.workspace.getActiveTextEditor()
-    atom.workspaceView.append(this)
-    @setFieldsFromSelection()
-    @imgEditor.focus()
 
   setFieldsFromSelection: ->
     selection = @editor.getSelectedText()
     if utils.isImage(selection)
       img = utils.parseImage(selection)
-      @imgEditor.setText(img.src)
+      @imageEditor.setText(img.src)
       @titleEditor.setText(img.alt)
       @displayImagePreview(img.src)
     else if utils.isRawImage(selection)
       img = utils.parseRawImage(selection)
-      @imgEditor.setText(img.src)
+      @imageEditor.setText(img.src)
       @titleEditor.setText(img.alt)
       @widthEditor.setText(img.width || "")
       @heightEditor.setText(img.height || "")
@@ -94,7 +95,7 @@ class InsertImageView extends View
       properties: ['openFile']
       defaultPath: atom.project.getPath()
     return unless files
-    @imgEditor.setText(files[0])
+    @imageEditor.setText(files[0])
     @displayImagePreview(files[0])
     @titleEditor.focus()
 
