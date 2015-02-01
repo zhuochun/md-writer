@@ -19,18 +19,21 @@ class PublishDraft
 
   display: ->
     @updateFrontMatter()
-    atom.workspaceView.destroyActivePaneItem()
-    @publishDraft()
-    atom.workspaceView.open(@postPath)
+    @editor.save()
+
+    unless @draftPath == @postPath
+      @editor.destroy()
+      @moveDraft()
+      atom.workspace.open(@postPath)
 
   updateFrontMatter: ->
-    @frontMatter.published = true if @frontMatter.published?
+    @frontMatter.published = true unless @frontMatter.published?
     @frontMatter.date = "#{utils.getDateStr()} #{utils.getTimeStr()}"
+
     @editor.buffer.scan utils.frontMatterRegex, (match) =>
       match.replace utils.getFrontMatterText(@frontMatter)
-    atom.workspaceView.saveActivePaneItem()
 
-  publishDraft: ->
+  moveDraft: ->
     try
       if fs.existsSync(@postPath)
         alert("Error:\nPost #{@postPath} already exists!")

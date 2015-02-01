@@ -9,7 +9,7 @@ class NewPostView extends View
   previouslyFocusedElement: null
 
   @content: ->
-    @div class: "markdown-writer overlay from-top", =>
+    @div class: "markdown-writer", =>
       @label "Add New Post", class: "icon icon-file-add"
       @div =>
         @label "Directory", class: "message"
@@ -22,27 +22,30 @@ class NewPostView extends View
       @p class: "error", outlet: "error"
 
   initialize: ->
-    @titleEditor.hiddenInput.on 'keyup', => @updatePath()
-    @pathEditor.hiddenInput.on 'keyup', => @updatePath()
-    @dateEditor.hiddenInput.on 'keyup', => @updatePath()
+    @titleEditor.getModel().onDidChange => @updatePath()
+    @pathEditor.getModel().onDidChange  => @updatePath()
+    @dateEditor.getModel().onDidChange  => @updatePath()
 
-    @on "core:confirm", => @createPost()
-    @on "core:cancel", => @detach()
+    atom.commands.add @element,
+      "core:confirm": => @createPost()
+      "core:cancel":  => @detach()
+
+  display: ->
+    @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
+    @previouslyFocusedElement = $(document.activeElement)
+    @dateEditor.setText(utils.getDateStr())
+    @pathEditor.setText(utils.dirTemplate(config.get("sitePostsDir")))
+    @panel.show()
+    @titleEditor.focus()
 
   detach: ->
-    return unless @hasParent()
+    return unless @panel.isVisible()
+    @panel.hide()
     @previouslyFocusedElement?.focus()
     super
 
   updatePath: ->
-    @message.text "Create Post: #{@getPostPath()}"
-
-  display: ->
-    @previouslyFocusedElement = $(':focus')
-    atom.workspaceView.append(this)
-    @titleEditor.focus()
-    @dateEditor.setText(utils.getDateStr())
-    @pathEditor.setText(utils.dirTemplate(config.get("sitePostsDir")))
+    @message.text "Create Post At: #{@getPostPath()}"
 
   createPost: () ->
     try
@@ -52,7 +55,7 @@ class NewPostView extends View
         @error.text("Post #{@getFullPath()} already exists!")
       else
         fs.writeFileSync(post, @generateFrontMatter(@getFrontMatter()))
-        atom.workspaceView.open(post)
+        atom.workspace.open(post)
         @detach()
     catch error
       @error.text("#{error.message}")

@@ -9,7 +9,7 @@ class NewDraftView extends View
   previouslyFocusedElement: null
 
   @content: ->
-    @div class: "markdown-writer overlay from-top", =>
+    @div class: "markdown-writer", =>
       @label "Add New Draft", class: "icon icon-file-add"
       @div =>
         @label "Title", class: "message"
@@ -18,24 +18,28 @@ class NewDraftView extends View
       @p class: "error", outlet: "error"
 
   initialize: ->
-    @titleEditor.hiddenInput.on 'keyup', => @updatePath()
-    @on "core:confirm", => @createPost()
-    @on "core:cancel", => @detach()
+    @titleEditor.getModel().onDidChange => @updatePath()
+
+    atom.commands.add @element,
+      "core:confirm": => @createPost()
+      "core:cancel":  => @detach()
+
+  display: ->
+    @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
+    @previouslyFocusedElement = $(document.activeElement)
+    @panel.show()
+    @titleEditor.focus()
 
   detach: ->
-    return unless @hasParent()
+    return unless @panel.isVisible()
+    @panel.hide()
     @previouslyFocusedElement?.focus()
     super
 
   updatePath: ->
-    @message.text "Create Draft: #{@getPostPath()}"
+    @message.text "Create Draft At: #{@getPostPath()}"
 
-  display: ->
-    @previouslyFocusedElement = $(':focus')
-    atom.workspaceView.append(this)
-    @titleEditor.focus()
-
-  createPost: () ->
+  createPost: ->
     try
       post = @getFullPath()
 
@@ -43,7 +47,7 @@ class NewDraftView extends View
         @error.text("Draft #{@getFullPath()} already exists!")
       else
         fs.writeFileSync(post, @generateFrontMatter(@getFrontMatter()))
-        atom.workspaceView.open(post)
+        atom.workspace.open(post)
         @detach()
     catch error
       @error.text("#{error.message}")
