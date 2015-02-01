@@ -10,47 +10,48 @@ class ManagePostTagsView extends View
   previouslyFocusedElement: null
 
   @content: ->
-    @div class: "markdown-writer markdown-writer-selection overlay from-top", =>
+    @div class: "markdown-writer markdown-writer-selection", =>
       @label "Manage Post Tags", class: "icon icon-tag"
       @p class: "error", outlet: "error"
       @subview "tagsEditor", new TextEditorView(mini: true)
-      @ul class: "candidates", outlet: "candidates"
+      @ul class: "candidates", outlet: "candidates", =>
+        @li "Loading..."
 
   initialize: ->
     @fetchTags()
     @candidates.on "click", "li", (e) => @appendTag(e)
-    @on "core:confirm", => @updateFrontMatter()
-    @on "core:cancel", => @detach()
+
+    atom.commands.add @element,
+      "core:confirm": => @updateFrontMatter()
+      "core:cancel":  => @detach()
 
   updateFrontMatter: ->
     @frontMatter.tags = @getEditorTags()
-    @editor.buffer.scan utils.frontMatterRegex, (match) =>
-      noLeadingFence = !match.matchText.startsWith("---")
-      match.replace utils.getFrontMatterText(@frontMatter, noLeadingFence)
+    utils.updateFrontMatter(@editor, @frontMatter)
     @detach()
 
-  detach: ->
-    return unless @hasParent()
-    @previouslyFocusedElement?.focus()
-    super
-
   display: ->
-    @previouslyFocusedElement = $(':focus')
     @editor = atom.workspace.getActiveTextEditor()
+    @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
+    @previouslyFocusedElement = $(document.activeElement)
 
-    if @isValidMarkdown(@editor.getText())
+    if utils.hasFrontMatter(@editor.getText())
       @setFrontMatter()
       @setEditorTags(@frontMatter.tags)
-      atom.workspaceView.append(this)
+      @panel.show()
       @tagsEditor.focus()
     else
       @detach()
 
-  isValidMarkdown: (content) ->
-    return !!content and utils.hasFrontMatter(content)
+  detach: ->
+    return unless @panel.isVisible()
+    @panel.hide()
+    @previouslyFocusedElement?.focus()
+    super
 
   setFrontMatter: ->
     @frontMatter = utils.getFrontMatter(@editor.getText())
+
     if !@frontMatter.tags
       @frontMatter.tags = []
     else if typeof @frontMatter.tags == "string"
@@ -75,7 +76,7 @@ class ManagePostTagsView extends View
   # rank tags based on the number of times they appear in content
   rankTags: (tags, content) ->
     tags.forEach (tag) ->
-      tagRegex = new RegExp(tag.name, "ig")
+      tagRegex = ///.* #{tag.name} .*///ig
       tag.count = content.match(tagRegex)?.length || 0
     tags.sort (t1, t2) -> t2.count - t1.count
 

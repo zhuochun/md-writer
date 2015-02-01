@@ -30,8 +30,7 @@ class PublishDraft
     @frontMatter.published = true unless @frontMatter.published?
     @frontMatter.date = "#{utils.getDateStr()} #{utils.getTimeStr()}"
 
-    @editor.buffer.scan utils.frontMatterRegex, (match) =>
-      match.replace utils.getFrontMatterText(@frontMatter)
+    utils.updateFrontMatter(@editor, @frontMatter)
 
   moveDraft: ->
     try

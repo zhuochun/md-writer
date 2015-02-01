@@ -1,7 +1,6 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
 config = require "./config"
 utils = require "./utils"
-request = require "request"
 
 module.exports =
 class ManagePostCategoriesView extends View
@@ -11,47 +10,48 @@ class ManagePostCategoriesView extends View
   previouslyFocusedElement: null
 
   @content: ->
-    @div class: "markdown-writer markdown-writer-selection overlay from-top", =>
+    @div class: "markdown-writer markdown-writer-selection", =>
       @label "Manage Post Categories", class: "icon icon-book"
       @p class: "error", outlet: "error"
       @subview "categoriesEditor", new TextEditorView(mini: true)
-      @ul class: "candidates", outlet: "candidates"
+      @ul class: "candidates", outlet: "candidates", =>
+        @li "Loading..."
 
   initialize: ->
     @fetchCategories()
     @candidates.on "click", "li", (e) => @appendCategory(e)
-    @on "core:confirm", => @updateFrontMatter()
-    @on "core:cancel", => @detach()
+
+    atom.commands.add @element,
+      "core:confirm": => @updateFrontMatter()
+      "core:cancel":  => @detach()
 
   updateFrontMatter: ->
     @frontMatter.categories = @getEditorCategories()
-    @editor.buffer.scan utils.frontMatterRegex, (match) =>
-      noLeadingFence = !match.matchText.startsWith("---")
-      match.replace utils.getFrontMatterText(@frontMatter, noLeadingFence)
+    utils.updateFrontMatter(@editor, @frontMatter)
     @detach()
 
-  detach: ->
-    return unless @hasParent()
-    @previouslyFocusedElement?.focus()
-    super
-
   display: ->
-    @previouslyFocusedElement = $(':focus')
     @editor = atom.workspace.getActiveTextEditor()
+    @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
+    @previouslyFocusedElement = $(document.activeElement)
 
-    if @isValidMarkdown(@editor.getText())
+    if utils.hasFrontMatter(@editor.getText())
       @setFrontMatter()
       @setEditorCategories(@frontMatter.categories)
-      atom.workspaceView.append(this)
+      @panel.show()
       @categoriesEditor.focus()
     else
       @detach()
 
-  isValidMarkdown: (content) ->
-    return !!content and utils.hasFrontMatter(content)
+  detach: ->
+    return unless @panel.isVisible()
+    @panel.hide()
+    @previouslyFocusedElement?.focus()
+    super
 
   setFrontMatter: ->
     @frontMatter = utils.getFrontMatter(@editor.getText())
+
     if !@frontMatter.categories
       @frontMatter.categories = []
     else if typeof @frontMatter.categories == "string"

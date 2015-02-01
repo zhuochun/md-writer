@@ -52,7 +52,7 @@ FRONT_MATTER_REGEX = ///
   ///m
 
 hasFrontMatter = (content) ->
-  FRONT_MATTER_REGEX.test(content)
+  !!content && FRONT_MATTER_REGEX.test(content)
 
 getFrontMatter = (content) ->
   matches = content.match(FRONT_MATTER_REGEX)
@@ -66,6 +66,11 @@ getFrontMatterText = (obj, noLeadingFence) ->
     return ["#{yamlText}---", ""].join(os.EOL)
   else
     return ["---", "#{yamlText}---", ""].join(os.EOL)
+
+updateFrontMatter = (editor, frontMatter) ->
+  editor.buffer.scan FRONT_MATTER_REGEX, (match) ->
+    noLeadingFence = !match.matchText.startsWith("---")
+    match.replace getFrontMatterText(frontMatter, noLeadingFence)
 
 IMG_RAW_REGEX = /// <img (.*?)\/?> ///i
 IMG_RAW_ATTRIBUTE = /// ([a-z]+?) = ('|")(.*?)\2 ///ig
@@ -153,7 +158,7 @@ SLUG_REGEX = ///
 
 getTitleSlug = (str) ->
   str = path.basename(str, path.extname(str))
-  
+
   if matches = SLUG_REGEX.exec(str)
     matches[2]
   else
@@ -175,6 +180,7 @@ module.exports =
   hasFrontMatter: hasFrontMatter
   getFrontMatter: getFrontMatter
   getFrontMatterText: getFrontMatterText
+  updateFrontMatter: updateFrontMatter
   frontMatterRegex: FRONT_MATTER_REGEX
   isRawImage: isRawImage
   parseRawImage: parseRawImage
