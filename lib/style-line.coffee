@@ -22,18 +22,17 @@ class StyleLine
 
   display: ->
     @editor = atom.workspace.getActiveTextEditor()
-    @editor.buffer.beginTransaction()
-    @editor.getSelections().forEach (selection) =>
-      range = selection.getBufferRange()
-      rows = selection.getBufferRowRange()
-      for row in [rows[0]..rows[1]]
-        selection.cursor.setBufferPosition([row,0])
-        if line = @getLine(selection)
-          @toggleStyle(selection, line)
-        else
-          @insertEmptyStyle(selection)
-      selection.setBufferRange(range) if rows[0] != rows[1]
-    @editor.buffer.commitTransaction()
+    @editor.transact =>
+      @editor.getSelections().forEach (selection) =>
+        range = selection.getBufferRange()
+        rows = selection.getBufferRowRange()
+        for row in [rows[0]..rows[1]]
+          selection.cursor.setBufferPosition([row,0])
+          if line = @getLine(selection)
+            @toggleStyle(selection, line)
+          else
+            @insertEmptyStyle(selection)
+        selection.setBufferRange(range) if rows[0] != rows[1]
 
   getLine: (selection) ->
     selection.selectToEndOfLine()

@@ -136,8 +136,7 @@ class InsertImageView extends View
   generateImageUrl: (file) ->
     return file if utils.isUrl(file)
 
-    localDir = atom.project.getPath()
-
+    localDir = atom.project.getPaths()[0]
     if file.startsWith(localDir) # resolve relative to root of site
       file.replace(localDir, "").replace(/\\/g, "/")
     else
