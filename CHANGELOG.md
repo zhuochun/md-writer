@@ -1,3 +1,8 @@
+## 0.10.2
+
+* Fix package's atom engine semver
+* Fix tag regex escape
+
 ## 0.10.1
 
 * Fix deprecated APIs
