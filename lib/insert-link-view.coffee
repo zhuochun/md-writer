@@ -132,7 +132,7 @@ class InsertLinkView extends View
   updateReferenceLink: (text, title, url) ->
     if title
       position = @editor.getCursorBufferPosition()
-      @editor.buffer.scan ///^\ *\[#{@referenceId}\]:\ +([\S\ ]+)$///, (match) =>
+      @editor.buffer.scan ///^\ *\[#{utils.regexpEscape(@referenceId)}\]:\ +([\S\ ]+)$///, (match) =>
         indent = if config.get("referenceIndentLength") == 2 then "  " else ""
         title = if /^[-\*\!]$/.test(title) then "" else " \"#{title}\""
         @editor.setTextInBufferRange(match.range, "#{indent}[#{referenceId}]: #{url}#{title}")
@@ -180,7 +180,7 @@ class InsertLinkView extends View
   removeReferenceLink: (text) ->
     @editor.setTextInBufferRange(@range, text)
     position = @editor.getCursorBufferPosition()
-    @editor.buffer.scan /// ^\ * \[#{@referenceId}\]: \ + ///, (match) =>
+    @editor.buffer.scan ///^\ *\[#{utils.regexpEscape(@referenceId)}\]:\ +///, (match) =>
       @editor.setSelectedBufferRange(match.range)
       @editor.deleteLine()
       emptyLine = !@editor.selectLinesContainingCursors()[0].getText().trim()
