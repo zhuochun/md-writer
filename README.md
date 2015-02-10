@@ -141,19 +141,16 @@ Go to `Atom -> Open your Keymap`, paste the following:
   'ctrl-alt-5': 'unset!'
 ```
 
-Default mappings can be found in [keymaps/md.cson](https://github.com/zhuochun/md-writer/blob/master/keymaps/md.cson).
+Default mappings can be found in [keymaps/md.cson](https://github.com/zhuochun/md-writer/blob/master/keymaps/keymap.cson).
 
 A list of all commands can be found [here](https://github.com/zhuochun/md-writer/blob/master/package.json).
-
-## TODOs
-
-- Support multiple blog directories
 
 ## Project
 
 - View [CHANGELOG][e45121fa] :notebook_with_decorative_cover:.
 - Bugs, suggestions & feature requests, [open an issue][e6ad7ed1] :octocat:.
-- License in [MIT][6a9a3773] :unlock:. Copyright (C) 2014 [Zhuochun][41ae693b].
+- License in [MIT][6a9a3773] :unlock:.
+- Copyright (C) 2014 [Zhuochun][41ae693b].
 
   [e45121fa]: https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md
   [e6ad7ed1]: https://github.com/zhuochun/md-writer/issues
