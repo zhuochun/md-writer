@@ -18,3 +18,17 @@ describe "FrontMatterView", ->
       { name:"cd", count:1 }
       { name:"ij", count:0 }
     ]
+
+  it "rank tags with regex escaped", ->
+    fixture = "c++ c.c^abc $10.0 +abc"
+    tags = ["c++", "\\", "^", "$", "+abc"].map (t) -> name: t
+
+    @view.rankTags(tags, fixture)
+
+    expect(tags).toEqual [
+      { name:"c++", count:1 }
+      { name:"^", count:1 }
+      { name:"$", count:1 }
+      { name:"+abc", count:1 }
+      { name:"\\", count:0 }
+    ]
