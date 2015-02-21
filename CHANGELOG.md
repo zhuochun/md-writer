@@ -1,7 +1,12 @@
+## 0.10.3
+
+* Fix table insert and format bugs
+* Update package activation commands
+
 ## 0.10.2
 
 * Fix package's atom engine semver
-* Fix tag regex escape
+* Fix tag regexp escape
 
 ## 0.10.1
 
