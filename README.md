@@ -17,15 +17,16 @@ More GIFs Here:
 - **Create new post** with front matter.
 - **Create new draft** with front matter.
 - **Publish draft** moves file to `_posts` directory, updates `date` and optionally renames the filename using `title` in front matter.
-- **Manage tags and categories in front matter** (configuration required).
+- **Manage blog tags and categories in front matter**.
 - **Continue markdown lists** when you press `enter`.
 - **Insert link** (`shift-cmd-k`) and **automatically link to the text next time** (My favorite feature from Windows Live Writer).
-  - Insert inline link by default
-  - Insert reference link if title is specified. Use `-` for an empty title.
-  - Remove link (and its reference) after URL is deleted
-  - Search published posts by title (configuration required)
-- **Insert image** (`shift-cmd-i`) and its height and width auto-detected.
-- **Insert table** and shortcuts for **jumping to next cell and formatting table**.
+  - Insert inline link (by default).
+  - Insert reference link if title is specified. _Use `-` in title field to create an empty title reference link._
+  - Remove link (and its reference) after URL is deleted.
+  - Search published posts by title.
+- **Insert image** (`shift-cmd-i`) and with image's height and width auto-detected.
+- **Insert table** (`markdown-writer:insert-table`), and a shortcut to **jump to next table cell** (`cmd-j cmd-t`).
+- **Format table** (`markdown-writer:format-table`).
 - **Toggle text styles**:
   - `code` (`cmd-'`)
   - **bold** (`cmd-b`)
@@ -41,42 +42,41 @@ More GIFs Here:
 - **Helper commands**:
   - Jump to previous heading (`cmd-j cmd-p`)
   - Jump to next heading (`cmd-j cmd-n`)
-  - Jump to next tabel cell (`cmd-j cmd-t`)
+  - Jump to next table cell (`cmd-j cmd-t`)
   - Jump to reference marker/definition (`cmd-j cmd-d`)
-  - Format table (`markdown-writer:format-table`)
 - **Markdown cheat sheet** (`Markdown Writer: Open Cheat Sheet`).
 
-You can trigger these features using:
+You can find and trigger all features in:
 
 - Command Palette (`shift-cmd-P`), enter `Markdown Writer`
 - Menu Bar `Packages -> Markdown Writer`.
 
 ## Setup
 
-You need to configure markdown-writer to use some of the features.
+To use features like `create draft/post`, Markdown-Writer needs to be configured. E.g. to know the path to your blog.
 
-Go to `Preferences` (`cmd-,`), search `markdown writer` package.
-
-Default settings can be found [here](https://github.com/zhuochun/md-writer/blob/master/lib/config.coffee).
+Go to Preferences (`cmd-,`) -> Packages -> markdown-writer -> Settings.
 
 ### Basic Settings:
 
-- **siteEngine**: The static engine of your blog. This could alter behaviours as shown [here](https://github.com/zhuochun/md-writer/blob/master/lib/config.coffee#L52).
-- **siteLocalDir**: The root directory of your blog.
-- **siteDraftsDir**: The directory of drafts from the root of `siteLocalDir`. Default is `_draft/`.
-- **sitePostsDir**: The directory of posts from the root of `siteLocalDir`. Default is `_posts/{year}`. You can also use `{year}`, `{month}` and `{day}`.
+> If you could not see these settings (due to [Atom's bug][3ecd2daa]), please activate Markdown-Writer by activate any command (e.g. `Open Cheat Sheet`). Close and reopen Preferences.
+
+[3ecd2daa]: https://github.com/atom/settings-view/issues/356 "Viewing a package's settings should activate it"
+
+- **siteEngine**: The static engine of your blog.
+- **siteLocalDir**: The path to the directory of your blog.
+- **siteDraftsDir**: The sub-path to your drafts from the `siteLocalDir`. Default is `_draft/`.
+- **sitePostsDir**: The sub-path to your posts from the `siteLocalDir`. Default is `_posts/{year}`. You can use `{year}`, `{month}` and `{day}`.
 - **newPostFileName**: The filename format of new posts created. Default is `{year}-{month}-{day}-{title}{extension}`.
-- **fileExtension**: The file extension of posts/drafts. Default is `.markdown`.
+- **fileExtension**: The file extension of your posts/drafts. Default is `.markdown`.
 - **urlForTags**: The URL to tags `JSON` file. Refer to next section.
 - **urlForPosts**: The URL to posts `JSON` file. Refer to next section.
 - **urlForCategories**: The URL to categories `JSON` file. Refer to next section.
 
 ### Advance Settings:
 
-To change these settings, open your Atom Config file, find `markdown-writer` entry.
+To change these settings, you need to edit in `Atom -> Your Config` file.
 
-- **publishRenameBasedOnTitle**: Determine whether publish rename filename based on title in front matter. Default is `false` (boolean).
-- **publishKeepFileExtname**: Determine whether publish keep draft's extname used. Default is `false` (boolean).
 - **siteLinkPath**: Define path (string) to a `.cson` file that stores all links added for automatic linking next time. Default uses `markdown-writer-links.cson` in Atom's config directory.
 - **frontMatter**: Define front matter (string) used when create new post/draft.
 - **codeblock**: Define fenced code block (object). Default uses GitHub's fenced code block.
@@ -95,36 +95,34 @@ This is an example of advance configuration:
   date: "<date>"
   ---
   """
-  # use jekyll highlight code block
+  # use Jekyll highlight code block
   # change this requires reload, shift-cmd-P -> Window Reload
   'codeblock':
     'before': '{% highlight %}\n'
     'after': '\n{% endhighlight %}'
     'regexBefore': '{% highlight(?: .+)? %}\n'
     'regexAfter': '\n{% endhighlight %}'
-  # use octopress img tag
+  # use Octopress img tag
   'imageTag': "{% img <align> <src> <width> <height> '{alt}' %}"
 ```
 
-## Populate Tags/Categories/Posts
+## Setup Tags/Categories/Posts
 
 ![Manage Tags](http://i.imgur.com/amt2m0Y.png)
 
-To **manage tags/categories in front matter** or **search published posts when inserting links**, you need to provide `JSON` files that contains tags/categories/posts in your blog.
-
-The `JSON` files should contain following information of your blog:
+To **manage tags/categories in front matter** or **search published posts when inserting links**, the Markdown-Writer needs to read `JSON` files that contains the following information of your blog:
 
 ```json
 {
-  "tags": ["tag a", "tag b", "..."],
-  "categories": ["category a", "category b", "..."],
-  "posts": [{"title": "post a", "url": "url/to/post/a"}]
+  "tags": [ "tag a", "tag b", "..." ],
+  "categories": [ "category a", "category b", "..." ],
+  "posts": [ {"title": "post a", "url": "url/to/post/a" } ]
 }
 ```
 
-For **Jekyll/Octopress** users, you can add [these scripts](https://gist.github.com/zhuochun/fe127356bcf8c07ae1fb) to your Jekyll directory and upload the generated `JSON` files.
+If you use **Jekyll/Octopress**, download [these scripts](https://gist.github.com/zhuochun/fe127356bcf8c07ae1fb) to your blog, generate and upload your blog again. Setup the full URLs to these files in Settings.
 
-For **Hexo** users, you can install [hexo-generator-atom-markdown-writer-meta](https://github.com/timnew/hexo-generator-atom-markdown-writer-meta) (Thanks to [@timnew](https://github.com/timnew)).
+If you use **Hexo**, you can install [hexo-generator-atom-markdown-writer-meta](https://github.com/timnew/hexo-generator-atom-markdown-writer-meta) (Thanks to [@timnew](https://github.com/timnew)). Generate and upload your blog again. Setup the full URLs to these files in Settings.
 
 ## FAQs
 
@@ -143,19 +141,19 @@ Go to `Atom -> Open your Keymap`, paste the following:
 
 Default mappings can be found in [keymaps/md.cson](https://github.com/zhuochun/md-writer/blob/master/keymaps/keymap.cson).
 
-A list of all commands can be found [here](https://github.com/zhuochun/md-writer/blob/master/package.json).
+A list of all commands can also be found [here](https://github.com/zhuochun/md-writer/blob/master/package.json).
 
 ## Project
 
 - View [CHANGELOG][e45121fa] :notebook_with_decorative_cover:.
 - Bugs, suggestions & feature requests, [open an issue][e6ad7ed1] :octocat:.
 - License in [MIT][6a9a3773] :unlock:.
-- Copyright (C) 2014-2015 [Zhuochun][41ae693b].
+- Authored by [Zhuochun][41ae693b] :sunny:.
 
-  [e45121fa]: https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md
-  [e6ad7ed1]: https://github.com/zhuochun/md-writer/issues
-  [6a9a3773]: https://github.com/zhuochun/md-writer/blob/master/LICENSE.md
-  [41ae693b]: https://github.com/zhuochun
+[e45121fa]: https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md
+[e6ad7ed1]: https://github.com/zhuochun/md-writer/issues
+[6a9a3773]: https://github.com/zhuochun/md-writer/blob/master/LICENSE.md
+[41ae693b]: https://github.com/zhuochun
 
 ## Tips
 
