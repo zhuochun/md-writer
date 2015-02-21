@@ -7,6 +7,14 @@ describe "commands", ->
     expect(cmds._findNextTableCellIdx(fixture,  6)).toEqual(11)
     expect(cmds._findNextTableCellIdx(fixture, 13)).toEqual(19)
 
+  it "find the first non empty line index", ->
+    fixture = ["", ""]
+    expect(cmds._indexOfFirstNonEmptyLine(fixture)).toEqual(-1)
+    fixture = ["abc"]
+    expect(cmds._indexOfFirstNonEmptyLine(fixture)).toEqual(0)
+    fixture = ["", "abc"]
+    expect(cmds._indexOfFirstNonEmptyLine(fixture)).toEqual(1)
+
   it "parse table into vals", ->
     fixture = """
 h1   | h21

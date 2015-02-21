@@ -117,7 +117,9 @@ class Commands
     unless editor.getSelectedText()
       editor.moveCursorToBeginningOfPreviousParagraph()
       editor.selectToBeginningOfNextParagraph()
+
     lines = editor.getSelectedText().split("\n")
+    return if lines.every (line) -> line.trim().length == 0
 
     range = @_findTableRange(lines, editor.getSelectedBufferRange())
     values = @_parseTable(lines)
@@ -125,9 +127,14 @@ class Commands
     editor.setSelectedBufferRange(range)
     editor.insertText(@_createTable(values))
 
+  _indexOfFirstNonEmptyLine: (lines) ->
+    for line, i in lines
+      return i if line.trim().length > 0
+    return -1 # not found
+
   _findTableRange: (lines, {start, end}) ->
-    head = lines.findIndex (line) -> line != ""
-    tail = lines[..].reverse().findIndex (line) -> line != ""
+    head = @_indexOfFirstNonEmptyLine(lines)
+    tail = @_indexOfFirstNonEmptyLine(lines[..].reverse())
 
     return [
       [start.row + head, 0]
