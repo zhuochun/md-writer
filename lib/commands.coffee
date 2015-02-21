@@ -115,7 +115,7 @@ class Commands
     editor = atom.workspace.getActiveTextEditor()
 
     unless editor.getSelectedText()
-      editor.moveCursorToBeginningOfPreviousParagraph()
+      editor.moveToBeginningOfPreviousParagraph()
       editor.selectToBeginningOfNextParagraph()
 
     lines = editor.getSelectedText().split("\n")
