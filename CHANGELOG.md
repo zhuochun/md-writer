@@ -1,3 +1,8 @@
+## 1.0.0
+
+* Support project specific settings
+* Support copy image to project directory
+
 ## 0.10.3
 
 * Fix table insert and format bugs
@@ -5,8 +10,8 @@
 
 ## 0.10.2
 
-* Fix package's atom engine semver
-* Fix tag regexp escape
+* Fix package's atom engine SemVer
+* Fix tag RegExp escape
 
 ## 0.10.1
 
@@ -20,7 +25,7 @@
 
 ## 0.9.1
 
-* Improve table separator regexp
+* Improve table separator RegExp
 
 ## 0.9.0
 
@@ -42,7 +47,7 @@
 
 ## 0.7.5
 
-* Enhance jump table cell behaviour
+* Enhance jump table cell behavior
 * Change key mappings of jump headings
 * Mention Gist to markdown specific styles
 
@@ -113,8 +118,8 @@
 
 ## 0.5.5
 
-* Support Hexo frontmatter format
-* Fix single tag/category in frontmatter
+* Support Hexo front matters format
+* Fix single tag/category in front matters
 * Add Hexo generator description in README
 
 ## 0.5.4
@@ -131,7 +136,7 @@
 ## 0.5.2
 
 * Fix add headings on empty line
-* Support customising front matter in new post/draft
+* Support customizing front matters in new post/draft
 * Clean up default settings
 
 ## 0.5.1

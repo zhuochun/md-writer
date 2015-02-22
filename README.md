@@ -14,10 +14,10 @@ More GIFs Here:
 
 ## Features
 
-- **Create new post** with front matter.
-- **Create new draft** with front matter.
+- **Create new post** with front matters.
+- **Create new draft** with front matters.
 - **Publish draft** moves file to `_posts` directory, updates `date` and optionally renames the filename using `title` in front matter.
-- **Manage blog tags and categories in front matter**.
+- **Manage blog tags and categories in front matters**.
 - **Continue markdown lists** when you press `enter`.
 - **Insert link** (`shift-cmd-k`) and **automatically link to the text next time** (My favorite feature from Windows Live Writer).
   - Insert inline link (by default).
@@ -44,6 +44,7 @@ More GIFs Here:
   - Jump to next heading (`cmd-j cmd-n`)
   - Jump to next table cell (`cmd-j cmd-t`)
   - Jump to reference marker/definition (`cmd-j cmd-d`)
+- **Project specific settings**.
 - **Markdown cheat sheet** (`Markdown Writer: Open Cheat Sheet`).
 
 You can find and trigger all features in:
@@ -74,6 +75,12 @@ Go to Preferences (`cmd-,`) -> Packages -> markdown-writer -> Settings.
 - **urlForPosts**: The URL to posts `JSON` file. Refer to next section.
 - **urlForCategories**: The URL to categories `JSON` file. Refer to next section.
 
+### Project Specific Settings:
+
+Create a `_mdwriter.cson` file under your project/blog. See [this commit][02399ed7] for example.
+
+[02399ed7]: https://github.com/zhuochun/zhuochun.github.io/commit/cb34e3c16d42c52b281c34920ad55bbca223ac23 "zhuochun.github.io"
+
 ### Advance Settings:
 
 To change these settings, you need to edit in `Atom -> Your Config` file.
@@ -82,6 +89,7 @@ To change these settings, you need to edit in `Atom -> Your Config` file.
 - **frontMatter**: Define front matter (string) used when create new post/draft.
 - **codeblock**: Define fenced code block (object). Default uses GitHub's fenced code block.
 - **imageTag**: Define image tag inserted (string). Default uses `![alt](img-url)`.
+- **projectConfigFile**: Define the project specific `.cson` config file (string). Default uses `_mdwriter.cson`.
 
 This is an example of advance configuration:
 
