@@ -20,13 +20,13 @@ describe "utils", ->
     fixture = """
 <img alt="alt" src="src.png" class="aligncenter" height="304" width="520">
 """
-    expect(utils.isRawImage(fixture)).toBe(true)
+    expect(utils.isImageTag(fixture)).toBe(true)
 
   it "check parse valid raw image", ->
     fixture = """
   <img alt="alt" src="src.png" class="aligncenter" height="304" width="520">
   """
-    expect(utils.parseRawImage(fixture)).toEqual
+    expect(utils.parseImageTag(fixture)).toEqual
       alt: "alt", src: "src.png",
       class: "aligncenter", height: "304", width: "520"
 
@@ -34,7 +34,7 @@ describe "utils", ->
     fixture = """
   <img title="" src="src.png" class="aligncenter" height="304" width="520" />
   """
-    expect(utils.parseRawImage(fixture)).toEqual
+    expect(utils.parseImageTag(fixture)).toEqual
       title: "", src: "src.png",
       class: "aligncenter", height: "304", width: "520"
 
