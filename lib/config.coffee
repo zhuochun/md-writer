@@ -51,7 +51,7 @@ class Configuration
     siteLinkPath: path.join(atom.getConfigDirPath(), "#{@prefix}-links.cson")
     # reference tag insert position (paragraph or article)
     referenceInsertPosition: "paragraph"
-    # reference tag indent space
+    # reference tag indent space (0 or 2)
     referenceIndentLength: 2
     # image tag template
     imageTag: "![<alt>](<src>)"

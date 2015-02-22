@@ -132,10 +132,16 @@ class InsertLinkView extends View
   updateReferenceLink: (text, title, url) ->
     if title
       position = @editor.getCursorBufferPosition()
-      @editor.buffer.scan ///^\ *\[#{utils.regexpEscape(@referenceId)}\]:\ +([\S\ ]+)$///, (match) =>
-        indent = if config.get("referenceIndentLength") == 2 then "  " else ""
-        title = if /^[-\*\!]$/.test(title) then "" else " \"#{title}\""
-        @editor.setTextInBufferRange(match.range, "#{indent}[#{referenceId}]: #{url}#{title}")
+      referenceTagRegex = ///
+        ^\ *
+        \[#{utils.regexpEscape(@referenceId)}\]:
+        \ +([\S\ ]+)$
+      ///
+      @editor.buffer.scan referenceTagRegex, (match) =>
+        indent = @getReferenceIndentLength()
+        title = @getFormattedReferenceTitle(title)
+        @editor.setTextInBufferRange(match.range,
+          "#{indent}[#{@referenceId}]: #{url}#{title}")
       @editor.setCursorBufferPosition(position)
     else
       @removeReferenceLink("[#{text}](#{url})")
@@ -159,8 +165,8 @@ class InsertLinkView extends View
       cursorRow += 1
 
     # insert text
-    indent = if config.get("referenceIndentLength") == 2 then "  " else ""
-    title = if /^[-\*\!]$/.test(title) then "" else " \"#{title}\""
+    indent = @getReferenceIndentLength()
+    title = @getFormattedReferenceTitle(title)
     eol = if @editor.lineTextForBufferRow(cursorRow) then "\n" else ""
     @editor.setTextInBufferRange([[cursorRow, 0], [cursorRow, 0]],
       "#{indent}[#{id}]: #{url}#{title}#{eol}")
@@ -171,6 +177,10 @@ class InsertLinkView extends View
     @editor.insertNewline() unless utils.isReferenceDefinition(line)
     @editor.setCursorBufferPosition(position)
 
+  getReferenceIndentLength: -> " ".repeat(config.get("referenceIndentLength"))
+  getFormattedReferenceTitle: (title) ->
+    if /^[-\*\!]$/.test(title) then "" else " \"#{title}\""
+
   removeLink: (text) ->
     if @referenceId
       @removeReferenceLink(text)
@@ -180,13 +190,14 @@ class InsertLinkView extends View
   removeReferenceLink: (text) ->
     @editor.setTextInBufferRange(@range, text)
     position = @editor.getCursorBufferPosition()
-    @editor.buffer.scan ///^\ *\[#{utils.regexpEscape(@referenceId)}\]:\ +///, (match) =>
+    referenceTagRegex = ///^\ *\[#{utils.regexpEscape(@referenceId)}\]:\ +///
+    @editor.buffer.scan referenceTagRegex, (match) =>
+      lineNum = match.range.getRows()[0]
+      emptyLineAbove = @editor.lineTextForBufferRow(lineNum - 1).trim() == ""
+      emptyLineBelow = @editor.lineTextForBufferRow(lineNum + 1).trim() == ""
       @editor.setSelectedBufferRange(match.range)
       @editor.deleteLine()
-      emptyLine = !@editor.selectLinesContainingCursors()[0].getText().trim()
-      @editor.moveUp()
-      emptyLineAbove = !@editor.selectLinesContainingCursors()[0].getText().trim()
-      @editor.deleteLine() if emptyLine and emptyLineAbove
+      @editor.deleteLine() if emptyLineAbove and emptyLineBelow
     @editor.setCursorBufferPosition(position)
 
   setLink: (text, url, title) ->
@@ -208,20 +219,14 @@ class InsertLinkView extends View
       delete @links[text.toLowerCase()]
 
     file = config.get("siteLinkPath")
-    fs.exists file, (exists) ->
-      if exists then CSON.writeFile file, @links, (error) -> console.log(error)
+    fs.exists file, (exists) -> CSON.writeFile(file, @links) if exists
 
   loadSavedLinks: (callback) ->
     setLinks = (data) => @links = data || {}; callback()
+    readFile = (file) -> CSON.readFile file, (error, data) -> setLinks(data)
 
     file = config.get("siteLinkPath")
-    fs.exists file, (exists) ->
-      if exists
-        CSON.readFile file, (error, data) ->
-          console.log(error) if error
-          setLinks(data)
-      else
-        setLinks()
+    fs.exists file, (exists) -> if exists then readFile(file) else setLinks()
 
   fetchPosts: ->
     if posts
