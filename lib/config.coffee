@@ -1,4 +1,6 @@
 path = require "path"
+CSON = require "season"
+fs = require "fs-plus"
 
 class Configuration
   @prefix: "markdown-writer"
@@ -57,6 +59,8 @@ class Configuration
     referenceInsertPosition: "paragraph"
     # reference tag indent space (0 or 2)
     referenceIndentLength: 2
+    # project specific configuration file name
+    projectConfigFile: "_mdwriter.cson"
 
   @engines:
     html:
@@ -82,10 +86,12 @@ class Configuration
         ---
         """
 
+  @projectConfigs: {}
+
   engineNames: -> Object.keys(@constructor.engines)
 
   get: (key) ->
-    @getUserConfig(key) || @getEngine(key) || @getDefault(key)
+    @getProject(key) || @getUser(key) || @getEngine(key) || @getDefault(key)
 
   set: (key, val) ->
     atom.config.set(@keyPath(key), val)
@@ -96,17 +102,30 @@ class Configuration
 
   # get config.engines based on siteEngine set
   getEngine: (key) ->
-    engine = atom.config.get(@keyPath("siteEngine"))
+    engine = @getProject("siteEngine") || @getUser("siteEngine") || @getDefault("siteEngine")
     if engine in @engineNames()
       @_valueForKeyPath(@constructor.engines[engine], key)
 
   # get config based on engine set or global defaults
-  getCurrentConfig: (key) ->
+  getCurrentDefault: (key) ->
     @getEngine(key) || @getDefault(key)
 
   # get config from user's config file
-  getUserConfig: (key) ->
+  getUser: (key) ->
     atom.config.get(@keyPath(key), sources: [atom.config.getUserConfigPath()])
+
+  # get project specific config from project's config file
+  getProject: (key) ->
+    return unless atom.project && atom.project.getPaths().length > 0
+    project = atom.project.getPaths()[0]
+    @_loadProjectConfig(project) unless @constructor.projectConfigs[project]
+    return @_valueForKeyPath(@constructor.projectConfigs[project], key)
+
+  _loadProjectConfig: (project) ->
+    file = @getUser("projectConfigFile") || @getDefault("projectConfigFile")
+    filePath = path.join(project, file)
+    config = CSON.readFileSync(filePath) if fs.existsSync(filePath)
+    @constructor.projectConfigs[project] = config || {}
 
   restoreDefault: (key) ->
     atom.config.unset(@keyPath(key))

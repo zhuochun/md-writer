@@ -35,10 +35,10 @@ basicConfig =
     default: config.getDefault("urlForCategories")
   newPostFileName:
     type: "string"
-    default: config.getCurrentConfig("newPostFileName")
+    default: config.getCurrentDefault("newPostFileName")
   fileExtension:
     type: "string"
-    default: config.getCurrentConfig("fileExtension")
+    default: config.getCurrentDefault("fileExtension")
 
 module.exports =
   config: basicConfig
