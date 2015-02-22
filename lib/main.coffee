@@ -18,6 +18,9 @@ basicConfig =
   sitePostsDir:
     type: "string"
     default: config.getDefault("sitePostsDir")
+  siteImagesDir:
+    type: "string"
+    default: config.getDefault("siteImagesDir")
   urlForTags:
     title: "URL to Tags JSON definitions"
     type: "string"

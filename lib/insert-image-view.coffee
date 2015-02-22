@@ -12,6 +12,7 @@ module.exports =
 class InsertImageView extends View
   imageOnPreview: ""
   editor: null
+  range: null
   previouslyFocusedElement: null
 
   @content: ->
@@ -34,12 +35,15 @@ class InsertImageView extends View
         @div class: "col-2", =>
           @label "Alignment", class: "message"
           @subview "alignEditor", new TextEditorView(mini: true)
+      @div outlet: "copyImagePanel", class: "hidden dialog-row", =>
+        @label for: "markdown-writer-copy-image-checkbox", =>
+          @input id: "markdown-writer-copy-image-checkbox", type:"checkbox", outlet: "copyImageCheckbox"
+          @span "Copy Image to Site Image Directory", class: "side-label"
       @div class: "image-container", =>
         @img outlet: 'imagePreview'
 
   initialize: ->
-    @imageEditor.on "blur", =>
-      @displayImagePreview(@imageEditor.getText().trim())
+    @imageEditor.on "blur", => @updateImageSource(@imageEditor.getText().trim())
     @openImageButton.on "click", => @openImageDialog()
 
     atom.commands.add @element,
@@ -47,6 +51,14 @@ class InsertImageView extends View
       "core:cancel":  => @detach()
 
   onConfirm: ->
+    callback = => @insertImage(); @detach()
+
+    if @copyImageCheckbox.prop("checked")
+      @copyImage(@resolveImageUrl(@imageEditor.getText().trim()), callback)
+    else
+      callback()
+
+  insertImage: ->
     img =
       src: @generateImageUrl(@imageEditor.getText().trim())
       alt: @titleEditor.getText()
@@ -56,8 +68,22 @@ class InsertImageView extends View
       slug: utils.getTitleSlug(@editor.getPath())
       site: config.get("siteUrl")
     text = if img.src then @generateImageTag(img) else img.alt
-    @editor.insertText(text)
-    @detach()
+    @editor.setTextInBufferRange(@range, text)
+
+  copyImage: (file, callback) ->
+    return callback() if utils.isUrl(file) || !fs.existsSync(file)
+
+    try
+      destFile = path.join(config.get("siteLocalDir"), @imagesDir(), path.basename(file))
+
+      if fs.existsSync(destFile)
+        alert("Error:\nImage #{destPath} already exists!")
+      else
+        fs.copy file, destFile, =>
+          @imageEditor.setText(destFile)
+          callback()
+    catch error
+      alert("Error:\n#{error.message}")
 
   display: ->
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
@@ -74,21 +100,23 @@ class InsertImageView extends View
     super
 
   setFieldsFromSelection: ->
-    selection = @editor.getSelectedText()
+    @range = utils.getSelectedTextBufferRange(@editor, "link")
+    selection = @editor.getTextInRange(@range)
+    @_setFieldsFromSelection(selection) if selection
+
+  _setFieldsFromSelection: (selection) ->
     if utils.isImage(selection)
       img = utils.parseImage(selection)
-      @imageEditor.setText(img.src)
-      @titleEditor.setText(img.alt)
-      @displayImagePreview(img.src)
     else if utils.isImageTag(selection)
       img = utils.parseImageTag(selection)
-      @imageEditor.setText(img.src)
-      @titleEditor.setText(img.alt)
-      @widthEditor.setText(img.width || "")
-      @heightEditor.setText(img.height || "")
-      @displayImagePreview(img.src)
     else
-      @titleEditor.setText(selection)
+      img = { alt: selection }
+
+    @titleEditor.setText(img.alt || "")
+    @widthEditor.setText(img.width || "")
+    @heightEditor.setText(img.height || "")
+    @imageEditor.setText(img.src || "")
+    @updateImageSource(img.src)
 
   openImageDialog: ->
     files = dialog.showOpenDialog
@@ -96,25 +124,27 @@ class InsertImageView extends View
       defaultPath: atom.project.getPaths()[0]
     return unless files
     @imageEditor.setText(files[0])
-    @displayImagePreview(files[0])
+    @updateImageSource(files[0])
     @titleEditor.focus()
+
+  updateImageSource: (file) ->
+    @displayImagePreview(file)
+
+    if utils.isUrl(file) || @isInSiteDir(@resolveImageUrl(file))
+      @copyImagePanel.addClass("hidden")
+    else
+      @copyImagePanel.removeClass("hidden")
 
   displayImagePreview: (file) ->
     return if @imageOnPreview == file
 
     if @isValidImageFile(file)
-      @imageOnPreview = file
       @message.text("Opening Image Preview ...")
       @imagePreview.attr("src", @resolveImageUrl(file))
-      @imagePreview.load =>
-        @message.text("")
-        { naturalWidth, naturalHeight } = @imagePreview.context
-        @widthEditor.setText("" + naturalWidth)
-        @heightEditor.setText("" + naturalHeight)
-        position = if naturalWidth > 300 then "center" else "right"
-        @alignEditor.setText(position)
+      @imagePreview.load => @setImageContext(); @message.text("")
       @imagePreview.error =>
         @message.text("Error: Failed to Load Image.")
+        @imagePreview.attr("src", "")
     else
       @message.text("Error: Invalid Image File.") if file
       @imagePreview.attr("src", "")
@@ -122,25 +152,36 @@ class InsertImageView extends View
       @heightEditor.setText("")
       @alignEditor.setText("")
 
+    @imageOnPreview = file # cache preview image src
+
   isValidImageFile: (file) ->
-    path.extname(file).toLowerCase() in imageExtensions
+    file && (path.extname(file).toLowerCase() in imageExtensions)
+
+  setImageContext: ->
+    { naturalWidth, naturalHeight } = @imagePreview.context
+    @widthEditor.setText("" + naturalWidth)
+    @heightEditor.setText("" + naturalHeight)
+
+    position = if naturalWidth > 300 then "center" else "right"
+    @alignEditor.setText(position)
+
+  isInSiteDir: (file) -> file && file.startsWith(config.get("siteLocalDir"))
+
+  imagesDir: -> utils.dirTemplate(config.get("siteImagesDir"))
 
   resolveImageUrl: (file) ->
-    if utils.isUrl(file)
-      file
-    else if fs.existsSync(file)
-      file
-    else
-      "#{atom.project.getPaths()[0]}#{file}"
+    return "" if !file
+    return file if utils.isUrl(file) || fs.existsSync(file)
+    return path.join(config.get("siteLocalDir"), file)
 
   generateImageUrl: (file) ->
+    return "" if !file
     return file if utils.isUrl(file)
 
-    localDir = atom.project.getPaths()[0]
-    if file.startsWith(localDir) # resolve relative to root of site
-      file.replace(localDir, "").replace(/\\/g, "/")
+    if @isInSiteDir(file)
+      filePath = path.relative(config.get("siteLocalDir"), file)
     else
-      utils.dirTemplate(config.get("siteImageUrl")) + path.basename(file)
+      filePath = path.join(@imagesDir(), path.basename(file))
+    return path.join("/", filePath) # resolve to from root
 
-  generateImageTag: (data) ->
-    utils.template(config.get("imageTag"), data)
+  generateImageTag: (data) -> utils.template(config.get("imageTag"), data)

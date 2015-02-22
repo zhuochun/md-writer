@@ -24,7 +24,7 @@ More GIFs Here:
   - Insert reference link if title is specified. _Use `-` in title field to create an empty title reference link._
   - Remove link (and its reference) after URL is deleted.
   - Search published posts by title.
-- **Insert image** (`shift-cmd-i`) and with image's height and width auto-detected.
+- **Insert image** (`shift-cmd-i`), auto-detect images' heights and widths, and optionally copy images to your site's images directory.
 - **Insert table** (`markdown-writer:insert-table`), and a shortcut to **jump to next table cell** (`cmd-j cmd-t`).
 - **Format table** (`markdown-writer:format-table`).
 - **Toggle text styles**:
@@ -67,6 +67,7 @@ Go to Preferences (`cmd-,`) -> Packages -> markdown-writer -> Settings.
 - **siteLocalDir**: The path to the directory of your blog.
 - **siteDraftsDir**: The sub-path to your drafts from the `siteLocalDir`. Default is `_draft/`.
 - **sitePostsDir**: The sub-path to your posts from the `siteLocalDir`. Default is `_posts/{year}`. You can use `{year}`, `{month}` and `{day}`.
+- **siteImagesDir**: The sub-path to your images from the `siteLocalDir`. Default is `images/{year}/{month}/`.
 - **newPostFileName**: The filename format of new posts created. Default is `{year}-{month}-{day}-{title}{extension}`.
 - **fileExtension**: The file extension of your posts/drafts. Default is `.markdown`.
 - **urlForTags**: The URL to tags `JSON` file. Refer to next section.

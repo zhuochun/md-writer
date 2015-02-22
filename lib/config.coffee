@@ -12,6 +12,8 @@ class Configuration
     siteDraftsDir: "_drafts/"
     # directory to posts from the root of siteLocalDir
     sitePostsDir: "_posts/{year}/"
+    # directory to images from the root of siteLocalDir
+    siteImagesDir: "images/{year}/{month}/"
     # URL to your blog
     siteUrl: ""
     # URLs to tags/posts/categories JSON file
@@ -41,6 +43,8 @@ class Configuration
       date: "<date>"
       ---
       """
+    # image tag template
+    imageTag: "![<alt>](<src>)"
     # fenced code block used
     codeblock:
       before: "```\n"
@@ -53,10 +57,6 @@ class Configuration
     referenceInsertPosition: "paragraph"
     # reference tag indent space (0 or 2)
     referenceIndentLength: 2
-    # image tag template
-    imageTag: "![<alt>](<src>)"
-    # image url prefix if you insert image not in blog directory
-    siteImageUrl: "/assets/{year}/{month}/"
 
   @engines:
     html:
