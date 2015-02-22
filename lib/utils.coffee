@@ -136,9 +136,9 @@ parseReferenceLink = (input, content) ->
     throw new Error("Cannot find reference tag for specified link")
 
 URL_REGEX = ///
-  ^(https?|ftp):\/\/
-  [^\s\/$.?#].
-  [^\s]*$
+  ^(?:\w+:)?\/\/
+  ([^\s\.]+\.\S{2}|localhost[\:?\d]*)
+  \S*$
   ///i
 
 isUrl = (url) -> URL_REGEX.test(url)
