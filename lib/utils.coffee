@@ -190,6 +190,14 @@ getCursorScopeRange = (editor, wordRegex) ->
   else
     editor.getLastCursor().getCurrentWordBufferRange()
 
+getSelectedTextBufferRange = (editor, scope) ->
+  if editor.getSelectedText()
+    editor.getSelectedBufferRange()
+  else if hasCursorScope(editor, scope)
+    editor.bufferRangeForScopeAtCursor(scope)
+  else
+    getCursorScopeRange(editor)
+
 module.exports =
   getJSON: getJSON
   getDate: getDate
@@ -219,3 +227,4 @@ module.exports =
   template: template
   hasCursorScope: hasCursorScope
   getCursorScopeRange: getCursorScopeRange
+  getSelectedTextBufferRange: getSelectedTextBufferRange

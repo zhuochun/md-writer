@@ -61,7 +61,7 @@ class InsertLinkView extends View
 
     @fetchPosts()
     @loadSavedLinks =>
-      @setLinkFromSelection()
+      @setFieldsFromSelection()
       if @textEditor.getText()
         @urlEditor.getModel().selectAll()
         @urlEditor.focus()
@@ -74,15 +74,12 @@ class InsertLinkView extends View
     @previouslyFocusedElement?.focus()
     super
 
-  setLinkFromSelection: ->
-    try
-      @range = @getLinkBufferRange()
-      selection = @editor.getTextInRange(@range)
-      @_setLinkFromSelection(selection) if selection
-    catch
-      @setLink(selection, "", "")
+  setFieldsFromSelection: ->
+    @range = utils.getSelectedTextBufferRange(@editor, "link")
+    selection = @editor.getTextInRange(@range)
+    @_setFieldsFromSelection(selection) if selection
 
-  _setLinkFromSelection: (selection) ->
+  _setFieldsFromSelection: (selection) ->
     if utils.isInlineLink(selection)
       link = utils.parseInlineLink(selection)
       @setLink(link.text, link.url, link.title)
@@ -98,14 +95,6 @@ class InsertLinkView extends View
       @saveCheckbox.prop("checked", true)
     else
       @setLink(selection, "", "")
-
-  getLinkBufferRange: ->
-    if @editor.getSelectedText()
-      @editor.getSelectedBufferRange()
-    else if utils.hasCursorScope(@editor, "link")
-      @editor.bufferRangeForScopeAtCursor("link")
-    else
-      utils.getCursorScopeRange(@editor)
 
   updateSearch: (query) ->
     query = query.trim().toLowerCase()
