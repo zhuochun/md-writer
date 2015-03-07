@@ -1,19 +1,10 @@
+{$} = require "atom-space-pen-views"
 os = require "os"
 path = require "path"
 yaml = require "js-yaml"
-request = require "request"
 
 getJSON = (uri, succeed, error) ->
-  data = uri: uri, json: true, encoding: 'utf-8', gzip: true
-  request data, (err, res, body) ->
-    if !err and res.statusCode == 200
-      succeed(body)
-    else
-      error(err)
-
-getDateStr = (date)->
-  date = getDate(date)
-  return "#{date.year}-#{date.month}-#{date.day}"
+  $.getJSON(uri).done(succeed).fail(error)
 
 DATE_REGEX = /// ^
   (\d{4})[-\/]     # year
@@ -29,6 +20,10 @@ parseDateStr = (str) ->
     date.setMonth(parseInt(matches[2], 10) - 1)
     date.setDate(parseInt(matches[3], 10))
   return getDate(date)
+
+getDateStr = (date)->
+  date = getDate(date)
+  return "#{date.year}-#{date.month}-#{date.day}"
 
 getTimeStr = (date) ->
   date = getDate(date)
