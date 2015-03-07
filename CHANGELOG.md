@@ -1,3 +1,8 @@
+## 1.1.0
+
+* Remove dependency on `request` module
+* Change plugin styles to follow users' themes
+
 ## 1.0.0
 
 * Support project specific settings
