@@ -6,11 +6,7 @@ Works great with static blogs. Try it with [Jekyll](http://jekyllrb.com/), [Octo
 
 ![Insert Image](http://i.imgur.com/s9ekMns.gif)
 
-More GIFs Here:
-
-- [Create New Post](http://i.imgur.com/BwntxhB.gif)
-- [Insert Reference Link](http://i.imgur.com/L67TqyF.gif)
-- [Remove Reference Link](http://i.imgur.com/TglzeJV.gif)
+More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Reference Link](http://i.imgur.com/L67TqyF.gif), [Remove Reference Link](http://i.imgur.com/TglzeJV.gif).
 
 ## Features
 
@@ -49,18 +45,23 @@ More GIFs Here:
 
 You can find and trigger all features in:
 
-- Command Palette (`shift-cmd-P`), enter `Markdown Writer`
-- Menu Bar `Packages -> Markdown Writer`.
+- Open Command Palette (`shift-cmd-P`), enter `Markdown Writer`
+- Or, go to menubar `Packages -> Markdown Writer`.
+
+## Installation
+
+- In Atom, go to Settings (`cmd-,`) -> Install -> Search `markdown-writer`.
+- Or, run `apm install markdown-writer`.
 
 ## Setup
 
-To use features like `create draft/post`, Markdown-Writer needs to be configured. E.g. to know the path to your blog.
+To use features like `create draft/post`, Markdown-Writer needs to be configured to know the path to your blog.
 
-Go to Preferences (`cmd-,`) -> Packages -> markdown-writer -> Settings.
+Go to Settings (`cmd-,`) -> Packages -> `markdown-writer` -> Settings.
+
+> If you do not see any settings (due to a [Atom's bug][3ecd2daa]), please activate Markdown-Writer by activate any command (e.g. `Open Cheat Sheet`). Close and reopen Settings page.
 
 ### Basic Settings:
-
-> If you could not see these settings (due to [Atom's bug][3ecd2daa]), please activate Markdown-Writer by activate any command (e.g. `Open Cheat Sheet`). Close and reopen Preferences.
 
 [3ecd2daa]: https://github.com/atom/settings-view/issues/356 "Viewing a package's settings should activate it"
 
@@ -83,7 +84,7 @@ Create a `_mdwriter.cson` file under your project/blog. See [this commit][02399e
 
 ### Advance Settings:
 
-To change these settings, you need to edit in `Atom -> Your Config` file.
+To change these settings, you need to edit in `Atom -> Your Config` file or in your projects' specific setting files.
 
 - **siteLinkPath**: Define path (string) to a `.cson` file that stores all links added for automatic linking next time. Default uses `markdown-writer-links.cson` in Atom's config directory.
 - **frontMatter**: Define front matter (string) used when create new post/draft.
@@ -166,7 +167,5 @@ A list of all commands can also be found [here](https://github.com/zhuochun/md-w
 
 ## Tips
 
-- A light theme targets Markdown: Copy [this Gist](https://gist.github.com/zhuochun/b3659bcea98fca56cb43) to your Stylesheet.
-  - Better highlights for all syntax in Markdown.
 - Jumping among your posts: `Cmd-t` or `Cmd-p`.
 - Markdown Preview: [markdown-preview](https://atom.io/packages/markdown-preview) package.
