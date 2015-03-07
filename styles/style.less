@@ -1,7 +1,6 @@
-// The ui-variables file is provided by base themes provided by Atom.
-//
-// See https://github.com/atom/atom-dark-ui/blob/master/stylesheets/ui-variables.less
-// for a full listing of what's available.
+// The ui-variables file is provided by themes provided by Atom.
+@import "ui-variables";
+
 .markdown-writer-dialog {
   .dialog-row {
     margin-bottom: 10px;
@@ -37,19 +36,19 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  font-size: 14px;
   max-height: 170px;
   overflow: scroll;
 
   li {
     padding: 5px 3px;
-    border: 1px solid #aaa;
+    border: 1px solid @button-border-color;
+    background-color: @button-background-color;
     margin-bottom: 2px;
     cursor: pointer;
 
     &:hover {
-      background-color: #7f8c8d;
-      color: #fff;
+      background-color: @button-background-color-hover;
+      color: @text-color-highlight;
     }
   }
 }
@@ -60,27 +59,28 @@
     padding: 0;
     height: 209px;
     overflow-y: scroll;
-    font-size: 15px;
 
     li {
       display: inline-block;
       padding: 5px;
       margin: 0 2px 2px 0;
-      border: 1px solid #bdc3c7;
+      border: 1px solid @button-border-color;
+      background-color: @button-background-color;
       cursor: pointer;
 
-      &:hover {
-        background-color: #7f8c8d;
-        color: #fff;
+      &.selected {
+        background-color: @button-background-color-selected;
+        color: @text-color-selected;
+
+        &:hover {
+          background-color: @background-color-success;
+          color: @text-color-highlight;
+        }
       }
-    }
-
-    li.selected {
-      border-color: #d35400;
-      color: #c0392b;
 
       &:hover {
-        background-color: #f1c40f;
+        background-color: @button-background-color-hover;
+        color: @text-color-highlight;
       }
     }
   }

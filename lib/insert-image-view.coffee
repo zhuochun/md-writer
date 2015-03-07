@@ -51,10 +51,12 @@ class InsertImageView extends View
       "core:cancel":  => @detach()
 
   onConfirm: ->
-    callback = => @insertImage(); @detach()
+    imgUrl = @imageEditor.getText().trim()
+    return unless imgUrl
 
+    callback = => @insertImage(); @detach()
     if @copyImageCheckbox.prop("checked")
-      @copyImage(@resolveImageUrl(@imageEditor.getText().trim()), callback)
+      @copyImage(@resolveImageUrl(imgUrl), callback)
     else
       callback()
 
@@ -128,8 +130,9 @@ class InsertImageView extends View
     @titleEditor.focus()
 
   updateImageSource: (file) ->
-    @displayImagePreview(file)
+    return unless file
 
+    @displayImagePreview(file)
     if utils.isUrl(file) || @isInSiteDir(@resolveImageUrl(file))
       @copyImagePanel.addClass("hidden")
     else
