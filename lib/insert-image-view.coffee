@@ -7,6 +7,7 @@ path = require "path"
 fs = require "fs-plus"
 
 imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".ico"]
+lastInsertImageDir = null # remember last inserted image directory
 
 module.exports =
 class InsertImageView extends View
@@ -123,8 +124,9 @@ class InsertImageView extends View
   openImageDialog: ->
     files = dialog.showOpenDialog
       properties: ['openFile']
-      defaultPath: atom.project.getPaths()[0]
+      defaultPath: lastInsertImageDir || atom.project.getPaths()[0]
     return unless files
+    lastInsertImageDir = path.dirname(files[0])
     @imageEditor.setText(files[0])
     @updateImageSource(files[0])
     @titleEditor.focus()
