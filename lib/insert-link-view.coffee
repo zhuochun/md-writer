@@ -58,7 +58,6 @@ class InsertLinkView extends View
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
     @previouslyFocusedElement = $(document.activeElement)
     @panel.show()
-
     @fetchPosts()
     @loadSavedLinks =>
       @setFieldsFromSelection()
@@ -208,14 +207,18 @@ class InsertLinkView extends View
       delete @links[text.toLowerCase()]
 
     file = config.get("siteLinkPath")
-    fs.exists file, (exists) -> CSON.writeFile(file, @links) if exists
+    fs.exists file, (exists) =>
+      CSON.writeFile(file, @links) if exists
 
   loadSavedLinks: (callback) ->
-    setLinks = (data) => @links = data || {}; callback()
-    readFile = (file) -> CSON.readFile file, (error, data) -> setLinks(data)
+    setLinks = (data) =>
+      @links = data || {}; callback()
+    readFile = (file) ->
+      CSON.readFile file, (error, data) -> setLinks(data)
 
     file = config.get("siteLinkPath")
-    fs.exists file, (exists) -> if exists then readFile(file) else setLinks()
+    fs.exists file, (exists) ->
+      if exists then readFile(file) else setLinks()
 
   fetchPosts: ->
     if posts
