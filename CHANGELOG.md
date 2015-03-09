@@ -1,3 +1,8 @@
+## 1.1.1
+
+* Fix links no longer saved regression
+* Improve insert image open dialog location logic
+
 ## 1.1.0
 
 * Remove dependency on `request` module
