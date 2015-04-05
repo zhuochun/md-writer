@@ -78,9 +78,9 @@ Go to Settings (`cmd-,`) -> Packages -> `markdown-writer` -> Settings.
 
 ### Project Specific Settings:
 
-Create a `_mdwriter.cson` file under your project/blog. See [this commit][02399ed7] for example.
+Create a `_mdwriter.cson` file under your project/blog. Read this [config file][example_config] for an example.
 
-[02399ed7]: https://github.com/zhuochun/zhuochun.github.io/commit/cb34e3c16d42c52b281c34920ad55bbca223ac23 "zhuochun.github.io"
+[example_config]: https://github.com/zhuochun/zhuochun.github.io/blob/cb34e3c16d42c52b281c34920ad55bbca223ac23/_mdwriter.cson "zhuochun.github.io"
 
 ### Advance Settings:
 
