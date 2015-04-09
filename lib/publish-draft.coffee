@@ -27,7 +27,7 @@ class PublishDraft
       atom.workspace.open(@postPath)
 
   updateFrontMatter: ->
-    @frontMatter.published = true unless @frontMatter.published?
+    @frontMatter.published = true if @frontMatter.published?
     @frontMatter.date = "#{utils.getDateStr()} #{utils.getTimeStr()}"
 
     utils.updateFrontMatter(@editor, @frontMatter)
