@@ -6,6 +6,9 @@ describe "InsertLinkView", ->
     workspaceElement = atom.views.getView(atom.workspace)
     @view = new InsertLinkView({})
 
+  xit "update search by query", ->
+    @view.updateSearch("not-exists")
+
   xit "get saved link path", ->
     expect(@view.getSavedLinksPath()).toMatch(atom.getConfigDirPath())
 

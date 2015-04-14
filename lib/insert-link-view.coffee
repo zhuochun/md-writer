@@ -4,7 +4,7 @@ utils = require "./utils"
 CSON = require "season"
 fs = require "fs-plus"
 
-posts = null # to cache it
+posts = null # to cache posts
 
 module.exports =
 class InsertLinkView extends View
@@ -96,11 +96,11 @@ class InsertLinkView extends View
       @setLink(selection, "", "")
 
   updateSearch: (query) ->
+    return unless query and posts
     query = query.trim().toLowerCase()
-    results = posts.filter (post) ->
-      query and post.title.toLowerCase().contains(query)
-    results = results.map (post) ->
-      "<li data-url='#{post.url}'>#{post.title}</li>"
+    results = posts
+      .filter((post) -> post.title.toLowerCase().indexOf(query) >= 0)
+      .map((post) -> "<li data-url='#{post.url}'>#{post.title}</li>")
     @searchResult.empty().append(results.join(""))
 
   useSearchResult: (e) ->
@@ -141,6 +141,7 @@ class InsertLinkView extends View
 
     # reserve original cursor position
     position = @editor.getCursorBufferPosition()
+
     if position.row == @editor.getLastBufferRow()
       @editor.insertNewline() # handle last row position
     else
@@ -211,27 +212,23 @@ class InsertLinkView extends View
       CSON.writeFile(file, @links) if exists
 
   loadSavedLinks: (callback) ->
-    setLinks = (data) =>
-      @links = data || {}; callback()
-    readFile = (file) ->
-      CSON.readFile file, (error, data) -> setLinks(data)
+    setLinks = (data) => @links = data || {}; callback()
+    readFile = (file) -> CSON.readFile file, (err, data) -> setLinks(data)
 
     file = config.get("siteLinkPath")
     fs.exists file, (exists) ->
       if exists then readFile(file) else setLinks()
 
   fetchPosts: ->
-    if posts
-      @searchBox.hide() unless posts.length > 0
-    else
-      uri = config.get("urlForPosts")
-      succeed = (body) =>
-        posts = body.posts
+    if posts then return (@searchBox.hide() unless posts.length > 0)
 
-        if posts.length > 0
-          @searchBox.show()
-          @searchEditor.setText(@textEditor.getText())
-          @updateSearch(@textEditor.getText())
-      error = (err) =>
-        @searchBox.hide()
-      utils.getJSON(uri, succeed, error)
+    uri = config.get("urlForPosts")
+    succeed = (body) =>
+      posts = body.posts
+      if posts.length > 0
+        @searchBox.show()
+        @searchEditor.setText(@textEditor.getText())
+        @updateSearch(@textEditor.getText())
+    error = (err) => @searchBox.hide()
+
+    utils.getJSON(uri, succeed, error)
