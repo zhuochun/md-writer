@@ -1,3 +1,8 @@
+## 1.1.2
+
+* Remove Array#contains API usage
+* Fix publish post 'published' front matter bug
+
 ## 1.1.1
 
 * Fix links no longer saved regression
