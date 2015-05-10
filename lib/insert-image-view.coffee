@@ -38,7 +38,8 @@ class InsertImageView extends View
           @subview "alignEditor", new TextEditorView(mini: true)
       @div outlet: "copyImagePanel", class: "hidden dialog-row", =>
         @label for: "markdown-writer-copy-image-checkbox", =>
-          @input id: "markdown-writer-copy-image-checkbox", type:"checkbox", outlet: "copyImageCheckbox"
+          @input id: "markdown-writer-copy-image-checkbox",
+            type:"checkbox", outlet: "copyImageCheckbox"
           @span "Copy Image to Site Image Directory", class: "side-label"
       @div class: "image-container", =>
         @img outlet: 'imagePreview'
@@ -77,7 +78,8 @@ class InsertImageView extends View
     return callback() if utils.isUrl(file) || !fs.existsSync(file)
 
     try
-      destFile = path.join(config.get("siteLocalDir"), @imagesDir(), path.basename(file))
+      destFile = path.join(config.get("siteLocalDir"),
+        @imagesDir(), path.basename(file))
 
       if fs.existsSync(destFile)
         alert("Error:\nImage #{destPath} already exists!")

@@ -102,7 +102,9 @@ class Configuration
 
   # get config.engines based on siteEngine set
   getEngine: (key) ->
-    engine = @getProject("siteEngine") || @getUser("siteEngine") || @getDefault("siteEngine")
+    engine = @getProject("siteEngine") ||
+             @getUser("siteEngine") ||
+             @getDefault("siteEngine")
     if engine in @engineNames()
       @_valueForKeyPath(@constructor.engines[engine], key)
 
