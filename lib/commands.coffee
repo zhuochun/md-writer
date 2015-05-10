@@ -3,9 +3,9 @@ utils = require "./utils"
 HEADING_REGEX   = /// ^\# {1,6} \ + .+$ ///g
 REFERENCE_REGEX = /// \[? ([^\s\]]+) (?:\] | \]:)? ///
 
+LIST_TL_REGEX   = /// ^ (\s*) (-\ \[[xX\ ]\]) \s+ (.*) $ ///
 LIST_UL_REGEX   = /// ^ (\s*) ([*+-]) \s+ (.*) $ ///
 LIST_OL_REGEX   = /// ^ (\s*) (\d+)\. \s+ (.*) $ ///
-LIST_TL_REGEX   = /// ^ (\s*) (-\ \[[xX\ ]\]) \s+ (.*) $ ///
 
 TABLE_COL_REGEX = ///  ([^\|]*?) \s* \| ///
 TABLE_VAL_REGEX = /// (?:^|\|) ([^\|]+) ///g
@@ -36,6 +36,14 @@ class Commands
       return replaceLine: true, value: matches[1] || "\n"
     else
       return replaceLine: false, value: value || "\n"
+
+  indentListLine: ->
+    editor = atom.workspace.getActiveTextEditor()
+    line = editor.lineTextForBufferRow(editor.getCursorBufferPosition().row)
+
+    inList = [LIST_TL_REGEX, LIST_UL_REGEX, LIST_OL_REGEX].some (regex) ->
+      regex.exec(line)
+    if inList then editor.indentSelectedRows() else editor.insertText(" ")
 
   jumpToPreviousHeading: ->
     editor = atom.workspace.getActiveTextEditor()

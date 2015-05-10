@@ -37,7 +37,8 @@
       "markdown-writer:jump-to-next-heading",
       "markdown-writer:jump-to-next-table-cell",
       "markdown-writer:format-table",
-      "markdown-writer:insert-new-line"
+      "markdown-writer:insert-new-line",
+      "markdown-writer:indent-list-line"
     ]
   },
   "author": "Wang Zhuochun <zhuochun@hotmail.com> (http://www.bicrement.com/)",
