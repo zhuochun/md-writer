@@ -1,6 +1,7 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
 config = require "./config"
 utils = require "./utils"
+helper = require "./insert-link-helper"
 CSON = require "season"
 fs = require "fs-plus"
 
@@ -26,7 +27,8 @@ class InsertLinkView extends View
         @subview "titleEditor", new TextEditorView(mini: true)
       @div class: "dialog-row", =>
         @label for: "markdown-writer-save-link-checkbox", =>
-          @input id: "markdown-writer-save-link-checkbox", type:"checkbox", outlet: "saveCheckbox"
+          @input id: "markdown-writer-save-link-checkbox",
+            type:"checkbox", outlet: "saveCheckbox"
           @span "Automatically link to this text next time", class: "side-label"
       @div outlet: "searchBox", =>
         @label "Search Posts", class: "icon icon-search"
@@ -118,57 +120,37 @@ class InsertLinkView extends View
       @editor.setTextInBufferRange(@range, "[#{text}](#{url})")
 
   updateReferenceLink: (text, title, url) ->
-    if title
+    if title # update the reference link
       position = @editor.getCursorBufferPosition()
       referenceTagRegex = ///
-        ^\ *
-        \[#{utils.regexpEscape(@referenceId)}\]:
-        \ +([\S\ ]+)$
+        ^\ *\[#{utils.regexpEscape(@referenceId)}\]:\ +([\S\ ]+)$
       ///
       @editor.buffer.scan referenceTagRegex, (match) =>
-        indent = @getReferenceIndentLength()
-        title = @getFormattedReferenceTitle(title)
-        @editor.setTextInBufferRange(match.range,
-          "#{indent}[#{@referenceId}]: #{url}#{title}")
+        @editor.setTextInBufferRange match.range, @_referenceLink(url, title)
       @editor.setCursorBufferPosition(position)
-    else
+    else # change to inline link
       @removeReferenceLink("[#{text}](#{url})")
 
   insertReferenceLink: (text, title, url) ->
-    # modify selection
-    id = require("guid").raw()[0..7]
-    @editor.setTextInBufferRange(@range, "[#{text}][#{id}]")
+    @referenceId = require("guid").raw()[0..7] # create an unique id
 
-    # reserve original cursor position
-    position = @editor.getCursorBufferPosition()
+    referenceText = "[#{text}][#{@referenceId}]"
+    @editor.setTextInBufferRange(@range, referenceText)
 
-    if position.row == @editor.getLastBufferRow()
-      @editor.insertNewline() # handle last row position
+    referenceLink = @_referenceLink(url, title)
+    if config.get("referenceInsertPosition") == "article"
+      helper.insertAtEndOfArticle(@editor, referenceLink)
     else
-      @editor.moveToBeginningOfNextParagraph()
+      helper.insertAfterCurrentParagraph(@editor, referenceLink)
 
-    # handle paragraph is not correct sometimes
-    cursorRow = @editor.getCursorBufferPosition().row
-    if cursorRow == position.row + 1
-      @editor.insertNewline()
-      cursorRow += 1
-
-    # insert text
-    indent = @getReferenceIndentLength()
-    title = @getFormattedReferenceTitle(title)
-    eol = if @editor.lineTextForBufferRow(cursorRow) then "\n" else ""
-    @editor.setTextInBufferRange([[cursorRow, 0], [cursorRow, 0]],
-      "#{indent}[#{id}]: #{url}#{title}#{eol}")
-
-    # check if additional space line required
-    @editor.setCursorBufferPosition([cursorRow + 1, 0])
-    line = @editor.lineTextForBufferRow(cursorRow + 1)
-    @editor.insertNewline() unless utils.isReferenceDefinition(line)
-    @editor.setCursorBufferPosition(position)
-
-  getReferenceIndentLength: -> " ".repeat(config.get("referenceIndentLength"))
-  getFormattedReferenceTitle: (title) ->
+  _referenceIndentLength: ->
+    " ".repeat(config.get("referenceIndentLength"))
+  _formattedReferenceTitle: (title) ->
     if /^[-\*\!]$/.test(title) then "" else " \"#{title}\""
+  _referenceLink: (url, title) ->
+    indent = @_referenceIndentLength()
+    title = @_formattedReferenceTitle(title)
+    "#{indent}[#{@referenceId}]: #{url}#{title}"
 
   removeLink: (text) ->
     if @referenceId
