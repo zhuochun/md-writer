@@ -1,3 +1,7 @@
+## 1.3.0
+
+* Support correct order list numbers
+
 ## 1.2.0
 
 * Support reference link insertion at the end of article

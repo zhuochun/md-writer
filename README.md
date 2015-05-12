@@ -16,8 +16,8 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 - **Manage blog tags and categories in front matters** ([setup required][9be76601]).
 - **Continue markdown lists** when you press `enter`.
 - **Insert link** (`shift-cmd-k`) and **automatically link to the text next time** (My favorite feature from Windows Live Writer).
-  - Insert inline link (by default).
-  - Insert reference link if title is specified. _Use `-` in title field to create an empty title reference link._
+  - Insert inline link.
+  - Insert reference link with title. _Use `-` in title field to create an empty title reference link._
   - Remove link (and its reference) after URL is deleted.
   - Search published posts by title.
 - **Insert image** (`shift-cmd-i`), auto-detect images' heights and widths, and optionally copy images to your site's images directory.
@@ -35,7 +35,8 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
   - `> blockquote` (`shift-cmd->`)
   - `- [ ] task list` (`markdown-writer:toggle-task`)
 - **Toggle headings**: `ctrl-alt-[1-5]` to switch among `H1` to `H5`.
-- **Helper commands**:
+- **Correct order list numbers** (`markdown-writer:correct-order-list-numbers`).
+- **Jumping commands**:
   - Jump to previous heading (`cmd-j cmd-p`)
   - Jump to next heading (`cmd-j cmd-n`)
   - Jump to next table cell (`cmd-j cmd-t`)
