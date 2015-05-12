@@ -44,6 +44,7 @@
       "markdown-writer:jump-to-next-heading",
       "markdown-writer:jump-to-next-table-cell",
       "markdown-writer:format-table",
+      "markdown-writer:correct-order-list-numbers",
       "markdown-writer:insert-new-line",
       "markdown-writer:indent-list-line"
     ]

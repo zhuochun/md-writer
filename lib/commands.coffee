@@ -119,31 +119,63 @@ class Commands
     else
       line.length + 1
 
-  formatTable: ->
+  correctOrderListNumbers: ->
     editor = atom.workspace.getActiveTextEditor()
 
+    lines = @_getSelectedLines(editor)
+    lines = @_correctOrderNumbers(lines)
+
+    editor.insertText(lines.join("\n"))
+
+  _correctOrderNumbers: (lines) ->
+    correctedLines = []
+
+    indent = -1
+    nextOrder = -1
+    for line, idx in lines
+      correctedLines[idx] = line
+
+      matches = LIST_OL_REGEX.exec(line)
+      continue unless matches
+
+      if indent < 0 # first ol match
+        indent = matches[1].length
+        nextOrder = parseInt(matches[2], 10) + 1
+      else if matches[1].length == indent # rest of ol matches
+        correctedLines[idx] = "#{matches[1]}#{nextOrder}. #{matches[3]}"
+        nextOrder += 1
+
+    return correctedLines
+
+  _getSelectedLines: (editor) ->
     unless editor.getSelectedText()
       editor.moveToBeginningOfPreviousParagraph()
       editor.selectToBeginningOfNextParagraph()
 
     lines = editor.getSelectedText().split("\n")
-    return if lines.every (line) -> line.trim().length == 0
 
-    range = @_findTableRange(lines, editor.getSelectedBufferRange())
+  formatTable: ->
+    editor = atom.workspace.getActiveTextEditor()
+
+    lines = @_getSelectedLines(editor)
+    range = @_findMinSelectedBufferRange(lines, editor.getSelectedBufferRange())
+    return unless range
+
     values = @_parseTable(lines)
+    table = @_createTable(values)
 
-    editor.setSelectedBufferRange(range)
-    editor.insertText(@_createTable(values))
+    editor.setTextInBufferRange(range, table)
 
   _indexOfFirstNonEmptyLine: (lines) ->
     for line, i in lines
       return i if line.trim().length > 0
     return -1 # not found
 
-  _findTableRange: (lines, {start, end}) ->
+  _findMinSelectedBufferRange: (lines, {start, end}) ->
     head = @_indexOfFirstNonEmptyLine(lines)
     tail = @_indexOfFirstNonEmptyLine(lines[..].reverse())
 
+    return null if head == -1 || tail == -1 # no buffer range
     return [
       [start.row + head, 0]
       [end.row - tail, lines[lines.length - 1 - tail].length]

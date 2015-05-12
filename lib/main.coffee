@@ -79,10 +79,14 @@ module.exports =
         @createCommand("./insert-#{media}-view")
 
     # helpers
-    ["insert-new-line", "indent-list-line",
-     "jump-to-previous-heading", "jump-to-next-heading",
+    ["insert-new-line",
+     "indent-list-line",
+     "correct-order-list-numbers",
+     "jump-to-previous-heading",
+     "jump-to-next-heading",
      "jump-between-reference-definition",
-     "jump-to-next-table-cell", "format-table"].forEach (command) =>
+     "jump-to-next-table-cell",
+     "format-table"].forEach (command) =>
       editorCommands["markdown-writer:#{command}"] =
         @createHelper("./commands", command)
 

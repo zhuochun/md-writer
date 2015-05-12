@@ -1,6 +1,18 @@
 cmds = require "../lib/commands"
 
 describe "commands", ->
+  it "correct top level order list numbers", ->
+    fixture  = ["3. abc", "9. efg", "0. hij", "  1. k l m", "7. opq", "rst"]
+    expected = ["3. abc", "4. efg", "5. hij", "  1. k l m", "6. opq", "rst"]
+    expect(cmds._correctOrderNumbers(fixture)).toEqual(expected)
+
+  it "correct sub-level order list numbers", ->
+    fixture  = ["  1. abc", "    efg", "  9. hij", "    1. klm", "  9. opq"]
+    expected = ["  1. abc", "    efg", "  2. hij", "    1. klm", "  3. opq"]
+
+    expect(cmds._correctOrderNumbers(fixture)).toEqual(expected)
+
+
   it "find the first column in table row", ->
     fixture = "hd 1 | hd 2 | hd 3"
     expect(cmds._findNextTableCellIdx(fixture,  0)).toEqual(4)
