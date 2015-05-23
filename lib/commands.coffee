@@ -40,11 +40,21 @@ class Commands
 
   indentListLine: ->
     editor = atom.workspace.getActiveTextEditor()
-    line = editor.lineTextForBufferRow(editor.getCursorBufferPosition().row)
+    cursor = editor.getCursorBufferPosition()
+    line = editor.lineTextForBufferRow(cursor.row)
 
-    inList = [LIST_TL_REGEX, LIST_UL_REGEX, LIST_OL_REGEX].some (regex) ->
-      regex.exec(line)
-    if inList then editor.indentSelectedRows() else editor.insertText(" ")
+    if @_isListLine(line)
+      editor.indentSelectedRows()
+    else if @_isAtLineBeginning(line, cursor.column)
+      editor.indent()
+    else
+      editor.insertText(" ") # convert tab to space
+
+  _isListLine: (line) ->
+    [LIST_TL_REGEX, LIST_UL_REGEX, LIST_OL_REGEX].some (rgx) -> rgx.exec(line)
+
+  _isAtLineBeginning: (line, col) ->
+    col == 0 || line.substring(0, col).trim() == ""
 
   jumpToPreviousHeading: ->
     editor = atom.workspace.getActiveTextEditor()
