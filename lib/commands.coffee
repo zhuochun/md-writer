@@ -23,6 +23,7 @@ class Commands
 
     editor.selectToBeginningOfLine() if replaceLine
     editor.insertText(value)
+    editor.outdentSelectedRows() if replaceLine
 
   _findNewLineValue: (line) ->
     if matches = LIST_TL_REGEX.exec(line)
