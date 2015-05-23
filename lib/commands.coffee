@@ -17,26 +17,38 @@ class Commands
 
   insertNewLine: ->
     editor = atom.workspace.getActiveTextEditor()
-    line = editor.lineTextForBufferRow(editor.getCursorBufferPosition().row)
+    cursor = editor.getCursorBufferPosition()
 
+    # find potential replace line
+    line = editor.lineTextForBufferRow(cursor.row)
     {replaceLine, value} = @_findNewLineValue(line)
 
+    # hanlde outdent/list label for replace line
+    indentation = editor.indentationForBufferRow(cursor.row)
+    if replaceLine && indentation > 0
+      for row in [(cursor.row - 1)..0]
+        line = editor.lineTextForBufferRow(row)
+        break unless @_isListLine(line)
+        break if editor.indentationForBufferRow(row) == indentation - 1
+      {value} = @_findNewLineValue(line)
+    else value = "\n#{value}"
+
+    # insert new line
     editor.selectToBeginningOfLine() if replaceLine
-    editor.insertText(value)
-    editor.outdentSelectedRows() if replaceLine
+    editor.insertText(value || "\n")
 
   _findNewLineValue: (line) ->
     if matches = LIST_TL_REGEX.exec(line)
-      value = "\n#{matches[1]}- [ ] "
+      value = "#{matches[1]}- [ ] "
     else if matches = LIST_UL_REGEX.exec(line)
-      value = "\n#{matches[1]}#{matches[2]} "
+      value = "#{matches[1]}#{matches[2]} "
     else if matches = LIST_OL_REGEX.exec(line)
-      value = "\n#{matches[1]}#{parseInt(matches[2], 10) + 1}. "
+      value = "#{matches[1]}#{parseInt(matches[2], 10) + 1}. "
 
     if matches && !matches[3]
-      return replaceLine: true, value: matches[1] || "\n"
+      return replaceLine: true, value: matches[1]
     else
-      return replaceLine: false, value: value || "\n"
+      return replaceLine: false, value: value || ""
 
   indentListLine: ->
     editor = atom.workspace.getActiveTextEditor()
