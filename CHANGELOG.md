@@ -1,3 +1,8 @@
+## 1.3.1
+
+* Outdent when `Enter` on a empty line
+* Improve indent tab line behavior
+
 ## 1.3.0
 
 * Support correct order list numbers
