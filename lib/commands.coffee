@@ -20,6 +20,8 @@ class Commands
     cursor = editor.getCursorBufferPosition()
     line = editor.lineTextForBufferRow(cursor.row)
 
+    return editor.insertNewline() if cursor.column < line.length
+
     currentLine = @_findLineValue(line)
 
     if currentLine.isEmptyList
