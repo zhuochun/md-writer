@@ -1,3 +1,7 @@
+## 1.3.2
+
+* Fix list continuation on `Enter` to only happens at the end of line
+
 ## 1.3.1
 
 * Outdent when `Enter` on a empty line
