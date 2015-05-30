@@ -1,8 +1,8 @@
 # Markdown-Writer for Atom
 
-Makes [Atom](https://atom.io/) a better Markdown editor with tons of features!
+Adds tons of features to make [Atom](https://atom.io/) a even better Markdown editor!
 
-Works great with static blogging. Try it with [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) and any of your favorite static blog engines.
+Works great with static blogging as well. Try it with [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) and any of your favorite static blog engines.
 
 ![Insert Image](http://i.imgur.com/s9ekMns.gif)
 
@@ -10,39 +10,44 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 
 ## Features
 
+### Blogging
+
 - **Create new post** with front matters ([setup required][ca8870d7]).
 - **Create new draft** with front matters ([setup required][ca8870d7]).
-- **Publish draft** moves file to `_posts` directory, updates `date` and optionally renames the filename using `title` in front matter.
-- **Manage blog tags and categories in front matters** ([setup required][9be76601]).
-- **Continue markdown lists** when you press `enter`.
-- **Insert link** (`shift-cmd-k`) and **automatically link to the text next time** (My favorite feature from Windows Live Writer).
+- **Publish draft** moves a draft to post's directory with front matters (`date`, `published`) updated.
+- **Manage tags and categories in front matters** ([setup required][9be76601]).
+- **Site specific settings** ([view setup][1561ed4c]).
+
+### General
+
+- **Continue lists** when you press `enter`.
+- **Insert link** (`shift-cmd-k`) and **automatically link to the text next time**.
   - Insert inline link.
   - Insert reference link with title. _Use `-` in title field to create an empty title reference link._
   - Remove link (and its reference) after URL is deleted.
-  - Search published posts by title.
+  - Search published posts by title in your blog.
 - **Insert image** (`shift-cmd-i`), auto-detect images' heights and widths, and optionally copy images to your site's images directory.
 - **Insert table** (`markdown-writer:insert-table`), and a shortcut to **jump to next table cell** (`cmd-j cmd-t`).
 - **Format table** (`markdown-writer:format-table`).
+- **Toggle headings**: `ctrl-alt-[1-5]` to switch among `H1` to `H5`.
 - **Toggle text styles**:
   - `code` (`cmd-'`)
   - **bold** (`cmd-b`)
   - _italic_ (`cmd-i`)
   - ~~strikethrough~~ (`cmd-h`)
-  - `'''codeblock'''` (`shift-cmd-"`)
+  - `'''code block'''` (`shift-cmd-"`)
   - `<kbd>key</kbd>` (`cmd + k`)
   - `- unordered list` (`shift-cmd-U`)
   - `0. ordered list` (`shift-cmd-O`)
   - `> blockquote` (`shift-cmd->`)
   - `- [ ] task list` (`markdown-writer:toggle-task`)
-- **Toggle headings**: `ctrl-alt-[1-5]` to switch among `H1` to `H5`.
-- **Correct order list numbers** (`markdown-writer:correct-order-list-numbers`).
 - **Jumping commands**:
   - Jump to previous heading (`cmd-j cmd-p`)
   - Jump to next heading (`cmd-j cmd-n`)
   - Jump to next table cell (`cmd-j cmd-t`)
   - Jump to reference marker/definition (`cmd-j cmd-d`)
-- Support **project specific settings** ([view setup][1561ed4c]).
-- **Markdown cheat sheet** (`Markdown Writer: Open Cheat Sheet`).
+- **Markdown cheat sheet** (`markdown-writer:open-cheat-sheet`).
+- **Correct order list numbers** (`markdown-writer:correct-order-list-numbers`).
 
   [ca8870d7]: https://github.com/zhuochun/md-writer/wiki/Quick-Start "Markdown-Writer Setup Guide"
   [9be76601]: https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters "Setup Tags/Categories/Posts"
