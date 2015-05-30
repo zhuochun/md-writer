@@ -18,37 +18,50 @@ class Commands
   insertNewLine: ->
     editor = atom.workspace.getActiveTextEditor()
     cursor = editor.getCursorBufferPosition()
-
-    # find potential replace line
     line = editor.lineTextForBufferRow(cursor.row)
-    {replaceLine, value} = @_findNewLineValue(line)
 
-    # hanlde outdent/list label for replace line
+    currentLine = @_findLineValue(line)
+
+    if currentLine.isEmptyList
+      @_insertNewLineAfterEmptyList(editor, cursor)
+    else if currentLine.isList
+      editor.insertText("\n#{currentLine.nextLine}")
+    else
+      editor.insertNewline()
+
+  # if it is an indented empty list, we will go up lines and try to find
+  # its parent's list prefix and use that instead
+  _insertNewLineAfterEmptyList: (editor, cursor) ->
     indentation = editor.indentationForBufferRow(cursor.row)
-    if replaceLine && indentation > 0
+
+    if indentation == 0
+      nextLine = "\n"
+    else
       for row in [(cursor.row - 1)..0]
         line = editor.lineTextForBufferRow(row)
         break unless @_isListLine(line)
         break if editor.indentationForBufferRow(row) == indentation - 1
-      {value} = @_findNewLineValue(line)
-    else value = "\n#{value}"
 
-    # insert new line
-    editor.selectToBeginningOfLine() if replaceLine
-    editor.insertText(value || "\n")
+      {nextLine} = @_findLineValue(line)
 
-  _findNewLineValue: (line) ->
+    editor.selectToBeginningOfLine()
+    editor.insertText("#{nextLine}")
+
+  _findLineValue: (line) ->
     if matches = LIST_TL_REGEX.exec(line)
-      value = "#{matches[1]}- [ ] "
+      nextLine = "#{matches[1]}- [ ] "
     else if matches = LIST_UL_REGEX.exec(line)
-      value = "#{matches[1]}#{matches[2]} "
+      nextLine = "#{matches[1]}#{matches[2]} "
     else if matches = LIST_OL_REGEX.exec(line)
-      value = "#{matches[1]}#{parseInt(matches[2], 10) + 1}. "
-
-    if matches && !matches[3]
-      return replaceLine: true, value: matches[1]
+      nextLine = "#{matches[1]}#{parseInt(matches[2], 10) + 1}. "
     else
-      return replaceLine: false, value: value || ""
+      nextLine = ""
+
+    return {
+      isList: !!matches,
+      isEmptyList: matches && !matches[3],
+      nextLine: nextLine
+    }
 
   indentListLine: ->
     editor = atom.workspace.getActiveTextEditor()
