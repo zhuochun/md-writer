@@ -1,3 +1,7 @@
+## 1.3.4
+
+* Fix deprecated API `lineLengthForBufferRow`
+
 ## 1.3.3
 
 * Update Atom engine version to mark it Atom v1.0.0 compatible
