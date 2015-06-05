@@ -1,3 +1,7 @@
+## 1.3.3
+
+* Update Atom engine version to mark it Atom v1.0.0 compatible
+
 ## 1.3.2
 
 * Fix list continuation on `Enter` to only happens at the end of line
