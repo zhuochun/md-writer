@@ -9,7 +9,7 @@ insertAtEndOfArticle = (editor, text) ->
   position = editor.getCursorBufferPosition() # keep original cursor position
 
   row = _findFirstNonEmptyRowBackwards(editor, editor.getLastBufferRow())
-  point = [row, editor.lineLengthForBufferRow(row)]
+  point = [row, editor.lineTextForBufferRow(row).length]
   if _isReferenceLink(editor, row)
     editor.setTextInBufferRange [point, point], "\n#{text}"
   else
@@ -18,7 +18,7 @@ insertAtEndOfArticle = (editor, text) ->
   editor.setCursorBufferPosition(position)
 
 _findFirstNonEmptyRowBackwards = (editor, row) ->
-  row-- while row >= 0 && editor.lineLengthForBufferRow(row) == 0
+  row-- while row >= 0 && editor.lineTextForBufferRow(row).length == 0
   return row
 
 # Search from the current row for the first empty row (not followed by any
@@ -27,7 +27,7 @@ insertAfterCurrentParagraph = (editor, text) ->
   position = editor.getCursorBufferPosition() # keep original cursor position
 
   row = _findFirstEmptyRow(editor, position.row + 1)
-  point = [row, editor.lineLengthForBufferRow(row)]
+  point = [row, editor.lineTextForBufferRow(row).length]
   if _isReferenceLink(editor, row)
     editor.setTextInBufferRange [point, point], "\n#{text}"
   else if point[1] > 0
@@ -40,7 +40,7 @@ insertAfterCurrentParagraph = (editor, text) ->
 _findFirstEmptyRow = (editor, row) ->
   lastRow = editor.getLastBufferRow()
   # find the first empty line
-  row++ while row <= lastRow && editor.lineLengthForBufferRow(row) != 0
+  row++ while row <= lastRow && editor.lineTextForBufferRow(row).length != 0
   return lastRow if row > lastRow
   # skip reference links
   row++ while row < lastRow && _isReferenceLink(editor, row + 1)
