@@ -36,9 +36,10 @@ class StyleText
     selection.insertText(text)
 
   insertEmptyStyle: (selection) ->
-    selection.insertText(@addStyle(""))
-    {row, column} = selection.cursor.getBufferPosition()
-    selection.cursor.setBufferPosition([row, column - @style.after.length])
+    selection.insertText(@style.before)
+    position = selection.cursor.getBufferPosition()
+    selection.insertText(@style.after)
+    selection.cursor.setBufferPosition(position)
 
   isStyleOn: (text) ->
     @getStylePattern().test(text) if text
