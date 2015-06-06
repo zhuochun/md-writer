@@ -34,6 +34,7 @@
   "ctrl-i":       "markdown-writer:toggle-italic-text"
   "ctrl-b":       "markdown-writer:toggle-bold-text"
   "ctrl-'":       "markdown-writer:toggle-code-text"
+  'ctrl-`':       "markdown-writer:toggle-codeblock-text"
   "ctrl-h":       "markdown-writer:toggle-strikethrough-text"
   "ctrl-1":       "markdown-writer:toggle-h1"
   "ctrl-2":       "markdown-writer:toggle-h2"
