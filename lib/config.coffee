@@ -9,7 +9,7 @@ class Configuration
     # static engine of your blog
     siteEngine: "general"
     # root directory of your blog
-    siteLocalDir: "/github/example.github.io/"
+    siteLocalDir: "/config/your/local/directory/in/settings"
     # directory to drafts from the root of siteLocalDir
     siteDraftsDir: "_drafts/"
     # directory to posts from the root of siteLocalDir
@@ -19,9 +19,9 @@ class Configuration
     # URL to your blog
     siteUrl: ""
     # URLs to tags/posts/categories JSON file
-    urlForTags: "http://example.github.io/assets/tags.json"
-    urlForPosts: "http://example.github.io/assets/posts.json"
-    urlForCategories: "http://example.github.io/assets/categories.json"
+    urlForTags: ""
+    urlForPosts: ""
+    urlForCategories: ""
     # filetypes markdown-writer commands apply
     grammars: [
       'source.gfm'
@@ -118,14 +118,20 @@ class Configuration
 
   # get project specific config from project's config file
   getProject: (key) ->
-    return unless atom.project && atom.project.getPaths().length > 0
+    return if !atom.project || atom.project.getPaths().length < 1
+
     project = atom.project.getPaths()[0]
-    @_loadProjectConfig(project) unless @constructor.projectConfigs[project]
-    return @_valueForKeyPath(@constructor.projectConfigs[project], key)
+    config = @_loadProjectConfig(project)
+
+    return @_valueForKeyPath(config, key)
 
   _loadProjectConfig: (project) ->
+    if @constructor.projectConfigs[project]
+      return @constructor.projectConfigs[project]
+
     file = @getUser("projectConfigFile") || @getDefault("projectConfigFile")
     filePath = path.join(project, file)
+
     config = CSON.readFileSync(filePath) if fs.existsSync(filePath)
     @constructor.projectConfigs[project] = config || {}
 

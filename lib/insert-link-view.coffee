@@ -202,7 +202,9 @@ class InsertLinkView extends View
       if exists then readFile(file) else setLinks()
 
   fetchPosts: ->
-    if posts then return (@searchBox.hide() unless posts.length > 0)
+    if posts
+      @searchBox.hide() if posts.length < 1
+      return
 
     uri = config.get("urlForPosts")
     succeed = (body) =>

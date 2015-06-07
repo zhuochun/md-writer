@@ -70,7 +70,7 @@ class ManagePostTagsView extends View
       @rankTags(@tags, @editor.getText())
       @displayTags(@tags)
     error = (err) =>
-      @error.text(err?.message || "Tags are not available.")
+      @error.text(err?.message || "Error fetching tags from '#{uri}'")
     utils.getJSON(uri, succeed, error)
 
   # rank tags based on the number of times they appear in content

@@ -3,22 +3,32 @@ CmdModule = {} # To cache required modules
 config = require "./config"
 basicConfig =
   siteEngine:
+    title: "Site Engine"
     type: "string"
     default: config.getDefault("siteEngine")
     enum: [config.getDefault("siteEngine"), config.engineNames()...]
   siteUrl:
+    title: "Site URL"
     type: "string"
     default: config.getDefault("siteUrl")
   siteLocalDir:
+    title: "Site Local Directory"
+    description: "The absolute path to your site's local directory"
     type: "string"
     default: config.getDefault("siteLocalDir")
   siteDraftsDir:
+    title: "Site Drafts Directory"
+    description: "The relative path from your site's local directory"
     type: "string"
     default: config.getDefault("siteDraftsDir")
   sitePostsDir:
+    title: "Site Posts Directory"
+    description: "The relative path from your site's local directory"
     type: "string"
     default: config.getDefault("sitePostsDir")
   siteImagesDir:
+    title: "Site Images Directory"
+    description: "The relative path from your site's local directory"
     type: "string"
     default: config.getDefault("siteImagesDir")
   urlForTags:
@@ -34,9 +44,11 @@ basicConfig =
     type: "string"
     default: config.getDefault("urlForCategories")
   newPostFileName:
+    title: "New Post File Name"
     type: "string"
     default: config.getCurrentDefault("newPostFileName")
   fileExtension:
+    title: "File Extension"
     type: "string"
     default: config.getCurrentDefault("fileExtension")
 

@@ -69,7 +69,7 @@ class ManagePostCategoriesView extends View
       @categories = body.categories
       @displayCategories(@categories)
     error = (err) =>
-      @error.text(err?.message || "Categories are not available")
+      @error.text(err?.message || "Error fetching categories from '#{uri}'")
     utils.getJSON(uri, succeed, error)
 
   displayCategories: (categories) ->

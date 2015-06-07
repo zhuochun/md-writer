@@ -4,6 +4,7 @@ path = require "path"
 yaml = require "js-yaml"
 
 getJSON = (uri, succeed, error) ->
+  return error() if uri.length == 0
   $.getJSON(uri).done(succeed).fail(error)
 
 DATE_REGEX = /// ^
