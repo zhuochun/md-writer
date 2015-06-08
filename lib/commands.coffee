@@ -67,15 +67,22 @@ class Commands
 
   indentListLine: ->
     editor = atom.workspace.getActiveTextEditor()
-    cursor = editor.getCursorBufferPosition()
-    line = editor.lineTextForBufferRow(cursor.row)
+    editor.getSelections().forEach (selection) =>
+      head = selection.getHeadBufferPosition()
+      tail = selection.getTailBufferPosition()
 
-    if @_isListLine(line)
-      editor.indentSelectedRows()
-    else if @_isAtLineBeginning(line, cursor.column)
-      editor.indent()
-    else
-      editor.insertText(" ") # convert tab to space
+      # we only handle cursor specially, means no selection range
+      if head.row == tail.row && head.column == tail.column
+        line = editor.lineTextForBufferRow(head.row)
+
+        if @_isListLine(line)
+          selection.indentSelectedRows()
+        else if @_isAtLineBeginning(line, head.column)
+          selection.indent()
+        else
+          selection.insertText(" ") # convert tab to space
+      else
+        selection.indentSelectedRows()
 
   _isListLine: (line) ->
     [LIST_TL_REGEX, LIST_UL_REGEX, LIST_OL_REGEX].some (rgx) -> rgx.exec(line)
