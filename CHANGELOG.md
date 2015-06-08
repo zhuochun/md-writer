@@ -1,3 +1,10 @@
+## 1.4.0
+
+* Fix cursor position after empty codeblock insertion
+* Fix `Tab` behaviour with range selections
+* Modified some default setting values
+* Updated cheatsheet
+
 ## 1.3.4
 
 * Fix deprecated API `lineLengthForBufferRow`
