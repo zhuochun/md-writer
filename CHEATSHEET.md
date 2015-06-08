@@ -4,7 +4,7 @@ Markdown Cheat Sheet for [Markdown-Writer](https://atom.io/packages/markdown-wri
 
 ## Headings
 
-**Key Mapping:** <kbd>Alt</kbd> + <kbd>1-5</kbd>
+**Key Mapping:** <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>1-5</kbd>
 
 ```
 # heading 1
@@ -32,6 +32,8 @@ Markdown Cheat Sheet for [Markdown-Writer](https://atom.io/packages/markdown-wri
 2. List 2
 ```
 
+Use command `Markdown Writer:Correct Order List Numbers` to fix any wrong order numbers.
+
 ### Unordered List
 
 **Key Mapping:** <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd>
@@ -47,9 +49,9 @@ Markdown Cheat Sheet for [Markdown-Writer](https://atom.io/packages/markdown-wri
 **Key Mapping:** <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>K</kbd>
 
 ```
-[inline-style link](https://www.google.com)
+inline-style [link](https://www.google.com) is inline.
 
-[reference-style link][id]
+reference-style [link][id] uses `id`.
 
   [id]: https://www.google.com
 ```
@@ -100,11 +102,13 @@ $(function() {
 **Command Palette <kbd>shift</kbd> + <kbd>cmd</kbd> + <kbd>P</kbd>:** `Markdown Writer: Insert Table`
 
 ```
-First Header | Second Header
------------- | -------------
-Content from cell 1 | Content from cell 2
+First Header                | Second Header
+----------------------------|-----------------------------
+Content from cell 1         | Content from cell 2
 Content in the first column | Content in the second column
 ```
+
+Use command `Markdown Writer:Format Table` to fix cell indentations.
 
 ## Horizontal Rule
 
