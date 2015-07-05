@@ -1,3 +1,7 @@
+## 1.5.1
+
+* Add missing command to Menu
+
 ## 1.5.0
 
 * Remove default keymaps, refer to [wiki](https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps).
