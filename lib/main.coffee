@@ -91,20 +91,17 @@ module.exports =
         @createCommand("./insert-#{media}-view")
 
     # helpers
-    ["insert-new-line",
-     "indent-list-line",
-     "correct-order-list-numbers",
-     "jump-to-previous-heading",
-     "jump-to-next-heading",
-     "jump-between-reference-definition",
-     "jump-to-next-table-cell",
+    ["insert-new-line", "indent-list-line", "correct-order-list-numbers",
+     "jump-to-previous-heading", "jump-to-next-heading",
+     "jump-between-reference-definition", "jump-to-next-table-cell",
      "format-table"].forEach (command) =>
       editorCommands["markdown-writer:#{command}"] =
         @createHelper("./commands", command)
 
-    # open help docs
-    workspaceCommands["markdown-writer:open-cheat-sheet"] =
-      @createHelper("./commands", "open-cheat-sheet", optOutGrammars: true)
+    # additional workspace helpers
+    ["open-cheat-sheet", "create-default-keymaps"].forEach (command) =>
+      workspaceCommands["markdown-writer:#{command}"] =
+        @createHelper("./commands", command, optOutGrammars: true)
 
     @wsCommands = atom.commands.add "atom-workspace", workspaceCommands
     @edCommands = atom.commands.add "atom-text-editor", editorCommands

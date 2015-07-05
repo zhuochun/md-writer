@@ -8,6 +8,14 @@ Works great with static blogging as well. Try it with [Jekyll](http://jekyllrb.c
 
 More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Reference Link](http://i.imgur.com/L67TqyF.gif), [Remove Reference Link](http://i.imgur.com/TglzeJV.gif).
 
+## Notice
+
+> From version `1.5.0`, the invasive key maps that come with package are removed.
+>
+> You can execute command `Markdown Writer: Create Default keymaps` to append the list of default keymaps to your keymap config file, then modify them based on your needs. Refer to [wiki][31ebd53f].
+
+  [31ebd53f]: https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps "Settings for Keymaps"
+
 ## Features
 
 ### Blogging

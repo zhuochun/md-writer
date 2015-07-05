@@ -15,12 +15,16 @@
   "repository": "https://github.com/zhuochun/md-writer",
   "bugs": "https://github.com/zhuochun/md-writer/issues",
   "license": "MIT",
+  "keymaps": [
+    "keymap.cson"
+  ],
   "activationCommands": {
     "atom-workspace": [
       "markdown-writer:new-post",
       "markdown-writer:new-draft",
       "markdown-writer:publish-draft",
-      "markdown-writer:open-cheat-sheet"
+      "markdown-writer:open-cheat-sheet",
+      "markdown-writer:create-default-keymaps"
     ],
     "atom-text-editor": [
       "markdown-writer:insert-link",
