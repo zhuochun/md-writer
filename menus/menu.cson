@@ -138,13 +138,23 @@
             }
             { 'type': 'separator' }
             {
-              'label': 'Format Table'
-              'command': 'markdown-writer:format-table'
+              'label': 'Jump to Next Table Cell'
+              'command': 'markdown-writer:jump-to-next-table-cell'
             }
             { 'type': 'separator' }
             {
-              'label': 'Jump to Next Table Cell'
-              'command': 'markdown-writer:jump-to-next-table-cell'
+              'label': 'Format Table'
+              'command': 'markdown-writer:format-table'
+            }
+          ]
+        }
+        { 'type': 'separator' }
+        {
+          'label': 'Configurations'
+          'submenu': [
+            {
+              'label': 'Create Default Keymaps'
+              'command': 'markdown-writer:create-default-keymaps'
             }
           ]
         }
