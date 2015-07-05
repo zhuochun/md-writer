@@ -6,7 +6,7 @@
 ## 1.4.0
 
 * Fix cursor position after empty codeblock insertion
-* Fix `Tab` behaviour with range selections
+* Fix `Tab` behavior with range selections
 * Modified some default setting values
 * Updated cheatsheet
 
@@ -64,7 +64,7 @@
 
 ## 0.10.2
 
-* Fix package's atom engine SemVer
+* Fix package's atom engine version
 * Fix tag RegExp escape
 
 ## 0.10.1

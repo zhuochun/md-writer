@@ -86,12 +86,15 @@ To **manage tags/categories in front matter**, please [follow this setup](https:
 
 ## Project
 
-- View [CHANGELOG][e45121fa] :notebook_with_decorative_cover:.
-- Bugs, suggestions & feature requests, [open an issue][e6ad7ed1] :octocat:.
-- License in [MIT][6a9a3773] :unlock:.
-- Authored by [Zhuochun][41ae693b] :sunny:.
+- View [CHANGELOG][e45121fa] :notebook_with_decorative_cover:
+- Bugs, suggestions & feature requests, [open an issue][e6ad7ed1] :octocat:
+- Contributes to project, [view guide][ed53c4bd] :sparkles:
+- License in [MIT][6a9a3773] :unlock:
+- Shipped by [Zhuochun][41ae693b] :sunny: and [contributes][f303810e] :clap:
 
 [e45121fa]: https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md
 [e6ad7ed1]: https://github.com/zhuochun/md-writer/issues
 [6a9a3773]: https://github.com/zhuochun/md-writer/blob/master/LICENSE.md
 [41ae693b]: https://github.com/zhuochun
+[ed53c4bd]: https://github.com/zhuochun/md-writer/wiki/Contribute
+[f303810e]: https://github.com/zhuochun/md-writer/graphs/contributors

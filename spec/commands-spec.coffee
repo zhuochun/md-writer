@@ -12,7 +12,6 @@ describe "commands", ->
 
     expect(cmds._correctOrderNumbers(fixture)).toEqual(expected)
 
-
   it "find the first column in table row", ->
     fixture = "hd 1 | hd 2 | hd 3"
     expect(cmds._findNextTableCellIdx(fixture,  0)).toEqual(4)
