@@ -10,9 +10,9 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 
 ## Notice
 
-> From version `1.5.0`, the invasive key maps that come with package are removed.
+> From version `1.5.0`, all default key maps that come with package are removed.
 >
-> You can execute command `Markdown Writer: Create Default keymaps` to append the list of default keymaps to your keymap config file, then modify them based on your needs. Refer to [wiki][31ebd53f].
+> You can execute command `Markdown Writer: Create Default keymaps` to append the original list of keymaps to your keymap config file, then modify them based on your needs. Refer to [wiki][31ebd53f].
 
   [31ebd53f]: https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps "Settings for Keymaps"
 
@@ -34,7 +34,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
   - Insert reference link with title. _Use `-` in title field to create an empty title reference link._
   - Remove link (and its reference) after URL is deleted.
   - Search published posts by title in your blog.
-- **Insert image** (`shift-cmd-i`), auto-detect images' heights and widths, and optionally copy images to your site's images directory.
+- **Insert image** (`shift-cmd-i`), auto-detect image height/width, and optionally copy images to your site's images directory.
 - **Insert table** (`markdown-writer:insert-table`), and a shortcut to **jump to next table cell** (`cmd-j cmd-t`).
 - **Format table** (`markdown-writer:format-table`).
 - **Toggle headings**: `ctrl-alt-[1-5]` to switch among `H1` to `H5`.
@@ -42,7 +42,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
   - `code` (`cmd-'`)
   - **bold** (`cmd-b`)
   - _italic_ (`cmd-i`)
-  - ~~strikethrough~~ (`cmd-h`)
+  - ~~strike through~~ (`cmd-h`)
   - `'''code block'''` (`shift-cmd-"`)
   - `<kbd>key</kbd>` (`cmd + k`)
   - `- unordered list` (`shift-cmd-U`)
@@ -77,10 +77,10 @@ Go to Settings (`cmd-,`) -> Packages -> `markdown-writer` -> Settings.
 
 > If you do not see any settings (due to a [Atom's bug][3ecd2daa]), please activate Markdown-Writer using command (e.g. `Open Cheat Sheet`). Close and reopen the Settings page.
 
-[View setting explanations][7ddaeaf4] if you have any doubts.
+[View settings explanation][7ddaeaf4] if you have any doubts.
 
-[3ecd2daa]: https://github.com/atom/settings-view/issues/356 "Viewing a package's settings should activate it"
-[7ddaeaf4]: https://github.com/zhuochun/md-writer/wiki/Settings "Settings"
+  [3ecd2daa]: https://github.com/atom/settings-view/issues/356 "Viewing a package's settings should activate it"
+  [7ddaeaf4]: https://github.com/zhuochun/md-writer/wiki/Settings "Settings"
 
 To **manage tags/categories in front matter**, please [follow this setup](https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters).
 
@@ -88,13 +88,13 @@ To **manage tags/categories in front matter**, please [follow this setup](https:
 
 - View [CHANGELOG][e45121fa] :notebook_with_decorative_cover:
 - Bugs, suggestions & feature requests, [open an issue][e6ad7ed1] :octocat:
-- Contributes to project, [view guide][ed53c4bd] :sparkles:
+- Contribute to project, [view guide][ed53c4bd] :sparkles:
 - License in [MIT][6a9a3773] :unlock:
-- Shipped by [Zhuochun][41ae693b] :sunny: and [contributes][f303810e] :clap:
+- Shipped by [Zhuochun][41ae693b] :sunny: and [contributors][f303810e] :clap:
 
-[e45121fa]: https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md
-[e6ad7ed1]: https://github.com/zhuochun/md-writer/issues
-[6a9a3773]: https://github.com/zhuochun/md-writer/blob/master/LICENSE.md
-[41ae693b]: https://github.com/zhuochun
-[ed53c4bd]: https://github.com/zhuochun/md-writer/wiki/Contribute
-[f303810e]: https://github.com/zhuochun/md-writer/graphs/contributors
+  [e45121fa]: https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md
+  [e6ad7ed1]: https://github.com/zhuochun/md-writer/issues
+  [6a9a3773]: https://github.com/zhuochun/md-writer/blob/master/LICENSE.md
+  [41ae693b]: https://github.com/zhuochun
+  [ed53c4bd]: https://github.com/zhuochun/md-writer/wiki/Contribute
+  [f303810e]: https://github.com/zhuochun/md-writer/graphs/contributors
