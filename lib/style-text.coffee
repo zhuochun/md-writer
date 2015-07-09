@@ -6,8 +6,18 @@ class StyleText
   editor: null
   style: null
 
+  # @style config could contains:
+  #
+  # - before (required)
+  # - after (required)
+  # - regexBefore (optional) overwrites before when to match/replace string
+  # - regexAfter (optional) overwrites after when to match/replace string
+  #
   constructor: (style) ->
     @style = config.get("textStyles.#{style}")
+    # make sure before/after exist
+    @style.before ?= ""
+    @style.after ?= ""
 
   display: ->
     @editor = atom.workspace.getActiveTextEditor()
