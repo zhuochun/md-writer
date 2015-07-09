@@ -33,7 +33,7 @@ class Configuration
     fileExtension: ".markdown"
     # whether rename filename based on title in front matter when publishing
     publishRenameBasedOnTitle: false
-    # whether publish keep draft's extensio name used
+    # whether publish keep draft's extension name used
     publishKeepFileExtname: false
     # filename format of new posts/drafts created
     newPostFileName: "{year}-{month}-{day}-{title}{extension}"
@@ -45,14 +45,6 @@ class Configuration
       date: "<date>"
       ---
       """
-    # image tag template
-    imageTag: "![<alt>](<src>)"
-    # fenced code block used
-    codeblock:
-      before: "```\n"
-      after: "\n```"
-      regexBefore: "```(?:[\\w- ]+)?\\n"
-      regexAfter: "\\n```"
     # path to a .cson file that stores links added for automatic linking
     siteLinkPath: path.join(atom.getConfigDirPath(), "#{@prefix}-links.cson")
     # reference tag insert position (paragraph or article)
@@ -61,6 +53,32 @@ class Configuration
     referenceIndentLength: 2
     # project specific configuration file name
     projectConfigFile: "_mdwriter.cson"
+    # text styles related
+    textStyles:
+      code: before: "`", after: "`"
+      bold: before: "**", after: "**"
+      italic: before: "_", after: "_"
+      keystroke: before: "<kbd>", after: "</kbd>"
+      strikethrough: before: "~~", after: "~~"
+      codeblock:
+        before: "```\n"
+        after: "\n```"
+        regexBefore: "```(?:[\\w- ]+)?\\n"
+        regexAfter: "\\n```"
+    # line styles related
+    lineStyles:
+      h1: before: "# ", after: ""
+      h2: before: "## ", after: ""
+      h3: before: "### ", after: ""
+      h4: before: "#### ", after: ""
+      h5: before: "##### ", after: ""
+      ul: before: "- ", after: "", prefix: "-|\\*|\\d+\\."
+      ol: before: "0. ", after: "", prefix: "-|\\*|\\d+\\."
+      task: before: "- [ ] ", after: "", prefix: "- \\[ ]|- \\[x]|- \\[X]|-|\\*"
+      taskdone: before: "- [x] ", after: "", prefix: "- \\[ ]|- \\[x]|- \\[X]|-|\\*"
+      blockquote: before: "> ", after: ""
+    # image tag template
+    imageTag: "![<alt>](<src>)"
 
   @engines:
     html:
@@ -70,11 +88,12 @@ class Configuration
         </a>
         """
     jekyll:
-      codeblock:
-        before: "{% highlight %}\n"
-        after: "\n{% endhighlight %}"
-        regexBefore: "{% highlight(?: .+)? %}\n"
-        regexAfter: "\n{% endhighlight %}"
+      textStyles:
+        codeblock:
+          before: "{% highlight %}\n"
+          after: "\n{% endhighlight %}"
+          regexBefore: "{% highlight(?: .+)? %}\n"
+          regexAfter: "\n{% endhighlight %}"
     octopress:
       imageTag: "{% img {align} {src} {width} {height} '{alt}' %}"
     hexo:

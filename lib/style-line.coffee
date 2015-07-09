@@ -1,16 +1,5 @@
+config = require "./config"
 utils = require "./utils"
-
-styles =
-  h1: before: "# ", after: ""
-  h2: before: "## ", after: ""
-  h3: before: "### ", after: ""
-  h4: before: "#### ", after: ""
-  h5: before: "##### ", after: ""
-  ul: before: "- ", after: "", prefix: "-|\\*|\\d+\\."
-  ol: before: "0. ", after: "", prefix: "-|\\*|\\d+\\."
-  task: before: "- [ ] ", after: "", prefix: "- \\[ ]|- \\[x]|- \\[X]|-|\\*"
-  taskdone: before: "- [x] ", after: "", prefix: "- \\[ ]|- \\[x]|- \\[X]|-|\\*"
-  blockquote: before: "> ", after: ""
 
 module.exports =
 class StyleLine
@@ -18,7 +7,7 @@ class StyleLine
   style: null
 
   constructor: (style) ->
-    @style = styles[style]
+    @style = config.get("lineStyles.#{style}")
 
   display: ->
     @editor = atom.workspace.getActiveTextEditor()
