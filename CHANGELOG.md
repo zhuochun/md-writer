@@ -1,11 +1,19 @@
+## 1.6.0
+
+* Support customization on styles, refer to [wiki][2b17f5ff]
+
+  [2b17f5ff]: https://github.com/zhuochun/md-writer/wiki/Settings-for-individual-projects "Settings for individual projects"
+
 ## 1.5.1
 
 * Add missing command to Menu
 
 ## 1.5.0
 
-* Remove default keymaps, refer to [wiki](https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps).
+* Remove default keymaps, refer to [wiki][72346d33].
 * Add command `markdown-writer:create-default-keymaps`
+
+  [72346d33]: https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps "Settings for Keymaps"
 
 ## 1.4.0
 
