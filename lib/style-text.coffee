@@ -1,23 +1,23 @@
 config = require "./config"
 utils = require "./utils"
 
-# supported styles
-styles =
-  code: before: "`", after: "`"
-  bold: before: "**", after: "**"
-  italic: before: "_", after: "_"
-  keystroke: before: "<kbd>", after: "</kbd>"
-  strikethrough: before: "~~", after: "~~"
-  codeblock: -> config.get("codeblock")
-
 module.exports =
 class StyleText
   editor: null
   style: null
 
+  # @style config could contains:
+  #
+  # - before (required)
+  # - after (required)
+  # - regexBefore (optional) overwrites before when to match/replace string
+  # - regexAfter (optional) overwrites after when to match/replace string
+  #
   constructor: (style) ->
-    @style = styles[style]
-    @style = @style() if typeof styles[style] == "function"
+    @style = config.get("textStyles.#{style}")
+    # make sure before/after exist
+    @style.before ?= ""
+    @style.after ?= ""
 
   display: ->
     @editor = atom.workspace.getActiveTextEditor()
