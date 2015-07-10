@@ -73,11 +73,11 @@ You can find and trigger all features in:
 
 ## Setup
 
-Go to Settings (`cmd-,`) -> Packages -> `markdown-writer` -> Settings.
+Go to Settings (`cmd-,`) -> Packages -> `Markdown-Writer` -> Settings.
 
 > If you do not see any settings (due to a [Atom's bug][3ecd2daa]), please activate Markdown-Writer using command (e.g. `Open Cheat Sheet`). Close and reopen the Settings page.
 
-[View settings explanation][7ddaeaf4] if you have any doubts.
+There are more configurations available for power users, view [this wiki document][7ddaeaf4].
 
   [3ecd2daa]: https://github.com/atom/settings-view/issues/356 "Viewing a package's settings should activate it"
   [7ddaeaf4]: https://github.com/zhuochun/md-writer/wiki/Settings "Settings"
