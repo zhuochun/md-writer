@@ -1,6 +1,9 @@
 
 # Default Keymaps for Markdown Writer
 # https://atom.io/packages/markdown-writer
+#
+# Wiki: https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps
+#
 ".platform-win32 atom-text-editor[data-grammar~='gfm']":
   "shift-ctrl-K": "markdown-writer:insert-link"
   "shift-ctrl-I": "markdown-writer:insert-image"
