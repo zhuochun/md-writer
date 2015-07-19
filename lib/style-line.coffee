@@ -12,8 +12,8 @@ class StyleLine
   # - after (required)
   # - regexBefore (optional) overwrites before when to match/replace string
   # - regexAfter (optional) overwrites after when to match/replace string
-  # - regexMatchBefore (optional) used to detect a string match the style pattern
-  # - regexMatchAfter (optional) used to detect a string match the style pattern
+  # - regexMatchBefore (optional) to detect a string match the style pattern
+  # - regexMatchAfter (optional) to detect a string match the style pattern
   #
   constructor: (style) ->
     @style = config.get("lineStyles.#{style}")
@@ -23,8 +23,10 @@ class StyleLine
     # use regexBefore, regexAfter if not specified
     @style.regexMatchBefore ?= @style.regexBefore || @style.before
     @style.regexMatchAfter ?= @style.regexAfter || @style.after
-    # construct regexBefore for headings etc that only need to take the first char
-    @style.regexBefore ?= "(?:#{@style.before[0]})+\\s" if @style.before
+    # set regexBefore for headings that only need to check the 1st char
+    @style.regexBefore ?= "#{@style.before[0]}+\\s" if @style.before
+    @style.regexAfter ?=
+      "\\s#{@style.after[@style.after.length - 1]}*" if @style.after
 
   display: ->
     @editor = atom.workspace.getActiveTextEditor()
@@ -59,12 +61,16 @@ class StyleLine
 
   # use regexMatchBefore/regexMatchAfter to match the string
   isStyleOn: (text) ->
-    /// ^ (\s*) #{@style.regexMatchBefore} (.*?) #{@style.regexMatchAfter} $ ///i.test(text)
+    /// ^(\s*)                   # start with any spaces
+    #{@style.regexMatchBefore}   # style start
+      (.*?)                      # any text
+    #{@style.regexMatchAfter}    # style end
+    (\s*)$ ///i.test(text)
 
   addStyle: (text) ->
     match = @getStylePattern().exec(text)
     if match
-      "#{match[1]}#{@style.before}#{match[2]}#{@style.after}"
+      "#{match[1]}#{@style.before}#{match[2]}#{@style.after}#{match[3]}"
     else
       "#{@style.before}#{@style.after}"
 
@@ -75,4 +81,5 @@ class StyleLine
   getStylePattern: ->
     before = @style.regexBefore || utils.regexpEscape(@style.before)
     after = @style.regexAfter || utils.regexpEscape(@style.after)
-    return /// ^ (\s*) (?:#{before})? (.*?) (?:#{after})? $ ///i
+
+    /// ^(\s*) (?:#{before})? (.*?) (?:#{after})? (\s*)$ ///i

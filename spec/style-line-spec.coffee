@@ -25,6 +25,12 @@ describe "StyleLine", ->
     fixture = "a unordered list"
     expect(view.isStyleOn(fixture)).toBe(false)
 
+  it "applies heading 1 styles", ->
+    atom.config.set("markdown-writer.lineStyles.h1", before: "# ", after: " #")
+    view = new LineStyleView("h1")
+    fixture = "## heading 1 ##"
+    expect(view.addStyle(fixture)).toBe("# heading 1 #")
+
   it "applies heading 2 styles", ->
     view = new LineStyleView("h2")
     fixture = "# heading 2"
@@ -34,6 +40,12 @@ describe "StyleLine", ->
     view = new LineStyleView("blockquote")
     fixture = "blockquote"
     expect(view.addStyle(fixture)).toBe("> blockquote")
+
+  it "applies heading 1 styles", ->
+    atom.config.set("markdown-writer.lineStyles.h1", before: "# ", after: " #")
+    view = new LineStyleView("h1")
+    fixture = "# heading 1 #"
+    expect(view.removeStyle(fixture)).toBe("heading 1")
 
   it "remove heading 3 styles", ->
     view = new LineStyleView("h3")
