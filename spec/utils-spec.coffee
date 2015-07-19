@@ -16,13 +16,13 @@ describe "utils", ->
     expect(utils.parseImage(fixture)).toEqual
       alt: "text", src: "url", title: ""
 
-  it "check is valid raw image", ->
+  it "check is valid html image tag", ->
     fixture = """
 <img alt="alt" src="src.png" class="aligncenter" height="304" width="520">
 """
     expect(utils.isImageTag(fixture)).toBe(true)
 
-  it "check parse valid raw image", ->
+  it "check parse valid html image tag", ->
     fixture = """
   <img alt="alt" src="src.png" class="aligncenter" height="304" width="520">
   """
@@ -30,7 +30,7 @@ describe "utils", ->
       alt: "alt", src: "src.png",
       class: "aligncenter", height: "304", width: "520"
 
-  it "check parse valid raw image 2", ->
+  it "check parse valid html image tag with title", ->
     fixture = """
   <img title="" src="src.png" class="aligncenter" height="304" width="520" />
   """
@@ -81,25 +81,28 @@ describe "utils", ->
     fixture = "[text]: http"
     expect(utils.isReferenceDefinition(fixture)).toBe(true)
 
-  it "parse valid reference link text", ->
+  it "parse valid reference link text without id", ->
     content = """
-Transform your plain [text][]
-into static websites and blogs.
+Transform your plain [text][] into static websites and blogs.
+
 [text]: http://www.jekyll.com
+
+Markdown (or Textile), Liquid, HTML & CSS go in.
 """
-    contentWithTitle = """
-Transform your plain [text][id]
-into static websites and blogs.
+    fixture = "[text][]"
+    expect(utils.parseReferenceLink(fixture, content)).toEqual
+      id: "text", text: "text", url: "http://www.jekyll.com", title: ""
+
+  it "parse valid reference link text with id", ->
+    content = """
+Transform your plain [text][id] into static websites and blogs.
 
 [id]: http://jekyll.com "Jekyll Website"
 
 Markdown (or Textile), Liquid, HTML & CSS go in.
     """
-    fixture = "[text][]"
-    expect(utils.parseReferenceLink(fixture, content)).toEqual
-      id: "text", text: "text", url: "http://www.jekyll.com", title: ""
     fixture = "[text][id]"
-    expect(utils.parseReferenceLink(fixture, contentWithTitle)).toEqual
+    expect(utils.parseReferenceLink(fixture, content)).toEqual
       id: "id", text: "text", url: "http://jekyll.com", title: "Jekyll Website"
 
   it "test not has front matter", ->
