@@ -1,3 +1,9 @@
+## 1.7.0
+
+* Improve text selection for link/image/text styles
+* Support edit link from reference link definition
+* Improve search reference link/definition logic
+
 ## 1.6.0
 
 * Support customization on styles, refer to [wiki][2b17f5ff]
