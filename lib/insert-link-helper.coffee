@@ -10,7 +10,7 @@ insertAtEndOfArticle = (editor, text) ->
 
   row = _findFirstNonEmptyRowBackwards(editor, editor.getLastBufferRow())
   point = [row, editor.lineTextForBufferRow(row).length]
-  if _isReferenceLink(editor, row)
+  if _isReferenceDefinition(editor, row)
     editor.setTextInBufferRange [point, point], "\n#{text}"
   else
     editor.setTextInBufferRange [point, point], "\n\n#{text}"
@@ -28,7 +28,7 @@ insertAfterCurrentParagraph = (editor, text) ->
 
   row = _findFirstEmptyRow(editor, position.row + 1)
   point = [row, editor.lineTextForBufferRow(row).length]
-  if _isReferenceLink(editor, row)
+  if _isReferenceDefinition(editor, row)
     editor.setTextInBufferRange [point, point], "\n#{text}"
   else if point[1] > 0
     editor.setTextInBufferRange [point, point], "\n\n#{text}"
@@ -43,10 +43,10 @@ _findFirstEmptyRow = (editor, row) ->
   row++ while row <= lastRow && editor.lineTextForBufferRow(row).length != 0
   return lastRow if row > lastRow
   # skip reference links
-  row++ while row < lastRow && _isReferenceLink(editor, row + 1)
+  row++ while row < lastRow && _isReferenceDefinition(editor, row + 1)
   return row
 
-_isReferenceLink = (editor, row) ->
+_isReferenceDefinition = (editor, row) ->
   line = editor.lineTextForBufferRow(row)
   return utils.isReferenceDefinition(line)
 

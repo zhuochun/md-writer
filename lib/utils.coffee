@@ -183,35 +183,51 @@ parseInlineLink = (input) ->
 REFERENCE_LINK_REGEX_OF = (id, opts = {}) ->
   id = regexpEscape(id) unless opts.noEscape
   ///
-  \[(#{id})\]\s?           # [text]
-  \[(.*)\]                 # [id] or []
+  \[(#{id})\]\s?\[\]            # [text][]
+  |                             # or
+  \[(.+?)\]\s?\[(#{id})\]       # [text][id]
   ///
 
+# REFERENCE_LINK_REGEX.exec("[text][id]")
+# => ["[text][id]", undefined, "text", "id"]
+#
+# REFERENCE_LINK_REGEX.exec("[text][]")
+# => ["[text][]", "text", undefined, undefined]
 REFERENCE_LINK_REGEX = REFERENCE_LINK_REGEX_OF(".+?", noEscape: true)
 
 REFERENCE_DEF_REGEX_OF = (id, opts = {}) ->
   id = regexpEscape(id) unless opts.noEscape
-  ///
-  ^ \ *                    # start of line with any spaces
-  \[(#{id})\]:\ +          # [id]: followed by spaces
-  ([^\s]*?)                # link
-  (?:\ +"?(.+?)"?)?        # any "link title"
+  /// ^\ *                      # start of line with any spaces
+  \[(#{id})\]:\ +               # [id]: followed by spaces
+  ([^\s]*?)                     # link
+  (?:\ +['"\(]?(.+?)['"\)]?)?   # any "link title"
   $ ///m
 
 REFERENCE_DEF_REGEX = REFERENCE_DEF_REGEX_OF(".+?", noEscape: true)
 
 isReferenceLink = (input) -> REFERENCE_LINK_REGEX.test(input)
 parseReferenceLink = (input, content) ->
-  refn = REFERENCE_LINK_REGEX.exec(input)
-  id = refn[2] || refn[1]
-  link = REFERENCE_DEF_REGEX_OF(id).exec(content)
+  link = REFERENCE_LINK_REGEX.exec(input)
+  text = link[2] || link[1]
+  id   = link[3] || link[1]
+  def  = REFERENCE_DEF_REGEX_OF(id).exec(content)
 
-  if link && link.length >= 3
-    id: id, text: refn[1], url: link[2], title: link[3] || ""
+  if def && def.length >= 3
+    id: id, text: text, url: def[2], title: def[3] || ""
   else
-    throw new Error("Cannot find reference tag for specified link")
+    id: id, text: text, url: "", title: ""
 
 isReferenceDefinition = (input) -> REFERENCE_DEF_REGEX.test(input)
+parseReferenceDefinition = (input, content) ->
+  def  = REFERENCE_DEF_REGEX.exec(input)
+  id   = def[1]
+  link = REFERENCE_LINK_REGEX_OF(id).exec(content)
+  text = link[2] || link[1]
+
+  if link && link.length >= 2
+    id: id, text: text, url: def[2], title: def[3] || ""
+  else
+    id: id, text: "", url: def[2], title: def[3] || ""
 
 # ==================================================
 # Table
@@ -320,6 +336,7 @@ module.exports =
   isReferenceLink: isReferenceLink
   parseReferenceLink: parseReferenceLink
   isReferenceDefinition: isReferenceDefinition
+  parseReferenceDefinition: parseReferenceDefinition
 
   isUrl: isUrl
   isTableSeparator: isTableSeparator
