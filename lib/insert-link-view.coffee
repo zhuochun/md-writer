@@ -10,8 +10,9 @@ posts = null # to cache posts
 module.exports =
 class InsertLinkView extends View
   editor: null
-  range: null
   links: null
+  range: null # link range/reference link range
+  definitionRange: null # reference definition range
   referenceId: false
   previouslyFocusedElement: null
 
@@ -62,7 +63,8 @@ class InsertLinkView extends View
     @panel.show()
     @fetchPosts()
     @loadSavedLinks =>
-      @setFieldsFromSelection()
+      @normalizeSelectionAndSetLinkFields()
+
       if @textEditor.getText()
         @urlEditor.getModel().selectAll()
         @urlEditor.focus()
@@ -75,27 +77,42 @@ class InsertLinkView extends View
     @previouslyFocusedElement?.focus()
     super
 
-  setFieldsFromSelection: ->
+  normalizeSelectionAndSetLinkFields: ->
     @range = utils.getTextBufferRange(@editor, "link")
-    selection = @editor.getTextInRange(@range)
-    @_setFieldsFromSelection(selection) if selection
+    link = @_findLinkInRange()
 
-  _setFieldsFromSelection: (selection) ->
+    @referenceId = link.id
+    @range = link.linkRange || @range
+    @definitionRange = link.definitionRange
+
+    @setLink(link.text, link.url, link.title)
+    @saveCheckbox.prop("checked", true) if @isInSavedLink(link)
+
+  _findLinkInRange: ->
+    selection = @editor.getTextInRange(@range)
+
     if utils.isInlineLink(selection)
-      link = utils.parseInlineLink(selection)
-      @setLink(link.text, link.url, link.title)
-      @saveCheckbox.prop("checked", true) if @isInSavedLink(link)
-    else if utils.isReferenceLink(selection)
-      link = utils.parseReferenceLink(selection, @editor.getText())
-      @referenceId = link.id
-      @setLink(link.text, link.url, link.title)
-      @saveCheckbox.prop("checked", true) if @isInSavedLink(link)
-    else if @getSavedLink(selection)
-      link = @getSavedLink(selection)
-      @setLink(selection, link.url, link.title)
-      @saveCheckbox.prop("checked", true)
-    else
-      @setLink(selection, "", "")
+      return utils.parseInlineLink(selection)
+
+    if utils.isReferenceLink(selection)
+      return utils.parseReferenceLink(selection, @editor)
+
+    if utils.isReferenceDefinition(selection)
+      # HACK correct the definition range, Atom's link scope does not include
+      # definition's title, so normalize to be the range start row
+      selection = @editor.lineTextForBufferRow(@range.start.row)
+      @range = @editor.bufferRangeForBufferRow(@range.start.row)
+
+      link = utils.parseReferenceDefinition(selection, @editor)
+      link.definitionRange = @range
+      # if link.linkRange is null, this definition is an orphan,
+      # just ignore this definition link match
+      return link if link.linkRange
+
+    if @getSavedLink(selection)
+      return @getSavedLink(selection)
+
+    text: selection, url: "", title: ""
 
   updateSearch: (query) ->
     return unless query and posts
@@ -112,7 +129,7 @@ class InsertLinkView extends View
     @titleEditor.focus()
 
   insertLink: (text, title, url) ->
-    if @referenceId
+    if @definitionRange
       @updateReferenceLink(text, title, url)
     else if title
       @insertReferenceLink(text, title, url)
@@ -121,35 +138,36 @@ class InsertLinkView extends View
 
   updateReferenceLink: (text, title, url) ->
     if title # update the reference link
-      position = @editor.getCursorBufferPosition()
-      referenceTagRegex = ///
-        ^\ *\[#{utils.regexpEscape(@referenceId)}\]:\ +([\S\ ]+)$
-      ///
-      @editor.buffer.scan referenceTagRegex, (match) =>
-        @editor.setTextInBufferRange match.range, @_referenceLink(url, title)
-      @editor.setCursorBufferPosition(position)
+      link = "[#{text}][#{@referenceId}]"
+      @editor.setTextInBufferRange(@range, link)
+
+      definition = @_referenceDefinition(url, title)
+      @editor.setTextInBufferRange(@definitionRange, definition)
     else # change to inline link
       @removeReferenceLink("[#{text}](#{url})")
 
   insertReferenceLink: (text, title, url) ->
     @referenceId = require("guid").raw()[0..7] # create an unique id
 
-    referenceText = "[#{text}][#{@referenceId}]"
-    @editor.setTextInBufferRange(@range, referenceText)
+    link = "[#{text}][#{@referenceId}]"
+    @editor.setTextInBufferRange(@range, link)
 
-    referenceLink = @_referenceLink(url, title)
+    definition = @_referenceDefinition(url, title)
     if config.get("referenceInsertPosition") == "article"
-      helper.insertAtEndOfArticle(@editor, referenceLink)
+      helper.insertAtEndOfArticle(@editor, definition)
     else
-      helper.insertAfterCurrentParagraph(@editor, referenceLink)
+      helper.insertAfterCurrentParagraph(@editor, definition)
 
   _referenceIndentLength: ->
     " ".repeat(config.get("referenceIndentLength"))
+
   _formattedReferenceTitle: (title) ->
     if /^[-\*\!]$/.test(title) then "" else " \"#{title}\""
-  _referenceLink: (url, title) ->
+
+  _referenceDefinition: (url, title) ->
     indent = @_referenceIndentLength()
     title = @_formattedReferenceTitle(title)
+
     "#{indent}[#{@referenceId}]: #{url}#{title}"
 
   removeLink: (text) ->
@@ -160,15 +178,9 @@ class InsertLinkView extends View
 
   removeReferenceLink: (text) ->
     @editor.setTextInBufferRange(@range, text)
+
     position = @editor.getCursorBufferPosition()
-    referenceTagRegex = ///^\ *\[#{utils.regexpEscape(@referenceId)}\]:\ +///
-    @editor.buffer.scan referenceTagRegex, (match) =>
-      lineNum = match.range.getRows()[0]
-      emptyLineAbove = @editor.lineTextForBufferRow(lineNum - 1).trim() == ""
-      emptyLineBelow = @editor.lineTextForBufferRow(lineNum + 1).trim() == ""
-      @editor.setSelectedBufferRange(match.range)
-      @editor.deleteLine()
-      @editor.deleteLine() if emptyLineAbove and emptyLineBelow
+    helper.removeDefinitionRange(@editor, @definitionRange)
     @editor.setCursorBufferPosition(position)
 
   setLink: (text, url, title) ->

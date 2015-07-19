@@ -183,9 +183,9 @@ parseInlineLink = (input) ->
 REFERENCE_LINK_REGEX_OF = (id, opts = {}) ->
   id = regexpEscape(id) unless opts.noEscape
   ///
-  \[(#{id})\]\s?\[\]            # [text][]
+  \[(#{id})\]\ ?\[\]            # [text][]
   |                             # or
-  \[(.+?)\]\s?\[(#{id})\]       # [text][id]
+  \[([^\[\]]+?)\]\ ?\[(#{id})\] # [text][id]
   ///
 
 # REFERENCE_LINK_REGEX.exec("[text][id]")
@@ -199,35 +199,38 @@ REFERENCE_DEF_REGEX_OF = (id, opts = {}) ->
   id = regexpEscape(id) unless opts.noEscape
   /// ^\ *                      # start of line with any spaces
   \[(#{id})\]:\ +               # [id]: followed by spaces
-  ([^\s]*?)                     # link
+  (\S*?)                        # link
   (?:\ +['"\(]?(.+?)['"\)]?)?   # any "link title"
   $ ///m
 
 REFERENCE_DEF_REGEX = REFERENCE_DEF_REGEX_OF(".+?", noEscape: true)
 
 isReferenceLink = (input) -> REFERENCE_LINK_REGEX.test(input)
-parseReferenceLink = (input, content) ->
+parseReferenceLink = (input, editor) ->
   link = REFERENCE_LINK_REGEX.exec(input)
   text = link[2] || link[1]
   id   = link[3] || link[1]
-  def  = REFERENCE_DEF_REGEX_OF(id).exec(content)
+  def  = undefined
+  editor.buffer.scan REFERENCE_DEF_REGEX_OF(id), (match) -> def = match
 
-  if def && def.length >= 3
-    id: id, text: text, url: def[2], title: def[3] || ""
+  if def
+    id: id, text: text, url: def.match[2], title: def.match[3] || "",
+    definitionRange: def.computedRange
   else
-    id: id, text: text, url: "", title: ""
+    id: id, text: text, url: "", title: "", definitionRange: null
 
 isReferenceDefinition = (input) -> REFERENCE_DEF_REGEX.test(input)
-parseReferenceDefinition = (input, content) ->
+parseReferenceDefinition = (input, editor) ->
   def  = REFERENCE_DEF_REGEX.exec(input)
   id   = def[1]
-  link = REFERENCE_LINK_REGEX_OF(id).exec(content)
-  text = link[2] || link[1]
+  link = undefined
+  editor.buffer.scan REFERENCE_LINK_REGEX_OF(id), (match) -> link = match
 
-  if link && link.length >= 2
-    id: id, text: text, url: def[2], title: def[3] || ""
+  if link
+    id: id, text: link.match[2] || link.match[1], url: def[2],
+    title: def[3] || "", linkRange: link.computedRange
   else
-    id: id, text: "", url: def[2], title: def[3] || ""
+    id: id, text: "", url: def[2], title: def[3] || "", linkRange: null
 
 # ==================================================
 # Table

@@ -50,6 +50,19 @@ _isReferenceDefinition = (editor, row) ->
   line = editor.lineTextForBufferRow(row)
   return utils.isReferenceDefinition(line)
 
+# Remove the reference definition range passed in
+removeDefinitionRange = (editor, range) ->
+  lineNum = range.start.row
+
+  emptyLineAbove = editor.lineTextForBufferRow(lineNum - 1).trim() == ""
+  emptyLineBelow = editor.lineTextForBufferRow(lineNum + 1).trim() == ""
+
+  editor.setSelectedBufferRange(range)
+
+  editor.deleteLine()
+  editor.deleteLine() if emptyLineAbove && emptyLineBelow
+
 module.exports =
-  insertAfterCurrentParagraph: insertAfterCurrentParagraph
   insertAtEndOfArticle: insertAtEndOfArticle
+  insertAfterCurrentParagraph: insertAfterCurrentParagraph
+  removeDefinitionRange: removeDefinitionRange
