@@ -1,3 +1,8 @@
+## 1.7.1
+
+* Fix remove top/bottom link definition would access out of bound lines
+* Fix toggle multiple text styles, text become missing
+
 ## 1.7.0
 
 * Improve text selection for link/image/text styles
