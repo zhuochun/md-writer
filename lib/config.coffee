@@ -54,15 +54,15 @@ class Configuration
     # project specific configuration file name
     projectConfigFile: "_mdwriter.cson"
     # text styles related
-    #
-    # for `regexBefore`, `regexAfter`, DO NOT use capture group, it could break things!
-    # use non-capturing group `(?:)` instead.
     textStyles:
       code: before: "`", after: "`"
       bold: before: "**", after: "**"
       italic: before: "_", after: "_"
       keystroke: before: "<kbd>", after: "</kbd>"
       strikethrough: before: "~~", after: "~~"
+      # for `regexBefore`, `regexAfter`,
+      # DO NOT use capture group, it could break things!
+      # use non-capturing group `(?:)` instead.
       codeblock:
         before: "```\n"
         after: "\n```"
@@ -75,10 +75,18 @@ class Configuration
       h3: before: "### "
       h4: before: "#### "
       h5: before: "##### "
-      ul: before: "- ", regexBefore: "(?:-|\\*|\\d+\\.)\\s"
-      ol: before: "0. ", regexBefore: "(?:-|\\*|\\d+\\.)\\s"
-      task: before: "- [ ] ", regexBefore: "(?:- \\[ ]|- \\[x]|- \\[X]|-|\\*)\\s"
-      taskdone: before: "- [x] ", regexBefore: "(?:- \\[ ]|- \\[x]|- \\[X]|-|\\*)\\s"
+      ul:
+        before: "- ",
+        regexBefore: "(?:-|\\*|\\d+\\.)\\s"
+      ol:
+        before: "1. ",
+        regexBefore: "(?:-|\\*|\\d+\\.)\\s"
+      task:
+        before: "- [ ] ",
+        regexBefore: "(?:- \\[ ]|- \\[x]|- \\[X]|-|\\*)\\s"
+      taskdone:
+        before: "- [x] ",
+        regexBefore: "(?:- \\[ ]|- \\[x]|- \\[X]|-|\\*)\\s"
       blockquote: before: "> "
     # image tag template
     imageTag: "![<alt>](<src>)"
