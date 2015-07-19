@@ -54,8 +54,8 @@ _isReferenceDefinition = (editor, row) ->
 removeDefinitionRange = (editor, range) ->
   lineNum = range.start.row
 
-  emptyLineAbove = editor.lineTextForBufferRow(lineNum - 1).trim() == ""
-  emptyLineBelow = editor.lineTextForBufferRow(lineNum + 1).trim() == ""
+  emptyLineAbove = !!editor.lineTextForBufferRow(lineNum - 1)?.trim()
+  emptyLineBelow = !!editor.lineTextForBufferRow(lineNum + 1)?.trim()
 
   editor.setSelectedBufferRange(range)
 

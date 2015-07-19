@@ -115,7 +115,7 @@ class InsertLinkView extends View
     text: selection, url: "", title: ""
 
   updateSearch: (query) ->
-    return unless query and posts
+    return unless query && posts
     query = query.trim().toLowerCase()
     results = posts
       .filter((post) -> post.title.toLowerCase().indexOf(query) >= 0)
@@ -193,7 +193,7 @@ class InsertLinkView extends View
 
   isInSavedLink: (link) ->
     savedLink = @getSavedLink(link.text)
-    savedLink and savedLink.title == link.title and savedLink.url == link.url
+    savedLink && savedLink.title == link.title && savedLink.url == link.url
 
   updateSavedLink: (text, title, url) ->
     if @saveCheckbox.prop("checked")
