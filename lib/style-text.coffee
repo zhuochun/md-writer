@@ -67,16 +67,16 @@ class StyleText
     "#{@style.before}#{text}#{@style.after}"
 
   removeStyle: (text) ->
-    matches = @getStylePattern().exec(text)
-    return matches[1..].join("")
+    while matches = @getStylePattern().exec(text)
+      text = matches[1..].join("")
+    return text
 
   getStylePattern: ->
     before = @style.regexBefore || utils.regexpEscape(@style.before)
     after = @style.regexAfter || utils.regexpEscape(@style.after)
+
     ///
-    ^([\s\S]*?)                 # random text at head
-    (?:#{before}([\s\S]*?)
-    #{after}([\s\S]+?))*        # the pattern can appear multiple time
-    #{before}([\s\S]*?)#{after} # the pattern must appear once
-    ([\s\S]*)$                  # random text at end
+    ^([\s\S]*?)                    # random text at head
+    #{before}([\s\S]*?)#{after}    # the style pattern appear once
+    ([\s\S]*?)$                    # random text at end
     ///gm

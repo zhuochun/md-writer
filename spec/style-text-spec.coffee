@@ -6,14 +6,19 @@ describe "StyleText", ->
     fixture = "**bold**"
     expect(view.isStyleOn(fixture)).toBe(true)
 
-  it "check a style is added in string", ->
+  it "check any bold style is in string", ->
     view = new TextStyleView("bold")
     fixture = "hello **bold** world"
     expect(view.isStyleOn(fixture)).toBe(true)
 
-  it "check multiple styles is in string", ->
+  it "check any italic is in string", ->
     view = new TextStyleView("italic")
     fixture = "_italic_ yah _text_"
+    expect(view.isStyleOn(fixture)).toBe(true)
+
+  it "check any strike is in string", ->
+    view = new TextStyleView("strikethrough")
+    fixture = "**bold** one ~~strike~~ two _italic_"
     expect(view.isStyleOn(fixture)).toBe(true)
 
   it "check a style is not added", ->
@@ -26,15 +31,15 @@ describe "StyleText", ->
     fixture = "_italic text_"
     expect(view.removeStyle(fixture)).toEqual("italic text")
 
-  it "remove a style from text", ->
-    view = new TextStyleView("italic")
-    fixture = "_italic text_ in a string"
-    expect(view.removeStyle(fixture)).toEqual("italic text in a string")
+  it "remove bold style from text", ->
+    view = new TextStyleView("bold")
+    fixture = "**bold text** in a string"
+    expect(view.removeStyle(fixture)).toEqual("bold text in a string")
 
-  it "remove multiple styles from text", ->
+  it "remove italic styles from text", ->
     view = new TextStyleView("italic")
-    fixture = "_italic_ yah _text_"
-    expect(view.removeStyle(fixture)).toEqual("italic yah text")
+    fixture = "_italic_ yah _text_ loh _more_"
+    expect(view.removeStyle(fixture)).toEqual("italic yah text loh more")
 
   it "add a style to text", ->
     view = new TextStyleView("bold")
