@@ -26,6 +26,10 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 - **Manage tags and categories in front matters** ([setup required][9be76601]).
 - **Site specific settings** ([view setup][1561ed4c]).
 
+  [ca8870d7]: https://github.com/zhuochun/md-writer/wiki/Quick-Start "Markdown-Writer Setup Guide"
+  [9be76601]: https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters "Setup Tags/Categories/Posts"
+  [1561ed4c]: https://github.com/zhuochun/md-writer/wiki/Settings#project-specific-settings "Project Specific Settings"
+
 ### General
 
 - **Continue lists** when you press `enter`.
@@ -57,10 +61,6 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 - **Markdown cheat sheet** (`markdown-writer:open-cheat-sheet`).
 - **Correct order list numbers** (`markdown-writer:correct-order-list-numbers`).
 
-  [ca8870d7]: https://github.com/zhuochun/md-writer/wiki/Quick-Start "Markdown-Writer Setup Guide"
-  [9be76601]: https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters "Setup Tags/Categories/Posts"
-  [1561ed4c]: https://github.com/zhuochun/md-writer/wiki/Settings#project-specific-settings "Project Specific Settings"
-
 You can find and trigger all features in:
 
 - Open Command Palette (`shift-cmd-P`), enter `Markdown Writer`
@@ -77,12 +77,13 @@ Go to Settings (`cmd-,`) -> Packages -> `Markdown-Writer` -> Settings.
 
 > If you do not see any settings (due to a [Atom's bug][3ecd2daa]), please activate Markdown-Writer using command (e.g. `Open Cheat Sheet`). Close and reopen the Settings page.
 
-There are more configurations available for power users, view [this wiki document][7ddaeaf4].
+To **manage tags/categories in front matter**, please [follow this setup][35eb9cc2].
+
+For more configurations (e.g. project specific settings, change italic text styles), view [this wiki document][7ddaeaf4].
 
   [3ecd2daa]: https://github.com/atom/settings-view/issues/356 "Viewing a package's settings should activate it"
+  [35eb9cc2]: https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters "Settings for Front Matters"
   [7ddaeaf4]: https://github.com/zhuochun/md-writer/wiki/Settings "Settings"
-
-To **manage tags/categories in front matter**, please [follow this setup](https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters).
 
 ## Project
 
