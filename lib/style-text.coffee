@@ -1,9 +1,17 @@
 config = require "./config"
 utils = require "./utils"
 
+# Map markdown-writer text style keys to official gfm style scope selectors
+scopeSelectors =
+  code: ".raw"
+  bold: ".bold"
+  italic: ".italic"
+  strikethrough: ".strike"
+
 module.exports =
 class StyleText
   editor: null
+  styleName: null
   style: null
 
   # @style config could contains:
@@ -14,6 +22,7 @@ class StyleText
   # - regexAfter (optional) overwrites after when to match/replace string
   #
   constructor: (style) ->
+    @styleName = style
     @style = config.get("textStyles.#{style}")
     # make sure before/after exist
     @style.before ?= ""
@@ -23,10 +32,20 @@ class StyleText
     @editor = atom.workspace.getActiveTextEditor()
     @editor.transact =>
       @editor.getSelections().forEach (selection) =>
+        @normalizeSelection(selection)
+
         if text = selection.getText()
           @toggleStyle(selection, text)
         else
           @insertEmptyStyle(selection)
+
+  # try to act smart to correct the selection if needed
+  normalizeSelection: (selection) ->
+    scopeSelector = scopeSelectors[@styleName]
+    return unless scopeSelector
+
+    range = utils.getTextBufferRange(@editor, scopeSelector, selection)
+    selection.setBufferRange(range)
 
   toggleStyle: (selection, text) ->
     if @isStyleOn(text)

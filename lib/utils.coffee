@@ -216,7 +216,8 @@ getTextBufferRange = (editor, scopeSelector, selection) ->
   else if (scope = getScopeDescriptor(cursor, scopeSelector))
     getBufferRangeForScope(editor, cursor, scope)
   else
-    cursor.getCurrentWordBufferRange()
+    wordRegex = cursor.wordRegExp(includeNonWordCharacters: false)
+    cursor.getCurrentWordBufferRange(wordRegex: wordRegex)
 
 module.exports =
   getJSON: getJSON
