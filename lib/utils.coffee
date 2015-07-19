@@ -176,23 +176,47 @@ template = (text, data, matcher = /[<{]([\w-]+?)[>}]/g) ->
   text.replace matcher, (match, attr) ->
     if data[attr]? then data[attr] else match
 
-hasCursorScope = (editor, scope) ->
-  editor.getLastCursor().getScopeDescriptor()
-    .getScopesArray().indexOf(scope) != -1
+# Return scopeSelector if there is an exact match,
+# else return any scope descriptor contains scopeSelector
+getScopeDescriptor = (cursor, scopeSelector) ->
+  scopes = cursor.getScopeDescriptor()
+    .getScopesArray()
+    .filter((scope) -> scope.indexOf(scopeSelector) >= 0)
 
-getCursorScopeRange = (editor, wordRegex) ->
-  if wordRegex
-    editor.getLastCursor().getCurrentWordBufferRange(wordRegex: wordRegex)
-  else
-    editor.getLastCursor().getCurrentWordBufferRange()
+  if scopes.indexOf(scopeSelector) >= 0
+    return scopeSelector
+  else if scopes.length > 0
+    return scopes[0]
 
-getSelectedTextBufferRange = (editor, scope) ->
-  if editor.getSelectedText()
-    editor.getSelectedBufferRange()
-  else if hasCursorScope(editor, scope)
-    editor.bufferRangeForScopeAtCursor(scope)
+# Atom has a bug returning the correct buffer range when cursor is
+# at the end of scope, refer https://github.com/atom/atom/issues/7961
+#
+# This provides a temporary fix for the bug.
+getBufferRangeForScope = (editor, cursor, scopeSelector) ->
+  pos = cursor.getBufferPosition()
+
+  range = editor.displayBuffer.bufferRangeForScopeAtPosition(scopeSelector, pos)
+  return range if range
+
+  # HACK if range is undefined, move the cursor position one char forward, and
+  # try to get the buffer range for scope again
+  pos = [pos.row, Math.max(0, pos.column - 1)]
+  editor.displayBuffer.bufferRangeForScopeAtPosition(scopeSelector, pos)
+
+# Get the text buffer range if selection is not empty, or get the
+# buffer range if it is inside a scope selector, or the current word.
+#
+# selection is optional, when not provided, use the last selection
+getTextBufferRange = (editor, scopeSelector, selection) ->
+  selection ?= editor.getLastSelection()
+  cursor = selection.cursor
+
+  if selection.getText()
+    selection.getBufferRange()
+  else if (scope = getScopeDescriptor(cursor, scopeSelector))
+    getBufferRangeForScope(editor, cursor, scope)
   else
-    getCursorScopeRange(editor)
+    cursor.getCurrentWordBufferRange()
 
 module.exports =
   getJSON: getJSON
@@ -221,6 +245,4 @@ module.exports =
   getTitleSlug: getTitleSlug
   dirTemplate: dirTemplate
   template: template
-  hasCursorScope: hasCursorScope
-  getCursorScopeRange: getCursorScopeRange
-  getSelectedTextBufferRange: getSelectedTextBufferRange
+  getTextBufferRange: getTextBufferRange

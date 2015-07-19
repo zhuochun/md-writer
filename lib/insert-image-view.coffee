@@ -105,7 +105,7 @@ class InsertImageView extends View
     super
 
   setFieldsFromSelection: ->
-    @range = utils.getSelectedTextBufferRange(@editor, "link")
+    @range = utils.getTextBufferRange(@editor, "link")
     selection = @editor.getTextInRange(@range)
     @_setFieldsFromSelection(selection) if selection
 
