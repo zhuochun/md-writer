@@ -51,6 +51,16 @@ basicConfig =
     title: "File Extension"
     type: "string"
     default: config.getCurrentDefault("fileExtension")
+  tableAlignment:
+    title: "Table Cell Alignment"
+    type: "string"
+    default: config.getDefault("tableAlignment")
+    enum: ["empty", "left", "right", "center"]
+  tableExtraPipes:
+    title: "Table Extra Pipes"
+    description: "Insert extra pipes at the start and the end of the table rows"
+    type: "boolean"
+    default: config.getDefault("tableExtraPipes")
 
 module.exports =
   config: basicConfig
