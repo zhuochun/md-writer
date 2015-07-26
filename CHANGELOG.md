@@ -1,3 +1,7 @@
+## 1.8.1
+
+* Fix table columnWidths bug
+
 ## 1.8.0
 
 * Fix table format with extra pipes
