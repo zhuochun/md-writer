@@ -193,12 +193,203 @@ key2:
     expect(utils.isUrl(fixture)).toBe(false)
 
   it "check is table separator", ->
-    fixture = "--|------|---"
+    fixture = "----|"
+    expect(utils.isTableSeparator(fixture)).toBe(false)
+
+    fixture = "--|--"
     expect(utils.isTableSeparator(fixture)).toBe(true)
     fixture = "---- |------ | ---"
     expect(utils.isTableSeparator(fixture)).toBe(true)
-    fixture = "------ | --------|--------"
+
+  it "check is table separator with extra pipes", ->
+    fixture = "|-----"
+    expect(utils.isTableSeparator(fixture)).toBe(false)
+
+    fixture = "|--|--"
     expect(utils.isTableSeparator(fixture)).toBe(true)
+    fixture = "|---- |------ | ---|"
+    expect(utils.isTableSeparator(fixture)).toBe(true)
+
+  it "check is table separator with format", ->
+    fixture = ":--  |::---"
+    expect(utils.isTableSeparator(fixture)).toBe(false)
+    fixture = "|:---: |"
+    expect(utils.isTableSeparator(fixture)).toBe(false)
+
+    fixture = ":--|--:"
+    expect(utils.isTableSeparator(fixture)).toBe(true)
+    fixture = "|:---: |:----- | --: |"
+    expect(utils.isTableSeparator(fixture)).toBe(true)
+
+  it "parse table separator", ->
+    fixture = "--|--"
+    expect(utils.parseTableSeparator(fixture)).toEqual({
+      separator: true
+      extraPipes: false
+      alignments: ["empty", "empty"]
+      columns: ["--", "--"]
+      columnLengths: [2, 2]})
+
+    fixture = "---- |------ | ---"
+    expect(utils.parseTableSeparator(fixture)).toEqual({
+      separator: true
+      extraPipes: false
+      alignments: ["empty", "empty", "empty"]
+      columns: ["----", "------", "---"]
+      columnLengths: [4, 6, 3]})
+
+  it "parse table separator with extra pipes", ->
+    fixture = "|--|--"
+    expect(utils.parseTableSeparator(fixture)).toEqual({
+      separator: true
+      extraPipes: true
+      alignments: ["empty", "empty"]
+      columns: ["--", "--"]
+      columnLengths: [2, 2]})
+
+    fixture = "|---- |------ | ---|"
+    expect(utils.parseTableSeparator(fixture)).toEqual({
+      separator: true
+      extraPipes: true
+      alignments: ["empty", "empty", "empty"]
+      columns: ["----", "------", "---"]
+      columnLengths: [4, 6, 3]})
+
+  it "parse table separator with format", ->
+    fixture = ":--|--:"
+    expect(utils.parseTableSeparator(fixture)).toEqual({
+      separator: true
+      extraPipes: false
+      alignments: ["left", "right"]
+      columns: [":--", "--:"]
+      columnLengths: [3, 3]})
+
+    fixture = "|:---: |:----- | --: |"
+    expect(utils.parseTableSeparator(fixture)).toEqual({
+      separator: true
+      extraPipes: true
+      alignments: ["center", "left", "right"]
+      columns: [":---:", ":-----", "--:"]
+      columnLengths: [5, 6, 3]})
+
+  it "check table separator is a table row", ->
+    fixture = ":--  |:---"
+    expect(utils.isTableRow(fixture)).toBe(true)
+
+  it "check is table row", ->
+    fixture = "| empty content |"
+    expect(utils.isTableRow(fixture)).toBe(true)
+    fixture = "abc|feg"
+    expect(utils.isTableRow(fixture)).toBe(true)
+    fixture = "|   abc |efg | |"
+    expect(utils.isTableRow(fixture)).toBe(true)
+
+  it "parse table separator by table row ", ->
+    fixture = "|:---: |:----- | --: |"
+    expect(utils.parseTableRow(fixture)).toEqual({
+      separator: true
+      extraPipes: true
+      alignments: ["center", "left", "right"]
+      columns: [":---:", ":-----", "--:"]
+      columnLengths: [5, 6, 3]})
+
+  it "parse table row ", ->
+    fixture = "| 中文 |"
+    expect(utils.parseTableRow(fixture)).toEqual({
+      separator: false
+      extraPipes: true
+      columns: ["中文"]
+      columnLengths: [4]})
+
+    fixture = "abc|feg"
+    expect(utils.parseTableRow(fixture)).toEqual({
+      separator: false
+      extraPipes: false
+      columns: ["abc", "feg"]
+      columnLengths: [3, 3]})
+
+    fixture = "|   abc |efg | |"
+    expect(utils.parseTableRow(fixture)).toEqual({
+      separator: false
+      extraPipes: true
+      columns: ["abc", "efg", ""]
+      columnLengths: [3, 3, 0]})
+
+  it "create table separator", ->
+    row = utils.createTableSeparator(
+      numOfColumns: 3, extraPipes: false, columnLength: 1, alignment: "empty")
+    expect(row).toEqual("--|---|--")
+
+    row = utils.createTableSeparator(
+      numOfColumns: 2, extraPipes: true, columnLength: 1, alignment: "empty")
+    expect(row).toEqual("|---|---|")
+
+    row = utils.createTableSeparator(
+      numOfColumns: 1, extraPipes: true, columnLength: 1, alignment: "left")
+    expect(row).toEqual("|:--|")
+
+    row = utils.createTableSeparator(
+      numOfColumns: 3, extraPipes: true, columnLength: 1,
+      columnLengths: [2, 3, 3], alignment: "left")
+    expect(row).toEqual("|:---|:----|:----|")
+
+    row = utils.createTableSeparator(
+      numOfColumns: 4, extraPipes: false, columnLength: 3,
+      alignment: "left", alignments: ["empty", "right", "center"])
+    expect(row).toEqual("----|----:|:---:|:---")
+
+  it "create empty table row", ->
+    row = utils.createTableRow([],
+      numOfColumns: 3, columnLength: 3, alignment: "empty")
+    expect(row).toEqual("    |     |    ")
+
+    row = utils.createTableRow([],
+      numOfColumns: 3, extraPipes: true, columnLengths: [3, 4, 5],
+      alignment: "empty")
+    expect(row).toEqual("|     |      |       |")
+
+  it "create table row", ->
+    row = utils.createTableRow(["中文", "English"],
+      numOfColumns: 2, extraPipes: true, columnLengths: [4, 7])
+    expect(row).toEqual("| 中文 | English |")
+
+    row = utils.createTableRow(["中文", "English"],
+      numOfColumns: 2, columnLengths: [9, 9], alignments: ["right", "center"])
+    expect(row).toEqual("     中文 |  English ")
+
+  it "create an empty table", ->
+    rows = []
+
+    options =
+      numOfColumns: 3, columnLengths: [5, 3, 5],
+      alignments: ["left", "center", "right"]
+
+    rows.push(utils.createTableRow([], options))
+    rows.push(utils.createTableSeparator(options))
+    rows.push(utils.createTableRow([], options))
+
+    expect(rows).toEqual([
+      "      |     |      "
+      ":-----|:---:|-----:"
+      "      |     |      "
+    ])
+
+  it "create an empty table with extra pipes", ->
+    rows = []
+
+    options =
+      numOfColumns: 3, extraPipes: true,
+      columnLength: 3, alignment: "empty"
+
+    rows.push(utils.createTableRow([], options))
+    rows.push(utils.createTableSeparator(options))
+    rows.push(utils.createTableRow([], options))
+
+    expect(rows).toEqual([
+      "|     |     |     |"
+      "|-----|-----|-----|"
+      "|     |     |     |"
+    ])
 
   it "replace front matter (no leading fence)", ->
     expected = """

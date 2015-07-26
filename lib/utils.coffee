@@ -2,6 +2,7 @@
 os = require "os"
 path = require "path"
 yaml = require "js-yaml"
+wcswidth = require "wcwidth"
 
 # ==================================================
 # General Utils
@@ -240,15 +241,129 @@ parseReferenceDefinition = (input, editor) ->
 # Table
 #
 
-TABLE_LINE_SEPARATOR_REGEX = ///
-  ^ \|?             # starts with an optional |
-  (\s*:?-+:?\s*\|)+ # one or more table cell
-  (\s*:?-+:?\s*)    # last table cell
-  \|? $             # ends with an optional |
-  ///
+TABLE_SEPARATOR_REGEX = /// ^
+  (\|)?                # starts with an optional |
+  (
+   (?:\s*:?-+:?\s*\|)+ # one or more table cell
+   (?:\s*:?-+:?\s*)    # last table cell
+  )
+  (\|)?                # ends with an optional |
+  $ ///
 
-isTableSeparator = (line) ->
-  TABLE_LINE_SEPARATOR_REGEX.test(line)
+isTableSeparator = (line) -> TABLE_SEPARATOR_REGEX.test(line)
+
+parseTableSeparator = (line) ->
+  matches = TABLE_SEPARATOR_REGEX.exec(line)
+  columns = matches[2].split("|").map (col) -> col.trim()
+
+  return {
+    separator: true
+    extraPipes: !!(matches[1] || matches[matches.length - 1])
+    columns: columns
+    columnLengths: columns.map (col) -> col.length
+    alignments: columns.map (col) ->
+      head = col[0] == ":"
+      tail = col[col.length - 1] == ":"
+
+      if head && tail
+        "center"
+      else if head
+        "left"
+      else if tail
+        "right"
+      else "empty"
+  }
+
+TABLE_ROW_REGEX = /// ^
+  (\|)?                # starts with an optional |
+  (.+?\|.+?)           # any content with at least 2 columns
+  (\|)?                # ends with an optional |
+  $ ///
+
+TABLE_ONE_COLUMN_ROW_REGEX = /// ^ (\|)([^\|]+?)(\|) $ ///
+
+isTableRow = (line) ->
+  TABLE_ROW_REGEX.test(line) || TABLE_ONE_COLUMN_ROW_REGEX.test(line)
+
+parseTableRow = (line) ->
+  return parseTableSeparator(line) if isTableSeparator(line)
+
+  matches = TABLE_ROW_REGEX.exec(line) || TABLE_ONE_COLUMN_ROW_REGEX.exec(line)
+  columns = matches[2].split("|").map (col) -> col.trim()
+
+  return {
+    separator: false
+    extraPipes: !!(matches[1] || matches[matches.length - 1])
+    columns: columns
+    columnLengths: columns.map (col) -> wcswidth(col)
+  }
+
+# defaults:
+#   numOfColumns: 3
+#   columnLength: 3
+#   columnLengths: []
+#   extraPipes: true
+#   alignment: "left" | "right" | "center" | "empty"
+#   alignments: []
+createTableSeparator = (options) ->
+  options.columnLengths ?= []
+  options.alignments ?= []
+
+  row = []
+  for i in [0..options.numOfColumns - 1]
+    columnLength = options.columnLengths[i] || options.columnLength
+
+    if !options.extraPipes && (i == 0 || i == options.numOfColumns - 1)
+      columnLength += 1
+    else
+      columnLength += 2
+
+    switch options.alignments[i] || options.alignment
+      when "center"
+        row.push(":" + "-".repeat(columnLength - 2) + ":")
+      when "left"
+        row.push(":" + "-".repeat(columnLength - 1))
+      when "right"
+        row.push("-".repeat(columnLength - 1) + ":")
+      else
+        row.push("-".repeat(columnLength))
+
+  row = row.join("|")
+  if options.extraPipes then "|#{row}|" else row
+
+# columns: [values]
+# defaults:
+#   numOfColumns: 3
+#   columnLength: 3
+#   columnLengths: []
+#   extraPipes: true
+#   alignment: "left" | "right" | "center" | "empty"
+#   alignments: []
+createTableRow = (columns, options) ->
+  options.columnLengths ?= []
+  options.alignments ?= []
+
+  row = []
+  for i in [0..options.numOfColumns - 1]
+    columnLength = options.columnLengths[i] || options.columnLength
+
+    if !columns[i]
+      row.push(" ".repeat(columnLength))
+      continue
+
+    len = columnLength - wcswidth(columns[i])
+    switch options.alignments[i] || options.alignment
+      when "center"
+        row.push(" ".repeat(len / 2) + columns[i] + " ".repeat((len + 1) / 2))
+      when "left"
+        row.push(columns[i] + " ".repeat(len))
+      when "right"
+        row.push(" ".repeat(len) + columns[i])
+      else
+        row.push(columns[i] + " ".repeat(len))
+
+  row = row.join(" | ")
+  if options.extraPipes then "| #{row} |" else row
 
 # ==================================================
 # URL
@@ -346,7 +461,13 @@ module.exports =
   isReferenceDefinition: isReferenceDefinition
   parseReferenceDefinition: parseReferenceDefinition
 
-  isUrl: isUrl
   isTableSeparator: isTableSeparator
+  parseTableSeparator: parseTableSeparator
+  createTableSeparator: createTableSeparator
+  isTableRow: isTableRow
+  parseTableRow: parseTableRow
+  createTableRow: createTableRow
+
+  isUrl: isUrl
 
   getTextBufferRange: getTextBufferRange
