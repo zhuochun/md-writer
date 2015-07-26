@@ -26,38 +26,68 @@ describe "commands", ->
     fixture = ["", "abc"]
     expect(cmds._indexOfFirstNonEmptyLine(fixture)).toEqual(1)
 
-  it "parse table into vals", ->
+  it "parse table to rows + options", ->
     fixture = """
 h1   | h21
 -----|----
 t123 | t2
 """
+
     expected =
-      table: [["h1", "h21"], ["t123", "t2"]]
-      maxes: [4, 3]
+      rows: [["h1", "h21"], ["t123", "t2"]]
+      options:
+        numOfColumns: 2
+        extraPipes: false
+        columnLengths: [5, 4]
+        alignment: "empty"
+        alignments: ["empty", "empty"]
+
     expect(cmds._parseTable(fixture.split("\n"))).toEqual(expected)
 
-  it "parse table with empty cell into vals", ->
+  it "parse table with empty cell to rows + options", ->
     fixture = """
-h1   | h2-1
------|----
- | t2
+|h1   | h2-1|h3-2
+|:-|:-:|--:
+| | t2
 """
-    expected =
-      table: [["h1", "h2-1"], ["", "t2"]]
-      maxes: [2, 4]
-    expect(cmds._parseTable(fixture.split("\n"))).toEqual(expected)
 
-  it "create table row text", ->
-    vals = ["h1", "h2", "x y z"]
-    maxes = [3, 2, 5]
-    expect(cmds._createTableRow(vals, maxes, " | ")).toEqual("h1  | h2 | x y z")
+    expected =
+      rows: [["h1", "h2-1", "h3-2"], ["", "t2"]]
+      options:
+        numOfColumns: 3
+        extraPipes: true
+        columnLengths: [4, 6, 6]
+        alignment: "empty"
+        alignments: ["left", "center", "right"]
+
+    expect(cmds._parseTable(fixture.split("\n"))).toEqual(expected)
 
   it "create table text", ->
-    vals = [["h1", "h21"], ["t123", "t2"]]
-    maxes = [4, 3]
-    expect(cmds._createTable(table: vals, maxes: maxes)).toEqual """
-h1   | h21
------|----
+    rows = [["h1", "h2"], ["t123", "t2"]]
+    options =
+      numOfColumns: 2
+      extraPipes: false
+      columnLengths: [5, 3]
+      alignment: "empty"
+      alignments: ["empty", "empty"]
+
+    expect(cmds._createTable(rows, options)).toEqual """
+h1   | h2
+-----|---
 t123 | t2
+"""
+
+  it "create table text with empty cells", ->
+    rows = [["h1", "h2-1", "h3-2"], ["", "t2"]]
+    options =
+      numOfColumns: 3
+      extraPipes: true
+      columnLengths: [4, 6, 6]
+      alignment: "empty"
+      alignments: ["left", "center", "right"]
+
+    expect(cmds._createTable(rows, options)).toEqual """
+| h1 | h2-1 | h3-2 |
+|:---|:----:|-----:|
+|    |  t2  |      |
 """
