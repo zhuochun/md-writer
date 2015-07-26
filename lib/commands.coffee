@@ -212,6 +212,8 @@ class Commands
 
     editor.setTextInBufferRange(range, table)
 
+  # FIXME when at the end of file, without the extra end of line
+  # the buffer range selected is not correct
   _findMinSelectedBufferRange: (lines, {start, end}) ->
     head = @_indexOfFirstNonEmptyLine(lines)
     tail = @_indexOfFirstNonEmptyLine(lines[..].reverse())
@@ -255,7 +257,11 @@ class Commands
       rows.push(row.columns)
       numOfColumns = Math.max(numOfColumns, row.columns.length)
       for columnLength, i in row.columnLengths
-        if extraPipes then columnLength += 2 else columnLength += 1
+        if !extraPipes && (i == 0 || i == numOfColumns - 1)
+          columnLength += 1
+        else
+          columnLength += 2
+
         columnLengths[i] = Math.max(columnLengths[i] || 0, columnLength)
 
     return {
