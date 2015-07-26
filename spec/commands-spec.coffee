@@ -38,7 +38,7 @@ t123 | t2
       options:
         numOfColumns: 2
         extraPipes: false
-        columnLengths: [5, 4]
+        columnWidths: [5, 4]
         alignment: "empty"
         alignments: ["empty", "empty"]
 
@@ -56,7 +56,7 @@ t123 | t2
       options:
         numOfColumns: 3
         extraPipes: true
-        columnLengths: [4, 6, 6]
+        columnWidths: [4, 6, 6]
         alignment: "empty"
         alignments: ["left", "center", "right"]
 
@@ -67,7 +67,7 @@ t123 | t2
     options =
       numOfColumns: 2
       extraPipes: false
-      columnLengths: [5, 3]
+      columnWidths: [5, 3]
       alignment: "empty"
       alignments: ["empty", "empty"]
 
@@ -82,7 +82,7 @@ t123 | t2
     options =
       numOfColumns: 3
       extraPipes: true
-      columnLengths: [4, 6, 6]
+      columnWidths: [4, 6, 6]
       alignment: "empty"
       alignments: ["left", "center", "right"]
 

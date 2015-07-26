@@ -234,7 +234,7 @@ class Commands
 
     numOfColumns = 0
     extraPipes = config.get("tableExtraPipes")
-    columnLengths = []
+    columnWidths = []
     alignments = []
 
     # parse table separator
@@ -245,7 +245,7 @@ class Commands
 
       numOfColumns = separator.columns.length
       extraPipes = extraPipes || separator.extraPipes
-      columnLengths = separator.columnLengths
+      columnWidths = separator.columnWidths
       alignments = separator.alignments
 
     # parse table content
@@ -256,20 +256,20 @@ class Commands
       row = utils.parseTableRow(line)
       rows.push(row.columns)
       numOfColumns = Math.max(numOfColumns, row.columns.length)
-      for columnLength, i in row.columnLengths
+      for columnWidth, i in row.columnWidths
         if !extraPipes && (i == 0 || i == numOfColumns - 1)
-          columnLength += 1
+          columnWidth += 1
         else
-          columnLength += 2
+          columnWidth += 2
 
-        columnLengths[i] = Math.max(columnLengths[i] || 0, columnLength)
+        columnWidths[i] = Math.max(columnWidths[i] || 0, columnWidth)
 
     return {
       rows: rows
       options: {
         numOfColumns: numOfColumns
         extraPipes: extraPipes
-        columnLengths: columnLengths
+        columnWidths: columnWidths
         alignment: config.get("tableAlignment")
         alignments: alignments
       }

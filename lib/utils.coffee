@@ -265,7 +265,7 @@ parseTableSeparator = (line) ->
     separator: true
     extraPipes: !!(matches[1] || matches[matches.length - 1])
     columns: columns
-    columnLengths: columns.map (col) -> col.length
+    columnWidths: columns.map (col) -> col.length
     alignments: columns.map (col) ->
       head = col[0] == ":"
       tail = col[col.length - 1] == ":"
@@ -300,33 +300,33 @@ parseTableRow = (line) ->
     separator: false
     extraPipes: !!(matches[1] || matches[matches.length - 1])
     columns: columns
-    columnLengths: columns.map (col) -> wcswidth(col)
+    columnWidths: columns.map (col) -> wcswidth(col)
   }
 
 # defaults:
 #   numOfColumns: 3
-#   columnLength: 3
-#   columnLengths: []
+#   columnWidth: 3
+#   columnWidths: []
 #   extraPipes: true
 #   alignment: "left" | "right" | "center" | "empty"
 #   alignments: []
 createTableSeparator = (options) ->
-  options.columnLengths ?= []
+  options.columnWidths ?= []
   options.alignments ?= []
 
   row = []
   for i in [0..options.numOfColumns - 1]
-    columnLength = options.columnLengths[i] || options.columnLength
+    columnWidth = options.columnWidths[i] || options.columnWidth
 
     switch options.alignments[i] || options.alignment
       when "center"
-        row.push(":" + "-".repeat(columnLength - 2) + ":")
+        row.push(":" + "-".repeat(columnWidth - 2) + ":")
       when "left"
-        row.push(":" + "-".repeat(columnLength - 1))
+        row.push(":" + "-".repeat(columnWidth - 1))
       when "right"
-        row.push("-".repeat(columnLength - 1) + ":")
+        row.push("-".repeat(columnWidth - 1) + ":")
       else
-        row.push("-".repeat(columnLength))
+        row.push("-".repeat(columnWidth))
 
   row = row.join("|")
   if options.extraPipes then "|#{row}|" else row
@@ -334,29 +334,29 @@ createTableSeparator = (options) ->
 # columns: [values]
 # defaults:
 #   numOfColumns: 3
-#   columnLength: 3
-#   columnLengths: []
+#   columnWidth: 3
+#   columnWidths: []
 #   extraPipes: true
 #   alignment: "left" | "right" | "center" | "empty"
 #   alignments: []
 createTableRow = (columns, options) ->
-  options.columnLengths ?= []
+  options.columnWidths ?= []
   options.alignments ?= []
 
   row = []
   for i in [0..options.numOfColumns - 1]
-    columnLength = options.columnLengths[i] || options.columnLength
+    columnWidth = options.columnWidths[i] || options.columnWidth
 
     if !options.extraPipes && (i == 0 || i == options.numOfColumns - 1)
-      columnLength -= 1
+      columnWidth -= 1
     else
-      columnLength -= 2
+      columnWidth -= 2
 
     if !columns[i]
-      row.push(" ".repeat(columnLength))
+      row.push(" ".repeat(columnWidth))
       continue
 
-    len = columnLength - wcswidth(columns[i])
+    len = columnWidth - wcswidth(columns[i])
     switch options.alignments[i] || options.alignment
       when "center"
         row.push(" ".repeat(len / 2) + columns[i] + " ".repeat((len + 1) / 2))
