@@ -1,4 +1,6 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
+config = require "./config"
+utils = require "./utils"
 
 module.exports =
 class InsertTableView extends View
@@ -23,7 +25,8 @@ class InsertTableView extends View
     row = parseInt(@rowEditor.getText(), 10)
     col = parseInt(@columnEditor.getText(), 10)
 
-    @insertTable(row, col)
+    @insertTable(row, col) if @isValidRange(row, col)
+
     @detach()
 
   display: ->
@@ -42,25 +45,27 @@ class InsertTableView extends View
     super
 
   insertTable: (row, col) ->
-    return unless @isValidRange(row, col)
     cursor = @editor.getCursorBufferPosition()
     @editor.insertText(@createTable(row, col))
     @editor.setCursorBufferPosition(cursor)
 
   createTable: (row, col) ->
+    options =
+      numOfColumns: col
+      extraPipes: config.get("tableExtraPipes")
+      columnLength: 1
+      alignment: config.get("tableAlignment")
+
     table = []
 
     # insert header
-    table.push(@createTableRow(col, beg: " |", mid: " |", end: ""))
-    table.push(@createTableRow(col, beg: "-|", mid: "-|", end: "-"))
-    # insert rest
-    while row -= 1 && row > 0
-      table.push(@createTableRow(col, beg: " |", mid: " |", end: ""))
+    table.push(utils.createTableRow([], options))
+    # insert separator
+    table.push(utils.createTableSeparator(options))
+    # insert body rows
+    table.push(utils.createTableRow([], options)) for [0..row - 2]
 
     table.join("\n")
-
-  createTableRow: (colNum, {beg, mid, end}) ->
-    beg + mid.repeat(colNum - 2) + end
 
   # at least 2 row + 2 columns
   isValidRange: (row, col) ->

@@ -90,6 +90,10 @@ class Configuration
       blockquote: before: "> "
     # image tag template
     imageTag: "![<alt>](<src>)"
+    # table default alignments: "empty", "left", "right", "center"
+    tableAlignment: "empty"
+    # insert extra pipes at the beginning and the end of table rows
+    tableExtraPipes: false
 
   @engines:
     html:
