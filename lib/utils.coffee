@@ -250,10 +250,15 @@ TABLE_SEPARATOR_REGEX = /// ^
   (\|)?                # ends with an optional |
   $ ///
 
-isTableSeparator = (line) -> TABLE_SEPARATOR_REGEX.test(line)
+TABLE_ONE_COLUMN_SEPARATOR_REGEX = /// ^ (\|)(\s*:?-+:?\s*)(\|) $ ///
+
+isTableSeparator = (line) ->
+  TABLE_SEPARATOR_REGEX.test(line) ||
+  TABLE_ONE_COLUMN_SEPARATOR_REGEX.test(line)
 
 parseTableSeparator = (line) ->
-  matches = TABLE_SEPARATOR_REGEX.exec(line)
+  matches = TABLE_SEPARATOR_REGEX.exec(line) ||
+    TABLE_ONE_COLUMN_SEPARATOR_REGEX.exec(line)
   columns = matches[2].split("|").map (col) -> col.trim()
 
   return {
