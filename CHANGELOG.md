@@ -1,3 +1,11 @@
+## 1.8.0
+
+* Fix table format with extra pipes
+* Fix handle single column tables
+* Improve table format to handle alignments
+* Improve table format to handle double-width characters
+* Add table default alignment, extra pipes configurations
+
 ## 1.7.1
 
 * Fix remove top/bottom link definition would access out of bound lines

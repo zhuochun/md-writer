@@ -40,7 +40,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
   - Search published posts by title in your blog.
 - **Insert image** (`shift-cmd-i`), auto-detect image height/width, and optionally copy images to your site's images directory.
 - **Insert table** (`markdown-writer:insert-table`), and a shortcut to **jump to next table cell** (`cmd-j cmd-t`).
-- **Format table** (`markdown-writer:format-table`).
+- **Format table** (`markdown-writer:format-table`) with table alignments.
 - **Toggle headings**: `ctrl-alt-[1-5]` to switch among `H1` to `H5`.
 - **Toggle text styles**:
   - `code` (`cmd-'`)
