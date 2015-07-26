@@ -17,6 +17,10 @@ regexpEscape = (str) ->
 dasherize = (str) ->
   str.trim().toLowerCase().replace(/[^-\w\s]|_/g, "").replace(/\s+/g,"-")
 
+getPackagePath = (segments...) ->
+  segments.unshift(atom.packages.resolvePackagePath("markdown-writer"))
+  path.join.apply(null, segments)
+
 # ==================================================
 # Template
 #
@@ -313,6 +317,7 @@ module.exports =
   getJSON: getJSON
   regexpEscape: regexpEscape
   dasherize: dasherize
+  getPackagePath: getPackagePath
 
   dirTemplate: dirTemplate
   template: template

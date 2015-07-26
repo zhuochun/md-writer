@@ -263,7 +263,7 @@ class Commands
         .trimRight() # remove trailing spaces
 
   openCheatSheet: ->
-    cheatsheet = require("path").join(@_getPackageDirPath(), "CHEATSHEET.md")
+    cheatsheet = utils.getPackagePath("CHEATSHEET.md")
 
     atom.workspace.open "markdown-preview://#{encodeURI(cheatsheet)}",
       split: 'right', searchAllPanes: true
@@ -272,21 +272,18 @@ class Commands
     fs = require("fs-plus")
     path = require("path")
 
-    sampleKeymapFile = path.join(@_getPackageDirPath(),
-      "keymaps", @_getSampleKeymapFilename())
+    sampleKeymapFile = utils.getPackagePath("keymaps", @_sampleKeymapFile())
     sampleKeymap = fs.readFileSync(sampleKeymapFile)
 
     userKeymapFile = path.join(atom.getConfigDirPath(), "keymap.cson")
     fs.appendFile userKeymapFile, sampleKeymap, (err) ->
       atom.workspace.open(userKeymapFile) unless err
 
-  _getSampleKeymapFilename: ->
+  _sampleKeymapFile: ->
     {
       "darwin": "sample-osx.cson",
       "linux" : "sample-linux.cson",
       "win32" : "sample-win32.cson"
     }[process.platform] || "sample-osx.cson"
-
-  _getPackageDirPath: -> atom.packages.resolvePackagePath("markdown-writer")
 
 module.exports = new Commands()

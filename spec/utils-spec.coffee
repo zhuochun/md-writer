@@ -247,3 +247,12 @@ key2:
     fixture = "<a href='<url>' title='<title>'><img></a>"
     expect(utils.template(fixture, url: "//", title: ''))
       .toEqual("<a href='//' title=''><img></a>")
+
+  it "get the package path", ->
+    expect(utils.getPackagePath()).toEqual(
+      atom.packages.resolvePackagePath("markdown-writer"))
+
+  it "get the package path to file", ->
+    root = atom.packages.resolvePackagePath("markdown-writer")
+    expect(utils.getPackagePath("CHEATSHEET.md")).toEqual(
+      "#{root}/CHEATSHEET.md")
