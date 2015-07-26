@@ -63,7 +63,7 @@ class InsertLinkView extends View
     @panel.show()
     @fetchPosts()
     @loadSavedLinks =>
-      @normalizeSelectionAndSetLinkFields()
+      @_normalizeSelectionAndSetLinkFields()
 
       if @textEditor.getText()
         @urlEditor.getModel().selectAll()
@@ -77,7 +77,7 @@ class InsertLinkView extends View
     @previouslyFocusedElement?.focus()
     super
 
-  normalizeSelectionAndSetLinkFields: ->
+  _normalizeSelectionAndSetLinkFields: ->
     @range = utils.getTextBufferRange(@editor, "link")
     link = @_findLinkInRange()
 
@@ -105,6 +105,7 @@ class InsertLinkView extends View
 
       link = utils.parseReferenceDefinition(selection, @editor)
       link.definitionRange = @range
+
       # if link.linkRange is null, this definition is an orphan,
       # just ignore this definition link match
       return link if link.linkRange

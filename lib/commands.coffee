@@ -272,7 +272,8 @@ class Commands
     fs = require("fs-plus")
     path = require("path")
 
-    sampleKeymapFile = path.join(@_getPackageDirPath(), "keymaps", @_getSampleKeymapFilename())
+    sampleKeymapFile = path.join(@_getPackageDirPath(),
+      "keymaps", @_getSampleKeymapFilename())
     sampleKeymap = fs.readFileSync(sampleKeymapFile)
 
     userKeymapFile = path.join(atom.getConfigDirPath(), "keymap.cson")
@@ -280,13 +281,11 @@ class Commands
       atom.workspace.open(userKeymapFile) unless err
 
   _getSampleKeymapFilename: ->
-    filename = {
+    {
       "darwin": "sample-osx.cson",
       "linux" : "sample-linux.cson",
       "win32" : "sample-win32.cson"
-    }[process.platform]
-
-    filename || "sample-osx.cson"
+    }[process.platform] || "sample-osx.cson"
 
   _getPackageDirPath: -> atom.packages.resolvePackagePath("markdown-writer")
 

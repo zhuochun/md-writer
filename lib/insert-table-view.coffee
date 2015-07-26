@@ -64,9 +64,6 @@ class InsertTableView extends View
 
   # at least 2 row + 2 columns
   isValidRange: (row, col) ->
-    if isNaN(row) or isNaN(col)
-      false
-    if row < 2 or col < 2
-      false
-    else
-      true
+    return false if isNaN(row) || isNaN(col)
+    return false if row < 2 || col < 2
+    return true
