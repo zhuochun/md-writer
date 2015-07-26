@@ -313,11 +313,6 @@ createTableSeparator = (options) ->
   for i in [0..options.numOfColumns - 1]
     columnLength = options.columnLengths[i] || options.columnLength
 
-    if !options.extraPipes && (i == 0 || i == options.numOfColumns - 1)
-      columnLength += 1
-    else
-      columnLength += 2
-
     switch options.alignments[i] || options.alignment
       when "center"
         row.push(":" + "-".repeat(columnLength - 2) + ":")
@@ -346,6 +341,11 @@ createTableRow = (columns, options) ->
   row = []
   for i in [0..options.numOfColumns - 1]
     columnLength = options.columnLengths[i] || options.columnLength
+
+    if !options.extraPipes && (i == 0 || i == options.numOfColumns - 1)
+      columnLength -= 1
+    else
+      columnLength -= 2
 
     if !columns[i]
       row.push(" ".repeat(columnLength))

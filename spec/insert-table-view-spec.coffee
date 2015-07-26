@@ -13,15 +13,15 @@ describe "InsertTableView", ->
   it "create correct table", ->
     table = @view.createTable(2, 2)
     expect(table).toEqual([
-      "  |  "
-      "--|--"
-      "  |  "
+      "   |   "
+      "---|---"
+      "   |   "
     ].join("\n"))
 
     table = @view.createTable(3, 3)
     expect(table).toEqual([
-      "  |   |  "
-      "--|---|--"
-      "  |   |  "
-      "  |   |  "
+      "   |   |   "
+      "---|---|---"
+      "   |   |   "
+      "   |   |   "
     ].join("\n"))

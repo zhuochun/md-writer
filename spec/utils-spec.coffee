@@ -196,6 +196,8 @@ key2:
     fixture = "----|"
     expect(utils.isTableSeparator(fixture)).toBe(false)
 
+    fixture = "|--|"
+    expect(utils.isTableSeparator(fixture)).toBe(true)
     fixture = "--|--"
     expect(utils.isTableSeparator(fixture)).toBe(true)
     fixture = "---- |------ | ---"
@@ -213,15 +215,23 @@ key2:
   it "check is table separator with format", ->
     fixture = ":--  |::---"
     expect(utils.isTableSeparator(fixture)).toBe(false)
-    fixture = "|:---: |"
-    expect(utils.isTableSeparator(fixture)).toBe(false)
 
+    fixture = "|:---: |"
+    expect(utils.isTableSeparator(fixture)).toBe(true)
     fixture = ":--|--:"
     expect(utils.isTableSeparator(fixture)).toBe(true)
     fixture = "|:---: |:----- | --: |"
     expect(utils.isTableSeparator(fixture)).toBe(true)
 
   it "parse table separator", ->
+    fixture = "|----|"
+    expect(utils.parseTableSeparator(fixture)).toEqual({
+      separator: true
+      extraPipes: true
+      alignments: ["empty"]
+      columns: ["----"]
+      columnLengths: [4]})
+
     fixture = "--|--"
     expect(utils.parseTableSeparator(fixture)).toEqual({
       separator: true
@@ -317,45 +327,45 @@ key2:
 
   it "create table separator", ->
     row = utils.createTableSeparator(
-      numOfColumns: 3, extraPipes: false, columnLength: 1, alignment: "empty")
-    expect(row).toEqual("--|---|--")
+      numOfColumns: 3, extraPipes: false, columnLength: 3, alignment: "empty")
+    expect(row).toEqual("---|---|---")
 
     row = utils.createTableSeparator(
-      numOfColumns: 2, extraPipes: true, columnLength: 1, alignment: "empty")
+      numOfColumns: 2, extraPipes: true, columnLength: 3, alignment: "empty")
     expect(row).toEqual("|---|---|")
 
     row = utils.createTableSeparator(
-      numOfColumns: 1, extraPipes: true, columnLength: 1, alignment: "left")
+      numOfColumns: 1, extraPipes: true, columnLength: 3, alignment: "left")
     expect(row).toEqual("|:--|")
 
     row = utils.createTableSeparator(
-      numOfColumns: 3, extraPipes: true, columnLength: 1,
-      columnLengths: [2, 3, 3], alignment: "left")
+      numOfColumns: 3, extraPipes: true, columnLengths: [4, 5, 5],
+      alignment: "left")
     expect(row).toEqual("|:---|:----|:----|")
 
     row = utils.createTableSeparator(
-      numOfColumns: 4, extraPipes: false, columnLength: 3,
+      numOfColumns: 4, extraPipes: false, columnLength: 5,
       alignment: "left", alignments: ["empty", "right", "center"])
-    expect(row).toEqual("----|----:|:---:|:---")
+    expect(row).toEqual("-----|----:|:---:|:----")
 
   it "create empty table row", ->
     row = utils.createTableRow([],
       numOfColumns: 3, columnLength: 3, alignment: "empty")
-    expect(row).toEqual("    |     |    ")
+    expect(row).toEqual("   |   |   ")
 
     row = utils.createTableRow([],
       numOfColumns: 3, extraPipes: true, columnLengths: [3, 4, 5],
       alignment: "empty")
-    expect(row).toEqual("|     |      |       |")
+    expect(row).toEqual("|   |    |     |")
 
   it "create table row", ->
     row = utils.createTableRow(["中文", "English"],
-      numOfColumns: 2, extraPipes: true, columnLengths: [4, 7])
+      numOfColumns: 2, extraPipes: true, columnLengths: [6, 9])
     expect(row).toEqual("| 中文 | English |")
 
     row = utils.createTableRow(["中文", "English"],
-      numOfColumns: 2, columnLengths: [9, 9], alignments: ["right", "center"])
-    expect(row).toEqual("     中文 |  English ")
+      numOfColumns: 2, columnLengths: [9, 11], alignments: ["right", "center"])
+    expect(row).toEqual("    中文 |  English  ")
 
   it "create an empty table", ->
     rows = []
@@ -369,9 +379,9 @@ key2:
     rows.push(utils.createTableRow([], options))
 
     expect(rows).toEqual([
-      "      |     |      "
-      ":-----|:---:|-----:"
-      "      |     |      "
+      "     |   |     "
+      ":----|:-:|----:"
+      "     |   |     "
     ])
 
   it "create an empty table with extra pipes", ->
@@ -386,9 +396,9 @@ key2:
     rows.push(utils.createTableRow([], options))
 
     expect(rows).toEqual([
-      "|     |     |     |"
-      "|-----|-----|-----|"
-      "|     |     |     |"
+      "|   |   |   |"
+      "|---|---|---|"
+      "|   |   |   |"
     ])
 
   it "replace front matter (no leading fence)", ->
