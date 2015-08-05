@@ -1,14 +1,10 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
+FrontMatter = require "./models/front-matter"
 config = require "./config"
 utils = require "./utils"
 
 module.exports =
 class ManagePostCategoriesView extends View
-  editor: null
-  frontMatter: null
-  categories: null
-  previouslyFocusedElement: null
-
   @content: ->
     @div class: "markdown-writer markdown-writer-selection", =>
       @label "Manage Post Categories", class: "icon icon-book"
@@ -18,30 +14,25 @@ class ManagePostCategoriesView extends View
         @li "Loading..."
 
   initialize: ->
-    @fetchCategories()
+    @fetchSiteCategories()
     @candidates.on "click", "li", (e) => @appendCategory(e)
 
     atom.commands.add @element,
-      "core:confirm": => @updateFrontMatter()
+      "core:confirm": => @saveFrontMatter()
       "core:cancel":  => @detach()
-
-  updateFrontMatter: ->
-    @frontMatter.categories = @getEditorCategories()
-    utils.updateFrontMatter(@editor, @frontMatter)
-    @detach()
 
   display: ->
     @editor = atom.workspace.getActiveTextEditor()
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
     @previouslyFocusedElement = $(document.activeElement)
 
-    if utils.hasFrontMatter(@editor.getText())
-      @setFrontMatter()
-      @setEditorCategories(@frontMatter.categories)
-      @panel.show()
-      @categoriesEditor.focus()
-    else
-      @detach()
+    @frontMatter = new FrontMatter(@editor)
+    return @detach if @frontMatter.isEmpty
+
+    @frontMatter.normalizeField("categories")
+    @setEditorCategories(@frontMatter.getField("categories"))
+    @panel.show()
+    @categoriesEditor.focus()
 
   detach: ->
     return unless @panel.isVisible()
@@ -49,13 +40,10 @@ class ManagePostCategoriesView extends View
     @previouslyFocusedElement?.focus()
     super
 
-  setFrontMatter: ->
-    @frontMatter = utils.getFrontMatter(@editor.getText())
-
-    if !@frontMatter.categories
-      @frontMatter.categories = []
-    else if typeof @frontMatter.categories == "string"
-      @frontMatter.categories = [@frontMatter.categories]
+  saveFrontMatter: ->
+    @frontMatter.setField("categories", @getEditorCategories())
+    @frontMatter.save()
+    @detach()
 
   setEditorCategories: (categories) ->
     @categoriesEditor.setText(categories.join(","))
@@ -63,18 +51,18 @@ class ManagePostCategoriesView extends View
   getEditorCategories: ->
     @categoriesEditor.getText().split(/\s*,\s*/).filter((c) -> !!c.trim())
 
-  fetchCategories: ->
+  fetchSiteCategories: ->
     uri = config.get("urlForCategories")
     succeed = (body) =>
-      @categories = body.categories
-      @displayCategories(@categories)
+      @displaySiteCategories(body.categories || [])
     error = (err) =>
       @error.text(err?.message || "Error fetching categories from '#{uri}'")
     utils.getJSON(uri, succeed, error)
 
-  displayCategories: (categories) ->
-    tagElems = categories.map (tag) =>
-      if @frontMatter.categories.indexOf(tag) < 0
+  displaySiteCategories: (siteCategories) ->
+    categories = @frontMatter.getField("categories")
+    tagElems = siteCategories.map (tag) ->
+      if categories.indexOf(tag) < 0
         "<li>#{tag}</li>"
       else
         "<li class='selected'>#{tag}</li>"
