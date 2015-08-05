@@ -4,9 +4,6 @@ utils = require "./utils"
 
 module.exports =
 class InsertTableView extends View
-  editor: null
-  previouslyFocusedElement: null
-
   @content: ->
     @div class: "markdown-writer markdown-writer-dialog", =>
       @label "Insert Table", class: "icon icon-diff-added"

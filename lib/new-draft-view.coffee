@@ -6,8 +6,6 @@ fs = require "fs-plus"
 
 module.exports =
 class NewDraftView extends View
-  previouslyFocusedElement: null
-
   @content: ->
     @div class: "markdown-writer", =>
       @label "Add New Draft", class: "icon icon-file-add"

@@ -9,13 +9,6 @@ posts = null # to cache posts
 
 module.exports =
 class InsertLinkView extends View
-  editor: null
-  links: null
-  range: null # link range/reference link range
-  definitionRange: null # reference definition range
-  referenceId: false
-  previouslyFocusedElement: null
-
   @content: ->
     @div class: "markdown-writer markdown-writer-dialog", =>
       @label "Insert Link", class: "icon icon-globe"

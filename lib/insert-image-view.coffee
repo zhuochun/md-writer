@@ -11,11 +11,6 @@ lastInsertImageDir = null # remember last inserted image directory
 
 module.exports =
 class InsertImageView extends View
-  imageOnPreview: ""
-  editor: null
-  range: null
-  previouslyFocusedElement: null
-
   @content: ->
     @div class: "markdown-writer markdown-writer-dialog", =>
       @label "Insert Image", class: "icon icon-device-camera"
