@@ -1,4 +1,5 @@
 {$} = require "atom-space-pen-views"
+FrontMatter = require "./models/front-matter"
 config = require "./config"
 utils = require "./utils"
 fs = require "fs-plus"
@@ -6,15 +7,10 @@ path = require "path"
 
 module.exports =
 class PublishDraft
-  draftPath: null
-  postPath: null
-  frontMatter: null
-  editor: null
-
   constructor: ->
     @editor = atom.workspace.getActiveTextEditor()
+    @frontMatter = new FrontMatter(@editor)
     @draftPath = @editor.getPath()
-    @frontMatter = utils.getFrontMatter(@editor.getText())
     @postPath = @getPostPath()
 
   display: ->
@@ -27,10 +23,13 @@ class PublishDraft
       atom.workspace.open(@postPath)
 
   updateFrontMatter: ->
-    @frontMatter.published = true if @frontMatter.published?
-    @frontMatter.date = "#{utils.getDateStr()} #{utils.getTimeStr()}"
+    return if @frontMatter.isEmpty
 
-    utils.updateFrontMatter(@editor, @frontMatter)
+    @frontMatter.setIfExists("published", true)
+    @frontMatter.setIfExists("date",
+      "#{utils.getDateStr()} #{utils.getTimeStr()}")
+
+    @frontMatter.save()
 
   moveDraft: ->
     try

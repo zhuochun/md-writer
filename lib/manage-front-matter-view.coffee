@@ -30,7 +30,7 @@ class ManageFrontMatterView extends View
     return @detach() if @frontMatter.isEmpty
     @fetchSiteFieldCandidates()
     @frontMatter.normalizeField(@constructor.fieldName)
-    @setEditorFieldItems(@frontMatter.getField(@constructor.fieldName))
+    @setEditorFieldItems(@frontMatter.get(@constructor.fieldName))
     @panel.show()
     @fieldEditor.focus()
 
@@ -41,7 +41,7 @@ class ManageFrontMatterView extends View
     super
 
   saveFrontMatter: ->
-    @frontMatter.setField(@constructor.fieldName, @getEditorFieldItems())
+    @frontMatter.set(@constructor.fieldName, @getEditorFieldItems())
     @frontMatter.save()
     @detach()
 
@@ -54,7 +54,7 @@ class ManageFrontMatterView extends View
   fetchSiteFieldCandidates: -> # override
 
   displaySiteFieldItems: (siteFieldItems) ->
-    fieldItems = @frontMatter.getField(@constructor.fieldName) || []
+    fieldItems = @frontMatter.get(@constructor.fieldName) || []
     tagElems = siteFieldItems.map (tag) ->
       if fieldItems.indexOf(tag) < 0
         "<li>#{tag}</li>"

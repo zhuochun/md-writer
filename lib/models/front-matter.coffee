@@ -33,11 +33,14 @@ class FrontMatter
     else if typeof @content[field] == "string"
       @content[field] = [@content[field]]
 
-  getField: (field) ->
-    @content[field]
+  has: (field) -> @content[field]?
 
-  setField: (field, content) ->
-    @content[field] = content
+  get: (field) -> @content[field]
+
+  set: (field, content) -> @content[field] = content
+
+  setIfExists: (field, content) ->
+    @content[field] = content if @has(field)
 
   getContentText: ->
     text = yaml.safeDump(@content)
