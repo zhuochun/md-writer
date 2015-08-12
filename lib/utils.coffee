@@ -1,7 +1,5 @@
 {$} = require "atom-space-pen-views"
-os = require "os"
 path = require "path"
-yaml = require "js-yaml"
 wcswidth = require "wcwidth"
 
 # ==================================================
