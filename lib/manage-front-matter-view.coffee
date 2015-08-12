@@ -18,6 +18,7 @@ class ManageFrontMatterView extends View
 
   initialize: ->
     @candidates.on "click", "li", (e) => @appendFieldItem(e)
+
     atom.commands.add @element,
       "core:confirm": => @saveFrontMatter()
       "core:cancel":  => @detach()
