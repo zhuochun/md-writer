@@ -143,49 +143,6 @@ Markdown (or Textile), Liquid, HTML & CSS go in.
     expect(utils.parseReferenceDefinition(fixture, content)).toEqual
       id: "id", text: "text", url: "http://jekyll.com", title: "Jekyll Website"
 
-  it "test not has front matter", ->
-    fixture = "title\n---\nhello world\n"
-    expect(utils.hasFrontMatter(fixture)).toBe(false)
-
-  it "test has front matter", ->
-    fixture = "---\nkey1: val1\nkey2: val2\n---\n" # jeykll
-    expect(utils.hasFrontMatter(fixture)).toBe(true)
-    fixture = "key1: val1\nkey2: val2\n---\n" # hexo
-    expect(utils.hasFrontMatter(fixture)).toBe(true)
-
-  it "get front matter as js object (jekyll)", ->
-    fixture = "---\nkey1: val1\nkey2: val2\n---\n"
-    result = utils.getFrontMatter(fixture)
-    expect(result).toEqual key1: "val1", key2: "val2"
-
-  it "get front matter as js object (hexo)", ->
-    fixture = "key1: val1\nkey2: val2\n---\n"
-    result = utils.getFrontMatter(fixture)
-    expect(result).toEqual key1: "val1", key2: "val2"
-
-  it "get front matter as empty object", ->
-    fixture = "---\n\n\n---\n"
-    result = utils.getFrontMatter(fixture)
-    expect(result).toEqual {}
-    fixture = "\n\n\n---\n"
-    result = utils.getFrontMatter(fixture)
-    expect(result).toEqual {}
-    fixture = "this is content\nwith no front matters\n"
-    result = utils.getFrontMatter(fixture)
-    expect(result).toEqual {}
-
-  it "replace front matter", ->
-    expected = """---
-key1: val1
-key2:
-  - v1
-  - v2
----
-
-"""
-    result = utils.getFrontMatterText(key1: "val1", key2: ["v1", "v2"])
-    expect(result).toEqual(expected)
-
   it "check is url", ->
     fixture = "https://github.com/zhuochun/md-writer"
     expect(utils.isUrl(fixture)).toBe(true)
@@ -400,19 +357,6 @@ key2:
       "|---|---|---|"
       "|   |   |   |"
     ])
-
-  it "replace front matter (no leading fence)", ->
-    expected = """
-key1: val1
-key2:
-  - v1
-  - v2
----
-
-"""
-    result = utils.getFrontMatterText(
-      {key1: "val1", key2: ["v1", "v2"]}, true)
-    expect(result).toEqual(expected)
 
   it "dasherize title", ->
     fixture = "hello world!"
