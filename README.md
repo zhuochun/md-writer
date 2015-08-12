@@ -1,5 +1,7 @@
 # Markdown-Writer for Atom
 
+[![Build Status](https://travis-ci.org/zhuochun/md-writer.svg)](https://travis-ci.org/zhuochun/md-writer)
+
 Adds tons of features to make [Atom](https://atom.io/) a even better Markdown editor!
 
 Works great with static blogging as well. Try it with [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) and any of your favorite static blog engines.
