@@ -3,9 +3,6 @@ utils = require "./utils"
 
 module.exports =
 class StyleLine
-  editor: null
-  style: null
-
   # @style config could contains:
   #
   # - before (required)

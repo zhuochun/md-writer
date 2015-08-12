@@ -10,10 +10,6 @@ scopeSelectors =
 
 module.exports =
 class StyleText
-  editor: null
-  styleName: null
-  style: null
-
   # @style config could contains:
   #
   # - before (required)

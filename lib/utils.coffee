@@ -71,38 +71,6 @@ getDate = (date = new Date()) ->
   seconds: ("0" + date.getSeconds()).slice(-2)
 
 # ==================================================
-# Front Matters
-#
-
-FRONT_MATTER_REGEX = ///
-  ^(?:---\s*)?  # match open --- (if any)
-  ([^:]+:       # match at least 1 open key
-  [\s\S]*?)\s*  # match the rest
-  ---\s*$       # match ending ---
-  ///m
-
-hasFrontMatter = (content) ->
-  !!content && FRONT_MATTER_REGEX.test(content)
-
-getFrontMatter = (content) ->
-  matches = content.match(FRONT_MATTER_REGEX)
-  return {} unless matches
-  yamlText = matches[1].trim()
-  return yaml.safeLoad(yamlText) || {}
-
-getFrontMatterText = (obj, noLeadingFence) ->
-  yamlText = yaml.safeDump(obj)
-  if noLeadingFence
-    return ["#{yamlText}---", ""].join(os.EOL)
-  else
-    return ["---", "#{yamlText}---", ""].join(os.EOL)
-
-updateFrontMatter = (editor, frontMatter) ->
-  editor.buffer.scan FRONT_MATTER_REGEX, (match) ->
-    noLeadingFence = !match.matchText.startsWith("---")
-    match.replace getFrontMatterText(frontMatter, noLeadingFence)
-
-# ==================================================
 # Title and Slug
 #
 
@@ -446,11 +414,6 @@ module.exports =
   parseDateStr: parseDateStr
   getDateStr: getDateStr
   getTimeStr: getTimeStr
-
-  hasFrontMatter: hasFrontMatter
-  getFrontMatter: getFrontMatter
-  getFrontMatterText: getFrontMatterText
-  updateFrontMatter: updateFrontMatter
 
   getTitleSlug: getTitleSlug
 

@@ -6,8 +6,6 @@ fs = require "fs-plus"
 
 module.exports =
 class NewPostView extends View
-  previouslyFocusedElement: null
-
   @content: ->
     @div class: "markdown-writer", =>
       @label "Add New Post", class: "icon icon-file-add"
