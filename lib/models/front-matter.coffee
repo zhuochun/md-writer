@@ -27,11 +27,14 @@ class FrontMatter
   _findFrontMatter: (onMatch) ->
     @editor.buffer.scan(FRONT_MATTER_REGEX, onMatch)
 
+  # normalize the field to an array
   normalizeField: (field) ->
     if !@content[field]
       @content[field] = []
     else if typeof @content[field] == "string"
       @content[field] = [@content[field]]
+    else
+      @content[field]
 
   has: (field) -> @content[field]?
 
