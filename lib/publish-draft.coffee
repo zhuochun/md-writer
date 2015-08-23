@@ -33,10 +33,7 @@ class PublishDraft
 
   moveDraft: ->
     try
-      if fs.existsSync(@postPath)
-        alert("Error:\nPost #{@postPath} already exists!")
-      else
-        fs.renameSync(@draftPath, @postPath)
+      fs.moveSync(@draftPath, @postPath)
     catch error
       alert("Error:\n#{error.message}")
 
@@ -47,15 +44,18 @@ class PublishDraft
     localDir = config.get("siteLocalDir")
     postsDir = config.get("sitePostsDir")
     postsDir = utils.dirTemplate(postsDir)
-    return path.join(localDir, postsDir)
+
+    path.join(localDir, postsDir)
 
   getPostName: ->
     template = config.get("newPostFileName")
+
     date = utils.getDate()
     info =
       title: @getPostTitle()
       extension: @getPostExtension()
-    return utils.template(template, $.extend(info, date))
+
+    utils.template(template, $.extend(info, date))
 
   getPostTitle: ->
     if config.get("publishRenameBasedOnTitle")
@@ -64,6 +64,5 @@ class PublishDraft
       utils.getTitleSlug(@draftPath)
 
   getPostExtension: ->
-    if config.get("publishKeepFileExtname")
-      extname = path.extname(@draftPath)
-    return extname || config.get("fileExtension")
+    extname = path.extname(@draftPath) if config.get("publishKeepFileExtname")
+    extname || config.get("fileExtension")
