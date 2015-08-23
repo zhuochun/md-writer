@@ -6,8 +6,13 @@ class Configuration
   @prefix: "markdown-writer"
 
   @defaults:
-    # static engine of your blog
+    # static engine of your blog, see `@engines`
     siteEngine: "general"
+
+    # project specific configuration file name
+    # https://github.com/zhuochun/md-writer/wiki/Settings-for-individual-projects
+    projectConfigFile: "_mdwriter.cson"
+
     # root directory of your blog
     siteLocalDir: "/config/your/local/directory/in/settings"
     # directory to drafts from the root of siteLocalDir
@@ -16,26 +21,18 @@ class Configuration
     sitePostsDir: "_posts/{year}/"
     # directory to images from the root of siteLocalDir
     siteImagesDir: "images/{year}/{month}/"
+
     # URL to your blog
     siteUrl: ""
-    # URLs to tags/posts/categories JSON file
+    # URLs to tags/posts/categories JSON files
+    # https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters
     urlForTags: ""
     urlForPosts: ""
     urlForCategories: ""
-    # filetypes markdown-writer commands apply
-    grammars: [
-      'source.gfm'
-      'source.litcoffee'
-      'text.plain'
-      'text.plain.null-grammar'
-    ]
-    # file extension of posts/drafts
-    fileExtension: ".markdown"
-    # whether rename filename based on title in front matter when publishing
-    publishRenameBasedOnTitle: false
-    # whether publish keep draft's extension name used
-    publishKeepFileExtname: false
-    # filename format of new posts/drafts created
+
+    # filename format of new drafts created
+    newDraftFileName: "{title}{extension}"
+    # filename format of new posts created
     newPostFileName: "{year}-{month}-{day}-{title}{extension}"
     # front matter template
     frontMatter: """
@@ -45,14 +42,22 @@ class Configuration
       date: "<date>"
       ---
       """
+
+    # file extension of posts/drafts
+    fileExtension: ".markdown"
+
+    # whether rename filename based on title in front matter when publishing
+    publishRenameBasedOnTitle: false
+    # whether publish keep draft's extension name used
+    publishKeepFileExtname: false
+
     # path to a .cson file that stores links added for automatic linking
     siteLinkPath: path.join(atom.getConfigDirPath(), "#{@prefix}-links.cson")
     # reference tag insert position (paragraph or article)
     referenceInsertPosition: "paragraph"
     # reference tag indent space (0 or 2)
     referenceIndentLength: 2
-    # project specific configuration file name
-    projectConfigFile: "_mdwriter.cson"
+
     # text styles related
     textStyles:
       code: before: "`", after: "`"
@@ -68,6 +73,7 @@ class Configuration
         after: "\n```"
         regexBefore: "```(?:[\\w- ]+)?\\n"
         regexAfter: "\\n```"
+
     # line styles related
     lineStyles:
       h1: before: "# "
@@ -85,15 +91,25 @@ class Configuration
         before: "- [ ] ",
         regexBefore: "(?:- \\[ ]|- \\[x]|- \\[X]|-|\\*)\\s"
       taskdone:
-        before: "- [x] ",
+        before: "- [X] ",
         regexBefore: "(?:- \\[ ]|- \\[x]|- \\[X]|-|\\*)\\s"
       blockquote: before: "> "
+
     # image tag template
     imageTag: "![<alt>](<src>)"
+
     # table default alignments: "empty", "left", "right", "center"
     tableAlignment: "empty"
     # insert extra pipes at the beginning and the end of table rows
     tableExtraPipes: false
+
+    # filetypes markdown-writer commands apply
+    grammars: [
+      'source.gfm'
+      'source.litcoffee'
+      'text.plain'
+      'text.plain.null-grammar'
+    ]
 
   @engines:
     html:
@@ -124,11 +140,16 @@ class Configuration
 
   engineNames: -> Object.keys(@constructor.engines)
 
+  keyPath: (key) -> "#{@constructor.prefix}.#{key}"
+
   get: (key) ->
     @getProject(key) || @getUser(key) || @getEngine(key) || @getDefault(key)
 
   set: (key, val) ->
     atom.config.set(@keyPath(key), val)
+
+  restoreDefault: (key) ->
+    atom.config.unset(@keyPath(key))
 
   # get config.defaults
   getDefault: (key) ->
@@ -139,6 +160,7 @@ class Configuration
     engine = @getProject("siteEngine") ||
              @getUser("siteEngine") ||
              @getDefault("siteEngine")
+
     if engine in @engineNames()
       @_valueForKeyPath(@constructor.engines[engine], key)
 
@@ -157,7 +179,7 @@ class Configuration
     project = atom.project.getPaths()[0]
     config = @_loadProjectConfig(project)
 
-    return @_valueForKeyPath(config, key)
+    @_valueForKeyPath(config, key)
 
   _loadProjectConfig: (project) ->
     if @constructor.projectConfigs[project]
@@ -168,11 +190,6 @@ class Configuration
 
     config = CSON.readFileSync(filePath) if fs.existsSync(filePath)
     @constructor.projectConfigs[project] = config || {}
-
-  restoreDefault: (key) ->
-    atom.config.unset(@keyPath(key))
-
-  keyPath: (key) -> "#{@constructor.prefix}.#{key}"
 
   _valueForKeyPath: (object, keyPath) ->
     keys = keyPath.split('.')
