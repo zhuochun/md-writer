@@ -1,3 +1,11 @@
+## 1.9.0
+
+* Refactoring code
+* Fix bug when edit tags/categories in files without front matter
+* Add travis for testing
+* Improve create draft, allow more customization as create post
+* Fix bug publish draft where destination path does not exists
+
 ## 1.8.1
 
 * Fix table columnWidths bug
