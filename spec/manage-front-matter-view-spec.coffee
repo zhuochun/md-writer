@@ -70,10 +70,10 @@ describe "ManageFrontMatterView", ->
       tagsView.rankTags(tags, fixture)
 
       expect(tags).toEqual [
-        { name:"ab", count:3 }
-        { name:"ef", count:2 }
-        { name:"cd", count:1 }
-        { name:"ij", count:0 }
+        {name: "ab", count: 3}
+        {name: "ef", count: 2}
+        {name: "cd", count: 1}
+        {name: "ij", count: 0}
       ]
 
     it "rank tags with regex escaped", ->
@@ -83,9 +83,9 @@ describe "ManageFrontMatterView", ->
       tagsView.rankTags(tags, fixture)
 
       expect(tags).toEqual [
-        { name:"c++", count:1 }
-        { name:"^", count:1 }
-        { name:"$", count:1 }
-        { name:"+abc", count:1 }
-        { name:"\\", count:0 }
+        {name: "c++", count: 1}
+        {name: "^", count: 1}
+        {name: "$", count: 1}
+        {name: "+abc", count: 1}
+        {name: "\\", count: 0}
       ]

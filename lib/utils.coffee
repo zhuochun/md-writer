@@ -14,7 +14,7 @@ regexpEscape = (str) ->
   str && str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
 dasherize = (str) ->
-  str.trim().toLowerCase().replace(/[^-\w\s]|_/g, "").replace(/\s+/g,"-")
+  str.trim().toLowerCase().replace(/[^-\w\s]|_/g, "").replace(/\s+/g, "-")
 
 getPackagePath = (segments...) ->
   segments.unshift(atom.packages.resolvePackagePath("markdown-writer"))
@@ -50,7 +50,7 @@ parseDateStr = (str) ->
     date.setDate(parseInt(matches[3], 10))
   return getDate(date)
 
-getDateStr = (date)->
+getDateStr = (date) ->
   date = getDate(date)
   return "#{date.year}-#{date.month}-#{date.day}"
 

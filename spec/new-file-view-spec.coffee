@@ -14,8 +14,7 @@ describe "NewFileView", ->
 
     describe '.getFileName', ->
       it "get filename in hexo format", ->
-        atom.config.set("markdown-writer.newFileFileName",
-          "file-{title}{extension}")
+        atom.config.set("markdown-writer.newFileFileName", "file-{title}{extension}")
         atom.config.set("markdown-writer.fileExtension", ".md")
 
         newFileView.titleEditor.setText("Hexo format")
