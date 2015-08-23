@@ -43,6 +43,10 @@ basicConfig =
     title: "URL to Categories JSON definitions"
     type: "string"
     default: config.getDefault("urlForCategories")
+  newDraftFileName:
+    title: "New Draft File Name"
+    type: "string"
+    default: config.getCurrentDefault("newDraftFileName")
   newPostFileName:
     title: "New Post File Name"
     type: "string"

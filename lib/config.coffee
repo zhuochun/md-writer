@@ -30,6 +30,8 @@ class Configuration
     urlForPosts: ""
     urlForCategories: ""
 
+    # filename format of new drafts created
+    newDraftFileName: "{title}{extension}"
     # filename format of new posts created
     newPostFileName: "{year}-{month}-{day}-{title}{extension}"
     # front matter template
