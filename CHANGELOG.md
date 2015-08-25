@@ -1,3 +1,9 @@
+## 1.9.1
+
+* Fix insert link exception when try to get a saved link
+* Fix insert link not saving links when the CSON file does not exists
+* Add tests for insert link view
+
 ## 1.9.0
 
 * Refactoring code
