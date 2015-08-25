@@ -32,21 +32,23 @@ class InsertLinkView extends View
   initialize: ->
     @searchEditor.getModel().onDidChange =>
       @updateSearch(@searchEditor.getText()) if posts
+
     @searchResult.on "click", "li", (e) => @useSearchResult(e)
 
     atom.commands.add @element,
       "core:confirm": => @onConfirm()
-      "core:cancel":  => @detach()
+      "core:cancel": => @detach()
 
   onConfirm: ->
-    text = @textEditor.getText()
-    url = @urlEditor.getText().trim()
-    title = @titleEditor.getText().trim()
+    link =
+      text: @textEditor.getText()
+      url: @urlEditor.getText().trim()
+      title: @titleEditor.getText().trim()
 
     @editor.transact =>
-      if url then @insertLink(text, title, url) else @removeLink(text)
+      if link.url then @insertLink(link) else @removeLink(link.text)
 
-    @updateSavedLink(text, title, url)
+    @updateSavedLinks(link)
     @detach()
 
   display: ->
@@ -65,9 +67,9 @@ class InsertLinkView extends View
         @textEditor.focus()
 
   detach: ->
-    return unless @panel.isVisible()
-    @panel.hide()
-    @previouslyFocusedElement?.focus()
+    if @panel.isVisible()
+      @panel.hide()
+      @previouslyFocusedElement?.focus()
     super
 
   _normalizeSelectionAndSetLinkFields: ->
@@ -78,8 +80,8 @@ class InsertLinkView extends View
     @range = link.linkRange || @range
     @definitionRange = link.definitionRange
 
-    @setLink(link.text, link.url, link.title)
-    @saveCheckbox.prop("checked", true) if @isInSavedLink(link)
+    @setLink(link)
+    @saveCheckbox.prop("checked", @isInSavedLink(link))
 
   _findLinkInRange: ->
     selection = @editor.getTextInRange(@range)
@@ -99,8 +101,8 @@ class InsertLinkView extends View
       link = utils.parseReferenceDefinition(selection, @editor)
       link.definitionRange = @range
 
-      # if link.linkRange is null, this definition is an orphan,
-      # just ignore this definition link match
+      # when link.linkRange is undefined, the definition is an orphan,
+      # will just ignore it and take it as normal text instead
       return link if link.linkRange
 
     if @getSavedLink(selection)
@@ -117,40 +119,40 @@ class InsertLinkView extends View
     @searchResult.empty().append(results.join(""))
 
   useSearchResult: (e) ->
+    @textEditor.setText(e.target.textContent) unless @textEditor.getText()
     @titleEditor.setText(e.target.textContent)
     @urlEditor.setText(e.target.dataset.url)
-    @textEditor.setText(e.target.textContent) unless @textEditor.getText()
     @titleEditor.focus()
 
-  insertLink: (text, title, url) ->
+  insertLink: (link) ->
     if @definitionRange
-      @updateReferenceLink(text, title, url)
-    else if title
-      @insertReferenceLink(text, title, url)
+      @updateReferenceLink(link)
+    else if link.title
+      @insertReferenceLink(link)
     else
-      @editor.setTextInBufferRange(@range, "[#{text}](#{url})")
+      @editor.setTextInBufferRange(@range, "[#{link.text}](#{link.url})")
 
-  updateReferenceLink: (text, title, url) ->
-    if title # update the reference link
-      link = "[#{text}][#{@referenceId}]"
-      @editor.setTextInBufferRange(@range, link)
+  updateReferenceLink: (link) ->
+    if link.title # update the reference link
+      linkText = "[#{link.text}][#{@referenceId}]"
+      @editor.setTextInBufferRange(@range, linkText)
 
-      definition = @_referenceDefinition(url, title)
-      @editor.setTextInBufferRange(@definitionRange, definition)
+      definitionText = @_referenceDefinition(link.url, link.title)
+      @editor.setTextInBufferRange(@definitionRange, definitionText)
     else # change to inline link
-      @removeReferenceLink("[#{text}](#{url})")
+      @removeReferenceLink("[#{link.text}](#{link.url})")
 
-  insertReferenceLink: (text, title, url) ->
+  insertReferenceLink: (link) ->
     @referenceId = require("guid").raw()[0..7] # create an unique id
 
-    link = "[#{text}][#{@referenceId}]"
-    @editor.setTextInBufferRange(@range, link)
+    linkText = "[#{link.text}][#{@referenceId}]"
+    @editor.setTextInBufferRange(@range, linkText)
 
-    definition = @_referenceDefinition(url, title)
+    definitionText = @_referenceDefinition(link.url, link.title)
     if config.get("referenceInsertPosition") == "article"
-      helper.insertAtEndOfArticle(@editor, definition)
+      helper.insertAtEndOfArticle(@editor, definitionText)
     else
-      helper.insertAfterCurrentParagraph(@editor, definition)
+      helper.insertAfterCurrentParagraph(@editor, definitionText)
 
   _referenceIndentLength: ->
     " ".repeat(config.get("referenceIndentLength"))
@@ -177,42 +179,50 @@ class InsertLinkView extends View
     helper.removeDefinitionRange(@editor, @definitionRange)
     @editor.setCursorBufferPosition(position)
 
-  setLink: (text, url, title) ->
-    @textEditor.setText(text)
-    @urlEditor.setText(url)
-    @titleEditor.setText(title)
+  setLink: (link) ->
+    @textEditor.setText(link.text)
+    @titleEditor.setText(link.title)
+    @urlEditor.setText(link.url)
 
   getSavedLink: (text) ->
-    @links?[text.toLowerCase()]
+    link = @links?[text.toLowerCase()]
+    return link unless link
+
+    link["text"] = text unless link.text
+    return link
 
   isInSavedLink: (link) ->
     savedLink = @getSavedLink(link.text)
-    savedLink && savedLink.title == link.title && savedLink.url == link.url
+    !!savedLink && !(["text", "title", "url"].some (k) -> savedLink[k] != link[k])
 
-  updateSavedLink: (text, title, url) ->
+  updateToLinks: (link) ->
+    linkUpdated = false
+    inSavedLink = @isInSavedLink(link)
+
     if @saveCheckbox.prop("checked")
-      @links[text.toLowerCase()] = title: title, url: url if url
-    else if @isInSavedLink(text: text, title: title, url: url)
-      delete @links[text.toLowerCase()]
+      if !inSavedLink && link.url
+        @links[link.text.toLowerCase()] = link
+        linkUpdated = true
+    else if inSavedLink
+      delete @links[link.text.toLowerCase()]
+      linkUpdated = true
 
-    file = config.get("siteLinkPath")
-    fs.exists file, (exists) =>
-      CSON.writeFile(file, @links) if exists
+    return linkUpdated
 
+  # save the new link to CSON file if the link has updated @links
+  updateSavedLinks: (link) ->
+    CSON.writeFile(config.get("siteLinkPath"), @links) if @updateToLinks(link)
+
+  # load saved links from CSON files
   loadSavedLinks: (callback) ->
-    setLinks = (data) => @links = data || {}; callback()
-    readFile = (file) -> CSON.readFile file, (err, data) -> setLinks(data)
+    CSON.readFile config.get("siteLinkPath"), (err, data) =>
+      @links = data || {}
+      callback()
 
-    file = config.get("siteLinkPath")
-    fs.exists file, (exists) ->
-      if exists then readFile(file) else setLinks()
-
+  # fetch remote posts in JSON format
   fetchPosts: ->
-    if posts
-      @searchBox.hide() if posts.length < 1
-      return
+    return (@searchBox.hide() if posts.length < 1) if posts
 
-    uri = config.get("urlForPosts")
     succeed = (body) =>
       posts = body.posts
       if posts.length > 0
@@ -221,4 +231,4 @@ class InsertLinkView extends View
         @updateSearch(@textEditor.getText())
     error = (err) => @searchBox.hide()
 
-    utils.getJSON(uri, succeed, error)
+    utils.getJSON(config.get("urlForPosts"), succeed, error)
