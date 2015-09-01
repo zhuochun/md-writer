@@ -1,3 +1,8 @@
+## 1.9.3
+
+* Fix publish-draft require missing file
+
+## 1.9.2
 ## 1.9.1
 
 * Fix insert link exception when try to get a saved link
