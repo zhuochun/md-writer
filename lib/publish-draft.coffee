@@ -1,5 +1,5 @@
 {$} = require "atom-space-pen-views"
-FrontMatter = require "./models/front-matter"
+FrontMatter = require "./front-matter"
 config = require "./config"
 utils = require "./utils"
 fs = require "fs-plus"
