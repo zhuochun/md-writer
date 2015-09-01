@@ -10,17 +10,15 @@ class PublishDraft
   constructor: ->
     @editor = atom.workspace.getActiveTextEditor()
     @frontMatter = new FrontMatter(@editor)
-    @draftPath = @editor.getPath()
-    @postPath = @getPostPath()
 
   display: ->
     @updateFrontMatter()
     @editor.save()
 
-    unless @draftPath == @postPath
-      @editor.destroy()
-      @moveDraft()
-      atom.workspace.open(@postPath)
+    @draftPath = @editor.getPath()
+    @postPath = @getPostPath()
+
+    @moveDraft() unless @draftPath == @postPath
 
   updateFrontMatter: ->
     return if @frontMatter.isEmpty
@@ -33,7 +31,9 @@ class PublishDraft
 
   moveDraft: ->
     try
+      @editor.destroy()
       fs.moveSync(@draftPath, @postPath)
+      atom.workspace.open(@postPath)
     catch error
       alert("Error:\n#{error.message}")
 
