@@ -44,7 +44,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 - **Insert table** (`markdown-writer:insert-table`), and a shortcut to **jump to next table cell** (`cmd-j cmd-t`).
 - **Format table** (`markdown-writer:format-table`) with table alignments.
 - **Toggle headings**: `ctrl-alt-[1-5]` to switch among `H1` to `H5`.
-- **Toggle text styles**:
+- **Toggle text styles** ([view customization][7ddaeaf4]):
   - `code` (`cmd-'`)
   - **bold** (`cmd-b`)
   - _italic_ (`cmd-i`)
@@ -81,7 +81,7 @@ Go to Settings (`cmd-,`) -> Packages -> `Markdown-Writer` -> Settings.
 
 To **manage tags/categories in front matter**, please [follow this setup][35eb9cc2].
 
-For more configurations (e.g. project specific settings, change italic text styles), view [this wiki document][7ddaeaf4].
+To **manage all configurations (e.g. project specific settings, change italic text styles)**, refer to [this wiki document][7ddaeaf4].
 
   [3ecd2daa]: https://github.com/atom/settings-view/issues/356 "Viewing a package's settings should activate it"
   [35eb9cc2]: https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters "Settings for Front Matters"
