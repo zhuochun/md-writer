@@ -22,8 +22,8 @@ The following is a set of guidelines for contributing to Markdown Writer.
 ### Submit a Pull Request
 
 - Start a new branch `git checkout -b branch-name`.
-- Run `atom --dev .` to edit files in Atom.
-- Commit your changes.
+- Run `atom --dev .` and edit files in Atom.
+- Commit your changes, with a few tests if possible.
 - Push your branch `git push -u origin branch-name` to GitHub.
 - Submit a Pull Request through GitHub with a clear description.
 
