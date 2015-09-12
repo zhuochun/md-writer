@@ -134,7 +134,7 @@
             { 'type': 'separator' }
             {
               'label': 'Jump to Definition'
-              'command': 'markdown-writer:jump-between-reference-definition'
+              'command': 'markdown-writer:jump-to-reference-definition'
             }
             { 'type': 'separator' }
             {

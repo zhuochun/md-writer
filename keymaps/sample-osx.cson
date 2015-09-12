@@ -23,5 +23,5 @@
   "shift-cmd-U": "markdown-writer:toggle-ul"
   "cmd-j cmd-p": "markdown-writer:jump-to-previous-heading"
   "cmd-j cmd-n": "markdown-writer:jump-to-next-heading"
-  "cmd-j cmd-d": "markdown-writer:jump-between-reference-definition"
+  "cmd-j cmd-d": "markdown-writer:jump-to-reference-definition"
   "cmd-j cmd-t": "markdown-writer:jump-to-next-table-cell"
