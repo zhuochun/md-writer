@@ -242,7 +242,8 @@ parseTableSeparator = (line) ->
         "left"
       else if tail
         "right"
-      else "empty"
+      else
+        "empty"
   }
 
 TABLE_ROW_REGEX = /// ^

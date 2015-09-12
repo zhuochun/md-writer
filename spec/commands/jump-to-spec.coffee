@@ -91,7 +91,7 @@ describe "JumpTo", ->
       jumpTo = new JumpTo()
       expect(jumpTo.nextHeading()).toEqual(row: 0, column: 0)
 
-  describe ".betweenReferenceDefinition", ->
+  describe ".referenceDefinition", ->
     text = """
     link to [content][]
 
@@ -100,28 +100,28 @@ describe "JumpTo", ->
 
     it "finds nothing if no word under cursor", ->
       jumpTo = new JumpTo()
-      expect(jumpTo.betweenReferenceDefinition()).toBe(false)
+      expect(jumpTo.referenceDefinition()).toBe(false)
 
     it "finds nothing if no link found", ->
       editor.setText(text)
       editor.setCursorBufferPosition([0, 2])
 
       jumpTo = new JumpTo()
-      expect(jumpTo.betweenReferenceDefinition()).toBe(false)
+      expect(jumpTo.referenceDefinition()).toBe(false)
 
     it "finds link reference", ->
       editor.setText(text)
       editor.setCursorBufferPosition([2, 2])
 
       jumpTo = new JumpTo()
-      expect(jumpTo.betweenReferenceDefinition()).toEqual([0, 16])
+      expect(jumpTo.referenceDefinition()).toEqual([0, 16])
 
     it "finds link definition", ->
       editor.setText(text)
       editor.setCursorBufferPosition([0, 16])
 
       jumpTo = new JumpTo()
-      expect(jumpTo.betweenReferenceDefinition()).toEqual([2, 8])
+      expect(jumpTo.referenceDefinition()).toEqual([2, 8])
 
   describe ".nextTableCell", ->
     beforeEach ->

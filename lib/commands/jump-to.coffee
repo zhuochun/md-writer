@@ -47,7 +47,7 @@ class JumpTo
       match.stop()
     return found
 
-  betweenReferenceDefinition: ->
+  referenceDefinition: ->
     key = @editor.getSelectedText() || @editor.getWordUnderCursor()
     return false unless key
 
