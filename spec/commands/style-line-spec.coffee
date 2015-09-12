@@ -1,4 +1,4 @@
-LineStyleView = require "../lib/style-line"
+LineStyleView = require "../../lib/commands/style-line"
 
 describe "StyleLine", ->
   it "check heading 1 exists", ->

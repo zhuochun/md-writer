@@ -1,6 +1,7 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
-config = require "./config"
-utils = require "./utils"
+
+config = require "../config"
+utils = require "../utils"
 
 module.exports =
 class InsertTableView extends View

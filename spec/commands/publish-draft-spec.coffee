@@ -1,4 +1,4 @@
-PublishDraft = require "../lib/publish-draft"
+PublishDraft = require "../../lib/commands/publish-draft"
 
 describe "PublishDraft", ->
   beforeEach ->

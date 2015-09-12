@@ -1,4 +1,4 @@
-TextStyleView = require "../lib/style-text"
+TextStyleView = require "../../lib/commands/style-text"
 
 describe "StyleText", ->
   it "check a style is added", ->

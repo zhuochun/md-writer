@@ -1,5 +1,5 @@
-config = require "./config"
-utils = require "./utils"
+config = require "../config"
+utils = require "../utils"
 
 module.exports =
 class StyleLine

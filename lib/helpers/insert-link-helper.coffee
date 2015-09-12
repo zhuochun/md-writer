@@ -1,4 +1,4 @@
-utils = require "./utils"
+utils = require "../utils"
 
 # Look backwards from the end of article for the first non-empty row,
 # then insert the text.

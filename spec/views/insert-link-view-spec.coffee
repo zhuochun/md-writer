@@ -1,4 +1,4 @@
-InsertLinkView = require "../lib/insert-link-view"
+InsertLinkView = require "../../lib/views/insert-link-view"
 
 describe "InsertLinkView", ->
   [editor, insertLinkView] = []

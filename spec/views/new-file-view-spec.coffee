@@ -1,6 +1,6 @@
-NewFileView = require "../lib/new-file-view"
-NewDraftView = require "../lib/new-draft-view"
-NewPostView = require "../lib/new-post-view"
+NewFileView = require "../../lib/views/new-file-view"
+NewDraftView = require "../../lib/views/new-draft-view"
+NewPostView = require "../../lib/views/new-post-view"
 
 describe "NewFileView", ->
   beforeEach ->

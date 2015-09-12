@@ -1,4 +1,4 @@
-FrontMatter = require "../lib/front-matter"
+FrontMatter = require "../../lib/helpers/front-matter"
 
 describe "FrontMatter", ->
   beforeEach ->

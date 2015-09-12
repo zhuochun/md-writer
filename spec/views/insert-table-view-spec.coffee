@@ -1,4 +1,4 @@
-InsertTableView = require "../lib/insert-table-view"
+InsertTableView = require "../../lib/views/insert-table-view"
 
 describe "InsertTableView", ->
   workspaceElement = null

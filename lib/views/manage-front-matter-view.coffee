@@ -1,7 +1,8 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
-FrontMatter = require "./front-matter"
-config = require "./config"
-utils = require "./utils"
+
+config = require "../config"
+utils = require "../utils"
+FrontMatter = require "../helpers/front-matter"
 
 module.exports =
 class ManageFrontMatterView extends View

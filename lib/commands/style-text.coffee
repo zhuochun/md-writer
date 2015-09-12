@@ -1,5 +1,5 @@
-config = require "./config"
-utils = require "./utils"
+config = require "../config"
+utils = require "../utils"
 
 # Map markdown-writer text style keys to official gfm style scope selectors
 scopeSelectors =
