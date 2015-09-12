@@ -12,7 +12,7 @@ class PublishDraft
     @editor = atom.workspace.getActiveTextEditor()
     @frontMatter = new FrontMatter(@editor)
 
-  display: ->
+  trigger: (e) ->
     @updateFrontMatter()
     @editor.save()
 

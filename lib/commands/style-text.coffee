@@ -24,7 +24,7 @@ class StyleText
     @style.before ?= ""
     @style.after ?= ""
 
-  display: ->
+  trigger: (e) ->
     @editor = atom.workspace.getActiveTextEditor()
     @editor.transact =>
       @editor.getSelections().forEach (selection) =>
