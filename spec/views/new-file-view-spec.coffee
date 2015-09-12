@@ -7,7 +7,7 @@ describe "NewFileView", ->
     waitsForPromise -> atom.workspace.open("empty.markdown")
 
   describe "NewFileView", ->
-    [editor, newFileView] = []
+    newFileView = null
 
     beforeEach ->
       newFileView = new NewFileView({})
@@ -46,7 +46,7 @@ describe "NewFileView", ->
 
 
   describe "NewDraftView", ->
-    [editor, newDraftView] = []
+    newDraftView = null
 
     beforeEach ->
       newDraftView = new NewDraftView({})
@@ -81,7 +81,7 @@ describe "NewFileView", ->
         expect(frontMatter.slug).toBe("draft-title")
 
   describe "NewPostView", ->
-    [editor, newPostView] = []
+    newPostView = null
 
     beforeEach ->
       newPostView = new NewPostView({})

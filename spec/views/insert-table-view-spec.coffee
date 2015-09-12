@@ -1,24 +1,24 @@
 InsertTableView = require "../../lib/views/insert-table-view"
 
 describe "InsertTableView", ->
-  workspaceElement = null
+  insertTableView = null
+
   beforeEach ->
-    workspaceElement = atom.views.getView(atom.workspace)
-    @view = new InsertTableView({})
+    insertTableView = new InsertTableView({})
 
   it "validates table rows/columns", ->
-    expect(@view.isValidRange(1, 1)).toBe false
-    expect(@view.isValidRange(2, 2)).toBe true
+    expect(insertTableView.isValidRange(1, 1)).toBe false
+    expect(insertTableView.isValidRange(2, 2)).toBe true
 
   it "create correct table", ->
-    table = @view.createTable(2, 2)
+    table = insertTableView.createTable(2, 2)
     expect(table).toEqual([
       "   |   "
       "---|---"
       "   |   "
     ].join("\n"))
 
-    table = @view.createTable(3, 3)
+    table = insertTableView.createTable(3, 3)
     expect(table).toEqual([
       "   |   |   "
       "---|---|---"

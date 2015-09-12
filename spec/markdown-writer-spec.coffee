@@ -6,21 +6,8 @@ MdWriter = require "../lib/markdown-writer"
 # or `fdescribe`). Remove the `f` to unfocus the block.
 
 describe "MarkdownWriter", ->
-  workspaceElement = null
-  activationPromise = null
-
   beforeEach ->
-    workspaceElement = atom.views.getView(atom.workspace)
-    activationPromise = atom.packages.activatePackage("markdown-writer")
+    waitsForPromise -> atom.workspace.open("empty.markdown")
 
-  xdescribe "when the md-writer:toggle event is triggered", ->
-    it "attaches and then detaches the view", ->
-      expect(getMarkdownWriter().length).toBe(0)
-
-      atom.commands.dispatch workspaceElement, "markdown-writer:new-draft"
-
-      waitsForPromise -> activationPromise
-      runs -> expect(getMarkdownWriter().length).toBe(1)
-
-  getMarkdownWriter = ->
-    workspaceElement.getElementsByClassName(".markdown-writer")
+  it "can be activated", ->
+    atom.packages.activatePackage("markdown-writer")
