@@ -1,4 +1,4 @@
-MdWriter = require "../lib/main"
+MdWriter = require "../lib/markdown-writer"
 
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 #
