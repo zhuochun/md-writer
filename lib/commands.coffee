@@ -209,28 +209,4 @@ class Commands
 
     table.join("\n")
 
-  openCheatSheet: ->
-    cheatsheet = utils.getPackagePath("CHEATSHEET.md")
-
-    atom.workspace.open "markdown-preview://#{encodeURI(cheatsheet)}",
-      split: 'right', searchAllPanes: true
-
-  createDefaultKeymaps: ->
-    fs = require("fs-plus")
-    path = require("path")
-
-    sampleKeymapFile = utils.getPackagePath("keymaps", @_sampleKeymapFile())
-    sampleKeymap = fs.readFileSync(sampleKeymapFile)
-
-    userKeymapFile = path.join(atom.getConfigDirPath(), "keymap.cson")
-    fs.appendFile userKeymapFile, sampleKeymap, (err) ->
-      atom.workspace.open(userKeymapFile) unless err
-
-  _sampleKeymapFile: ->
-    {
-      "darwin": "sample-osx.cson",
-      "linux" : "sample-linux.cson",
-      "win32" : "sample-win32.cson"
-    }[process.platform] || "sample-osx.cson"
-
 module.exports = new Commands()
