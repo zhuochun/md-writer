@@ -12,12 +12,6 @@ describe "commands", ->
 
     expect(cmds._correctOrderNumbers(fixture)).toEqual(expected)
 
-  it "find the first column in table row", ->
-    fixture = "hd 1 | hd 2 | hd 3"
-    expect(cmds._findNextTableCellIdx(fixture,  0)).toEqual(4)
-    expect(cmds._findNextTableCellIdx(fixture,  6)).toEqual(11)
-    expect(cmds._findNextTableCellIdx(fixture, 13)).toEqual(19)
-
   it "find the first non empty line index", ->
     fixture = ["", ""]
     expect(cmds._indexOfFirstNonEmptyLine(fixture)).toEqual(-1)

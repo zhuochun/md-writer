@@ -1,15 +1,9 @@
 config = require "./config"
 utils = require "./utils"
 
-HEADING_REGEX   = /// ^\# {1,6} \ + .+$ ///g
-REFERENCE_REGEX = /// \[? ([^\s\]]+) (?:\] | \]:)? ///
-
 LIST_TL_REGEX   = /// ^ (\s*) (-\ \[[xX\ ]\]) \s+ (.*) $ ///
 LIST_UL_REGEX   = /// ^ (\s*) ([*+-]) \s+ (.*) $ ///
 LIST_OL_REGEX   = /// ^ (\s*) (\d+)\. \s+ (.*) $ ///
-
-TABLE_COL_REGEX = ///  ([^\|]*?) \s* \| ///
-TABLE_VAL_REGEX = /// (?:^|\|) ([^\|]+) ///g
 
 class Commands
   trigger: (command) ->
@@ -91,79 +85,7 @@ class Commands
   _isAtLineBeginning: (line, col) ->
     col == 0 || line.substring(0, col).trim() == ""
 
-  jumpToPreviousHeading: ->
-    editor = atom.workspace.getActiveTextEditor()
-    {row} = editor.getCursorBufferPosition()
 
-    @_executeMoveToPreviousHeading(editor, [[0, 0], [row - 1, 0]])
-
-  _executeMoveToPreviousHeading: (editor, range) ->
-    found = false
-    editor.buffer.backwardsScanInRange HEADING_REGEX, range, (match) ->
-      found = true
-      editor.setCursorBufferPosition(match.range.start)
-      match.stop()
-    return found
-
-  jumpToNextHeading: ->
-    editor = atom.workspace.getActiveTextEditor()
-    curPosition = editor.getCursorBufferPosition()
-    eofPosition = editor.getEofBufferPosition()
-
-    range = [
-      [curPosition.row + 1, 0]
-      [eofPosition.row + 1, 0]
-    ]
-    return if @_executeMoveToNextHeading(editor, range)
-
-    # back to top
-    @_executeMoveToNextHeading(editor, [[0, 0], [eofPosition.row + 1, 0]])
-
-  _executeMoveToNextHeading: (editor, range) ->
-    found = false
-    editor.buffer.scanInRange HEADING_REGEX, range, (match) ->
-      found = true
-      editor.setCursorBufferPosition(match.range.start)
-      match.stop()
-    return found
-
-  jumpBetweenReferenceDefinition: ->
-    editor = atom.workspace.getActiveTextEditor()
-    cursor = editor.getCursorBufferPosition()
-
-    key = editor.getSelectedText() || editor.getWordUnderCursor()
-    key = utils.regexpEscape(REFERENCE_REGEX.exec(key)[1])
-
-    editor.buffer.scan /// \[ #{key} \] ///g, (match) ->
-      end = match.range.end
-      if end.row != cursor.row
-        editor.setCursorBufferPosition([end.row, end.column - 1])
-        match.stop()
-
-  jumpToNextTableCell: ->
-    editor = atom.workspace.getActiveTextEditor()
-    {row, column} = editor.getCursorBufferPosition()
-
-    line = editor.lineTextForBufferRow(row)
-    cell = line.indexOf("|", column)
-
-    if cell == -1
-      row += 1
-      line = editor.lineTextForBufferRow(row)
-
-    if utils.isTableSeparator(line)
-      row += 1
-      cell = -1
-      line = editor.lineTextForBufferRow(row)
-
-    cell = @_findNextTableCellIdx(line, cell + 1)
-    editor.setCursorBufferPosition([row, cell])
-
-  _findNextTableCellIdx: (line, column) ->
-    if td = TABLE_COL_REGEX.exec(line[column..])
-      column + td[1].length
-    else
-      line.length + 1
 
   correctOrderListNumbers: ->
     editor = atom.workspace.getActiveTextEditor()
