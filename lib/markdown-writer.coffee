@@ -1,3 +1,4 @@
+config = require "./config"
 basicConfig = require "./config-basic"
 
 CmdModule = {} # To cache required modules
@@ -48,8 +49,15 @@ module.exports =
       editorCommands["markdown-writer:jump-to-#{command}"] =
         @registerCommand("./commands/jump-to", args: command)
 
-    ["publish-draft", "insert-new-line", "indent-list-line",
-     "correct-order-list-numbers", "format-table"].forEach (command) =>
+    ["insert-new-line", "indent-list-line"].forEach (command) =>
+      editorCommands["markdown-writer:#{command}"] =
+        @registerCommand("./commands/edit-line", args: command)
+
+    ["correct-order-list-numbers", "format-table"].forEach (command) =>
+      editorCommands["markdown-writer:#{command}"] =
+        @registerCommand("./commands/format-text", args: command)
+
+    ["publish-draft"].forEach (command) =>
       editorCommands["markdown-writer:#{command}"] =
         @registerCommand("./commands/#{command}")
 
