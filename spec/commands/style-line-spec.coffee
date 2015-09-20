@@ -18,12 +18,12 @@ describe "StyleLine", ->
       expect(cmd.isStyleOn(fixture)).toBe(true)
       fixture = "- unordered list"
       expect(cmd.isStyleOn(fixture)).toBe(true)
-      fixture = "0. unordered list"
-      expect(cmd.isStyleOn(fixture)).toBe(true)
 
     it "check ul not exists", ->
       cmd = new StyleLine("ul")
-      fixture = "a unordered list"
+      fixture = "a normal list"
+      expect(cmd.isStyleOn(fixture)).toBe(false)
+      fixture = "0. ordered list"
       expect(cmd.isStyleOn(fixture)).toBe(false)
 
   describe ".addStyle", ->
@@ -69,7 +69,6 @@ describe "StyleLine", ->
 
     it "insert empty blockquote style", ->
       new StyleLine("blockquote").trigger()
-
       expect(editor.getText()).toBe("> ")
       expect(editor.getCursorBufferPosition().column).toBe(2)
 
@@ -77,7 +76,6 @@ describe "StyleLine", ->
       editor.setText("# heading")
 
       new StyleLine("h2").trigger()
-
       expect(editor.getText()).toBe("## heading")
       expect(editor.getCursorBufferPosition().column).toBe(10)
 
@@ -85,6 +83,31 @@ describe "StyleLine", ->
       editor.setText("### heading")
 
       new StyleLine("h3").trigger()
-
       expect(editor.getText()).toBe("heading")
       expect(editor.getCursorBufferPosition().column).toBe(7)
+
+    it "apply ordered/unordered list", ->
+      editor.setText("- list")
+
+      new StyleLine("ol").trigger()
+      expect(editor.getText()).toBe("1. list")
+      expect(editor.getCursorBufferPosition().column).toBe(7)
+
+      new StyleLine("ul").trigger()
+      expect(editor.getText()).toBe("- list")
+      expect(editor.getCursorBufferPosition().column).toBe(6)
+
+    it "apply task/taskdone list", ->
+      editor.setText("task")
+
+      new StyleLine("task").trigger()
+      expect(editor.getText()).toBe("- [ ] task")
+
+      new StyleLine("taskdone").trigger()
+      expect(editor.getText()).toBe("- [X] task")
+
+      new StyleLine("task").trigger()
+      expect(editor.getText()).toBe("- [ ] task")
+
+      new StyleLine("task").trigger()
+      expect(editor.getText()).toBe("task")

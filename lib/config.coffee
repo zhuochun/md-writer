@@ -61,16 +61,31 @@ class Configuration
     # reference tag indent space (0 or 2)
     referenceIndentLength: 2
 
+    # NOTE textStyles and lineStyles
+    #
+    # In `regex{Before,After}`, `regexMatch{Before,After}`, DO NOT USE CAPTURE GROUP!
+    # Capture group will break things! USE non-capturing group `(?:)` instead.
+    #
+    # Use `regexMatch{Before,After}` when you mean it is an exact match of the style.
+    # If this match regex test = true, the style will be toggled.
+    #
+    # Use `regex{Before,After}`, when you mean it is an general match of the style.
+    # If this match regex test = true, the style will be replaced by new style.
+    #
+    # When `regexMatch{Before,After}` is not specified, `regex{Before,After}` is used instead.
+
     # text styles related
     textStyles:
-      code: before: "`", after: "`"
-      bold: before: "**", after: "**"
-      italic: before: "_", after: "_"
-      keystroke: before: "<kbd>", after: "</kbd>"
-      strikethrough: before: "~~", after: "~~"
-      # for `regexBefore`, `regexAfter`,
-      # DO NOT use capture group, it could break things!
-      # use non-capturing group `(?:)` instead.
+      code:
+        before: "`", after: "`"
+      bold:
+        before: "**", after: "**"
+      italic:
+        before: "_", after: "_"
+      keystroke:
+        before: "<kbd>", after: "</kbd>"
+      strikethrough:
+        before: "~~", after: "~~"
       codeblock:
         before: "```\n"
         after: "\n```"
@@ -86,16 +101,20 @@ class Configuration
       h5: before: "##### "
       ul:
         before: "- ",
-        regexBefore: "(?:-|\\*|\\d+\\.)\\s"
+        regexMatchBefore: "(?:-|\\*|\\+)\\s"
+        regexBefore: "(?:-|\\*|\\+|\\d+\\.)\\s"
       ol:
         before: "1. ",
-        regexBefore: "(?:-|\\*|\\d+\\.)\\s"
+        regexMatchBefore: "(?:\\d+\\.)\\s"
+        regexBefore: "(?:-|\\*|\\+|\\d+\\.)\\s"
       task:
         before: "- [ ] ",
-        regexBefore: "(?:- \\[ ]|- \\[x]|- \\[X]|-|\\*)\\s"
+        regexMatchBefore: "(?:-|\\*|\\+|\\d+\\.)\\s+\\[ ]\\s"
+        regexBefore: "(?:-|\\*|\\+|\\d+\\.)\\s*(?:\\[[xX ]])?\\s"
       taskdone:
         before: "- [X] ",
-        regexBefore: "(?:- \\[ ]|- \\[x]|- \\[X]|-|\\*)\\s"
+        regexMatchBefore: "(?:-|\\*|\\+|\\d+\\.)\\s+\\[[xX]]\\s"
+        regexBefore: "(?:-|\\*|\\+|\\d+\\.)\\s*(?:\\[[xX ]])?\\s"
       blockquote: before: "> "
 
     # image tag template

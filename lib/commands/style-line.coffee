@@ -22,8 +22,7 @@ class StyleLine
     @style.regexMatchAfter ?= @style.regexAfter || @style.after
     # set regexBefore for headings that only need to check the 1st char
     @style.regexBefore ?= "#{@style.before[0]}+\\s" if @style.before
-    @style.regexAfter ?=
-      "\\s#{@style.after[@style.after.length - 1]}*" if @style.after
+    @style.regexAfter ?= "\\s#{@style.after[@style.after.length - 1]}*" if @style.after
 
   trigger: (e) ->
     @editor = atom.workspace.getActiveTextEditor()
