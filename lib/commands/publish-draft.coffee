@@ -1,9 +1,10 @@
 {$} = require "atom-space-pen-views"
-FrontMatter = require "./front-matter"
-config = require "./config"
-utils = require "./utils"
 fs = require "fs-plus"
 path = require "path"
+
+config = require "../config"
+utils = require "../utils"
+FrontMatter = require "../helpers/front-matter"
 
 module.exports =
 class PublishDraft
@@ -11,7 +12,7 @@ class PublishDraft
     @editor = atom.workspace.getActiveTextEditor()
     @frontMatter = new FrontMatter(@editor)
 
-  display: ->
+  trigger: (e) ->
     @updateFrontMatter()
     @editor.save()
 

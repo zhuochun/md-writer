@@ -1,5 +1,5 @@
-config = require "./config"
-utils = require "./utils"
+config = require "../config"
+utils = require "../utils"
 
 # Map markdown-writer text style keys to official gfm style scope selectors
 scopeSelectors =
@@ -24,7 +24,7 @@ class StyleText
     @style.before ?= ""
     @style.after ?= ""
 
-  display: ->
+  trigger: (e) ->
     @editor = atom.workspace.getActiveTextEditor()
     @editor.transact =>
       @editor.getSelections().forEach (selection) =>

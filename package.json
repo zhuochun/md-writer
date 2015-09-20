@@ -1,6 +1,6 @@
 {
   "name": "markdown-writer",
-  "main": "./lib/main",
+  "main": "./lib/markdown-writer",
   "version": "1.9.3",
   "description": "Make Atom a better Markdown editor and an easier static blogging tool.",
   "keywords": [
@@ -22,11 +22,12 @@
     "atom-workspace": [
       "markdown-writer:new-post",
       "markdown-writer:new-draft",
-      "markdown-writer:publish-draft",
       "markdown-writer:open-cheat-sheet",
       "markdown-writer:create-default-keymaps"
     ],
     "atom-text-editor": [
+      "markdown-writer:manage-post-tags",
+      "markdown-writer:manage-post-categories",
       "markdown-writer:insert-link",
       "markdown-writer:insert-image",
       "markdown-writer:insert-table",
@@ -46,12 +47,11 @@
       "markdown-writer:toggle-task",
       "markdown-writer:toggle-taskdone",
       "markdown-writer:toggle-blockquote",
-      "markdown-writer:manage-post-tags",
-      "markdown-writer:manage-post-categories",
-      "markdown-writer:jump-between-reference-definition",
       "markdown-writer:jump-to-previous-heading",
       "markdown-writer:jump-to-next-heading",
       "markdown-writer:jump-to-next-table-cell",
+      "markdown-writer:jump-to-reference-definition",
+      "markdown-writer:publish-draft",
       "markdown-writer:format-table",
       "markdown-writer:correct-order-list-numbers",
       "markdown-writer:insert-new-line",

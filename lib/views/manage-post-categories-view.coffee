@@ -1,6 +1,7 @@
+config = require "../config"
+utils = require "../utils"
+
 ManageFrontMatterView = require "./manage-front-matter-view"
-config = require "./config"
-utils = require "./utils"
 
 module.exports =
 class ManagePostCategoriesView extends ManageFrontMatterView

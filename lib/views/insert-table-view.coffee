@@ -1,6 +1,7 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
-config = require "./config"
-utils = require "./utils"
+
+config = require "../config"
+utils = require "../utils"
 
 module.exports =
 class InsertTableView extends View
@@ -50,7 +51,7 @@ class InsertTableView extends View
     options =
       numOfColumns: col
       extraPipes: config.get("tableExtraPipes")
-      columnWidth: 3
+      columnWidth: 1
       alignment: config.get("tableAlignment")
 
     table = []

@@ -1,8 +1,9 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
-config = require "./config"
-utils = require "./utils"
 path = require "path"
 fs = require "fs-plus"
+
+config = require "../config"
+utils = require "../utils"
 
 module.exports =
 class NewFileView extends View

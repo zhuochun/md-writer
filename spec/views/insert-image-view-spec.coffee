@@ -1,4 +1,4 @@
-InsertImageView = require "../lib/insert-image-view"
+InsertImageView = require "../../lib/views/insert-image-view"
 
 describe "InsertImageView", ->
   beforeEach ->

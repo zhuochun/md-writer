@@ -1,5 +1,5 @@
-ManagePostCategoriesView = require "../lib/manage-post-categories-view"
-ManagePostTagsView = require "../lib/manage-post-tags-view"
+ManagePostCategoriesView = require "../../lib/views/manage-post-categories-view"
+ManagePostTagsView = require "../../lib/views/manage-post-tags-view"
 
 describe "ManageFrontMatterView", ->
   beforeEach ->

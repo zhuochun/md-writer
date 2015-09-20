@@ -1,9 +1,10 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
-config = require "./config"
-utils = require "./utils"
-helper = require "./insert-link-helper"
 CSON = require "season"
 fs = require "fs-plus"
+
+config = require "../config"
+utils = require "../utils"
+helper = require "../helpers/insert-link-helper"
 
 posts = null # to cache posts
 

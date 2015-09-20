@@ -51,6 +51,9 @@ class Configuration
     # whether publish keep draft's extension name used
     publishKeepFileExtname: false
 
+    # list continuation in middle of line
+    inlineNewLineContinuation: false
+
     # path to a .cson file that stores links added for automatic linking
     siteLinkPath: path.join(atom.getConfigDirPath(), "#{@prefix}-links.cson")
     # reference tag insert position (paragraph or article)

@@ -1,10 +1,11 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
-config = require "./config"
-utils = require "./utils"
-remote = require "remote"
-dialog = remote.require "dialog"
 path = require "path"
 fs = require "fs-plus"
+remote = require "remote"
+dialog = remote.require "dialog"
+
+config = require "../config"
+utils = require "../utils"
 
 imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".ico"]
 lastInsertImageDir = null # remember last inserted image directory

@@ -1,5 +1,5 @@
-config = require "./config"
-utils = require "./utils"
+config = require "../config"
+utils = require "../utils"
 
 module.exports =
 class StyleLine
@@ -25,7 +25,7 @@ class StyleLine
     @style.regexAfter ?=
       "\\s#{@style.after[@style.after.length - 1]}*" if @style.after
 
-  display: ->
+  trigger: (e) ->
     @editor = atom.workspace.getActiveTextEditor()
     @editor.transact =>
       @editor.getSelections().forEach (selection) =>
