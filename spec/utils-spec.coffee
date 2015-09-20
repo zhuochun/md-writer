@@ -223,6 +223,14 @@ Markdown (or Textile), Liquid, HTML & CSS go in.
       columnWidths: [4, 6, 3]})
 
   it "parse table separator with format", ->
+    fixture = ":-|-:|::"
+    expect(utils.parseTableSeparator(fixture)).toEqual({
+      separator: true
+      extraPipes: false
+      alignments: ["left", "right", "center"]
+      columns: [":-", "-:", "::"]
+      columnWidths: [2, 2, 2]})
+
     fixture = ":--|--:"
     expect(utils.parseTableSeparator(fixture)).toEqual({
       separator: true

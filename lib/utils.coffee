@@ -210,8 +210,8 @@ parseReferenceDefinition = (input, editor) ->
 TABLE_SEPARATOR_REGEX = /// ^
   (\|)?                # starts with an optional |
   (
-   (?:\s*:?-+:?\s*\|)+ # one or more table cell
-   (?:\s*:?-+:?\s*)    # last table cell
+   (?:\s*(?:-+|:-*:|:-*|-*:)\s*\|)+ # one or more table cell
+   (?:\s*(?:-+|:-*:|:-*|-*:)\s*)    # last table cell
   )
   (\|)?                # ends with an optional |
   $ ///
