@@ -284,51 +284,51 @@ Markdown (or Textile), Liquid, HTML & CSS go in.
 
   it "create table separator", ->
     row = utils.createTableSeparator(
-      numOfColumns: 3, extraPipes: false, columnWidth: 3, alignment: "empty")
-    expect(row).toEqual("---|---|---")
+      numOfColumns: 3, extraPipes: false, columnWidth: 1, alignment: "empty")
+    expect(row).toEqual("--|---|--")
 
     row = utils.createTableSeparator(
-      numOfColumns: 2, extraPipes: true, columnWidth: 3, alignment: "empty")
+      numOfColumns: 2, extraPipes: true, columnWidth: 1, alignment: "empty")
     expect(row).toEqual("|---|---|")
 
     row = utils.createTableSeparator(
-      numOfColumns: 1, extraPipes: true, columnWidth: 3, alignment: "left")
+      numOfColumns: 1, extraPipes: true, columnWidth: 1, alignment: "left")
     expect(row).toEqual("|:--|")
 
     row = utils.createTableSeparator(
-      numOfColumns: 3, extraPipes: true, columnWidths: [4, 5, 5],
+      numOfColumns: 3, extraPipes: true, columnWidths: [2, 3, 3],
       alignment: "left")
     expect(row).toEqual("|:---|:----|:----|")
 
     row = utils.createTableSeparator(
-      numOfColumns: 4, extraPipes: false, columnWidth: 5,
+      numOfColumns: 4, extraPipes: false, columnWidth: 3,
       alignment: "left", alignments: ["empty", "right", "center"])
-    expect(row).toEqual("-----|----:|:---:|:----")
+    expect(row).toEqual("----|----:|:---:|:---")
 
   it "create empty table row", ->
     row = utils.createTableRow([],
-      numOfColumns: 3, columnWidth: 3, alignment: "empty")
-    expect(row).toEqual("   |   |   ")
+      numOfColumns: 3, columnWidth: 1, alignment: "empty")
+    expect(row).toEqual("  |   |  ")
 
     row = utils.createTableRow([],
-      numOfColumns: 3, extraPipes: true, columnWidths: [3, 4, 5],
+      numOfColumns: 3, extraPipes: true, columnWidths: [1, 2, 3],
       alignment: "empty")
     expect(row).toEqual("|   |    |     |")
 
   it "create table row", ->
     row = utils.createTableRow(["中文", "English"],
-      numOfColumns: 2, extraPipes: true, columnWidths: [6, 9])
+      numOfColumns: 2, extraPipes: true, columnWidths: [4, 7])
     expect(row).toEqual("| 中文 | English |")
 
     row = utils.createTableRow(["中文", "English"],
-      numOfColumns: 2, columnWidths: [9, 11], alignments: ["right", "center"])
+      numOfColumns: 2, columnWidths: [8, 10], alignments: ["right", "center"])
     expect(row).toEqual("    中文 |  English  ")
 
   it "create an empty table", ->
     rows = []
 
     options =
-      numOfColumns: 3, columnWidths: [5, 3, 5],
+      numOfColumns: 3, columnWidths: [4, 1, 4],
       alignments: ["left", "center", "right"]
 
     rows.push(utils.createTableRow([], options))
@@ -346,7 +346,7 @@ Markdown (or Textile), Liquid, HTML & CSS go in.
 
     options =
       numOfColumns: 3, extraPipes: true,
-      columnWidth: 3, alignment: "empty"
+      columnWidth: 1, alignment: "empty"
 
     rows.push(utils.createTableRow([], options))
     rows.push(utils.createTableSeparator(options))

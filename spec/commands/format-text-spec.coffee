@@ -10,6 +10,19 @@ describe "FormatText", ->
   describe "correctOrderListNumbers", ->
     beforeEach -> formatText = new FormatText("correct-order-list-numbers")
 
+    it "does nothing if it is not an order list", ->
+      editor.setText """
+      text is a long paragraph
+      text is a long paragraph
+      """
+      editor.setCursorBufferPosition([0, 3])
+
+      formatText.trigger()
+      expect(editor.getText()).toBe """
+      text is a long paragraph
+      text is a long paragraph
+      """
+
     it "correct order list numbers", ->
       editor.setText """
       text before
@@ -60,52 +73,81 @@ describe "FormatText", ->
   describe "formatTable", ->
     beforeEach -> formatText = new FormatText("format-table")
 
+    it "does nothing if it is not a table", ->
+      editor.setText """
+      text is a long paragraph
+      text is a long paragraph
+      """
+      editor.setCursorBufferPosition([0, 3])
+
+      formatText.trigger()
+      expect(editor.getText()).toBe """
+      text is a long paragraph
+      text is a long paragraph
+      """
+
     it "format table without alignment", ->
       editor.setText """
       text before
 
-      h1| h21
+      h1| h21|h1233|h343
       -|-
+      |||
       t123           | t2
+       |t12|
 
       text after
       """
-      editor.setCursorBufferPosition([4, 3])
 
-      formatText.trigger()
-      expect(editor.getText()).toBe """
+      expected = """
       text before
 
-      h1   | h21
-      -----|----
-      t123 | t2
+      h1   | h21 | h1233 | h343
+      -----|-----|-------|-----
+           |     |       |
+      t123 | t2  |       |
+           | t12 |       |
 
       text after
       """
+
+      editor.setCursorBufferPosition([4, 3])
+      formatText.trigger()
+
+      # trigger twice shouldn't change anything
+      editor.setCursorBufferPosition([4, 3])
+      formatText.trigger()
+      expect(editor.getText()).toBe(expected)
 
     it "format table with alignment", ->
       editor.setText """
       text before
 
-      |h1-3   | h2-1|h3-2
-      |:-|:-:|--:
+      |h1-3   | h2-1|h3-2|
+      |:-|:-:|--:|:-:|
       | | t2
       |t1| |t3
       |t     |t|    t
 
       text after
       """
-      editor.setCursorBufferPosition([4, 3])
 
-      formatText.trigger()
-      expect(editor.getText()).toBe """
+      expected = """
       text before
 
-      | h1-3 | h2-1 | h3-2 |
-      |:-----|:----:|-----:|
-      |      |  t2  |      |
-      | t1   |      |   t3 |
-      | t    |  t   |    t |
+      | h1-3 | h2-1 | h3-2 |   |
+      |:-----|:----:|-----:|:-:|
+      |      |  t2  |      |   |
+      | t1   |      |   t3 |   |
+      | t    |  t   |    t |   |
 
       text after
       """
+
+      editor.setCursorBufferPosition([4, 3])
+      formatText.trigger()
+
+      # trigger twice shouldn't change anything
+      editor.setCursorBufferPosition([4, 3])
+      formatText.trigger()
+      expect(editor.getText()).toBe(expected)

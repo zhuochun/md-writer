@@ -51,7 +51,7 @@ class InsertTableView extends View
     options =
       numOfColumns: col
       extraPipes: config.get("tableExtraPipes")
-      columnWidth: 3
+      columnWidth: 1
       alignment: config.get("tableAlignment")
 
     table = []

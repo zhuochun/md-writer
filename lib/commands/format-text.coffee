@@ -24,7 +24,7 @@ class FormatText
       return if range.start.row == range.end.row || text.trim() == ""
 
       formattedText = @[fn](e, range, text.split("\n"))
-      @editor.setTextInBufferRange(range, formattedText)
+      @editor.setTextInBufferRange(range, formattedText) if formattedText
 
   correctOrderListNumbers: (e, range, lines) ->
     correctedLines = []
@@ -53,61 +53,43 @@ class FormatText
     correctedLines.join("\n")
 
   formatTable: (e, range, lines) ->
+    return if lines.some (line) -> line.trim() != "" && !utils.isTableRow(line)
+
     { rows, options } = @_parseTable(lines)
 
     table = []
-
     # table head
     table.push(utils.createTableRow(rows[0], options).trimRight())
     # table separator
     table.push(utils.createTableSeparator(options))
     # table body
     table.push(utils.createTableRow(row, options).trimRight()) for row in rows[1..]
-
+    # table join rows
     table.join("\n")
 
   _parseTable: (lines) ->
     rows = []
+    options =
+      numOfColumns: 1
+      extraPipes: config.get("tableExtraPipes")
+      columnWidth: 1
+      columnWidths: []
+      alignment: config.get("tableAlignment")
+      alignments: []
 
-    numOfColumns = 0
-    extraPipes = config.get("tableExtraPipes")
-    columnWidths = []
-    alignments = []
-
-    # parse table separator
     for line in lines
-      continue unless utils.isTableSeparator(line)
+      if line.trim() == ""
+        continue
+      else if utils.isTableSeparator(line)
+        separator = utils.parseTableSeparator(line)
+        options.extraPipes = options.extraPipes || separator.extraPipes
+        options.alignments = separator.alignments
+        options.numOfColumns = Math.max(options.numOfColumns, separator.columns.length)
+      else
+        row = utils.parseTableRow(line)
+        rows.push(row.columns)
+        options.numOfColumns = Math.max(options.numOfColumns, row.columns.length)
+        for columnWidth, i in row.columnWidths
+          options.columnWidths[i] = Math.max(options.columnWidths[i] || 0, columnWidth)
 
-      separator = utils.parseTableSeparator(line)
-
-      numOfColumns = separator.columns.length
-      extraPipes = extraPipes || separator.extraPipes
-      columnWidths = separator.columnWidths
-      alignments = separator.alignments
-
-    # parse table content
-    for line in lines
-      continue if line.trim() == ""
-      continue if utils.isTableSeparator(line)
-
-      row = utils.parseTableRow(line)
-      rows.push(row.columns)
-      numOfColumns = Math.max(numOfColumns, row.columns.length)
-      for columnWidth, i in row.columnWidths
-        if !extraPipes && (i == 0 || i == numOfColumns - 1)
-          columnWidth += 1
-        else
-          columnWidth += 2
-
-        columnWidths[i] = Math.max(columnWidths[i] || 0, columnWidth)
-
-    return {
-      rows: rows
-      options: {
-        numOfColumns: numOfColumns
-        extraPipes: extraPipes
-        columnWidths: columnWidths
-        alignment: config.get("tableAlignment")
-        alignments: alignments
-      }
-    }
+    rows: rows, options: options
