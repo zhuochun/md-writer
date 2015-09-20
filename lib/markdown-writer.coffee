@@ -1,3 +1,5 @@
+{CompositeDisposable} = require "atom"
+
 config = require "./config"
 basicConfig = require "./config-basic"
 
@@ -6,7 +8,9 @@ CmdModule = {} # To cache required modules
 module.exports =
   config: basicConfig
 
-  activate: (state) ->
+  activate: ->
+    @disposables = new CompositeDisposable()
+
     @registerWorkspaceCommands()
     @registerEditorCommands()
 
@@ -21,7 +25,7 @@ module.exports =
       workspaceCommands["markdown-writer:#{command}"] =
         @registerCommand("./commands/#{command}", optOutGrammars: true)
 
-    @wsCommands = atom.commands.add("atom-workspace", workspaceCommands)
+    @disposables.add(atom.commands.add("atom-workspace", workspaceCommands))
 
   registerEditorCommands: ->
     editorCommands = {}
@@ -61,25 +65,25 @@ module.exports =
       editorCommands["markdown-writer:#{command}"] =
         @registerCommand("./commands/#{command}")
 
-    @edCommands = atom.commands.add("atom-text-editor", editorCommands)
+    @disposables.add(atom.commands.add("atom-text-editor", editorCommands))
 
   registerView: (path, options = {}) ->
     (e) =>
-      unless options.optOutGrammars or @isMarkdown()
+      unless options.optOutGrammars || @isMarkdown()
         return e.abortKeyBinding()
 
       CmdModule[path] ?= require(path)
       cmdInstance = new CmdModule[path](options.args)
-      cmdInstance.display()
+      cmdInstance.display() # unless config.get("testMode")
 
   registerCommand: (path, options = {}) ->
     (e) =>
-      unless options.optOutGrammars or @isMarkdown()
+      unless options.optOutGrammars || @isMarkdown()
         return e.abortKeyBinding()
 
       CmdModule[path] ?= require(path)
       cmdInstance = new CmdModule[path](options.args)
-      cmdInstance.trigger(e)
+      cmdInstance.trigger(e) # unless config.get("testMode")
 
   isMarkdown: ->
     editor = atom.workspace.getActiveTextEditor()
@@ -87,7 +91,5 @@ module.exports =
     return editor.getGrammar().scopeName in config.get("grammars")
 
   deactivate: ->
-    @wsCommands.dispose()
-    @edCommands.dispose()
-
+    @disposables.dispose()
     CmdModule = {}
