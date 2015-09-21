@@ -1,3 +1,19 @@
+## 2.0.0
+
+* Reorganize codebase
+  * Separate codes into views, commands, helpers
+  * Rename `main.coffee` to `markdown-writer.coffee`
+* Add a lot of tests, from 127 -> 219 tests
+* Add `regexMatchBefore` to lists' line styles in config
+* Improve `insert-new-line` behaviors
+  * Add new config `inlineNewLineContinuation`
+  * Support more lists continuation
+* Improve `correct-order-list-numbers` to correct all levels
+* Improve `format-table` behaviors
+  * Format on non-table text does not raise error
+  * Format table multiple times is idempotent
+* Change `jump-between-reference-definition` to `jump-to-reference-definition`
+
 ## 1.9.3
 
 * Fix publish-draft require missing file
