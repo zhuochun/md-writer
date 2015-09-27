@@ -5,10 +5,12 @@ describe "LineMeta", ->
   describe ".isList", ->
     it "is not list", -> expect(LineMeta.isList("normal line")).toBe(false)
     it "is not list, blockquote", -> expect(LineMeta.isList("> blockquote")).toBe(false)
-    it "is unordered list", -> expect(LineMeta.isList("-list")).toBe(true)
+    it "is unordered list", -> expect(LineMeta.isList("- list")).toBe(true)
+    it "is unordered task list", -> expect(LineMeta.isList("- [ ]list")).toBe(true)
     it "is unordered task list", -> expect(LineMeta.isList("- [ ] list")).toBe(true)
     it "is ordered list", -> expect(LineMeta.isList("12. list")).toBe(true)
-    it "is ordered task list", -> expect(LineMeta.isList("12.[ ] list")).toBe(true)
+    it "is ordered task list", -> expect(LineMeta.isList("12. [ ]list")).toBe(true)
+    it "is ordered task list", -> expect(LineMeta.isList("12. [ ] list")).toBe(true)
 
   # instance
   describe "normal line", ->

@@ -15,6 +15,8 @@ class InsertTableView extends View
         @subview "columnEditor", new TextEditorView(mini: true)
 
   initialize: ->
+    utils.setTabIndex([@rowEditor, @columnEditor])
+
     atom.commands.add @element,
       "core:confirm": => @onConfirm()
       "core:cancel":  => @detach()

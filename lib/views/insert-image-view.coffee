@@ -41,6 +41,9 @@ class InsertImageView extends View
         @img outlet: 'imagePreview'
 
   initialize: ->
+    utils.setTabIndex([@imageEditor, @openImageButton, @titleEditor,
+      @widthEditor, @heightEditor, @alignEditor, @copyImageCheckbox])
+
     @imageEditor.on "blur", => @updateImageSource(@imageEditor.getText().trim())
     @openImageButton.on "click", => @openImageDialog()
 

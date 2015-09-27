@@ -31,9 +31,11 @@ class InsertLinkView extends View
         @ul class: "markdown-writer-list", outlet: "searchResult"
 
   initialize: ->
+    utils.setTabIndex([@textEditor, @urlEditor, @titleEditor,
+      @saveCheckbox, @searchEditor])
+
     @searchEditor.getModel().onDidChange =>
       @updateSearch(@searchEditor.getText()) if posts
-
     @searchResult.on "click", "li", (e) => @useSearchResult(e)
 
     atom.commands.add @element,

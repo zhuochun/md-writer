@@ -11,8 +11,17 @@ describe "ManageFrontMatterView", ->
     beforeEach ->
       categoriesView = new ManagePostCategoriesView({})
 
-    describe "when editor has no front matter", ->
+    describe "when editor has malformed front matter", ->
       it "does nothing", ->
+        atom.confirm = -> {} # Double, mute confirm
+        editor = atom.workspace.getActiveTextEditor()
+        editor.setText """
+          ---
+          title: Markdown Writer (Jekyll)
+          ----
+          ---
+        """
+
         categoriesView.display()
         expect(categoriesView.panel.isVisible()).toBe(false)
 
@@ -58,7 +67,7 @@ describe "ManageFrontMatterView", ->
         """
 
   describe "ManagePostTagsView", ->
-    tagsView = null
+    [editor, tagsView] = []
 
     beforeEach ->
       tagsView = new ManagePostTagsView({})

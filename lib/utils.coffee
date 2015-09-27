@@ -23,6 +23,13 @@ getPackagePath = (segments...) ->
   path.join.apply(null, segments)
 
 # ==================================================
+# General View Helpers
+#
+
+setTabIndex = (elems) ->
+  elem[0].tabIndex = i + 1 for elem, i in elems
+
+# ==================================================
 # Template
 #
 
@@ -408,6 +415,8 @@ module.exports =
   regexpEscape: regexpEscape
   dasherize: dasherize
   getPackagePath: getPackagePath
+
+  setTabIndex: setTabIndex
 
   dirTemplate: dirTemplate
   template: template

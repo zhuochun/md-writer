@@ -1,3 +1,5 @@
+# coffeelint: disable=no_trailing_whitespace
+
 EditLine = require "../../lib/commands/edit-line"
 
 describe "EditLine", ->
@@ -27,21 +29,21 @@ describe "EditLine", ->
       editor.setCursorBufferPosition([0, 8])
 
       editLine.trigger()
-      expect(editor.getText()).toBe [
-        "- inline"
-        "-  line"
-      ].join("\n")
+      expect(editor.getText()).toBe """
+      - inline
+      -  line
+      """
 
     it "continue after unordered list line", ->
       editor.setText "- line"
       editor.setCursorBufferPosition([0, 6])
 
       editLine.trigger()
-      expect(editor.getText()).toBe [
-        "- line"
-        "- " # trailing whitespace
-      ].join("\n")
-
+      expect(editor.getText()).toBe """
+      - line
+      - 
+      """ # last item with trailing whitespace
+      
     it "continue after ordered task list line", ->
       editor.setText """
       1. [ ] Epic Tasks
@@ -50,11 +52,11 @@ describe "EditLine", ->
       editor.setCursorBufferPosition([1, 19])
 
       editLine.trigger()
-      expect(editor.getText()).toBe [
-        "1. [ ] Epic Tasks"
-        "  1. [X] Sub-task A"
-        "  2. [ ] " # trailing whitespace
-      ].join("\n")
+      expect(editor.getText()).toBe """
+      1. [ ] Epic Tasks
+        1. [X] Sub-task A
+        2. [ ] 
+      """ # last item with trailing whitespace
 
     it "continue after blockquote line", ->
       editor.setText """
@@ -63,10 +65,10 @@ describe "EditLine", ->
       editor.setCursorBufferPosition([0, 69])
 
       editLine.trigger()
-      expect(editor.getText()).toBe [
-        "> Your time is limited, so don’t waste it living someone else’s life."
-        "> " # trailing whitespace
-      ].join("\n")
+      expect(editor.getText()).toBe """
+      > Your time is limited, so don’t waste it living someone else’s life.
+      > 
+      """ # last item with trailing whitespace
 
     it "not continue after empty unordered task list line", ->
       editor.setText """
@@ -75,22 +77,25 @@ describe "EditLine", ->
       editor.setCursorBufferPosition([0, 5])
 
       editLine.trigger()
-      expect(editor.getText()).toBe ["", ""].join("\n")
+      expect(editor.getText()).toBe """
+      
+      
+      """
 
     it "not continue after empty ordered list line", ->
       editor.setText """
       1. [ ] parent
         - child
-        -
-      """
+        - 
+      """ # last item with trailing whitespace
       editor.setCursorBufferPosition([2, 4])
 
       editLine.trigger()
-      expect(editor.getText()).toBe [
-        "1. [ ] parent"
-        "  - child"
-        "2. [ ] "
-      ].join("\n")
+      expect(editor.getText()).toBe """
+      1. [ ] parent
+        - child
+      2. [ ] 
+      """ # last item with trailing whitespace
 
     it "not continue after empty ordered paragraph", ->
       editor.setText """
@@ -101,21 +106,21 @@ describe "EditLine", ->
 
           paragraph two
 
-        -
-      """
-      editor.setCursorBufferPosition([7, 3])
+        - 
+      """ # last item with trailing whitespace
+      editor.setCursorBufferPosition([7, 4])
 
       editLine.trigger()
-      expect(editor.getText()).toBe [
-        "1. parent"
-        "  - child has a paragraph"
-        ""
-        "    paragraph one"
-        ""
-        "    paragraph two"
-        ""
-        "2. "
-      ].join("\n")
+      expect(editor.getText()).toBe """
+      1. parent
+        - child has a paragraph
+
+          paragraph one
+
+          paragraph two
+
+      2. 
+      """ # last item with trailing whitespace
 
   describe "indentListLine", ->
     beforeEach -> editLine = new EditLine("indent-list-line")
@@ -140,3 +145,5 @@ describe "EditLine", ->
 
       editLine.trigger()
       expect(editor.getText()).toBe("text text")
+
+# coffeelint: enable=no_trailing_whitespace
