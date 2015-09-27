@@ -1,6 +1,7 @@
 {$} = require "atom-space-pen-views"
 fs = require "fs-plus"
 path = require "path"
+shell = require "shell"
 
 config = require "../config"
 utils = require "../utils"
@@ -14,56 +15,61 @@ class PublishDraft
 
   trigger: (e) ->
     @updateFrontMatter()
-    @editor.save()
 
     @draftPath = @editor.getPath()
     @postPath = @getPostPath()
 
-    @moveDraft() unless @draftPath == @postPath
+    @confirmPublish =>
+      try
+        @editor.saveAs(@postPath)
+        shell.moveItemToTrash(@draftPath) if @draftPath
+      catch error
+        alert("Error:\n#{error.message}")
+
+  confirmPublish: (callback) ->
+    if fs.existsSync(@postPath)
+      atom.confirm
+        message: "Do you want to overwrite file?"
+        detailedMessage: "Another file already exists at:\n#{@postPath}"
+        buttons:
+          "Confirm": callback
+          "Cancel": null
+    else if @draftPath == @postPath
+      atom.confirm
+        message: "This file is published!"
+        detailedMessage: "This file is already published at:\n#{@draftPath}"
+        buttons: ['OK']
+    else callback()
 
   updateFrontMatter: ->
     return if @frontMatter.isEmpty
 
     @frontMatter.setIfExists("published", true)
-    @frontMatter.setIfExists("date",
-      "#{utils.getDateStr()} #{utils.getTimeStr()}")
+    @frontMatter.setIfExists("date", "#{utils.getDateStr()} #{utils.getTimeStr()}")
 
     @frontMatter.save()
 
-  moveDraft: ->
-    try
-      @editor.destroy()
-      fs.moveSync(@draftPath, @postPath)
-      atom.workspace.open(@postPath)
-    catch error
-      alert("Error:\n#{error.message}")
-
   getPostPath: ->
-    path.join(@getPostDir(), @getPostName())
-
-  getPostDir: ->
     localDir = config.get("siteLocalDir")
-    postsDir = config.get("sitePostsDir")
-    postsDir = utils.dirTemplate(postsDir)
+    postsDir = utils.dirTemplate(config.get("sitePostsDir"))
 
-    path.join(localDir, postsDir)
+    path.join(localDir, postsDir, @_getPostName())
 
-  getPostName: ->
+  _getPostName: ->
     template = config.get("newPostFileName")
 
     date = utils.getDate()
     info =
-      title: @getPostTitle()
-      extension: @getPostExtension()
+      title: @_getPostTitle()
+      extension: @_getPostExtension()
 
     utils.template(template, $.extend(info, date))
 
-  getPostTitle: ->
-    if config.get("publishRenameBasedOnTitle")
-      utils.dasherize(@frontMatter.title)
-    else
-      utils.getTitleSlug(@draftPath)
+  _getPostTitle: ->
+    useFrontMatter = !@draftPath || !!config.get("publishRenameBasedOnTitle")
+    title = utils.dasherize(@frontMatter.get("title")) if useFrontMatter
+    title || utils.getTitleSlug(@draftPath) || utils.dasherize("New Post")
 
-  getPostExtension: ->
-    extname = path.extname(@draftPath) if config.get("publishKeepFileExtname")
+  _getPostExtension: ->
+    extname = path.extname(@draftPath) if !!config.get("publishKeepFileExtname")
     extname || config.get("fileExtension")
