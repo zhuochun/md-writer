@@ -28,11 +28,13 @@ class ManageFrontMatterView extends View
     @editor = atom.workspace.getActiveTextEditor()
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
     @previouslyFocusedElement = $(document.activeElement)
-    @frontMatter = new FrontMatter(@editor)
-    return @detach() if @frontMatter.isEmpty
+
     @fetchSiteFieldCandidates()
+    @frontMatter = new FrontMatter(@editor)
+    return @detach() if @frontMatter.parseError
     @frontMatter.normalizeField(@constructor.fieldName)
     @setEditorFieldItems(@frontMatter.get(@constructor.fieldName))
+
     @panel.show()
     @fieldEditor.focus()
 

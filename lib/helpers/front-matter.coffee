@@ -2,12 +2,12 @@ os = require "os"
 yaml = require "js-yaml"
 
 FRONT_MATTER_REGEX = ///
-  ^(?:---\s*)?  # match open --- (if any)
+  ^(?:---\s*$)?  # match open --- (if any)
   (
     [^:]+:      # match at least 1 open key
     [\s\S]*?    # match the rest
   )
-  ---\s*$       # match ending ---
+  ^---\s*$       # match ending ---
   ///m
 
 module.exports =
@@ -17,12 +17,20 @@ class FrontMatter
     @content = {}
     @leadingFence = true
     @isEmpty = true
+    @parseError = null
 
     # find and parse front matter
     @_findFrontMatter (match) =>
-      @content = yaml.safeLoad(match.match[1].trim())
-      @leadingFence = match.matchText.startsWith("---")
-      @isEmpty = false
+      try
+        @content = yaml.safeLoad(match.match[1].trim())
+        @leadingFence = match.matchText.startsWith("---")
+        @isEmpty = false
+      catch error
+        @parseError = error
+        atom.confirm
+          message: "[Markdown Writer] Error!"
+          detailedMessage: "Invalid Front Matter:\n#{error.message}"
+          buttons: ['OK']
 
   _findFrontMatter: (onMatch) ->
     @editor.buffer.scan(FRONT_MATTER_REGEX, onMatch)
