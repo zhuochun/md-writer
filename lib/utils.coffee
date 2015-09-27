@@ -11,9 +11,11 @@ getJSON = (uri, succeed, error) ->
   $.getJSON(uri).done(succeed).fail(error)
 
 regexpEscape = (str) ->
-  str && str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+  return "" unless str
+  str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
 dasherize = (str) ->
+  return "" unless str
   str.trim().toLowerCase().replace(/[^-\w\s]|_/g, "").replace(/\s+/g, "-")
 
 getPackagePath = (segments...) ->
@@ -80,12 +82,10 @@ SLUG_REGEX = ///
   ///
 
 getTitleSlug = (str) ->
-  str = path.basename(str, path.extname(str))
+  return "" unless str
 
-  if matches = SLUG_REGEX.exec(str)
-    matches[2]
-  else
-    str
+  str = path.basename(str, path.extname(str))
+  if matches = SLUG_REGEX.exec(str) then matches[2] else str
 
 # ==================================================
 # Image HTML Tag

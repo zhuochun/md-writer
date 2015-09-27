@@ -1,9 +1,114 @@
 utils = require "../lib/utils"
 
 describe "utils", ->
+
+# ==================================================
+# General Utils
+#
+
+  describe ".dasherize", ->
+    it "dasherize string", ->
+      fixture = "hello world!"
+      expect(utils.dasherize(fixture)).toEqual("hello-world")
+      fixture = "hello-world"
+      expect(utils.dasherize(fixture)).toEqual("hello-world")
+      fixture = " hello     World"
+      expect(utils.dasherize(fixture)).toEqual("hello-world")
+
+    it "dasherize empty string", ->
+      expect(utils.dasherize(undefined)).toEqual("")
+      expect(utils.dasherize("")).toEqual("")
+
+  describe ".getPackagePath", ->
+    it "get the package path", ->
+      root = atom.packages.resolvePackagePath("markdown-writer")
+      expect(utils.getPackagePath()).toEqual(root)
+
+    it "get the path to package file", ->
+      root = atom.packages.resolvePackagePath("markdown-writer")
+      expect(utils.getPackagePath("CHEATSHEET.md")).toEqual("#{root}/CHEATSHEET.md")
+
+# ==================================================
+# Template
+#
+
+  describe ".dirTemplate", ->
+    it "generate posts directory without token", ->
+      expect(utils.dirTemplate("_posts/")).toEqual("_posts/")
+
+    it "generate posts directory with tokens", ->
+      date = utils.getDate()
+      result = utils.dirTemplate("_posts/{year}/{month}")
+      expect(result).toEqual("_posts/#{date.year}/#{date.month}")
+
+  describe ".template", ->
+    it "generate template", ->
+      fixture = "<a href=''>hello <title>! <from></a>"
+      expect(utils.template(fixture, title: "world", from: "markdown-writer"))
+        .toEqual("<a href=''>hello world! markdown-writer</a>")
+
+    it "generate template with data missing", ->
+      fixture = "<a href='<url>' title='<title>'><img></a>"
+      expect(utils.template(fixture, url: "//", title: ''))
+        .toEqual("<a href='//' title=''><img></a>")
+
+# ==================================================
+# Date and Time
+#
+
   it "get date dashed string", ->
     date = utils.getDate()
     expect(utils.getDateStr()).toEqual("#{date.year}-#{date.month}-#{date.day}")
+    expect(utils.getTimeStr()).toEqual("#{date.hour}:#{date.minute}")
+
+# ==================================================
+# Title and Slug
+#
+
+  describe ".getTitleSlug", ->
+    it "get title slug", ->
+      slug = "hello-world"
+
+      fixture = "abc/hello-world.markdown"
+      expect(utils.getTitleSlug(slug)).toEqual(slug)
+      fixture = "abc/2014-02-12-hello-world.markdown"
+      expect(utils.getTitleSlug(fixture)).toEqual(slug)
+      fixture = "abc/02-12-2014-hello-world.markdown"
+      expect(utils.getTitleSlug(fixture)).toEqual(slug)
+
+    it "get empty slug", ->
+      expect(utils.getTitleSlug(undefined)).toEqual("")
+      expect(utils.getTitleSlug("")).toEqual("")
+
+# ==================================================
+# Image HTML Tag
+#
+
+  it "check is valid html image tag", ->
+    fixture = """
+    <img alt="alt" src="src.png" class="aligncenter" height="304" width="520">
+    """
+    expect(utils.isImageTag(fixture)).toBe(true)
+
+  it "check parse valid html image tag", ->
+    fixture = """
+    <img alt="alt" src="src.png" class="aligncenter" height="304" width="520">
+    """
+    expect(utils.parseImageTag(fixture)).toEqual
+      alt: "alt", src: "src.png",
+      class: "aligncenter", height: "304", width: "520"
+
+  it "check parse valid html image tag with title", ->
+    fixture = """
+    <img title="" src="src.png" class="aligncenter" height="304" width="520" />
+    """
+    expect(utils.parseImageTag(fixture)).toEqual
+      title: "", src: "src.png",
+      class: "aligncenter", height: "304", width: "520"
+
+# ==================================================
+# Image
+#
 
   it "check is valid image", ->
     fixture = "![text](url)"
@@ -16,43 +121,26 @@ describe "utils", ->
     expect(utils.parseImage(fixture)).toEqual
       alt: "text", src: "url", title: ""
 
-  it "check is valid html image tag", ->
-    fixture = """
-<img alt="alt" src="src.png" class="aligncenter" height="304" width="520">
-"""
-    expect(utils.isImageTag(fixture)).toBe(true)
+# ==================================================
+# Link
+#
 
-  it "check parse valid html image tag", ->
-    fixture = """
-  <img alt="alt" src="src.png" class="aligncenter" height="304" width="520">
-  """
-    expect(utils.parseImageTag(fixture)).toEqual
-      alt: "alt", src: "src.png",
-      class: "aligncenter", height: "304", width: "520"
+  describe ".isInlineLink", ->
+    it "check is text invalid inline link", ->
+      fixture = "![text](url)"
+      expect(utils.isInlineLink(fixture)).toBe(false)
+      fixture = "[text]()"
+      expect(utils.isInlineLink(fixture)).toBe(false)
+      fixture = "[text][]"
+      expect(utils.isInlineLink(fixture)).toBe(false)
 
-  it "check parse valid html image tag with title", ->
-    fixture = """
-  <img title="" src="src.png" class="aligncenter" height="304" width="520" />
-  """
-    expect(utils.parseImageTag(fixture)).toEqual
-      title: "", src: "src.png",
-      class: "aligncenter", height: "304", width: "520"
-
-  it "check is text invalid inline link", ->
-    fixture = "![text](url)"
-    expect(utils.isInlineLink(fixture)).toBe(false)
-    fixture = "[text]()"
-    expect(utils.isInlineLink(fixture)).toBe(false)
-    fixture = "[text][]"
-    expect(utils.isInlineLink(fixture)).toBe(false)
-
-  it "check is text valid inline link", ->
-    fixture = "[text](url)"
-    expect(utils.isInlineLink(fixture)).toBe(true)
-    fixture = "[text](url title)"
-    expect(utils.isInlineLink(fixture)).toBe(true)
-    fixture = "[text](url 'title')"
-    expect(utils.isInlineLink(fixture)).toBe(true)
+    it "check is text valid inline link", ->
+      fixture = "[text](url)"
+      expect(utils.isInlineLink(fixture)).toBe(true)
+      fixture = "[text](url title)"
+      expect(utils.isInlineLink(fixture)).toBe(true)
+      fixture = "[text](url 'title')"
+      expect(utils.isInlineLink(fixture)).toBe(true)
 
   it "parse valid inline link text", ->
     fixture = "[text](url)"
@@ -65,230 +153,238 @@ describe "utils", ->
     expect(utils.parseInlineLink(fixture)).toEqual(
       {text: "text", url: "url", title: "title"})
 
-  it "check is text invalid reference link", ->
-    fixture = "![text](url)"
-    expect(utils.isReferenceLink(fixture)).toBe(false)
-    fixture = "[text](has)"
-    expect(utils.isReferenceLink(fixture)).toBe(false)
+  describe ".isReferenceLink", ->
+    it "check is text invalid reference link", ->
+      fixture = "![text](url)"
+      expect(utils.isReferenceLink(fixture)).toBe(false)
+      fixture = "[text](has)"
+      expect(utils.isReferenceLink(fixture)).toBe(false)
 
-  it "check is text valid reference link", ->
-    fixture = "[text][]"
-    expect(utils.isReferenceLink(fixture)).toBe(true)
+    it "check is text valid reference link", ->
+      fixture = "[text][]"
+      expect(utils.isReferenceLink(fixture)).toBe(true)
 
-  it "check is text valid reference link with id", ->
-    fixture = "[text][id with space]"
-    expect(utils.isReferenceLink(fixture)).toBe(true)
+    it "check is text valid reference link with id", ->
+      fixture = "[text][id with space]"
+      expect(utils.isReferenceLink(fixture)).toBe(true)
 
-  # TODO fix this to use editor
-  xit "parse valid reference link text without id", ->
-    content = """
-Transform your plain [text][] into static websites and blogs.
+  describe ".parseReferenceLink", ->
+    editor = null
 
-[text]: http://www.jekyll.com
+    beforeEach ->
+      waitsForPromise -> atom.workspace.open("empty.markdown")
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+        editor.setText """
+        Transform your plain [text][] into static websites and blogs.
 
-Markdown (or Textile), Liquid, HTML & CSS go in.
-"""
-    fixture = "[text][]"
-    expect(utils.parseReferenceLink(fixture, content)).toEqual
-      id: "text", text: "text", url: "http://www.jekyll.com", title: ""
+        [text]: http://www.jekyll.com
+        [id]: http://jekyll.com "Jekyll Website"
 
-  # TODO fix this to use editor
-  xit "parse valid reference link text with id", ->
-    content = """
-Transform your plain [text][id] into static websites and blogs.
+        Markdown (or Textile), Liquid, HTML & CSS go in [Jekyll][id].
+        """
 
-[id]: http://jekyll.com "Jekyll Website"
+    it "parse valid reference link text without id", ->
+      fixture = "[text][]"
+      expect(utils.parseReferenceLink(fixture, editor)).toEqual
+        id: "text", text: "text", url: "http://www.jekyll.com", title: ""
+        definitionRange: {start: {row: 2, column: 0}, end: {row: 2, column: 29}}
 
-Markdown (or Textile), Liquid, HTML & CSS go in.
-    """
-    fixture = "[text][id]"
-    expect(utils.parseReferenceLink(fixture, content)).toEqual
-      id: "id", text: "text", url: "http://jekyll.com", title: "Jekyll Website"
+    it "parse valid reference link text with id", ->
+      fixture = "[Jekyll][id]"
+      expect(utils.parseReferenceLink(fixture, editor)).toEqual
+        id: "id", text: "Jekyll", url: "http://jekyll.com", title: "Jekyll Website"
+        definitionRange: {start: {row: 3, column: 0}, end: {row: 3, column: 40}}
 
-  it "check is text invalid reference definition", ->
-    fixture = "[text] http"
-    expect(utils.isReferenceDefinition(fixture)).toBe(false)
+  describe ".isReferenceDefinition", ->
+    it "check is text invalid reference definition", ->
+      fixture = "[text] http"
+      expect(utils.isReferenceDefinition(fixture)).toBe(false)
 
-  it "check is text valid reference definition", ->
-    fixture = "[text text]: http"
-    expect(utils.isReferenceDefinition(fixture)).toBe(true)
+    it "check is text valid reference definition", ->
+      fixture = "[text text]: http"
+      expect(utils.isReferenceDefinition(fixture)).toBe(true)
 
-  it "check is text valid reference definition with title", ->
-    fixture = "  [text]: http 'title not in double quote'"
-    expect(utils.isReferenceDefinition(fixture)).toBe(true)
+    it "check is text valid reference definition with title", ->
+      fixture = "  [text]: http 'title not in double quote'"
+      expect(utils.isReferenceDefinition(fixture)).toBe(true)
 
-  # TODO fix this to use editor
-  xit "parse valid reference definition text without id", ->
-    content = """
-Transform your plain [text][] into static websites and blogs.
+  describe ".parseReferenceLink", ->
+    editor = null
 
-[text]: http://www.jekyll.com
+    beforeEach ->
+      waitsForPromise -> atom.workspace.open("empty.markdown")
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+        editor.setText """
+        Transform your plain [text][] into static websites and blogs.
 
-Markdown (or Textile), Liquid, HTML & CSS go in.
-"""
-    fixture = "[text]: http://www.jekyll.com"
-    expect(utils.parseReferenceDefinition(fixture, content)).toEqual
-      id: "text", text: "text", url: "http://www.jekyll.com", title: ""
+        [text]: http://www.jekyll.com
+        [id]: http://jekyll.com "Jekyll Website"
 
-  # TODO fix this to use editor
-  xit "parse valid reference definition text with id", ->
-    content = """
-Transform your plain [text][id] into static websites and blogs.
+        Markdown (or Textile), Liquid, HTML & CSS go in [Jekyll][id].
+        """
 
-[id]: http://jekyll.com "Jekyll Website"
+    it "parse valid reference definition text without id", ->
+      fixture = "[text]: http://www.jekyll.com"
+      expect(utils.parseReferenceDefinition(fixture, editor)).toEqual
+        id: "text", text: "text", url: "http://www.jekyll.com", title: ""
+        linkRange: {start: {row: 0, column: 21}, end: {row: 0, column: 29}}
 
-Markdown (or Textile), Liquid, HTML & CSS go in.
-    """
-    fixture = "[id]: http://jekyll.com \"Jekyll Website\""
-    expect(utils.parseReferenceDefinition(fixture, content)).toEqual
-      id: "id", text: "text", url: "http://jekyll.com", title: "Jekyll Website"
+    it "parse valid reference definition text with id", ->
+      fixture = "[id]: http://jekyll.com \"Jekyll Website\""
+      expect(utils.parseReferenceDefinition(fixture, editor)).toEqual
+        id: "id", text: "Jekyll", url: "http://jekyll.com", title: "Jekyll Website"
+        linkRange: {start: {row: 5, column: 48}, end: {row: 5, column: 60}}
 
-  it "check is url", ->
-    fixture = "https://github.com/zhuochun/md-writer"
-    expect(utils.isUrl(fixture)).toBe(true)
-    fixture = "/Users/zhuochun/md-writer"
-    expect(utils.isUrl(fixture)).toBe(false)
+# ==================================================
+# Table
+#
 
-  it "check is table separator", ->
-    fixture = "----|"
-    expect(utils.isTableSeparator(fixture)).toBe(false)
+  describe ".isTableSeparator", ->
+    it "check is table separator", ->
+      fixture = "----|"
+      expect(utils.isTableSeparator(fixture)).toBe(false)
 
-    fixture = "|--|"
-    expect(utils.isTableSeparator(fixture)).toBe(true)
-    fixture = "--|--"
-    expect(utils.isTableSeparator(fixture)).toBe(true)
-    fixture = "---- |------ | ---"
-    expect(utils.isTableSeparator(fixture)).toBe(true)
+      fixture = "|--|"
+      expect(utils.isTableSeparator(fixture)).toBe(true)
+      fixture = "--|--"
+      expect(utils.isTableSeparator(fixture)).toBe(true)
+      fixture = "---- |------ | ---"
+      expect(utils.isTableSeparator(fixture)).toBe(true)
 
-  it "check is table separator with extra pipes", ->
-    fixture = "|-----"
-    expect(utils.isTableSeparator(fixture)).toBe(false)
+    it "check is table separator with extra pipes", ->
+      fixture = "|-----"
+      expect(utils.isTableSeparator(fixture)).toBe(false)
 
-    fixture = "|--|--"
-    expect(utils.isTableSeparator(fixture)).toBe(true)
-    fixture = "|---- |------ | ---|"
-    expect(utils.isTableSeparator(fixture)).toBe(true)
+      fixture = "|--|--"
+      expect(utils.isTableSeparator(fixture)).toBe(true)
+      fixture = "|---- |------ | ---|"
+      expect(utils.isTableSeparator(fixture)).toBe(true)
 
-  it "check is table separator with format", ->
-    fixture = ":--  |::---"
-    expect(utils.isTableSeparator(fixture)).toBe(false)
+    it "check is table separator with format", ->
+      fixture = ":--  |::---"
+      expect(utils.isTableSeparator(fixture)).toBe(false)
 
-    fixture = "|:---: |"
-    expect(utils.isTableSeparator(fixture)).toBe(true)
-    fixture = ":--|--:"
-    expect(utils.isTableSeparator(fixture)).toBe(true)
-    fixture = "|:---: |:----- | --: |"
-    expect(utils.isTableSeparator(fixture)).toBe(true)
+      fixture = "|:---: |"
+      expect(utils.isTableSeparator(fixture)).toBe(true)
+      fixture = ":--|--:"
+      expect(utils.isTableSeparator(fixture)).toBe(true)
+      fixture = "|:---: |:----- | --: |"
+      expect(utils.isTableSeparator(fixture)).toBe(true)
 
-  it "parse table separator", ->
-    fixture = "|----|"
-    expect(utils.parseTableSeparator(fixture)).toEqual({
-      separator: true
-      extraPipes: true
-      alignments: ["empty"]
-      columns: ["----"]
-      columnWidths: [4]})
+  describe ".parseTableSeparator", ->
+    it "parse table separator", ->
+      fixture = "|----|"
+      expect(utils.parseTableSeparator(fixture)).toEqual({
+        separator: true
+        extraPipes: true
+        alignments: ["empty"]
+        columns: ["----"]
+        columnWidths: [4]})
 
-    fixture = "--|--"
-    expect(utils.parseTableSeparator(fixture)).toEqual({
-      separator: true
-      extraPipes: false
-      alignments: ["empty", "empty"]
-      columns: ["--", "--"]
-      columnWidths: [2, 2]})
+      fixture = "--|--"
+      expect(utils.parseTableSeparator(fixture)).toEqual({
+        separator: true
+        extraPipes: false
+        alignments: ["empty", "empty"]
+        columns: ["--", "--"]
+        columnWidths: [2, 2]})
 
-    fixture = "---- |------ | ---"
-    expect(utils.parseTableSeparator(fixture)).toEqual({
-      separator: true
-      extraPipes: false
-      alignments: ["empty", "empty", "empty"]
-      columns: ["----", "------", "---"]
-      columnWidths: [4, 6, 3]})
+      fixture = "---- |------ | ---"
+      expect(utils.parseTableSeparator(fixture)).toEqual({
+        separator: true
+        extraPipes: false
+        alignments: ["empty", "empty", "empty"]
+        columns: ["----", "------", "---"]
+        columnWidths: [4, 6, 3]})
 
-  it "parse table separator with extra pipes", ->
-    fixture = "|--|--"
-    expect(utils.parseTableSeparator(fixture)).toEqual({
-      separator: true
-      extraPipes: true
-      alignments: ["empty", "empty"]
-      columns: ["--", "--"]
-      columnWidths: [2, 2]})
+    it "parse table separator with extra pipes", ->
+      fixture = "|--|--"
+      expect(utils.parseTableSeparator(fixture)).toEqual({
+        separator: true
+        extraPipes: true
+        alignments: ["empty", "empty"]
+        columns: ["--", "--"]
+        columnWidths: [2, 2]})
 
-    fixture = "|---- |------ | ---|"
-    expect(utils.parseTableSeparator(fixture)).toEqual({
-      separator: true
-      extraPipes: true
-      alignments: ["empty", "empty", "empty"]
-      columns: ["----", "------", "---"]
-      columnWidths: [4, 6, 3]})
+      fixture = "|---- |------ | ---|"
+      expect(utils.parseTableSeparator(fixture)).toEqual({
+        separator: true
+        extraPipes: true
+        alignments: ["empty", "empty", "empty"]
+        columns: ["----", "------", "---"]
+        columnWidths: [4, 6, 3]})
 
-  it "parse table separator with format", ->
-    fixture = ":-|-:|::"
-    expect(utils.parseTableSeparator(fixture)).toEqual({
-      separator: true
-      extraPipes: false
-      alignments: ["left", "right", "center"]
-      columns: [":-", "-:", "::"]
-      columnWidths: [2, 2, 2]})
+    it "parse table separator with format", ->
+      fixture = ":-|-:|::"
+      expect(utils.parseTableSeparator(fixture)).toEqual({
+        separator: true
+        extraPipes: false
+        alignments: ["left", "right", "center"]
+        columns: [":-", "-:", "::"]
+        columnWidths: [2, 2, 2]})
 
-    fixture = ":--|--:"
-    expect(utils.parseTableSeparator(fixture)).toEqual({
-      separator: true
-      extraPipes: false
-      alignments: ["left", "right"]
-      columns: [":--", "--:"]
-      columnWidths: [3, 3]})
+      fixture = ":--|--:"
+      expect(utils.parseTableSeparator(fixture)).toEqual({
+        separator: true
+        extraPipes: false
+        alignments: ["left", "right"]
+        columns: [":--", "--:"]
+        columnWidths: [3, 3]})
 
-    fixture = "|:---: |:----- | --: |"
-    expect(utils.parseTableSeparator(fixture)).toEqual({
-      separator: true
-      extraPipes: true
-      alignments: ["center", "left", "right"]
-      columns: [":---:", ":-----", "--:"]
-      columnWidths: [5, 6, 3]})
+      fixture = "|:---: |:----- | --: |"
+      expect(utils.parseTableSeparator(fixture)).toEqual({
+        separator: true
+        extraPipes: true
+        alignments: ["center", "left", "right"]
+        columns: [":---:", ":-----", "--:"]
+        columnWidths: [5, 6, 3]})
 
-  it "check table separator is a table row", ->
-    fixture = ":--  |:---"
-    expect(utils.isTableRow(fixture)).toBe(true)
+  describe ".isTableRow", ->
+    it "check table separator is a table row", ->
+      fixture = ":--  |:---"
+      expect(utils.isTableRow(fixture)).toBe(true)
 
-  it "check is table row", ->
-    fixture = "| empty content |"
-    expect(utils.isTableRow(fixture)).toBe(true)
-    fixture = "abc|feg"
-    expect(utils.isTableRow(fixture)).toBe(true)
-    fixture = "|   abc |efg | |"
-    expect(utils.isTableRow(fixture)).toBe(true)
+    it "check is table row", ->
+      fixture = "| empty content |"
+      expect(utils.isTableRow(fixture)).toBe(true)
+      fixture = "abc|feg"
+      expect(utils.isTableRow(fixture)).toBe(true)
+      fixture = "|   abc |efg | |"
+      expect(utils.isTableRow(fixture)).toBe(true)
 
-  it "parse table separator by table row ", ->
-    fixture = "|:---: |:----- | --: |"
-    expect(utils.parseTableRow(fixture)).toEqual({
-      separator: true
-      extraPipes: true
-      alignments: ["center", "left", "right"]
-      columns: [":---:", ":-----", "--:"]
-      columnWidths: [5, 6, 3]})
+  describe ".parseTableRow", ->
+    it "parse table separator by table row ", ->
+      fixture = "|:---: |:----- | --: |"
+      expect(utils.parseTableRow(fixture)).toEqual({
+        separator: true
+        extraPipes: true
+        alignments: ["center", "left", "right"]
+        columns: [":---:", ":-----", "--:"]
+        columnWidths: [5, 6, 3]})
 
-  it "parse table row ", ->
-    fixture = "| 中文 |"
-    expect(utils.parseTableRow(fixture)).toEqual({
-      separator: false
-      extraPipes: true
-      columns: ["中文"]
-      columnWidths: [4]})
+    it "parse table row ", ->
+      fixture = "| 中文 |"
+      expect(utils.parseTableRow(fixture)).toEqual({
+        separator: false
+        extraPipes: true
+        columns: ["中文"]
+        columnWidths: [4]})
 
-    fixture = "abc|feg"
-    expect(utils.parseTableRow(fixture)).toEqual({
-      separator: false
-      extraPipes: false
-      columns: ["abc", "feg"]
-      columnWidths: [3, 3]})
+      fixture = "abc|feg"
+      expect(utils.parseTableRow(fixture)).toEqual({
+        separator: false
+        extraPipes: false
+        columns: ["abc", "feg"]
+        columnWidths: [3, 3]})
 
-    fixture = "|   abc |efg | |"
-    expect(utils.parseTableRow(fixture)).toEqual({
-      separator: false
-      extraPipes: true
-      columns: ["abc", "efg", ""]
-      columnWidths: [3, 3, 0]})
+      fixture = "|   abc |efg | |"
+      expect(utils.parseTableRow(fixture)).toEqual({
+        separator: false
+        extraPipes: true
+        columns: ["abc", "efg", ""]
+        columnWidths: [3, 3, 0]})
 
   it "create table separator", ->
     row = utils.createTableSeparator(
@@ -366,46 +462,16 @@ Markdown (or Textile), Liquid, HTML & CSS go in.
       "|   |   |   |"
     ])
 
-  it "dasherize title", ->
-    fixture = "hello world!"
-    expect(utils.dasherize(fixture)).toEqual("hello-world")
-    fixture = "hello-world"
-    expect(utils.dasherize(fixture)).toEqual("hello-world")
-    fixture = " hello     World"
-    expect(utils.dasherize(fixture)).toEqual("hello-world")
+# ==================================================
+# URL
+#
 
-  it "get title slug", ->
-    slug = "hello-world"
-    fixture = "abc/hello-world.markdown"
-    expect(utils.getTitleSlug(slug)).toEqual(slug)
-    fixture = "abc/2014-02-12-hello-world.markdown"
-    expect(utils.getTitleSlug(fixture)).toEqual(slug)
-    fixture = "abc/02-12-2014-hello-world.markdown"
-    expect(utils.getTitleSlug(fixture)).toEqual(slug)
+  it "check is url", ->
+    fixture = "https://github.com/zhuochun/md-writer"
+    expect(utils.isUrl(fixture)).toBe(true)
+    fixture = "/Users/zhuochun/md-writer"
+    expect(utils.isUrl(fixture)).toBe(false)
 
-  it "generate posts directory without token", ->
-    expect(utils.dirTemplate("_posts/")).toEqual("_posts/")
-
-  it "generate posts directory with tokens", ->
-    date = utils.getDate()
-    result = utils.dirTemplate("_posts/{year}/{month}")
-    expect(result).toEqual("_posts/#{date.year}/#{date.month}")
-
-  it "generate template", ->
-    fixture = "<a href=''>hello <title>! <from></a>"
-    expect(utils.template(fixture, title: "world", from: "markdown-writer"))
-      .toEqual("<a href=''>hello world! markdown-writer</a>")
-
-  it "generate template with data missing", ->
-    fixture = "<a href='<url>' title='<title>'><img></a>"
-    expect(utils.template(fixture, url: "//", title: ''))
-      .toEqual("<a href='//' title=''><img></a>")
-
-  it "get the package path", ->
-    expect(utils.getPackagePath()).toEqual(
-      atom.packages.resolvePackagePath("markdown-writer"))
-
-  it "get the package path to file", ->
-    root = atom.packages.resolvePackagePath("markdown-writer")
-    expect(utils.getPackagePath("CHEATSHEET.md")).toEqual(
-      "#{root}/CHEATSHEET.md")
+# ==================================================
+# Atom TextEditor
+#
