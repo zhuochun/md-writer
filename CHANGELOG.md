@@ -1,3 +1,11 @@
+## 2.0.1
+
+* Fix publish draft in new buffers
+* Use `atom.confirm` for better confirm UIs
+* Add tabindex to view dialogs
+* Catch YAML parse error in FrontMatter
+* Fix ul/ol regex to restrict at least an empty space
+
 ## 2.0.0
 
 * Reorganize codebase
