@@ -25,6 +25,8 @@ class NewFileView extends View
       @p class: "error", outlet: "error"
 
   initialize: ->
+    utils.setTabIndex([@titleEditor, @pathEditor, @dateEditor])
+
     @pathEditor.getModel().onDidChange => @updatePath()
     @dateEditor.getModel().onDidChange => @updatePath()
     @titleEditor.getModel().onDidChange => @updatePath()
