@@ -74,17 +74,22 @@ class InsertImageView extends View
     return callback() if utils.isUrl(file) || !fs.existsSync(file)
 
     try
-      destFile = path.join(config.get("siteLocalDir"),
-        @imagesDir(), path.basename(file))
+      destFile = path.join(config.get("siteLocalDir"), @imagesDir(), path.basename(file))
 
       if fs.existsSync(destFile)
-        alert("Error:\nImage #{destPath} already exists!")
+        atom.confirm
+          message: "File already exists!"
+          detailedMessage: "Another file already exists at:\n#{destPath}"
+          buttons: ['OK']
       else
         fs.copy file, destFile, =>
           @imageEditor.setText(destFile)
           callback()
     catch error
-      alert("Error:\n#{error.message}")
+      atom.confirm
+        message: "[Markdown Writer] Error!"
+        detailedMessage: "Copy Image:\n#{error.message}"
+        buttons: ['OK']
 
   display: ->
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)

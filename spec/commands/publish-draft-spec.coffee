@@ -1,6 +1,6 @@
 PublishDraft = require "../../lib/commands/publish-draft"
 
-fdescribe "PublishDraft", ->
+describe "PublishDraft", ->
   [editor, publishDraft] = []
 
   beforeEach ->

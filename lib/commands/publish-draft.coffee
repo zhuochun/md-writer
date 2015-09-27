@@ -24,7 +24,10 @@ class PublishDraft
         @editor.saveAs(@postPath)
         shell.moveItemToTrash(@draftPath) if @draftPath
       catch error
-        alert("Error:\n#{error.message}")
+        atom.confirm
+          message: "[Markdown Writer] Error!"
+          detailedMessage: "Publish Draft:\n#{error.message}"
+          buttons: ['OK']
 
   confirmPublish: (callback) ->
     if fs.existsSync(@postPath)
@@ -37,7 +40,7 @@ class PublishDraft
     else if @draftPath == @postPath
       atom.confirm
         message: "This file is published!"
-        detailedMessage: "This file is already published at:\n#{@draftPath}"
+        detailedMessage: "This file already published at:\n#{@draftPath}"
         buttons: ['OK']
     else callback()
 
