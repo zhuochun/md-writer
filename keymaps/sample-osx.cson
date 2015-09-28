@@ -4,7 +4,7 @@
 #
 # Wiki: https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps
 #
-".platform-darwin atom-text-editor[data-grammar~='gfm']":
+".platform-darwin atom-text-editor:not([mini])[data-grammar~='gfm']":
   "shift-cmd-K": "markdown-writer:insert-link"
   "shift-cmd-I": "markdown-writer:insert-image"
   "cmd-i":       "markdown-writer:toggle-italic-text"

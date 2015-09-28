@@ -4,7 +4,7 @@
 #
 # Wiki: https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps
 #
-".platform-linux atom-text-editor[data-grammar~='gfm']":
+".platform-linux atom-text-editor:not([mini])[data-grammar~='gfm']":
   "shift-ctrl-K": "markdown-writer:insert-link"
   "shift-ctrl-I": "markdown-writer:insert-image"
   "ctrl-i":       "markdown-writer:toggle-italic-text"
