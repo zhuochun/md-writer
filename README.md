@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/zhuochun/md-writer.svg)](https://travis-ci.org/zhuochun/md-writer)
 
-Adds tons of features to make [Atom](https://atom.io/) a even better Markdown editor!
+Adds tons of features to make [Atom](https://atom.io/) an even better Markdown editor!
 
 Works great with static blogging as well. Try it with [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) and any of your favorite static blog engines.
 
@@ -17,7 +17,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 > You can execute command `Markdown Writer: Create Default keymaps` to append the original list of keymaps to your keymap config file, then modify them based on your needs. Refer to [wiki][31ebd53f].
 
   [31ebd53f]: https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps "Settings for Keymaps"
-
+  
 ## Features
 
 ### Blogging
@@ -25,7 +25,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 - **Create new post** with front matters ([setup required][ca8870d7]).
 - **Create new draft** with front matters ([setup required][ca8870d7]).
 - **Publish draft** moves a draft to post's directory with front matters (`date`, `published`) updated.
-- **Manage tags and categories in front matters** ([setup required][9be76601]).
+- **Manage tags and categories** in front matters ([setup required][9be76601]).
 - **Site specific settings** ([view setup][1561ed4c]).
 
   [ca8870d7]: https://github.com/zhuochun/md-writer/wiki/Quick-Start "Markdown-Writer Setup Guide"
@@ -44,7 +44,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 - **Insert table** (`markdown-writer:insert-table`), and a shortcut to **jump to next table cell** (`cmd-j cmd-t`).
 - **Format table** (`markdown-writer:format-table`) with table alignments.
 - **Toggle headings**: `ctrl-alt-[1-5]` to switch among `H1` to `H5`.
-- **Toggle text styles** ([view customization][7ddaeaf4]):
+- **Toggle text styles** ([customization supported][7ddaeaf4]):
   - `code` (`cmd-'`)
   - **bold** (`cmd-b`)
   - _italic_ (`cmd-i`)
@@ -72,6 +72,8 @@ You can find and trigger all features in:
 
 - In Atom, go to Settings (`cmd-,`) -> Install -> Search `Markdown Writer`.
 - Or, run `apm install markdown-writer`.
+
+> If you saw errors after this plugin updated, please try restart Atom to allow it reloads the updated code.
 
 ## Setup
 
