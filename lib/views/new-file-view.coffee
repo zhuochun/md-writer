@@ -64,11 +64,11 @@ class NewFileView extends View
 
   updatePath: ->
     @message.html """
-    <b>Site Directory:</b> #{config.get('siteLocalDir')}/<br/>
+    <b>Site Directory:</b> #{utils.getRootPath()}/<br/>
     <b>Create #{@constructor.fileType} At:</b> #{@getPostPath()}
     """
 
-  getFullPath: -> path.join(config.get("siteLocalDir"), @getPostPath())
+  getFullPath: -> path.join(utils.getRootPath(), @getPostPath())
 
   getPostPath: -> path.join(@pathEditor.getText(), @getFileName())
 

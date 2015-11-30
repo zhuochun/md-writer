@@ -10,6 +10,11 @@ module.exports =
     title: "Site URL"
     type: "string"
     default: config.getDefault("siteUrl")
+  useCurrentProject:
+    title: "Use Current Project"
+    description: "Use the current project for your site's local directory"
+    type: "boolean"
+    default: config.getDefault("useCurrentProject")
   siteLocalDir:
     title: "Site Local Directory"
     description: "The absolute path to your site's local directory"
