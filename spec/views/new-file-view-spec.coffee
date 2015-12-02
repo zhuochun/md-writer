@@ -63,9 +63,10 @@ describe "NewFileView", ->
 
         newDraftView.dateEditor.setText("2015-08-23")
         newDraftView.titleEditor.setText("Draft Title")
+        path = atom.project.getPaths()[0]
 
         expect(newDraftView.message.text()).toBe """
-        Site Directory: /config/your/local/directory/in/settings/
+        Site Directory: #{path}/
         Create Draft At: _drafts/draft-title.markdown
         """
 
@@ -98,9 +99,10 @@ describe "NewFileView", ->
 
         newPostView.dateEditor.setText("2015-08-23")
         newPostView.titleEditor.setText("Post's Title")
+        path = atom.project.getPaths()[0]
 
         expect(newPostView.message.text()).toBe """
-        Site Directory: /config/your/local/directory/in/settings/
+        Site Directory: #{path}/
         Create Post At: _posts/2015/2015-08-23-posts-title.markdown
         """
 

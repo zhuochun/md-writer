@@ -1,3 +1,4 @@
+path = require "path"
 utils = require "../lib/utils"
 
 describe "utils", ->
@@ -26,7 +27,8 @@ describe "utils", ->
 
     it "get the path to package file", ->
       root = atom.packages.resolvePackagePath("markdown-writer")
-      expect(utils.getPackagePath("CHEATSHEET.md")).toEqual("#{root}/CHEATSHEET.md")
+      cheatsheetPath = path.join(root, "CHEATSHEET.md")
+      expect(utils.getPackagePath("CHEATSHEET.md")).toEqual(cheatsheetPath)
 
 # ==================================================
 # Template

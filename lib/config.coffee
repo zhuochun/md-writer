@@ -13,10 +13,8 @@ class Configuration
     # https://github.com/zhuochun/md-writer/wiki/Settings-for-individual-projects
     projectConfigFile: "_mdwriter.cson"
 
-    # Flag for using the root directory of the current project
-    useCurrentProject: true
     # root directory of your blog
-    siteLocalDir: "/config/your/local/directory/in/settings"
+    siteLocalDir: ""
     # directory to drafts from the root of siteLocalDir
     siteDraftsDir: "_drafts/"
     # directory to posts from the root of siteLocalDir

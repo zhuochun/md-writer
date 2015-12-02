@@ -24,12 +24,17 @@ getPackagePath = (segments...) ->
   segments.unshift(atom.packages.resolvePackagePath("markdown-writer"))
   path.join.apply(null, segments)
 
-getRootPath = () ->
+getRootPath = ->
   paths = atom.project.getPaths()
 
-  # TODO: This is always true. Need to figure out why.
-  if config.get("useCurrentProject") && paths
-    return paths[0]
+  if paths
+    projectPath = paths[0]
+  else
+    # Give the user a path if there's no project paths.
+    projectPath = atom.config.get("core.projectHome")
+
+  if !config.get("siteLocalDir")
+    return projectPath
   else
     return config.get("siteLocalDir")
 
