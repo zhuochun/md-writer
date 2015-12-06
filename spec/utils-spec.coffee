@@ -122,6 +122,12 @@ describe "utils", ->
     fixture = "![text](url)"
     expect(utils.parseImage(fixture)).toEqual
       alt: "text", src: "url", title: ""
+      
+  it "check is valid image file", ->
+    fixture = "fixtures/abc.jpg"
+    expect(utils.isImageFile(fixture)).toBe(true)
+    fixture = "fixtures/abc.txt"
+    expect(utils.isImageFile(fixture)).toBe(false)
 
 # ==================================================
 # Link

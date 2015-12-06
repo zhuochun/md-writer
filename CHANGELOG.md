@@ -1,3 +1,7 @@
+## 2.1.0
+
+* Add `relativeImagePath` configuration for insert image
+
 ## 2.0.1
 
 * Fix publish draft in new buffers

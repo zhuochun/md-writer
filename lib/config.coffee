@@ -45,6 +45,8 @@ class Configuration
 
     # file extension of posts/drafts
     fileExtension: ".markdown"
+    # use relative path to image from the opened file
+    relativeImagePath: false
 
     # whether rename filename based on title in front matter when publishing
     publishRenameBasedOnTitle: false
