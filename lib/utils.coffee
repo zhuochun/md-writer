@@ -27,7 +27,7 @@ getPackagePath = (segments...) ->
 getRootPath = ->
   paths = atom.project.getPaths()
 
-  if paths
+  if paths && paths.length > 0
     projectPath = paths[0]
   else
     # Give the user a path if there's no project paths.
