@@ -149,6 +149,11 @@ parseImage = (input) ->
     return alt: image[1], src: image[2], title: image[3]
   else
     return alt: input, src: "", title: ""
+    
+IMG_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".ico"]
+
+isImageFile = (file) ->
+  file && (path.extname(file).toLowerCase() in IMG_EXTENSIONS)
 
 # ==================================================
 # Inline link
@@ -431,6 +436,7 @@ module.exports =
   getJSON: getJSON
   regexpEscape: regexpEscape
   dasherize: dasherize
+  
   getPackagePath: getPackagePath
   getRootPath: getRootPath
 
@@ -466,5 +472,6 @@ module.exports =
   createTableRow: createTableRow
 
   isUrl: isUrl
+  isImageFile: isImageFile
 
   getTextBufferRange: getTextBufferRange

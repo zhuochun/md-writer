@@ -54,6 +54,11 @@ module.exports =
     title: "File Extension"
     type: "string"
     default: config.getCurrentDefault("fileExtension")
+  relativeImagePath:
+    title: "Use Relative Image Path"
+    description: "Use relative image path from the open file"
+    type: "boolean"
+    default: config.getCurrentDefault("relativeImagePath")
   tableAlignment:
     title: "Table Cell Alignment"
     type: "string"
