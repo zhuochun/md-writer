@@ -2,6 +2,8 @@
 path = require "path"
 wcswidth = require "wcwidth"
 
+config = require "./config"
+
 # ==================================================
 # General Utils
 #
@@ -21,6 +23,21 @@ dasherize = (str) ->
 getPackagePath = (segments...) ->
   segments.unshift(atom.packages.resolvePackagePath("markdown-writer"))
   path.join.apply(null, segments)
+
+getRootPath = ->
+  paths = atom.project.getPaths()
+
+  if paths
+    projectPath = paths[0]
+  else
+    # Give the user a path if there's no project paths.
+    projectPath = atom.config.get("core.projectHome")
+
+  if !config.get("siteLocalDir")
+    return projectPath
+  else
+    return config.get("siteLocalDir")
+
 
 # ==================================================
 # General View Helpers
@@ -415,6 +432,7 @@ module.exports =
   regexpEscape: regexpEscape
   dasherize: dasherize
   getPackagePath: getPackagePath
+  getRootPath: getRootPath
 
   setTabIndex: setTabIndex
 

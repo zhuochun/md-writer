@@ -77,7 +77,7 @@ class InsertImageView extends View
     return callback() if utils.isUrl(file) || !fs.existsSync(file)
 
     try
-      destFile = path.join(config.get("siteLocalDir"), @imagesDir(), path.basename(file))
+      destFile = path.join(utils.getRootPath(), @imagesDir(), path.basename(file))
 
       if fs.existsSync(destFile)
         atom.confirm
@@ -176,21 +176,21 @@ class InsertImageView extends View
     position = if naturalWidth > 300 then "center" else "right"
     @alignEditor.setText(position)
 
-  isInSiteDir: (file) -> file && file.startsWith(config.get("siteLocalDir"))
+  isInSiteDir: (file) -> file && file.startsWith(utils.getRootPath())
 
   imagesDir: -> utils.dirTemplate(config.get("siteImagesDir"))
 
   resolveImageUrl: (file) ->
     return "" if !file
     return file if utils.isUrl(file) || fs.existsSync(file)
-    return path.join(config.get("siteLocalDir"), file)
+    return path.join(utils.getRootPath(), file)
 
   generateImageUrl: (file) ->
     return "" if !file
     return file if utils.isUrl(file)
 
     if @isInSiteDir(file)
-      filePath = path.relative(config.get("siteLocalDir"), file)
+      filePath = path.relative(utils.getRootPath(), file)
     else
       filePath = path.join(@imagesDir(), path.basename(file))
     return path.join("/", filePath) # resolve to from root

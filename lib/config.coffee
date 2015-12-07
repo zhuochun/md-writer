@@ -14,7 +14,7 @@ class Configuration
     projectConfigFile: "_mdwriter.cson"
 
     # root directory of your blog
-    siteLocalDir: "/config/your/local/directory/in/settings"
+    siteLocalDir: ""
     # directory to drafts from the root of siteLocalDir
     siteDraftsDir: "_drafts/"
     # directory to posts from the root of siteLocalDir
