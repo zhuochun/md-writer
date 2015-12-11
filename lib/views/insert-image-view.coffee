@@ -96,7 +96,7 @@ class InsertImageView extends View
   openImageDialog: ->
     files = dialog.showOpenDialog
       properties: ['openFile']
-      defaultPath: lastInsertImageDir || utils.getRootPath()
+      defaultPath: lastInsertImageDir || @siteLocalDir()
     return unless files && files.length > 0
     
     @imageEditor.setText(files[0])
@@ -150,7 +150,7 @@ class InsertImageView extends View
       rawSrc: imgSource,
       src: @generateImageSrc(imgSource)
       relativeFileSrc: @generateRelativeImageSrc(imgSource, @currentFileDir())
-      relativeSiteSrc: @generateRelativeImageSrc(imgSource, utils.getRootPath())
+      relativeSiteSrc: @generateRelativeImageSrc(imgSource, @siteLocalDir())
       alt: @titleEditor.getText()
       width: @widthEditor.getText()
       height: @heightEditor.getText()
@@ -170,7 +170,7 @@ class InsertImageView extends View
     return callback() if utils.isUrl(file) || !fs.existsSync(file)
 
     try
-      destFile = path.join(utils.getRootPath(), @siteImagesDir(), path.basename(file))
+      destFile = path.join(@siteLocalDir(), @siteImagesDir(), path.basename(file))
 
       if fs.existsSync(destFile)
         atom.confirm
@@ -186,6 +186,9 @@ class InsertImageView extends View
         message: "[Markdown Writer] Error!"
         detailedMessage: "Copy Image:\n#{error.message}"
         buttons: ['OK']
+        
+  # get user's site local directory
+  siteLocalDir: -> config.get("siteLocalDir") || utils.getProjectPath()
 
   # get user's site images directory
   siteImagesDir: -> utils.dirTemplate(config.get("siteImagesDir"))
@@ -194,13 +197,13 @@ class InsertImageView extends View
   currentFileDir: -> path.dirname(@editor.getPath() || "")
   
   # check the file is in the site directory
-  isInSiteDir: (file) -> file && file.startsWith(utils.getRootPath())
+  isInSiteDir: (file) -> file && file.startsWith(@siteLocalDir())
 
   # try to resolve file to a valid src that could be displayed
   resolveImagePath: (file) ->
     return "" unless file
     return file if utils.isUrl(file) || fs.existsSync(file)
-    absolutePath = path.join(utils.getRootPath(), file)
+    absolutePath = path.join(@siteLocalDir(), file)
     return absolutePath if fs.existsSync(absolutePath)
     return file # fallback to not resolve
 
@@ -209,7 +212,7 @@ class InsertImageView extends View
     return "" unless file
     return file if utils.isUrl(file)
     return path.relative(@currentFileDir(), file) if config.get('relativeImagePath')
-    return path.relative(utils.getRootPath(), file) if @isInSiteDir(file)
+    return path.relative(@siteLocalDir(), file) if @isInSiteDir(file)
     return path.join("/", @siteImagesDir(), path.basename(file))
 
   # generate a relative src from the base path or from user's home directory
