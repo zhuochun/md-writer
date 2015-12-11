@@ -53,7 +53,7 @@ class PublishDraft
     @frontMatter.save()
 
   getPostPath: ->
-    localDir = utils.getRootPath()
+    localDir = config.get("siteLocalDir") || utils.getProjectPath()
     postsDir = utils.dirTemplate(config.get("sitePostsDir"))
 
     path.join(localDir, postsDir, @_getPostName())
