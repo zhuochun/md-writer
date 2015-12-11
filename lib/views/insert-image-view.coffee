@@ -78,7 +78,7 @@ class InsertImageView extends View
     @range = utils.getTextBufferRange(@editor, "link")
     selection = @editor.getTextInRange(@range)
     return unless selection
-    
+
     if utils.isImage(selection)
       img = utils.parseImage(selection)
     else if utils.isImageTag(selection)
@@ -90,7 +90,7 @@ class InsertImageView extends View
     @widthEditor.setText(img.width || "")
     @heightEditor.setText(img.height || "")
     @imageEditor.setText(img.src || "")
-    
+
     @updateImageSource(img.src)
 
   openImageDialog: ->
@@ -98,10 +98,10 @@ class InsertImageView extends View
       properties: ['openFile']
       defaultPath: lastInsertImageDir || @siteLocalDir()
     return unless files && files.length > 0
-    
+
     @imageEditor.setText(files[0])
     @updateImageSource(files[0])
-    
+
     lastInsertImageDir = path.dirname(files[0]) unless utils.isUrl(files[0])
     @titleEditor.focus()
 
@@ -109,7 +109,7 @@ class InsertImageView extends View
     return unless file
 
     @displayImagePreview(file)
-    
+
     if utils.isUrl(file) || @isInSiteDir(@resolveImagePath(file))
       @copyImagePanel.addClass("hidden")
     else
@@ -157,20 +157,26 @@ class InsertImageView extends View
       align: @alignEditor.getText()
       slug: utils.getTitleSlug(@editor.getPath())
       site: config.get("siteUrl")
-    
+
     # insert image tag when img.src exists, otherwise consider the image was removed
     if img.src
       text = utils.template(config.get("imageTag"), img)
     else
       text = img.alt
-    
+
     @editor.setTextInBufferRange(@range, text)
 
   copyImage: (file, callback) ->
     return callback() if utils.isUrl(file) || !fs.existsSync(file)
 
     try
-      destFile = path.join(@siteLocalDir(), @siteImagesDir(), path.basename(file))
+      if config.get("postAssetFolder")
+        destFile = path.join(@siteLocalDir(),
+                             utils.dirTemplate(config.get("sitePostsDir"), null, @editor),
+                             utils.getTitleSlug(@editor.getPath()),
+                             path.basename(file))
+      else
+        destFile = path.join(@siteLocalDir(), @siteImagesDir(), path.basename(file))
 
       if fs.existsSync(destFile)
         atom.confirm
@@ -186,16 +192,16 @@ class InsertImageView extends View
         message: "[Markdown Writer] Error!"
         detailedMessage: "Copy Image:\n#{error.message}"
         buttons: ['OK']
-        
+
   # get user's site local directory
   siteLocalDir: -> config.get("siteLocalDir") || utils.getProjectPath()
 
   # get user's site images directory
   siteImagesDir: -> utils.dirTemplate(config.get("siteImagesDir"))
-  
+
   # get current open file directory
   currentFileDir: -> path.dirname(@editor.getPath() || "")
-  
+
   # check the file is in the site directory
   isInSiteDir: (file) -> file && file.startsWith(@siteLocalDir())
 
@@ -203,6 +209,7 @@ class InsertImageView extends View
   resolveImagePath: (file) ->
     return "" unless file
     return file if utils.isUrl(file) || fs.existsSync(file)
+    return path.basename(file) if config.get("postAssetFolder")
     absolutePath = path.join(@siteLocalDir(), file)
     return absolutePath if fs.existsSync(absolutePath)
     return file # fallback to not resolve

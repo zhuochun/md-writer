@@ -54,7 +54,7 @@ class PublishDraft
 
   getPostPath: ->
     localDir = config.get("siteLocalDir") || utils.getProjectPath()
-    postsDir = utils.dirTemplate(config.get("sitePostsDir"))
+    postsDir = utils.dirTemplate(config.get("sitePostsDir"), null, @editor)
 
     path.join(localDir, postsDir, @_getPostName())
 
