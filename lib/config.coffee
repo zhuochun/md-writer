@@ -21,6 +21,8 @@ class Configuration
     sitePostsDir: "_posts/{year}/"
     # directory to images from the root of siteLocalDir
     siteImagesDir: "images/{year}/{month}/"
+    # Whether to use post asset folder
+    postAssetFolder: false
 
     # URL to your blog
     siteUrl: ""

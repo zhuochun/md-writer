@@ -1,6 +1,7 @@
 {$} = require "atom-space-pen-views"
 path = require "path"
 wcswidth = require "wcwidth"
+FrontMatter = require "./helpers/front-matter"
 
 # ==================================================
 # General Utils
@@ -39,9 +40,16 @@ setTabIndex = (elems) ->
 # ==================================================
 # Template
 #
+dirTemplate = (directory, date, editor) ->
+  if editor
+    @frontMatter = new FrontMatter(editor)
+    title = dasherize(@frontMatter.get("title"))
+    category = @frontMatter.get("category")
+  info =
+    title: title || dasherize(getTitleSlug(editor.getPath()) || "New Post")
+    category: category || "uncategorized"
 
-dirTemplate = (directory, date) ->
-  template(directory, getDate(date))
+  template(directory, $.extend(info, getDate(date)))
 
 template = (text, data, matcher = /[<{]([\w-]+?)[>}]/g) ->
   text.replace matcher, (match, attr) ->
@@ -139,7 +147,7 @@ parseImage = (input) ->
     return alt: image[1], src: image[2], title: image[3]
   else
     return alt: input, src: "", title: ""
-    
+
 IMG_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".ico"]
 
 isImageFile = (file) ->
@@ -426,7 +434,7 @@ module.exports =
   getJSON: getJSON
   regexpEscape: regexpEscape
   dasherize: dasherize
-  
+
   getPackagePath: getPackagePath
   getProjectPath: getProjectPath
 
