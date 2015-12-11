@@ -18,7 +18,7 @@ class EditLine
         @[fn](e, selection)
 
   insertNewLine: (e, selection) ->
-    return @editor.insertNewline() if @_isRangeSelection(selection)
+    return e.abortKeyBinding() if @_isRangeSelection(selection)
 
     cursor = selection.getHeadBufferPosition()
     line = @editor.lineTextForBufferRow(cursor.row)
@@ -26,7 +26,7 @@ class EditLine
     # when cursor is at middle of line, do a normal insert line
     # unless inline continuation is enabled
     if cursor.column < line.length && !config.get("inlineNewLineContinuation")
-      return @editor.insertNewline()
+      return e.abortKeyBinding()
 
     lineMeta = new LineMeta(line)
     if lineMeta.isContinuous()
@@ -35,7 +35,7 @@ class EditLine
       else
         @_insertNewlineWithContinuation(lineMeta.nextLine)
     else
-      @editor.insertNewline()
+      e.abortKeyBinding()
 
   _insertNewlineWithContinuation: (nextLine) ->
     @editor.insertText("\n#{nextLine}")
@@ -65,7 +65,7 @@ class EditLine
     @editor.insertText(nextLine)
 
   indentListLine: (e, selection) ->
-    return selection.indentSelectedRows() if @_isRangeSelection(selection)
+    return e.abortKeyBinding() if @_isRangeSelection(selection)
 
     cursor = selection.getHeadBufferPosition()
     line = @editor.lineTextForBufferRow(cursor.row)
@@ -75,7 +75,7 @@ class EditLine
     else if @_isAtLineBeginning(line, cursor.column) # indent on start of line
       selection.indent()
     else
-      selection.insertText(" ") # convert tab to space
+      e.abortKeyBinding()
 
   _isAtLineBeginning: (line, col) ->
     col == 0 || line.substring(0, col).trim() == ""
