@@ -3,11 +3,15 @@
 EditLine = require "../../lib/commands/edit-line"
 
 describe "EditLine", ->
-  [editor, editLine] = []
+  [editor, editLine, event] = []
 
   beforeEach ->
     waitsForPromise -> atom.workspace.open("empty.markdown")
-    runs -> editor = atom.workspace.getActiveTextEditor()
+    runs ->
+      editor = atom.workspace.getActiveTextEditor()
+      
+      event = { abortKeyBinding: -> {} }
+      spyOn(event, "abortKeyBinding")
 
   describe "insertNewLine", ->
     beforeEach -> editLine = new EditLine("insert-new-line")
@@ -15,12 +19,9 @@ describe "EditLine", ->
     it "does not affect normal new line", ->
       editor.setText "this is normal line"
       editor.setCursorBufferPosition([0, 4])
-
-      editLine.trigger()
-      expect(editor.getText()).toBe """
-      this
-       is normal line
-      """
+      
+      editLine.trigger(event)
+      expect(event.abortKeyBinding).toHaveBeenCalled()
 
     it "continue if config inlineNewLineContinuation enabled", ->
       atom.config.set("markdown-writer.inlineNewLineContinuation", true)
@@ -143,7 +144,7 @@ describe "EditLine", ->
       editor.setText "texttext"
       editor.setCursorBufferPosition([0, 4])
 
-      editLine.trigger()
-      expect(editor.getText()).toBe("text text")
+      editLine.trigger(event)
+      expect(event.abortKeyBinding).toHaveBeenCalled()
 
 # coffeelint: enable=no_trailing_whitespace
