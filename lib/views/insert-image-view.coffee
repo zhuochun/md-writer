@@ -209,7 +209,6 @@ class InsertImageView extends View
   resolveImagePath: (file) ->
     return "" unless file
     return file if utils.isUrl(file) || fs.existsSync(file)
-    return path.basename(file) if config.get("postAssetFolder")
     absolutePath = path.join(@siteLocalDir(), file)
     return absolutePath if fs.existsSync(absolutePath)
     return file # fallback to not resolve
@@ -218,6 +217,7 @@ class InsertImageView extends View
   generateImageSrc: (file) ->
     return "" unless file
     return file if utils.isUrl(file)
+    return path.basename(file) if config.get("postAssetFolder")
     return path.relative(@currentFileDir(), file) if config.get('relativeImagePath')
     return path.relative(@siteLocalDir(), file) if @isInSiteDir(file)
     return path.join("/", @siteImagesDir(), path.basename(file))
