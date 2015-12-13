@@ -43,10 +43,10 @@ setTabIndex = (elems) ->
 dirTemplate = (directory, date, editor) ->
   if editor
     @frontMatter = new FrontMatter(editor)
-    title = dasherize(@frontMatter.get("title"))
+    title = dasherize(@frontMatter.get("title") || getTitleSlug(editor.getPath()))
     category = @frontMatter.get("category")
   info =
-    title: title || dasherize(getTitleSlug(editor.getPath()) || "New Post")
+    title: title || dasherize("New Post")
     category: category || "uncategorized"
 
   template(directory, $.extend(info, getDate(date)))
