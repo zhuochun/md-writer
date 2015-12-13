@@ -21,7 +21,7 @@ class PublishDraft
 
     @confirmPublish =>
       try
-        postassetfolder = path.join(path.dirname(@draftPath), @_getPostTitle())
+        postassetfolder = path.join(path.dirname(@draftPath), utils.getTitleSlug(@draftPath))
         fs.moveSync(postassetfolder,
                     path.join(path.dirname(@postPath), @_getPostTitle())) if fs.existsSync(postassetfolder)
         @editor.saveAs(@postPath)
