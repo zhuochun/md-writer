@@ -51,7 +51,7 @@ class JumpTo
     key = @editor.getSelectedText() || @editor.getWordUnderCursor()
     return false unless key
 
-    key = utils.regexpEscape(REFERENCE_REGEX.exec(key)[1])
+    key = utils.escapeRegExp(REFERENCE_REGEX.exec(key)[1])
 
     found = false
     @editor.buffer.scan /// \[ #{key} \] ///g, (match) =>

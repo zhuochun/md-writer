@@ -10,7 +10,7 @@ getJSON = (uri, succeed, error) ->
   return error() if uri.length == 0
   $.getJSON(uri).done(succeed).fail(error)
 
-regexpEscape = (str) ->
+escapeRegExp = (str) ->
   return "" unless str
   str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
@@ -171,7 +171,7 @@ parseInlineLink = (input) ->
 #
 
 REFERENCE_LINK_REGEX_OF = (id, opts = {}) ->
-  id = regexpEscape(id) unless opts.noEscape
+  id = escapeRegExp(id) unless opts.noEscape
   ///
   \[(#{id})\]\ ?\[\]            # [text][]
   |                             # or
@@ -186,7 +186,7 @@ REFERENCE_LINK_REGEX_OF = (id, opts = {}) ->
 REFERENCE_LINK_REGEX = REFERENCE_LINK_REGEX_OF(".+?", noEscape: true)
 
 REFERENCE_DEF_REGEX_OF = (id, opts = {}) ->
-  id = regexpEscape(id) unless opts.noEscape
+  id = escapeRegExp(id) unless opts.noEscape
   /// ^\ *                      # start of line with any spaces
   \[(#{id})\]:\ +               # [id]: followed by spaces
   (\S*?)                        # link
@@ -424,9 +424,9 @@ getTextBufferRange = (editor, scopeSelector, selection) ->
 
 module.exports =
   getJSON: getJSON
-  regexpEscape: regexpEscape
   dasherize: dasherize
   
+  escapeRegExp: escapeRegExp
   getPackagePath: getPackagePath
   getProjectPath: getProjectPath
 
