@@ -14,9 +14,44 @@ escapeRegExp = (str) ->
   return "" unless str
   str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
-dasherize = (str) ->
+# https://github.com/epeli/underscore.string/blob/master/cleanDiacritics.js
+cleanDiacritics = (str) ->
   return "" unless str
-  str.trim().toLowerCase().replace(/[^-\w\s]|_/g, "").replace(/\s+/g, "-")
+
+  from = "ąàáäâãåæăćčĉęèéëêĝĥìíïîĵłľńňòóöőôõðøśșšŝťțŭùúüűûñÿýçżźž"
+  to = "aaaaaaaaaccceeeeeghiiiijllnnoooooooossssttuuuuuunyyczzz"
+
+  from += from.toUpperCase()
+  to += to.toUpperCase()
+
+  to = to.split("")
+
+  # for tokens requireing multitoken output
+  from += "ß"
+  to.push('ss')
+
+  str.replace /.{1}/g, (c) ->
+    index = from.indexOf(c)
+    if index == -1 then c else to[index]
+
+SLUGIZE_CONTROL_REGEX = /[\u0000-\u001f]/g
+SLUGIZE_SPECIAL_REGEX = /[\s~`!@#\$%\^&\*\(\)\-_\+=\[\]\{\}\|\\;:"'<>,\.\?\/]+/g
+
+# https://github.com/hexojs/hexo-util/blob/master/lib/slugize.js
+slugize = (str, separator = '-') ->
+  return "" unless str
+
+  escapedSep = escapeRegExp(separator)
+
+  cleanDiacritics(str).trim().toLowerCase()
+    # Remove control characters
+    .replace(SLUGIZE_CONTROL_REGEX, '')
+    # Replace special characters
+    .replace(SLUGIZE_SPECIAL_REGEX, separator)
+    # Remove continous separators
+    .replace(new RegExp(escapedSep + '{2,}', 'g'), separator)
+    # Remove prefixing and trailing separtors
+    .replace(new RegExp('^' + escapedSep + '+|' + escapedSep + '+$', 'g'), '')
 
 getPackagePath = (segments...) ->
   segments.unshift(atom.packages.resolvePackagePath("markdown-writer"))
@@ -139,7 +174,7 @@ parseImage = (input) ->
     return alt: image[1], src: image[2], title: image[3]
   else
     return alt: input, src: "", title: ""
-    
+
 IMG_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".ico"]
 
 isImageFile = (file) ->
@@ -424,9 +459,9 @@ getTextBufferRange = (editor, scopeSelector, selection) ->
 
 module.exports =
   getJSON: getJSON
-  dasherize: dasherize
-  
   escapeRegExp: escapeRegExp
+  slugize: slugize
+
   getPackagePath: getPackagePath
   getProjectPath: getProjectPath
 

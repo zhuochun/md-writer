@@ -74,14 +74,15 @@ class NewFileView extends View
 
   getFileName: ->
     template = config.get(@constructor.fileNameConfig)
-
     info =
-      title: utils.dasherize(@getTitle())
+      title: @getTitleSlug()
+      slug: @getTitleSlug()
       extension: config.get("fileExtension")
-
     utils.template(template, $.extend(info, @getDate()))
 
   getTitle: -> @titleEditor.getText() || "New #{@constructor.fileType}"
+
+  getTitleSlug: -> utils.slugize(@getTitle(), config.get('slugSeparator'))
 
   getDate: -> utils.parseDateStr(@dateEditor.getText())
 
@@ -94,6 +95,6 @@ class NewFileView extends View
     layout: "post"
     published: @getPublished()
     title: @getTitle()
-    slug: utils.dasherize(@getTitle())
+    slug: @getTitleSlug()
     date: "#{@dateEditor.getText()} #{utils.getTimeStr()}"
     dateTime: @getDate()

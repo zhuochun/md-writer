@@ -62,16 +62,18 @@ class PublishDraft
     template = config.get("newPostFileName")
 
     date = utils.getDate()
+    slug = @_getPostSlug()
     info =
-      title: @_getPostTitle()
+      title: slug
+      slug: slug
       extension: @_getPostExtension()
 
     utils.template(template, $.extend(info, date))
 
-  _getPostTitle: ->
+  _getPostSlug: ->
     useFrontMatter = !@draftPath || !!config.get("publishRenameBasedOnTitle")
-    title = utils.dasherize(@frontMatter.get("title")) if useFrontMatter
-    title || utils.getTitleSlug(@draftPath) || utils.dasherize("New Post")
+    slug = utils.slugize(@frontMatter.get("title"), config.get('slugSeparator')) if useFrontMatter
+    slug || utils.getTitleSlug(@draftPath) || utils.slugize("New Post", config.get('slugSeparator'))
 
   _getPostExtension: ->
     extname = path.extname(@draftPath) if !!config.get("publishKeepFileExtname")

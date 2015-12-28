@@ -31,9 +31,9 @@ class Configuration
     urlForCategories: ""
 
     # filename format of new drafts created
-    newDraftFileName: "{title}{extension}"
+    newDraftFileName: "{slug}{extension}"
     # filename format of new posts created
-    newPostFileName: "{year}-{month}-{day}-{title}{extension}"
+    newPostFileName: "{year}-{month}-{day}-{slug}{extension}"
     # front matter template
     frontMatter: """
       ---
@@ -45,6 +45,8 @@ class Configuration
 
     # file extension of posts/drafts
     fileExtension: ".markdown"
+    # file slug separator
+    slugSeparator: "-"
     # use relative path to image from the opened file
     relativeImagePath: false
 

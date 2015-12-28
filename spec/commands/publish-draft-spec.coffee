@@ -17,7 +17,7 @@ describe "PublishDraft", ->
       expect(publishDraft.draftPath).toMatch("fixtures/empty.markdown")
       expect(publishDraft.postPath).toMatch(/\/\d{4}\/\d{4}-\d\d-\d\d-empty\.markdown/)
 
-  describe ".getPostTile", ->
+  describe "._getPostSlug", ->
     it "get title from front matter by config", ->
       atom.config.set("markdown-writer.publishRenameBasedOnTitle", true)
       editor.setText """
@@ -27,7 +27,7 @@ describe "PublishDraft", ->
       """
 
       publishDraft = new PublishDraft({})
-      expect(publishDraft._getPostTitle()).toBe("markdown-writer")
+      expect(publishDraft._getPostSlug()).toBe("markdown-writer")
 
     it "get title from front matter if no draft path", ->
       editor.setText """
@@ -37,18 +37,18 @@ describe "PublishDraft", ->
       """
 
       publishDraft = new PublishDraft({})
-      expect(publishDraft._getPostTitle()).toBe("markdown-writer-new-post")
+      expect(publishDraft._getPostSlug()).toBe("markdown-writer-new-post")
 
     it "get title from draft path", ->
       publishDraft = new PublishDraft({})
       publishDraft.draftPath = "test/name-of-post.md"
-      expect(publishDraft._getPostTitle()).toBe("name-of-post")
+      expect(publishDraft._getPostSlug()).toBe("name-of-post")
 
     it "get new-post when no front matter/draft path", ->
       publishDraft = new PublishDraft({})
-      expect(publishDraft._getPostTitle()).toBe("new-post")
+      expect(publishDraft._getPostSlug()).toBe("new-post")
 
-  describe ".getPostExtension", ->
+  describe "._getPostExtension", ->
     beforeEach -> publishDraft = new PublishDraft({})
 
     it "get draft path extname by config", ->

@@ -7,18 +7,26 @@ describe "utils", ->
 # General Utils
 #
 
-  describe ".dasherize", ->
-    it "dasherize string", ->
+  describe ".slugize", ->
+    it "slugize string", ->
       fixture = "hello world!"
-      expect(utils.dasherize(fixture)).toEqual("hello-world")
+      expect(utils.slugize(fixture)).toEqual("hello-world")
       fixture = "hello-world"
-      expect(utils.dasherize(fixture)).toEqual("hello-world")
+      expect(utils.slugize(fixture)).toEqual("hello-world")
       fixture = " hello     World"
-      expect(utils.dasherize(fixture)).toEqual("hello-world")
+      expect(utils.slugize(fixture)).toEqual("hello-world")
 
-    it "dasherize empty string", ->
-      expect(utils.dasherize(undefined)).toEqual("")
-      expect(utils.dasherize("")).toEqual("")
+    it "slugize chinese", ->
+      fixture = "中文也可以"
+      expect(utils.slugize(fixture)).toEqual("中文也可以")
+      fixture = "中文：也可以"
+      expect(utils.slugize(fixture)).toEqual("中文：也可以")
+      fixture = " 「中文」  『也可以』"
+      expect(utils.slugize(fixture)).toEqual("「中文」-『也可以』")
+
+    it "slugize empty string", ->
+      expect(utils.slugize(undefined)).toEqual("")
+      expect(utils.slugize("")).toEqual("")
 
   describe ".getPackagePath", ->
     it "get the package path", ->
@@ -122,7 +130,7 @@ describe "utils", ->
     fixture = "![text](url)"
     expect(utils.parseImage(fixture)).toEqual
       alt: "text", src: "url", title: ""
-      
+
   it "check is valid image file", ->
     fixture = "fixtures/abc.jpg"
     expect(utils.isImageFile(fixture)).toBe(true)

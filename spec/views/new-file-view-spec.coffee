@@ -103,7 +103,7 @@ describe "NewFileView", ->
 
         expect(newPostView.message.text()).toBe """
         Site Directory: #{path}/
-        Create Post At: _posts/2015/2015-08-23-posts-title.markdown
+        Create Post At: _posts/2015/2015-08-23-post-s-title.markdown
         """
 
     describe ".getFrontMatter", ->
@@ -115,4 +115,4 @@ describe "NewFileView", ->
         expect(frontMatter.layout).toBe("post")
         expect(frontMatter.published).toBe(true)
         expect(frontMatter.title).toBe("Post's Title: Subtitle")
-        expect(frontMatter.slug).toBe("posts-title-subtitle")
+        expect(frontMatter.slug).toBe("post-s-title-subtitle")
