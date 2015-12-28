@@ -3,10 +3,10 @@
 # To create additional keymaps, run command `Markdown Writer: Create Default Keymaps`
 # Refer to wiki: https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps
 
-"atom-workspace atom-text-editor:not([mini])[data-grammar~='gfm']":
+"atom-workspace atom-text-editor:not([mini])":
   "enter": "markdown-writer:insert-new-line"
-  "tab"  : "markdown-writer:indent-list-line"
+  "tab":   "markdown-writer:indent-list-line"
 
 ".markdown-writer atom-text-editor[mini]":
-  "enter" : "core:confirm"
+  "enter":  "core:confirm"
   "escape": "core:cancel"

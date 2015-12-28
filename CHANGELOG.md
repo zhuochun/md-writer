@@ -1,3 +1,8 @@
+## 2.1.1
+
+* Abort key mapping event if action not performable
+* Fix key mapping conflicts with `autocomplete-plus`
+
 ## 2.1.0
 
 * Add default project support directory
