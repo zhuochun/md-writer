@@ -3,16 +3,22 @@
 config = require "./config"
 basicConfig = require "./config-basic"
 
-CmdModule = {} # To cache required modules
-
 module.exports =
   config: basicConfig
+
+  modules: {} # To cache required modules
+  disposables: null # Composite disposable
 
   activate: ->
     @disposables = new CompositeDisposable()
 
     @registerWorkspaceCommands()
     @registerEditorCommands()
+
+  deactivate: ->
+    @disposables?.dispose()
+    @disposables = null
+    @modules = {}
 
   registerWorkspaceCommands: ->
     workspaceCommands = {}
@@ -55,7 +61,8 @@ module.exports =
 
     ["insert-new-line", "indent-list-line"].forEach (command) =>
       editorCommands["markdown-writer:#{command}"] =
-        @registerCommand("./commands/edit-line", args: command)
+        @registerCommand("./commands/edit-line",
+          args: command, skipList: ["autocomplete-active"])
 
     ["correct-order-list-numbers", "format-table"].forEach (command) =>
       editorCommands["markdown-writer:#{command}"] =
@@ -69,27 +76,29 @@ module.exports =
 
   registerView: (path, options = {}) ->
     (e) =>
-      unless options.optOutGrammars || @isMarkdown()
-        return e.abortKeyBinding()
-
-      CmdModule[path] ?= require(path)
-      cmdInstance = new CmdModule[path](options.args)
-      cmdInstance.display() # unless config.get("testMode")
+      if (options.optOutGrammars || @isMarkdown()) && !@inSkipList(options.skipList)
+        @modules[path] ?= require(path)
+        moduleInstance = new @modules[path](options.args)
+        moduleInstance.display() unless config.get("_skipAction")?
+      else
+        e.abortKeyBinding()
 
   registerCommand: (path, options = {}) ->
     (e) =>
-      unless options.optOutGrammars || @isMarkdown()
-        return e.abortKeyBinding()
-
-      CmdModule[path] ?= require(path)
-      cmdInstance = new CmdModule[path](options.args)
-      cmdInstance.trigger(e) # unless config.get("testMode")
+      if (options.optOutGrammars || @isMarkdown()) && !@inSkipList(options.skipList)
+        @modules[path] ?= require(path)
+        moduleInstance = new @modules[path](options.args)
+        moduleInstance.trigger(e) unless config.get("_skipAction")?
+      else
+        e.abortKeyBinding()
 
   isMarkdown: ->
     editor = atom.workspace.getActiveTextEditor()
     return false unless editor?
-    return editor.getGrammar().scopeName in config.get("grammars")
+    return config.get("grammars").indexOf(editor.getGrammar().scopeName) >= 0
 
-  deactivate: ->
-    @disposables.dispose()
-    CmdModule = {}
+  inSkipList: (list) ->
+    return false unless list?
+    editorElement = atom.views.getView(atom.workspace.getActiveTextEditor())
+    return false unless editorElement? && editorElement.classList?
+    return list.every (className) -> editorElement.classList.contains(className)
