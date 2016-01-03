@@ -12,12 +12,12 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 
 ## Notice
 
-> From version `1.5.0`, all default key maps that come with package are removed.
+> From version `1.5.0`, default keymaps that come with this package are removed (except `enter`/`tab`).
 >
 > You can execute command `Markdown Writer: Create Default keymaps` to append the original list of keymaps to your keymap config file, then modify them based on your needs. Refer to [wiki][31ebd53f].
 
   [31ebd53f]: https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps "Settings for Keymaps"
-  
+
 ## Features
 
 ### Blogging
