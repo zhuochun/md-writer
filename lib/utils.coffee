@@ -75,66 +75,83 @@ setTabIndex = (elems) ->
 # Template
 #
 
-dirTemplate = (directory, date) ->
-  template(directory, getDate(date))
+TEMPLATE_REGEX = ///
+  [\<\{]        # start with < or {
+  ([\w\.\-]+?)  # any reasonable words, - or .
+  [\>\}]        # end with > or }
+  ///g
 
-template = (text, data, matcher = /[<{]([\w-]+?)[>}]/g) ->
+template = (text, data, matcher = TEMPLATE_REGEX) ->
   text.replace matcher, (match, attr) ->
     if data[attr]? then data[attr] else match
+
+# Return a function that reverse parse the template, e.g.
+#
+# Pass `untemplate("{year}-{month}")` returns a function `fn`, that `fn("2015-11") # => { _: "2015-11", year: 2015, month: 11 }`
+#
+untemplate = (text, matcher = TEMPLATE_REGEX) ->
+  keys = []
+
+  text = text.replace matcher, (match, attr) ->
+    keys.push(attr)
+
+    if ["year"].indexOf(attr) != -1 then "(\\d{4})"
+    else if ["month", "day", "hour", "minute", "second"].indexOf(attr) != -1 then "(\\d{2})"
+    else if ["i_month", "i_day", "i_hour", "i_minute", "i_second"].indexOf(attr) != -1 then "(\\d{1,2})"
+    else if ["extension"].indexOf(attr) != -1 then "(\\.\\w+)"
+    else "([\\s\\S]+)"
+
+  createUntemplateMatcher(keys, /// ^ #{text} $ ///)
+
+createUntemplateMatcher = (keys, regex) ->
+  (str) ->
+    return unless str
+
+    matches = regex.exec(str)
+    return unless matches
+
+    results = { "_" : matches[0] }
+    keys.forEach (key, idx) -> results[key] = matches[idx + 1]
+    results
 
 # ==================================================
 # Date and Time
 #
 
-DATE_REGEX = /// ^
-  (\d{4})[-\/]     # year
-  (\d{1,2})[-\/]   # month
-  (\d{1,2})        # day
-  $ ///g
-
-parseDateStr = (str) ->
+parseDate = (hash) ->
   date = new Date()
-  matches = DATE_REGEX.exec(str)
-  if matches
-    date.setYear(parseInt(matches[1], 10))
-    date.setMonth(parseInt(matches[2], 10) - 1)
-    date.setDate(parseInt(matches[3], 10))
-  return getDate(date)
 
-getDateStr = (date) ->
-  date = getDate(date)
-  return "#{date.year}-#{date.month}-#{date.day}"
+  map =
+    setYear: ["year"]
+    setMonth: ["month", "i_month"]
+    setDate: ["day", "i_day"]
+    setHours: ["hour", "i_hour"]
+    setMinutes: ["minute", "i_minute"]
+    setSeconds: ["second", "i_second"]
 
-getTimeStr = (date) ->
-  date = getDate(date)
-  return "#{date.hour}:#{date.minute}"
+  for key, values of map
+    value = values.find (val) -> !!hash[val]
+    if value
+      value = parseInt(hash[value], 10)
+      value = value - 1 if key == 'setMonth'
+      date[key](value)
+
+  getDate(date)
 
 getDate = (date = new Date()) ->
   year: "" + date.getFullYear()
-  i_month: "" + (date.getMonth() + 1)
+  # with prepended 0
   month: ("0" + (date.getMonth() + 1)).slice(-2)
-  i_day: "" + date.getDate()
   day: ("0" + date.getDate()).slice(-2)
   hour: ("0" + date.getHours()).slice(-2)
   minute: ("0" + date.getMinutes()).slice(-2)
-  seconds: ("0" + date.getSeconds()).slice(-2)
-
-# ==================================================
-# Title and Slug
-#
-
-SLUG_REGEX = ///
-  ^
-  (\d{1,4}-\d{1,2}-\d{1,4}-)
-  (.+)
-  $
-  ///
-
-getTitleSlug = (str) ->
-  return "" unless str
-
-  str = path.basename(str, path.extname(str))
-  if matches = SLUG_REGEX.exec(str) then matches[2] else str
+  second: ("0" + date.getSeconds()).slice(-2)
+  # without prepend 0
+  i_month: "" + (date.getMonth() + 1)
+  i_day: "" + date.getDate()
+  i_hour: "" + date.getHours()
+  i_minute: "" + date.getMinutes()
+  i_second: "" + date.getSeconds()
 
 # ==================================================
 # Image HTML Tag
@@ -467,15 +484,11 @@ module.exports =
 
   setTabIndex: setTabIndex
 
-  dirTemplate: dirTemplate
   template: template
+  untemplate: untemplate
 
   getDate: getDate
-  parseDateStr: parseDateStr
-  getDateStr: getDateStr
-  getTimeStr: getTimeStr
-
-  getTitleSlug: getTitleSlug
+  parseDate: parseDate
 
   isImageTag: isImageTag
   parseImageTag: parseImageTag

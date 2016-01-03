@@ -42,15 +42,6 @@ describe "utils", ->
 # Template
 #
 
-  describe ".dirTemplate", ->
-    it "generate posts directory without token", ->
-      expect(utils.dirTemplate("_posts/")).toEqual("_posts/")
-
-    it "generate posts directory with tokens", ->
-      date = utils.getDate()
-      result = utils.dirTemplate("_posts/{year}/{month}")
-      expect(result).toEqual("_posts/#{date.year}/#{date.month}")
-
   describe ".template", ->
     it "generate template", ->
       fixture = "<a href=''>hello <title>! <from></a>"
@@ -62,33 +53,33 @@ describe "utils", ->
       expect(utils.template(fixture, url: "//", title: ''))
         .toEqual("<a href='//' title=''><img></a>")
 
+  describe ".untemplate", ->
+    it "generate untemplate for normal text", ->
+      fn = utils.untemplate("text")
+      expect(fn("text")).toEqual(_: "text")
+      expect(fn("abc")).toEqual(undefined)
+
+    it "generate untemplate for template", ->
+      fn = utils.untemplate("{year}-{month}")
+      expect(fn("2016-11-12")).toEqual(undefined)
+      expect(fn("2016-01")).toEqual(_: "2016-01", year: "2016", month: "01")
+
+    it "generate untemplate for complex template", ->
+      fn = utils.untemplate("{year}-{month}-{day} {hour}:{minute}")
+      expect(fn("2016-11-12")).toEqual(undefined)
+      expect(fn("2016-01-03 12:19")).toEqual(
+        _: "2016-01-03 12:19", year: "2016", month: "01",
+        day: "03", hour: "12", minute: "19")
+
 # ==================================================
 # Date and Time
 #
 
-  it "get date dashed string", ->
-    date = utils.getDate()
-    expect(utils.getDateStr()).toEqual("#{date.year}-#{date.month}-#{date.day}")
-    expect(utils.getTimeStr()).toEqual("#{date.hour}:#{date.minute}")
-
-# ==================================================
-# Title and Slug
-#
-
-  describe ".getTitleSlug", ->
-    it "get title slug", ->
-      slug = "hello-world"
-
-      fixture = "abc/hello-world.markdown"
-      expect(utils.getTitleSlug(slug)).toEqual(slug)
-      fixture = "abc/2014-02-12-hello-world.markdown"
-      expect(utils.getTitleSlug(fixture)).toEqual(slug)
-      fixture = "abc/02-12-2014-hello-world.markdown"
-      expect(utils.getTitleSlug(fixture)).toEqual(slug)
-
-    it "get empty slug", ->
-      expect(utils.getTitleSlug(undefined)).toEqual("")
-      expect(utils.getTitleSlug("")).toEqual("")
+  describe ".parseDate", ->
+    it "parse date dashed string", ->
+      date = utils.getDate()
+      parseDate = utils.parseDate(date)
+      expect(parseDate).toEqual(date)
 
 # ==================================================
 # Image HTML Tag

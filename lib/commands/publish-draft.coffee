@@ -5,20 +5,21 @@ shell = require "shell"
 
 config = require "../config"
 utils = require "../utils"
+templateHelper = require "../helpers/template-helper"
 FrontMatter = require "../helpers/front-matter"
 
 module.exports =
 class PublishDraft
   constructor: ->
     @editor = atom.workspace.getActiveTextEditor()
+    @draftPath = @editor.getPath()
     @frontMatter = new FrontMatter(@editor)
+    @dateTime = templateHelper.getDateTime()
 
   trigger: (e) ->
     @updateFrontMatter()
 
-    @draftPath = @editor.getPath()
     @postPath = @getPostPath()
-
     @confirmPublish =>
       try
         @editor.saveAs(@postPath)
@@ -48,33 +49,32 @@ class PublishDraft
     return if @frontMatter.isEmpty
 
     @frontMatter.setIfExists("published", true)
-    @frontMatter.setIfExists("date", "#{utils.getDateStr()} #{utils.getTimeStr()}")
+    @frontMatter.setIfExists("date", templateHelper.getFrontMatterDate(@dateTime))
 
     @frontMatter.save()
 
   getPostPath: ->
+    frontMatter= templateHelper.getFrontMatter(this)
+
     localDir = config.get("siteLocalDir") || utils.getProjectPath()
-    postsDir = utils.dirTemplate(config.get("sitePostsDir"))
+    postsDir = templateHelper.create("sitePostsDir", frontMatter, @dateTime)
+    fileName = templateHelper.create("newPostFileName", frontMatter, @dateTime)
 
-    path.join(localDir, postsDir, @_getPostName())
+    path.join(localDir, postsDir, fileName)
 
-  _getPostName: ->
-    template = config.get("newPostFileName")
-
-    date = utils.getDate()
-    slug = @_getPostSlug()
-    info =
-      title: slug
-      slug: slug
-      extension: @_getPostExtension()
-
-    utils.template(template, $.extend(info, date))
-
-  _getPostSlug: ->
+  # common interface for FrontMatter
+  getLayout: -> @frontMatter.get("layout")
+  getPublished: -> @frontMatter.get("published")
+  getTitle: -> @frontMatter.get("title")
+  getSlug: ->
+    # derive slug from front matters if current file is not saved (not having a path), or
+    # configured to rename base on title or the file path doen't exists.
     useFrontMatter = !@draftPath || !!config.get("publishRenameBasedOnTitle")
     slug = utils.slugize(@frontMatter.get("title"), config.get('slugSeparator')) if useFrontMatter
-    slug || utils.getTitleSlug(@draftPath) || utils.slugize("New Post", config.get('slugSeparator'))
-
-  _getPostExtension: ->
-    extname = path.extname(@draftPath) if !!config.get("publishKeepFileExtname")
+    slug || templateHelper.parseFileSlug(@draftPath) || utils.slugize("New Post", config.get('slugSeparator'))
+  getDate: -> templateHelper.getFrontMatterDate(@dateTime)
+  getExtension: ->
+    # keep file extension if path exists and has configured to keep it.
+    keepExtension = @draftPath && !!config.get("publishKeepFileExtname")
+    extname = path.extname(@draftPath) if keepExtension
     extname || config.get("fileExtension")
