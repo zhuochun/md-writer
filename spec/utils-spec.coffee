@@ -7,18 +7,26 @@ describe "utils", ->
 # General Utils
 #
 
-  describe ".dasherize", ->
-    it "dasherize string", ->
+  describe ".slugize", ->
+    it "slugize string", ->
       fixture = "hello world!"
-      expect(utils.dasherize(fixture)).toEqual("hello-world")
+      expect(utils.slugize(fixture)).toEqual("hello-world")
       fixture = "hello-world"
-      expect(utils.dasherize(fixture)).toEqual("hello-world")
+      expect(utils.slugize(fixture)).toEqual("hello-world")
       fixture = " hello     World"
-      expect(utils.dasherize(fixture)).toEqual("hello-world")
+      expect(utils.slugize(fixture)).toEqual("hello-world")
 
-    it "dasherize empty string", ->
-      expect(utils.dasherize(undefined)).toEqual("")
-      expect(utils.dasherize("")).toEqual("")
+    it "slugize chinese", ->
+      fixture = "中文也可以"
+      expect(utils.slugize(fixture)).toEqual("中文也可以")
+      fixture = "中文：也可以"
+      expect(utils.slugize(fixture)).toEqual("中文：也可以")
+      fixture = " 「中文」  『也可以』"
+      expect(utils.slugize(fixture)).toEqual("「中文」-『也可以』")
+
+    it "slugize empty string", ->
+      expect(utils.slugize(undefined)).toEqual("")
+      expect(utils.slugize("")).toEqual("")
 
   describe ".getPackagePath", ->
     it "get the package path", ->
@@ -34,15 +42,6 @@ describe "utils", ->
 # Template
 #
 
-  describe ".dirTemplate", ->
-    it "generate posts directory without token", ->
-      expect(utils.dirTemplate("_posts/")).toEqual("_posts/")
-
-    it "generate posts directory with tokens", ->
-      date = utils.getDate()
-      result = utils.dirTemplate("_posts/{year}/{month}")
-      expect(result).toEqual("_posts/#{date.year}/#{date.month}")
-
   describe ".template", ->
     it "generate template", ->
       fixture = "<a href=''>hello <title>! <from></a>"
@@ -54,33 +53,33 @@ describe "utils", ->
       expect(utils.template(fixture, url: "//", title: ''))
         .toEqual("<a href='//' title=''><img></a>")
 
+  describe ".untemplate", ->
+    it "generate untemplate for normal text", ->
+      fn = utils.untemplate("text")
+      expect(fn("text")).toEqual(_: "text")
+      expect(fn("abc")).toEqual(undefined)
+
+    it "generate untemplate for template", ->
+      fn = utils.untemplate("{year}-{month}")
+      expect(fn("2016-11-12")).toEqual(undefined)
+      expect(fn("2016-01")).toEqual(_: "2016-01", year: "2016", month: "01")
+
+    it "generate untemplate for complex template", ->
+      fn = utils.untemplate("{year}-{month}-{day} {hour}:{minute}")
+      expect(fn("2016-11-12")).toEqual(undefined)
+      expect(fn("2016-01-03 12:19")).toEqual(
+        _: "2016-01-03 12:19", year: "2016", month: "01",
+        day: "03", hour: "12", minute: "19")
+
 # ==================================================
 # Date and Time
 #
 
-  it "get date dashed string", ->
-    date = utils.getDate()
-    expect(utils.getDateStr()).toEqual("#{date.year}-#{date.month}-#{date.day}")
-    expect(utils.getTimeStr()).toEqual("#{date.hour}:#{date.minute}")
-
-# ==================================================
-# Title and Slug
-#
-
-  describe ".getTitleSlug", ->
-    it "get title slug", ->
-      slug = "hello-world"
-
-      fixture = "abc/hello-world.markdown"
-      expect(utils.getTitleSlug(slug)).toEqual(slug)
-      fixture = "abc/2014-02-12-hello-world.markdown"
-      expect(utils.getTitleSlug(fixture)).toEqual(slug)
-      fixture = "abc/02-12-2014-hello-world.markdown"
-      expect(utils.getTitleSlug(fixture)).toEqual(slug)
-
-    it "get empty slug", ->
-      expect(utils.getTitleSlug(undefined)).toEqual("")
-      expect(utils.getTitleSlug("")).toEqual("")
+  describe ".parseDate", ->
+    it "parse date dashed string", ->
+      date = utils.getDate()
+      parseDate = utils.parseDate(date)
+      expect(parseDate).toEqual(date)
 
 # ==================================================
 # Image HTML Tag
@@ -122,7 +121,7 @@ describe "utils", ->
     fixture = "![text](url)"
     expect(utils.parseImage(fixture)).toEqual
       alt: "text", src: "url", title: ""
-      
+
   it "check is valid image file", ->
     fixture = "fixtures/abc.jpg"
     expect(utils.isImageFile(fixture)).toBe(true)

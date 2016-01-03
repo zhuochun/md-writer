@@ -10,13 +10,48 @@ getJSON = (uri, succeed, error) ->
   return error() if uri.length == 0
   $.getJSON(uri).done(succeed).fail(error)
 
-regexpEscape = (str) ->
+escapeRegExp = (str) ->
   return "" unless str
   str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
-dasherize = (str) ->
+# https://github.com/epeli/underscore.string/blob/master/cleanDiacritics.js
+cleanDiacritics = (str) ->
   return "" unless str
-  str.trim().toLowerCase().replace(/[^-\w\s]|_/g, "").replace(/\s+/g, "-")
+
+  from = "ąàáäâãåæăćčĉęèéëêĝĥìíïîĵłľńňòóöőôõðøśșšŝťțŭùúüűûñÿýçżźž"
+  to = "aaaaaaaaaccceeeeeghiiiijllnnoooooooossssttuuuuuunyyczzz"
+
+  from += from.toUpperCase()
+  to += to.toUpperCase()
+
+  to = to.split("")
+
+  # for tokens requireing multitoken output
+  from += "ß"
+  to.push('ss')
+
+  str.replace /.{1}/g, (c) ->
+    index = from.indexOf(c)
+    if index == -1 then c else to[index]
+
+SLUGIZE_CONTROL_REGEX = /[\u0000-\u001f]/g
+SLUGIZE_SPECIAL_REGEX = /[\s~`!@#\$%\^&\*\(\)\-_\+=\[\]\{\}\|\\;:"'<>,\.\?\/]+/g
+
+# https://github.com/hexojs/hexo-util/blob/master/lib/slugize.js
+slugize = (str, separator = '-') ->
+  return "" unless str
+
+  escapedSep = escapeRegExp(separator)
+
+  cleanDiacritics(str).trim().toLowerCase()
+    # Remove control characters
+    .replace(SLUGIZE_CONTROL_REGEX, '')
+    # Replace special characters
+    .replace(SLUGIZE_SPECIAL_REGEX, separator)
+    # Remove continous separators
+    .replace(new RegExp(escapedSep + '{2,}', 'g'), separator)
+    # Remove prefixing and trailing separtors
+    .replace(new RegExp('^' + escapedSep + '+|' + escapedSep + '+$', 'g'), '')
 
 getPackagePath = (segments...) ->
   segments.unshift(atom.packages.resolvePackagePath("markdown-writer"))
@@ -40,66 +75,83 @@ setTabIndex = (elems) ->
 # Template
 #
 
-dirTemplate = (directory, date) ->
-  template(directory, getDate(date))
+TEMPLATE_REGEX = ///
+  [\<\{]        # start with < or {
+  ([\w\.\-]+?)  # any reasonable words, - or .
+  [\>\}]        # end with > or }
+  ///g
 
-template = (text, data, matcher = /[<{]([\w-]+?)[>}]/g) ->
+template = (text, data, matcher = TEMPLATE_REGEX) ->
   text.replace matcher, (match, attr) ->
     if data[attr]? then data[attr] else match
+
+# Return a function that reverse parse the template, e.g.
+#
+# Pass `untemplate("{year}-{month}")` returns a function `fn`, that `fn("2015-11") # => { _: "2015-11", year: 2015, month: 11 }`
+#
+untemplate = (text, matcher = TEMPLATE_REGEX) ->
+  keys = []
+
+  text = text.replace matcher, (match, attr) ->
+    keys.push(attr)
+
+    if ["year"].indexOf(attr) != -1 then "(\\d{4})"
+    else if ["month", "day", "hour", "minute", "second"].indexOf(attr) != -1 then "(\\d{2})"
+    else if ["i_month", "i_day", "i_hour", "i_minute", "i_second"].indexOf(attr) != -1 then "(\\d{1,2})"
+    else if ["extension"].indexOf(attr) != -1 then "(\\.\\w+)"
+    else "([\\s\\S]+)"
+
+  createUntemplateMatcher(keys, /// ^ #{text} $ ///)
+
+createUntemplateMatcher = (keys, regex) ->
+  (str) ->
+    return unless str
+
+    matches = regex.exec(str)
+    return unless matches
+
+    results = { "_" : matches[0] }
+    keys.forEach (key, idx) -> results[key] = matches[idx + 1]
+    results
 
 # ==================================================
 # Date and Time
 #
 
-DATE_REGEX = /// ^
-  (\d{4})[-\/]     # year
-  (\d{1,2})[-\/]   # month
-  (\d{1,2})        # day
-  $ ///g
-
-parseDateStr = (str) ->
+parseDate = (hash) ->
   date = new Date()
-  matches = DATE_REGEX.exec(str)
-  if matches
-    date.setYear(parseInt(matches[1], 10))
-    date.setMonth(parseInt(matches[2], 10) - 1)
-    date.setDate(parseInt(matches[3], 10))
-  return getDate(date)
 
-getDateStr = (date) ->
-  date = getDate(date)
-  return "#{date.year}-#{date.month}-#{date.day}"
+  map =
+    setYear: ["year"]
+    setMonth: ["month", "i_month"]
+    setDate: ["day", "i_day"]
+    setHours: ["hour", "i_hour"]
+    setMinutes: ["minute", "i_minute"]
+    setSeconds: ["second", "i_second"]
 
-getTimeStr = (date) ->
-  date = getDate(date)
-  return "#{date.hour}:#{date.minute}"
+  for key, values of map
+    value = values.find (val) -> !!hash[val]
+    if value
+      value = parseInt(hash[value], 10)
+      value = value - 1 if key == 'setMonth'
+      date[key](value)
+
+  getDate(date)
 
 getDate = (date = new Date()) ->
   year: "" + date.getFullYear()
-  i_month: "" + (date.getMonth() + 1)
+  # with prepended 0
   month: ("0" + (date.getMonth() + 1)).slice(-2)
-  i_day: "" + date.getDate()
   day: ("0" + date.getDate()).slice(-2)
   hour: ("0" + date.getHours()).slice(-2)
   minute: ("0" + date.getMinutes()).slice(-2)
-  seconds: ("0" + date.getSeconds()).slice(-2)
-
-# ==================================================
-# Title and Slug
-#
-
-SLUG_REGEX = ///
-  ^
-  (\d{1,4}-\d{1,2}-\d{1,4}-)
-  (.+)
-  $
-  ///
-
-getTitleSlug = (str) ->
-  return "" unless str
-
-  str = path.basename(str, path.extname(str))
-  if matches = SLUG_REGEX.exec(str) then matches[2] else str
+  second: ("0" + date.getSeconds()).slice(-2)
+  # without prepend 0
+  i_month: "" + (date.getMonth() + 1)
+  i_day: "" + date.getDate()
+  i_hour: "" + date.getHours()
+  i_minute: "" + date.getMinutes()
+  i_second: "" + date.getSeconds()
 
 # ==================================================
 # Image HTML Tag
@@ -139,7 +191,7 @@ parseImage = (input) ->
     return alt: image[1], src: image[2], title: image[3]
   else
     return alt: input, src: "", title: ""
-    
+
 IMG_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".ico"]
 
 isImageFile = (file) ->
@@ -171,7 +223,7 @@ parseInlineLink = (input) ->
 #
 
 REFERENCE_LINK_REGEX_OF = (id, opts = {}) ->
-  id = regexpEscape(id) unless opts.noEscape
+  id = escapeRegExp(id) unless opts.noEscape
   ///
   \[(#{id})\]\ ?\[\]            # [text][]
   |                             # or
@@ -186,7 +238,7 @@ REFERENCE_LINK_REGEX_OF = (id, opts = {}) ->
 REFERENCE_LINK_REGEX = REFERENCE_LINK_REGEX_OF(".+?", noEscape: true)
 
 REFERENCE_DEF_REGEX_OF = (id, opts = {}) ->
-  id = regexpEscape(id) unless opts.noEscape
+  id = escapeRegExp(id) unless opts.noEscape
   /// ^\ *                      # start of line with any spaces
   \[(#{id})\]:\ +               # [id]: followed by spaces
   (\S*?)                        # link
@@ -424,23 +476,19 @@ getTextBufferRange = (editor, scopeSelector, selection) ->
 
 module.exports =
   getJSON: getJSON
-  regexpEscape: regexpEscape
-  dasherize: dasherize
-  
+  escapeRegExp: escapeRegExp
+  slugize: slugize
+
   getPackagePath: getPackagePath
   getProjectPath: getProjectPath
 
   setTabIndex: setTabIndex
 
-  dirTemplate: dirTemplate
   template: template
+  untemplate: untemplate
 
   getDate: getDate
-  parseDateStr: parseDateStr
-  getDateStr: getDateStr
-  getTimeStr: getTimeStr
-
-  getTitleSlug: getTitleSlug
+  parseDate: parseDate
 
   isImageTag: isImageTag
   parseImageTag: parseImageTag

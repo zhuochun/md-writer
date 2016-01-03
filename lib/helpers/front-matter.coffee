@@ -12,8 +12,11 @@ FRONT_MATTER_REGEX = ///
 
 module.exports =
 class FrontMatter
-  constructor: (editor) ->
+  # options:
+  #   silient = true/false
+  constructor: (editor, options = {}) ->
     @editor = editor
+    @options = options
     @content = {}
     @leadingFence = true
     @isEmpty = true
@@ -27,10 +30,12 @@ class FrontMatter
         @isEmpty = false
       catch error
         @parseError = error
-        atom.confirm
-          message: "[Markdown Writer] Error!"
-          detailedMessage: "Invalid Front Matter:\n#{error.message}"
-          buttons: ['OK']
+        @content = {}
+        unless options["silent"] == true
+          atom.confirm
+            message: "[Markdown Writer] Error!"
+            detailedMessage: "Invalid Front Matter:\n#{error.message}"
+            buttons: ['OK']
 
   _findFrontMatter: (onMatch) ->
     @editor.buffer.scan(FRONT_MATTER_REGEX, onMatch)
@@ -52,6 +57,8 @@ class FrontMatter
 
   setIfExists: (field, content) ->
     @content[field] = content if @has(field)
+
+  getContent: -> JSON.parse(JSON.stringify(@content))
 
   getContentText: ->
     text = yaml.safeDump(@content)

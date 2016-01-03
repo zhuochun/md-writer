@@ -31,20 +31,24 @@ class Configuration
     urlForCategories: ""
 
     # filename format of new drafts created
-    newDraftFileName: "{title}{extension}"
+    newDraftFileName: "{slug}{extension}"
     # filename format of new posts created
-    newPostFileName: "{year}-{month}-{day}-{title}{extension}"
+    newPostFileName: "{year}-{month}-{day}-{slug}{extension}"
+    # front matter date format
+    frontMatterDate: "{year}-{month}-{day} {hour}:{minute}"
     # front matter template
     frontMatter: """
       ---
-      layout: <layout>
-      title: "<title>"
-      date: "<date>"
+      layout: "{layout}"
+      title: "{title}"
+      date: "{date}"
       ---
       """
 
     # file extension of posts/drafts
     fileExtension: ".markdown"
+    # file slug separator
+    slugSeparator: "-"
     # use relative path to image from the opened file
     relativeImagePath: false
 
@@ -63,7 +67,7 @@ class Configuration
     # reference tag indent space (0 or 2)
     referenceIndentLength: 2
 
-    # NOTE textStyles and lineStyles
+    # TextStyles and LineStyles
     #
     # In `regex{Before,After}`, `regexMatch{Before,After}`, DO NOT USE CAPTURE GROUP!
     # Capture group will break things! USE non-capturing group `(?:)` instead.
@@ -75,7 +79,7 @@ class Configuration
     # If this match regex test = true, the style will be replaced by new style.
     #
     # When `regexMatch{Before,After}` is not specified, `regex{Before,After}` is used instead.
-
+    #
     # text styles related
     textStyles:
       code:
@@ -120,7 +124,7 @@ class Configuration
       blockquote: before: "> "
 
     # image tag template
-    imageTag: "![<alt>](<src>)"
+    imageTag: "![{alt}]({src})"
 
     # table default alignments: "empty", "left", "right", "center"
     tableAlignment: "empty"
@@ -135,11 +139,16 @@ class Configuration
       'text.plain.null-grammar'
     ]
 
+    # template variables is a key-value map that used in template string
+    # e.g. you can have `posts/{author}/{year}` in newPostFileName after you set author.
+    templateVariables:
+      author: ''
+
   @engines:
     html:
       imageTag: """
-        <a href="<site>/<slug>.html" target="_blank">
-          <img class="align<align>" alt="<alt>" src="<src>" width="<width>" height="<height>" />
+        <a href="{site}/{slug}.html" target="_blank">
+          <img class="align{align}" alt="{alt}" src="{src}" width="{width}" height="{height}" />
         </a>
         """
     jekyll:
@@ -154,9 +163,9 @@ class Configuration
     hexo:
       newPostFileName: "{title}{extension}"
       frontMatter: """
-        layout: <layout>
-        title: "<title>"
-        date: "<date>"
+        layout: "{layout}"
+        title: "{title}"
+        date: "{date}"
         ---
         """
 

@@ -6,6 +6,7 @@ dialog = remote.require "dialog"
 
 config = require "../config"
 utils = require "../utils"
+templateHelper = require "../helpers/template-helper"
 
 lastInsertImageDir = null # remember last inserted image directory
 
@@ -64,6 +65,8 @@ class InsertImageView extends View
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
     @previouslyFocusedElement = $(document.activeElement)
     @editor = atom.workspace.getActiveTextEditor()
+    @frontMatter = templateHelper.getEditor(@editor)
+    @dateTime = templateHelper.getDateTime()
     @setFieldsFromSelection()
     @panel.show()
     @imageEditor.focus()
@@ -78,7 +81,7 @@ class InsertImageView extends View
     @range = utils.getTextBufferRange(@editor, "link")
     selection = @editor.getTextInRange(@range)
     return unless selection
-    
+
     if utils.isImage(selection)
       img = utils.parseImage(selection)
     else if utils.isImageTag(selection)
@@ -90,7 +93,7 @@ class InsertImageView extends View
     @widthEditor.setText(img.width || "")
     @heightEditor.setText(img.height || "")
     @imageEditor.setText(img.src || "")
-    
+
     @updateImageSource(img.src)
 
   openImageDialog: ->
@@ -98,10 +101,10 @@ class InsertImageView extends View
       properties: ['openFile']
       defaultPath: lastInsertImageDir || @siteLocalDir()
     return unless files && files.length > 0
-    
+
     @imageEditor.setText(files[0])
     @updateImageSource(files[0])
-    
+
     lastInsertImageDir = path.dirname(files[0]) unless utils.isUrl(files[0])
     @titleEditor.focus()
 
@@ -109,7 +112,7 @@ class InsertImageView extends View
     return unless file
 
     @displayImagePreview(file)
-    
+
     if utils.isUrl(file) || @isInSiteDir(@resolveImagePath(file))
       @copyImagePanel.addClass("hidden")
     else
@@ -155,15 +158,13 @@ class InsertImageView extends View
       width: @widthEditor.getText()
       height: @heightEditor.getText()
       align: @alignEditor.getText()
-      slug: utils.getTitleSlug(@editor.getPath())
-      site: config.get("siteUrl")
-    
+
     # insert image tag when img.src exists, otherwise consider the image was removed
     if img.src
-      text = utils.template(config.get("imageTag"), img)
+      text = templateHelper.create("imageTag", @frontMatter, @dateTime, img)
     else
       text = img.alt
-    
+
     @editor.setTextInBufferRange(@range, text)
 
   copyImage: (file, callback) ->
@@ -186,16 +187,16 @@ class InsertImageView extends View
         message: "[Markdown Writer] Error!"
         detailedMessage: "Copy Image:\n#{error.message}"
         buttons: ['OK']
-        
+
   # get user's site local directory
   siteLocalDir: -> config.get("siteLocalDir") || utils.getProjectPath()
 
   # get user's site images directory
-  siteImagesDir: -> utils.dirTemplate(config.get("siteImagesDir"))
-  
+  siteImagesDir: -> templateHelper.create("siteImagesDir", @frontMatter, @dateTime)
+
   # get current open file directory
   currentFileDir: -> path.dirname(@editor.getPath() || "")
-  
+
   # check the file is in the site directory
   isInSiteDir: (file) -> file && file.startsWith(@siteLocalDir())
 

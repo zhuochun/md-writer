@@ -75,7 +75,7 @@ class StyleLine
     return matches[1..].join("")
 
   getStylePattern: ->
-    before = @style.regexBefore || utils.regexpEscape(@style.before)
-    after = @style.regexAfter || utils.regexpEscape(@style.after)
+    before = @style.regexBefore || utils.escapeRegExp(@style.before)
+    after = @style.regexAfter || utils.escapeRegExp(@style.after)
 
     /// ^(\s*) (?:#{before})? (.*?) (?:#{after})? (\s*)$ ///i
