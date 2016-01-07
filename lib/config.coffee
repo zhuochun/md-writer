@@ -134,6 +134,7 @@ class Configuration
     # filetypes markdown-writer commands apply
     grammars: [
       'source.gfm'
+      'text.md'
       'source.litcoffee'
       'text.plain'
       'text.plain.null-grammar'
