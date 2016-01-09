@@ -143,8 +143,14 @@ describe "InsertLinkView", ->
     beforeEach ->
       atom.config.set("markdown-writer.referenceIndentLength", 2)
 
+      # stubs
       insertLinkView.fetchPosts = -> {}
       insertLinkView.loadSavedLinks = (cb) -> cb()
+      insertLinkView._referenceLink = (link) ->
+        link['indent'] = "  "
+        link['title'] = if /^[-\*\!]$/.test(link.title) then "" else link.title
+        link['label'] = insertLinkView.referenceId || 'GENERATED'
+        link
 
     it "insert new link", ->
       insertLinkView.display()
@@ -170,22 +176,22 @@ describe "InsertLinkView", ->
       insertLinkView.onConfirm()
 
       expect(editor.getText()).toBe """
-        [text][#{insertLinkView.referenceId}]
+        [text][GENERATED]
 
-          [#{insertLinkView.referenceId}]: url "title"
+          [GENERATED]: url "title"
         """
 
     it "insert new reference link with text", ->
       editor.setText "text"
       insertLinkView.display()
-      insertLinkView.titleEditor.setText("title")
+      insertLinkView.titleEditor.setText("*") # force reference link
       insertLinkView.urlEditor.setText("url")
       insertLinkView.onConfirm()
 
       expect(editor.getText()).toBe """
-        [text][#{insertLinkView.referenceId}]
+        [text][GENERATED]
 
-          [#{insertLinkView.referenceId}]: url "title"
+          [GENERATED]: url ""
         """
 
     it "update inline link", ->
@@ -217,9 +223,9 @@ describe "InsertLinkView", ->
       insertLinkView.onConfirm()
 
       expect(editor.getText()).toBe """
-        [new text][#{insertLinkView.referenceId}]
+        [new text][GENERATED]
 
-          [#{insertLinkView.referenceId}]: new url "title"
+          [GENERATED]: new url "title"
         """
 
     it "update reference link to inline link", ->
