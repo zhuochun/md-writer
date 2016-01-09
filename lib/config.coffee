@@ -13,6 +13,8 @@ class Configuration
     # https://github.com/zhuochun/md-writer/wiki/Settings-for-individual-projects
     projectConfigFile: "_mdwriter.cson"
 
+    # URL to your blog
+    siteUrl: ""
     # root directory of your blog
     siteLocalDir: ""
     # directory to drafts from the root of siteLocalDir
@@ -22,8 +24,6 @@ class Configuration
     # directory to images from the root of siteLocalDir
     siteImagesDir: "images/{year}/{month}/"
 
-    # URL to your blog
-    siteUrl: ""
     # URLs to tags/posts/categories JSON files
     # https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters
     urlForTags: ""
@@ -34,6 +34,7 @@ class Configuration
     newDraftFileName: "{slug}{extension}"
     # filename format of new posts created
     newPostFileName: "{year}-{month}-{day}-{slug}{extension}"
+
     # front matter date format
     frontMatterDate: "{year}-{month}-{day} {hour}:{minute}"
     # front matter template
@@ -62,10 +63,6 @@ class Configuration
 
     # path to a .cson file that stores links added for automatic linking
     siteLinkPath: path.join(atom.getConfigDirPath(), "#{@prefix}-links.cson")
-    # reference tag insert position (paragraph or article)
-    referenceInsertPosition: "paragraph"
-    # reference tag indent space (0 or 2)
-    referenceIndentLength: 2
 
     # TextStyles and LineStyles
     #
@@ -126,6 +123,16 @@ class Configuration
     # image tag template
     imageTag: "![{alt}]({src})"
 
+    # inline link tag template
+    linkInlineTag: "[{text}]({url})"
+    # reference link tag template
+    referenceInlineTag: "[{text}][{label}]"
+    referenceDefinitionTag: '{indent}[{label}]: {url} "{title}"'
+    # reference link tag insert position (paragraph or article)
+    referenceInsertPosition: "paragraph"
+    # reference link tag indent space (0 or 2) - deprecated
+    referenceIndentLength: 2
+
     # table default alignments: "empty", "left", "right", "center"
     tableAlignment: "empty"
     # insert extra pipes at the beginning and the end of table rows
@@ -177,7 +184,9 @@ class Configuration
   keyPath: (key) -> "#{@constructor.prefix}.#{key}"
 
   get: (key) ->
-    @getProject(key) || @getUser(key) || @getEngine(key) || @getDefault(key)
+    for config in ['Project', 'User', 'Engine', 'Default']
+      val = @["get#{config}"](key)
+      return val if val?
 
   set: (key, val) ->
     atom.config.set(@keyPath(key), val)

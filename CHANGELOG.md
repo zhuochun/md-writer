@@ -4,6 +4,7 @@
   * Use `slug` instead of `title` in directory templates
   * https://github.com/zhuochun/md-writer/pull/103
 * Add `language-markdown` package filetype to supported grammars
+* Support customization of link tags using template
 
 ## 2.1.1
 

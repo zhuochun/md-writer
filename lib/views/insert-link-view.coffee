@@ -1,10 +1,12 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
 CSON = require "season"
 fs = require "fs-plus"
+guid = require "guid"
 
 config = require "../config"
 utils = require "../utils"
 helper = require "../helpers/insert-link-helper"
+templateHelper = require "../helpers/template-helper"
 
 posts = null # to cache posts
 
@@ -55,10 +57,11 @@ class InsertLinkView extends View
     @detach()
 
   display: ->
-    @editor = atom.workspace.getActiveTextEditor()
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
     @previouslyFocusedElement = $(document.activeElement)
+    @editor = atom.workspace.getActiveTextEditor()
     @panel.show()
+    # fetch remote and local links
     @fetchPosts()
     @loadSavedLinks =>
       @_normalizeSelectionAndSetLinkFields()
@@ -133,49 +136,52 @@ class InsertLinkView extends View
     else if link.title
       @insertReferenceLink(link)
     else
-      @editor.setTextInBufferRange(@range, "[#{link.text}](#{link.url})")
+      @insertInlineLink(link)
+
+  insertInlineLink: (link) ->
+    text = templateHelper.create("linkInlineTag", link)
+    @editor.setTextInBufferRange(@range, text)
 
   updateReferenceLink: (link) ->
     if link.title # update the reference link
-      linkText = "[#{link.text}][#{@referenceId}]"
-      @editor.setTextInBufferRange(@range, linkText)
+      link = @_referenceLink(link)
+      inlineText = templateHelper.create("referenceInlineTag", link)
+      definitionText = templateHelper.create("referenceDefinitionTag", link)
 
-      definitionText = @_referenceDefinition(link.url, link.title)
-      @editor.setTextInBufferRange(@definitionRange, definitionText)
-    else # change to inline link
-      @removeReferenceLink("[#{link.text}](#{link.url})")
+      if definitionText
+        @editor.setTextInBufferRange(@range, inlineText)
+        @editor.setTextInBufferRange(@definitionRange, definitionText)
+      else
+        @replaceReferenceLink(inlineText)
+    else # replace by to inline link
+      inlineLink = templateHelper.create("linkInlineTag", link)
+      @replaceReferenceLink(inlineLink)
 
   insertReferenceLink: (link) ->
-    @referenceId = require("guid").raw()[0..7] # create an unique id
+    link = @_referenceLink(link)
+    inlineText = templateHelper.create("referenceInlineTag", link)
+    definitionText = templateHelper.create("referenceDefinitionTag", link)
 
-    linkText = "[#{link.text}][#{@referenceId}]"
-    @editor.setTextInBufferRange(@range, linkText)
+    @editor.setTextInBufferRange(@range, inlineText)
+    if definitionText # insert only if definitionText exists
+      if config.get("referenceInsertPosition") == "article"
+        helper.insertAtEndOfArticle(@editor, definitionText)
+      else
+        helper.insertAfterCurrentParagraph(@editor, definitionText)
 
-    definitionText = @_referenceDefinition(link.url, link.title)
-    if config.get("referenceInsertPosition") == "article"
-      helper.insertAtEndOfArticle(@editor, definitionText)
-    else
-      helper.insertAfterCurrentParagraph(@editor, definitionText)
-
-  _referenceIndentLength: ->
-    " ".repeat(config.get("referenceIndentLength"))
-
-  _formattedReferenceTitle: (title) ->
-    if /^[-\*\!]$/.test(title) then "" else " \"#{title}\""
-
-  _referenceDefinition: (url, title) ->
-    indent = @_referenceIndentLength()
-    title = @_formattedReferenceTitle(title)
-
-    "#{indent}[#{@referenceId}]: #{url}#{title}"
+  _referenceLink: (link) ->
+    link['indent'] = " ".repeat(config.get("referenceIndentLength"))
+    link['title'] = if /^[-\*\!]$/.test(link.title) then "" else link.title
+    link['label'] = @referenceId || guid.raw()[0..7]
+    link
 
   removeLink: (text) ->
     if @referenceId
-      @removeReferenceLink(text)
+      @replaceReferenceLink(text) # replace with raw text
     else
       @editor.setTextInBufferRange(@range, text)
 
-  removeReferenceLink: (text) ->
+  replaceReferenceLink: (text) ->
     @editor.setTextInBufferRange(@range, text)
 
     position = @editor.getCursorBufferPosition()

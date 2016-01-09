@@ -6,8 +6,8 @@ utils = require "../utils"
 FrontMatter = require "./front-matter"
 
 # All template should be created from here
-create = (key, frontMatter, dateTime, extraData) ->
-  data = $.extend({}, getTemplateVariables(), frontMatter, dateTime, extraData)
+create = (key, data...) ->
+  data = $.extend({}, getTemplateVariables(), data...)
   utils.template(config.get(key), data)
 
 getTemplateVariables = ->
