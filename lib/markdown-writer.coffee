@@ -27,7 +27,8 @@ module.exports =
       workspaceCommands["markdown-writer:new-#{file}"] =
         @registerView("./views/new-#{file}-view", optOutGrammars: true)
 
-    ["open-cheat-sheet", "create-default-keymaps"].forEach (command) =>
+    ["open-cheat-sheet", "create-default-keymaps",
+     "create-project-configs"].forEach (command) =>
       workspaceCommands["markdown-writer:#{command}"] =
         @registerCommand("./commands/#{command}", optOutGrammars: true)
 
