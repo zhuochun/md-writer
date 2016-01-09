@@ -184,7 +184,9 @@ class Configuration
   keyPath: (key) -> "#{@constructor.prefix}.#{key}"
 
   get: (key) ->
-    @getProject(key) || @getUser(key) || @getEngine(key) || @getDefault(key)
+    for config in ['Project', 'User', 'Engine', 'Default']
+      val = @["get#{config}"](key)
+      return val if val?
 
   set: (key, val) ->
     atom.config.set(@keyPath(key), val)

@@ -145,26 +145,29 @@ class InsertLinkView extends View
   updateReferenceLink: (link) ->
     if link.title # update the reference link
       link = @_referenceLink(link)
-
       inlineText = templateHelper.create("referenceInlineTag", link)
-      @editor.setTextInBufferRange(@range, inlineText)
-
       definitionText = templateHelper.create("referenceDefinitionTag", link)
-      @editor.setTextInBufferRange(@definitionRange, definitionText)
-    else # change to inline link
-      @removeReferenceLink(templateHelper.create("linkInlineTag", link))
+
+      if definitionText
+        @editor.setTextInBufferRange(@range, inlineText)
+        @editor.setTextInBufferRange(@definitionRange, definitionText)
+      else
+        @replaceReferenceLink(inlineText)
+    else # replace by to inline link
+      inlineLink = templateHelper.create("linkInlineTag", link)
+      @replaceReferenceLink(inlineLink)
 
   insertReferenceLink: (link) ->
     link = @_referenceLink(link)
-
     inlineText = templateHelper.create("referenceInlineTag", link)
-    @editor.setTextInBufferRange(@range, inlineText)
-
     definitionText = templateHelper.create("referenceDefinitionTag", link)
-    if config.get("referenceInsertPosition") == "article"
-      helper.insertAtEndOfArticle(@editor, definitionText)
-    else
-      helper.insertAfterCurrentParagraph(@editor, definitionText)
+
+    @editor.setTextInBufferRange(@range, inlineText)
+    if definitionText # insert only if definitionText exists
+      if config.get("referenceInsertPosition") == "article"
+        helper.insertAtEndOfArticle(@editor, definitionText)
+      else
+        helper.insertAfterCurrentParagraph(@editor, definitionText)
 
   _referenceLink: (link) ->
     link['indent'] = " ".repeat(config.get("referenceIndentLength"))
@@ -174,11 +177,11 @@ class InsertLinkView extends View
 
   removeLink: (text) ->
     if @referenceId
-      @removeReferenceLink(text)
+      @replaceReferenceLink(text) # replace with raw text
     else
       @editor.setTextInBufferRange(@range, text)
 
-  removeReferenceLink: (text) ->
+  replaceReferenceLink: (text) ->
     @editor.setTextInBufferRange(@range, text)
 
     position = @editor.getCursorBufferPosition()
