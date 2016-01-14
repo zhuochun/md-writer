@@ -1,6 +1,8 @@
 # Markdown-Writer for Atom
 
 [![Build Status](https://travis-ci.org/zhuochun/md-writer.svg)](https://travis-ci.org/zhuochun/md-writer)
+[![apm Version](https://img.shields.io/apm/v/markdown-writer.svg)](https://atom.io/packages/markdown-writer)
+[![apm Downloads](https://img.shields.io/apm/dm/markdown-writer.svg)](https://atom.io/packages/markdown-writer)
 
 Adds tons of features to make [Atom](https://atom.io/) an even better Markdown editor!
 
