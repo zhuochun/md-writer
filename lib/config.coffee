@@ -13,7 +13,7 @@ class Configuration
     # https://github.com/zhuochun/md-writer/wiki/Settings-for-individual-projects
     projectConfigFile: "_mdwriter.cson"
 
-    # URL to your blog
+    # website of your blog
     siteUrl: ""
     # root directory of your blog
     siteLocalDir: ""
@@ -50,8 +50,6 @@ class Configuration
     fileExtension: ".markdown"
     # file slug separator
     slugSeparator: "-"
-    # use relative path to image from the opened file
-    relativeImagePath: false
 
     # whether rename filename based on title in front matter when publishing
     publishRenameBasedOnTitle: false
@@ -122,6 +120,8 @@ class Configuration
 
     # image tag template
     imageTag: "![{alt}]({src})"
+    # use relative path to image from the opened file
+    relativeImagePath: false
 
     # inline link tag template
     linkInlineTag: "[{text}]({url})"
@@ -141,8 +141,8 @@ class Configuration
     # filetypes markdown-writer commands apply
     grammars: [
       'source.gfm'
-      'text.md'
       'source.litcoffee'
+      'text.md'
       'text.plain'
       'text.plain.null-grammar'
     ]
@@ -217,22 +217,25 @@ class Configuration
 
   # get project specific config from project's config file
   getProject: (key) ->
-    return if !atom.project || atom.project.getPaths().length < 1
+    configFile = @getProjectConfigFile()
+    return unless configFile
 
-    project = atom.project.getPaths()[0]
-    config = @_loadProjectConfig(project)
-
+    config = @_loadProjectConfig(configFile)
     @_valueForKeyPath(config, key)
 
-  _loadProjectConfig: (project) ->
-    if @constructor.projectConfigs[project]
-      return @constructor.projectConfigs[project]
+  getProjectConfigFile: ->
+    return if !atom.project || atom.project.getPaths().length < 1
 
-    file = @getUser("projectConfigFile") || @getDefault("projectConfigFile")
-    filePath = path.join(project, file)
+    projectPath = atom.project.getPaths()[0]
+    fileName = @getUser("projectConfigFile") || @getDefault("projectConfigFile")
+    path.join(projectPath, fileName)
 
-    config = CSON.readFileSync(filePath) if fs.existsSync(filePath)
-    @constructor.projectConfigs[project] = config || {}
+  _loadProjectConfig: (configFile) ->
+    if @constructor.projectConfigs[configFile]
+      return @constructor.projectConfigs[configFile]
+
+    config = CSON.readFileSync(configFile) if fs.existsSync(configFile)
+    @constructor.projectConfigs[configFile] = config || {}
 
   _valueForKeyPath: (object, keyPath) ->
     keys = keyPath.split('.')
