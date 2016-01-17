@@ -184,6 +184,11 @@ class InsertImageView extends View
           message: "File already exists!"
           detailedMessage: "Another file already exists at:\n#{destFile}"
           buttons: ['OK']
+      else if config.get("imageAltName") && !utils.dasherize(@titleEditor.getText())
+        atom.confirm
+          message: "Empty file name!"
+          detailedMessage: "Check your <alt> field and ensure it includes at least one alphanumeric letter."
+          buttons: ['Fuck']
       else
         fs.copy file, destFile, =>
           @imageEditor.setText(destFile)
@@ -218,8 +223,9 @@ class InsertImageView extends View
   generateImageSrc: (file) ->
     return "" unless file
     return file if utils.isUrl(file)
-    return utils.dasherize(@titleEditor.getText()) + path.extname(file) if config.get("imageAltName") && config.get("postAssetFolder")
-    return path.basename(file) if config.get("postAssetFolder")
+    return path.basename(file) if config.get("postAssetFolder") &&
+                                  !@copyImageCheckbox.hasClass('hidden') &&
+                                  @copyImageCheckbox.prop("checked")
     return path.relative(@currentFileDir(), file) if config.get('relativeImagePath')
     return path.relative(@siteLocalDir(), file) if @isInSiteDir(file)
     return path.join("/", @siteImagesDir(), path.basename(file))
