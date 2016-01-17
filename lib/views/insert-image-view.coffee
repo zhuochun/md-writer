@@ -170,12 +170,12 @@ class InsertImageView extends View
   copyImage: (file, callback) ->
     return callback() if utils.isUrl(file) || !fs.existsSync(file)
     destFileName = path.basename(file)
-    destFileName = utils.dasherize(@titleEditor.getText()) + path.extname(file) if config.get("imageAltName")
+    destFileName = utils.slugize(@titleEditor.getText()) + path.extname(file) if config.get("imageAltName")
 
     try
       if config.get("postAssetFolder")
         destFile = path.join(path.dirname(@editor.getPath()),
-                             utils.getTitleSlug(@editor.getPath()),
+                             templateHelper.parseFileSlug(@editor.getPath()),
                              destFileName)
       else
         destFile = path.join(@siteLocalDir(), @siteImagesDir(), destFileName)
@@ -185,7 +185,7 @@ class InsertImageView extends View
           message: "File already exists!"
           detailedMessage: "Another file already exists at:\n#{destFile}"
           buttons: ['OK']
-      else if config.get("imageAltName") && !utils.dasherize(@titleEditor.getText())
+      else if config.get("imageAltName") && !utils.slugize(@titleEditor.getText())
         atom.confirm
           message: "Empty file name!"
           detailedMessage: "Check your <alt> field and ensure it includes at least one alphanumeric letter."
