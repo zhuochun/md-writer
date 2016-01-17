@@ -4,6 +4,7 @@ fs = require "fs-plus"
 
 config = require "../config"
 utils = require "../utils"
+templateHelper = require "../helpers/template-helper"
 
 module.exports =
 class NewFileView extends View
@@ -27,19 +28,24 @@ class NewFileView extends View
   initialize: ->
     utils.setTabIndex([@titleEditor, @pathEditor, @dateEditor])
 
-    @pathEditor.getModel().onDidChange => @updatePath()
-    @dateEditor.getModel().onDidChange => @updatePath()
     @titleEditor.getModel().onDidChange => @updatePath()
+    @pathEditor.getModel().onDidChange => @updatePath()
+    # update pathEditor to reflect date changes, however this will overwrite user changes
+    @dateEditor.getModel().onDidChange =>
+      @pathEditor.setText(templateHelper.create(@constructor.pathConfig, @getDateTime()))
 
     atom.commands.add @element,
-      "core:confirm": => @createPost()
+      "core:confirm": => @createFile()
       "core:cancel": => @detach()
+
+    # save current date time as base
+    @dateTime = templateHelper.getDateTime()
 
   display: ->
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
     @previouslyFocusedElement = $(document.activeElement)
-    @dateEditor.setText(utils.getDateStr())
-    @pathEditor.setText(utils.dirTemplate(config.get(@constructor.pathConfig)))
+    @dateEditor.setText(templateHelper.getFrontMatterDate(@dateTime))
+    @pathEditor.setText(templateHelper.create(@constructor.pathConfig, @dateTime))
     @panel.show()
     @titleEditor.focus()
 
@@ -49,51 +55,38 @@ class NewFileView extends View
       @previouslyFocusedElement?.focus()
     super
 
-  createPost: ->
+  createFile: ->
     try
-      post = @getFullPath()
+      filePath = path.join(@getFileDir(), @getFilePath())
 
-      if fs.existsSync(post)
-        @error.text("File #{@getFullPath()} already exists!")
+      if fs.existsSync(filePath)
+        @error.text("File #{filePath} already exists!")
       else
-        fs.writeFileSync(post, @generateFrontMatter(@getFrontMatter()))
-        atom.workspace.open(post)
+        frontMatterText = templateHelper.create("frontMatter", @getFrontMatter(), @getDateTime())
+        fs.writeFileSync(filePath, frontMatterText)
+        atom.workspace.open(filePath)
         @detach()
     catch error
       @error.text("#{error.message}")
 
   updatePath: ->
     @message.html """
-    <b>Site Directory:</b> #{config.get("siteLocalDir") || utils.getProjectPath()}/<br/>
-    <b>Create #{@constructor.fileType} At:</b> #{@getPostPath()}
+    <b>Site Directory:</b> #{@getFileDir()}/<br/>
+    <b>Create #{@constructor.fileType} At:</b> #{@getFilePath()}
     """
 
-  getFullPath: -> path.join(config.get("siteLocalDir") || utils.getProjectPath(), @getPostPath())
-
-  getPostPath: -> path.join(@pathEditor.getText(), @getFileName())
-
-  getFileName: ->
-    template = config.get(@constructor.fileNameConfig)
-
-    info =
-      title: utils.dasherize(@getTitle())
-      extension: config.get("fileExtension")
-
-    utils.template(template, $.extend(info, @getDate()))
-
+  # common interface for FrontMatter
+  getLayout: -> "post"
+  getPublished: -> @constructor.fileType == "Post"
   getTitle: -> @titleEditor.getText() || "New #{@constructor.fileType}"
+  getSlug: -> utils.slugize(@getTitle(), config.get('slugSeparator'))
+  getDate: -> templateHelper.getFrontMatterDate(@getDateTime())
+  getExtension: -> config.get("fileExtension")
 
-  getDate: -> utils.parseDateStr(@dateEditor.getText())
+  # new file and front matters
+  getFileDir: -> config.get("siteLocalDir") || utils.getProjectPath()
+  getFilePath: -> path.join(@pathEditor.getText(), @getFileName())
 
-  getPublished: -> @constructor.fileType == 'Post'
-
-  generateFrontMatter: (data) ->
-    utils.template(config.get("frontMatter"), data)
-
-  getFrontMatter: ->
-    layout: "post"
-    published: @getPublished()
-    title: @getTitle()
-    slug: utils.dasherize(@getTitle())
-    date: "#{@dateEditor.getText()} #{utils.getTimeStr()}"
-    dateTime: @getDate()
+  getFileName: -> templateHelper.create(@constructor.fileNameConfig, @getFrontMatter(), @getDateTime())
+  getDateTime: -> templateHelper.parseFrontMatterDate(@dateEditor.getText()) || @dateTime
+  getFrontMatter: -> templateHelper.getFrontMatter(this)

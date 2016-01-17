@@ -68,8 +68,8 @@ class StyleText
     return text
 
   getStylePattern: ->
-    before = @style.regexBefore || utils.regexpEscape(@style.before)
-    after = @style.regexAfter || utils.regexpEscape(@style.after)
+    before = @style.regexBefore || utils.escapeRegExp(@style.before)
+    after = @style.regexAfter || utils.escapeRegExp(@style.after)
 
     ///
     ^([\s\S]*?)                    # random text at head

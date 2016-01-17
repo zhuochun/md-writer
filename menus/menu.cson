@@ -156,6 +156,10 @@
               'label': 'Create Default Keymaps'
               'command': 'markdown-writer:create-default-keymaps'
             }
+            {
+              'label': 'Create Project Configs'
+              'command': 'markdown-writer:create-project-configs'
+            }
           ]
         }
         { 'type': 'separator' }
