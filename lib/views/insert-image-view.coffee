@@ -168,19 +168,21 @@ class InsertImageView extends View
 
   copyImage: (file, callback) ->
     return callback() if utils.isUrl(file) || !fs.existsSync(file)
+    destFileName = path.basename(file)
+    destFileName = utils.dasherize(@titleEditor.getText()) + path.extname(file) if config.get("imageAltName")
 
     try
       if config.get("postAssetFolder")
         destFile = path.join(path.dirname(@editor.getPath()),
                              utils.getTitleSlug(@editor.getPath()),
-                             path.basename(file))
+                             destFileName)
       else
-        destFile = path.join(@siteLocalDir(), @siteImagesDir(), path.basename(file))
+        destFile = path.join(@siteLocalDir(), @siteImagesDir(), destFileName)
 
       if fs.existsSync(destFile)
         atom.confirm
           message: "File already exists!"
-          detailedMessage: "Another file already exists at:\n#{destPath}"
+          detailedMessage: "Another file already exists at:\n#{destFile}"
           buttons: ['OK']
       else
         fs.copy file, destFile, =>
@@ -216,6 +218,7 @@ class InsertImageView extends View
   generateImageSrc: (file) ->
     return "" unless file
     return file if utils.isUrl(file)
+    return utils.dasherize(@titleEditor.getText()) + path.extname(file) if config.get("imageAltName") && config.get("postAssetFolder")
     return path.basename(file) if config.get("postAssetFolder")
     return path.relative(@currentFileDir(), file) if config.get('relativeImagePath')
     return path.relative(@siteLocalDir(), file) if @isInSiteDir(file)
