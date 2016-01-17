@@ -1,7 +1,7 @@
 {
   "name": "markdown-writer",
   "main": "./lib/markdown-writer",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Make Atom a better Markdown editor and an easier static blogging tool.",
   "keywords": [
     "Markdown",
@@ -23,7 +23,8 @@
       "markdown-writer:new-post",
       "markdown-writer:new-draft",
       "markdown-writer:open-cheat-sheet",
-      "markdown-writer:create-default-keymaps"
+      "markdown-writer:create-default-keymaps",
+      "markdown-writer:create-project-configs"
     ],
     "atom-text-editor": [
       "markdown-writer:manage-post-tags",

@@ -21,6 +21,6 @@ class ManagePostTagsView extends ManageFrontMatterView
   # rank tags based on the number of times they appeared in content
   rankTags: (tags, content) ->
     tags.forEach (tag) ->
-      tagRegex = /// #{utils.regexpEscape(tag.name)} ///ig
+      tagRegex = /// #{utils.escapeRegExp(tag.name)} ///ig
       tag.count = content.match(tagRegex)?.length || 0
     tags.sort (t1, t2) -> t2.count - t1.count

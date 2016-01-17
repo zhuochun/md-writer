@@ -5,7 +5,6 @@ describe "InsertLinkView", ->
 
   beforeEach ->
     waitsForPromise -> atom.workspace.open("empty.markdown")
-
     runs ->
       insertLinkView = new InsertLinkView({})
       editor = atom.workspace.getActiveTextEditor()
@@ -41,7 +40,7 @@ describe "InsertLinkView", ->
     beforeEach ->
       atom.config.set("markdown-writer.referenceIndentLength", 2)
 
-    it "insert reference and definition", ->
+    it "update reference and definition", ->
       insertLinkView.referenceId = "ABC123"
       insertLinkView.range = "Range"
       insertLinkView.definitionRange = "DRange"
@@ -52,10 +51,26 @@ describe "InsertLinkView", ->
       link = text: "text", title: "this is title", url: "http://"
       insertLinkView.updateReferenceLink(link)
 
+      expect(insertLinkView.editor.setTextInBufferRange.calls.length).toEqual(2)
       expect(insertLinkView.editor.setTextInBufferRange.calls[0].args).toEqual(
         ["Range", "[text][ABC123]"])
       expect(insertLinkView.editor.setTextInBufferRange.calls[1].args).toEqual(
         ["DRange", '  [ABC123]: http:// "this is title"'])
+
+    it "update reference only if definition template is empty", ->
+      atom.config.set("markdown-writer.referenceDefinitionTag", "")
+
+      insertLinkView.referenceId = "ABC123"
+      insertLinkView.range = "Range"
+      insertLinkView.definitionRange = "DRange"
+
+      insertLinkView.replaceReferenceLink = {}
+      spyOn(insertLinkView, "replaceReferenceLink")
+
+      link = text: "text", title: "this is title", url: "http://"
+      insertLinkView.updateReferenceLink(link)
+
+      expect(insertLinkView.replaceReferenceLink).toHaveBeenCalledWith("[text][ABC123]")
 
   describe ".setLink", ->
     it "sets all the editors", ->
@@ -143,8 +158,14 @@ describe "InsertLinkView", ->
     beforeEach ->
       atom.config.set("markdown-writer.referenceIndentLength", 2)
 
+      # stubs
       insertLinkView.fetchPosts = -> {}
       insertLinkView.loadSavedLinks = (cb) -> cb()
+      insertLinkView._referenceLink = (link) ->
+        link['indent'] = "  "
+        link['title'] = if /^[-\*\!]$/.test(link.title) then "" else link.title
+        link['label'] = insertLinkView.referenceId || 'GENERATED'
+        link
 
     it "insert new link", ->
       insertLinkView.display()
@@ -170,23 +191,38 @@ describe "InsertLinkView", ->
       insertLinkView.onConfirm()
 
       expect(editor.getText()).toBe """
-        [text][#{insertLinkView.referenceId}]
+        [text][GENERATED]
 
-          [#{insertLinkView.referenceId}]: url "title"
+          [GENERATED]: url "title"
         """
 
     it "insert new reference link with text", ->
       editor.setText "text"
       insertLinkView.display()
+      insertLinkView.titleEditor.setText("*") # force reference link
+      insertLinkView.urlEditor.setText("url")
+      insertLinkView.onConfirm()
+
+      expect(editor.getText()).toBe """
+        [text][GENERATED]
+
+          [GENERATED]: url ""
+        """
+
+    it "insert reference link without definition", ->
+      atom.config.set("markdown-writer.referenceInlineTag",
+        "<a title='{title}' href='{url}' target='_blank'>{text}</a>")
+      atom.config.set("markdown-writer.referenceDefinitionTag", "")
+
+      insertLinkView.display()
+      insertLinkView.textEditor.setText("text")
       insertLinkView.titleEditor.setText("title")
       insertLinkView.urlEditor.setText("url")
       insertLinkView.onConfirm()
 
       expect(editor.getText()).toBe """
-        [text][#{insertLinkView.referenceId}]
-
-          [#{insertLinkView.referenceId}]: url "title"
-        """
+        <a title='title' href='url' target='_blank'>text</a>
+      """
 
     it "update inline link", ->
       editor.setText("[text](url)")
@@ -217,9 +253,9 @@ describe "InsertLinkView", ->
       insertLinkView.onConfirm()
 
       expect(editor.getText()).toBe """
-        [new text][#{insertLinkView.referenceId}]
+        [new text][GENERATED]
 
-          [#{insertLinkView.referenceId}]: new url "title"
+          [GENERATED]: new url "title"
         """
 
     it "update reference link to inline link", ->
@@ -242,6 +278,32 @@ describe "InsertLinkView", ->
       insertLinkView.onConfirm()
 
       expect(editor.getText().trim()).toBe "[new text](new url)"
+
+    it "update reference link to config reference link", ->
+      atom.config.set("markdown-writer.referenceInlineTag",
+        "<a title='{title}' href='{url}' target='_blank'>{text}</a>")
+      atom.config.set("markdown-writer.referenceDefinitionTag", "")
+
+      editor.setText """
+      [text][ABC123]
+
+      [ABC123]: url "title"
+      """
+      editor.setCursorBufferPosition([0, 0])
+      editor.selectToEndOfLine()
+      insertLinkView.display()
+
+      expect(insertLinkView.textEditor.getText()).toEqual("text")
+      expect(insertLinkView.titleEditor.getText()).toEqual("title")
+      expect(insertLinkView.urlEditor.getText()).toEqual("url")
+
+      insertLinkView.textEditor.setText("new text")
+      insertLinkView.titleEditor.setText("new title")
+      insertLinkView.urlEditor.setText("new url")
+      insertLinkView.onConfirm()
+
+      expect(editor.getText().trim()).toBe(
+        "<a title='new title' href='new url' target='_blank'>new text</a>")
 
     it "remove inline link", ->
       editor.setText("[text](url)")

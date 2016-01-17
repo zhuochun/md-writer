@@ -1,12 +1,17 @@
-# These are necessary keymaps for Markdown Writer
+# These are some necessary keymaps for Markdown Writer
 #
-# To create additional keymaps, run command `Markdown Writer: Create Default Keymaps`
+# For additional keymaps provided, run command `Markdown Writer: Create Default Keymaps`
 # Refer to wiki: https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps
+#
+# To disable these bundled keymaps, go to Atom:
+#
+#    settings -> packages -> Markdown Writer -> Disable keybindings
+#
 
-"atom-workspace atom-text-editor:not([mini])[data-grammar~='gfm']":
+"atom-workspace atom-text-editor:not([mini])":
   "enter": "markdown-writer:insert-new-line"
-  "tab"  : "markdown-writer:indent-list-line"
+  "tab":   "markdown-writer:indent-list-line"
 
 ".markdown-writer atom-text-editor[mini]":
-  "enter" : "core:confirm"
+  "enter":  "core:confirm"
   "escape": "core:cancel"

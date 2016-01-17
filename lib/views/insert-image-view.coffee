@@ -6,6 +6,7 @@ dialog = remote.require "dialog"
 
 config = require "../config"
 utils = require "../utils"
+templateHelper = require "../helpers/template-helper"
 
 lastInsertImageDir = null # remember last inserted image directory
 
@@ -64,6 +65,8 @@ class InsertImageView extends View
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
     @previouslyFocusedElement = $(document.activeElement)
     @editor = atom.workspace.getActiveTextEditor()
+    @frontMatter = templateHelper.getEditor(@editor)
+    @dateTime = templateHelper.getDateTime()
     @setFieldsFromSelection()
     @panel.show()
     @imageEditor.focus()
@@ -155,12 +158,10 @@ class InsertImageView extends View
       width: @widthEditor.getText()
       height: @heightEditor.getText()
       align: @alignEditor.getText()
-      slug: utils.getTitleSlug(@editor.getPath())
-      site: config.get("siteUrl")
 
     # insert image tag when img.src exists, otherwise consider the image was removed
     if img.src
-      text = utils.template(config.get("imageTag"), img)
+      text = templateHelper.create("imageTag", @frontMatter, @dateTime, img)
     else
       text = img.alt
 
@@ -203,7 +204,7 @@ class InsertImageView extends View
   siteLocalDir: -> config.get("siteLocalDir") || utils.getProjectPath()
 
   # get user's site images directory
-  siteImagesDir: -> utils.dirTemplate(config.get("siteImagesDir"))
+  siteImagesDir: -> templateHelper.create("siteImagesDir", @frontMatter, @dateTime)
 
   # get current open file directory
   currentFileDir: -> path.dirname(@editor.getPath() || "")

@@ -17,12 +17,12 @@ describe "MarkdownWriter", ->
       activationPromise = atom.packages.activatePackage("markdown-writer")
 
   # To test dispatch commands, remove the comments in markdown-writer.coffee to
-  # make sure testMode not actually trigger events.
+  # make sure _skipAction not actually trigger events.
   #
   # TODO Update individual command specs to test command dispatches in future.
   pkg.activationCommands["atom-workspace"].forEach (cmd) ->
-    xit "registered workspace commands #{cmd}", ->
-      atom.config.set("markdown-writer.testMode", true)
+    it "registered workspace commands #{cmd}", ->
+      atom.config.set("markdown-writer._skipAction", true)
 
       atom.commands.dispatch(workspaceView, cmd)
 
@@ -30,8 +30,8 @@ describe "MarkdownWriter", ->
       runs -> expect(true).toBe(true)
 
   pkg.activationCommands["atom-text-editor"].forEach (cmd) ->
-    xit "registered editor commands #{cmd}", ->
-      atom.config.set("markdown-writer.testMode", true)
+    it "registered editor commands #{cmd}", ->
+      atom.config.set("markdown-writer._skipAction", true)
 
       atom.commands.dispatch(editorView, cmd)
 

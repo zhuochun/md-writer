@@ -13,6 +13,8 @@ class Configuration
     # https://github.com/zhuochun/md-writer/wiki/Settings-for-individual-projects
     projectConfigFile: "_mdwriter.cson"
 
+    # website of your blog
+    siteUrl: ""
     # root directory of your blog
     siteLocalDir: ""
     # directory to drafts from the root of siteLocalDir
@@ -24,8 +26,6 @@ class Configuration
     # Whether to use post asset folder
     postAssetFolder: false
 
-    # URL to your blog
-    siteUrl: ""
     # URLs to tags/posts/categories JSON files
     # https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters
     urlForTags: ""
@@ -33,22 +33,25 @@ class Configuration
     urlForCategories: ""
 
     # filename format of new drafts created
-    newDraftFileName: "{title}{extension}"
+    newDraftFileName: "{slug}{extension}"
     # filename format of new posts created
-    newPostFileName: "{year}-{month}-{day}-{title}{extension}"
+    newPostFileName: "{year}-{month}-{day}-{slug}{extension}"
+
+    # front matter date format
+    frontMatterDate: "{year}-{month}-{day} {hour}:{minute}"
     # front matter template
     frontMatter: """
       ---
-      layout: <layout>
-      title: "<title>"
-      date: "<date>"
+      layout: "{layout}"
+      title: "{title}"
+      date: "{date}"
       ---
       """
 
     # file extension of posts/drafts
     fileExtension: ".markdown"
-    # use relative path to image from the opened file
-    relativeImagePath: false
+    # file slug separator
+    slugSeparator: "-"
 
     # whether rename filename based on title in front matter when publishing
     publishRenameBasedOnTitle: false
@@ -60,12 +63,8 @@ class Configuration
 
     # path to a .cson file that stores links added for automatic linking
     siteLinkPath: path.join(atom.getConfigDirPath(), "#{@prefix}-links.cson")
-    # reference tag insert position (paragraph or article)
-    referenceInsertPosition: "paragraph"
-    # reference tag indent space (0 or 2)
-    referenceIndentLength: 2
 
-    # NOTE textStyles and lineStyles
+    # TextStyles and LineStyles
     #
     # In `regex{Before,After}`, `regexMatch{Before,After}`, DO NOT USE CAPTURE GROUP!
     # Capture group will break things! USE non-capturing group `(?:)` instead.
@@ -77,7 +76,7 @@ class Configuration
     # If this match regex test = true, the style will be replaced by new style.
     #
     # When `regexMatch{Before,After}` is not specified, `regex{Before,After}` is used instead.
-
+    #
     # text styles related
     textStyles:
       code:
@@ -122,7 +121,19 @@ class Configuration
       blockquote: before: "> "
 
     # image tag template
-    imageTag: "![<alt>](<src>)"
+    imageTag: "![{alt}]({src})"
+    # use relative path to image from the opened file
+    relativeImagePath: false
+
+    # inline link tag template
+    linkInlineTag: "[{text}]({url})"
+    # reference link tag template
+    referenceInlineTag: "[{text}][{label}]"
+    referenceDefinitionTag: '{indent}[{label}]: {url} "{title}"'
+    # reference link tag insert position (paragraph or article)
+    referenceInsertPosition: "paragraph"
+    # reference link tag indent space (0 or 2) - deprecated
+    referenceIndentLength: 2
 
     # table default alignments: "empty", "left", "right", "center"
     tableAlignment: "empty"
@@ -133,15 +144,21 @@ class Configuration
     grammars: [
       'source.gfm'
       'source.litcoffee'
+      'text.md'
       'text.plain'
       'text.plain.null-grammar'
     ]
 
+    # template variables is a key-value map that used in template string
+    # e.g. you can have `posts/{author}/{year}` in newPostFileName after you set author.
+    templateVariables:
+      author: ''
+
   @engines:
     html:
       imageTag: """
-        <a href="<site>/<slug>.html" target="_blank">
-          <img class="align<align>" alt="<alt>" src="<src>" width="<width>" height="<height>" />
+        <a href="{site}/{slug}.html" target="_blank">
+          <img class="align{align}" alt="{alt}" src="{src}" width="{width}" height="{height}" />
         </a>
         """
     jekyll:
@@ -156,9 +173,9 @@ class Configuration
     hexo:
       newPostFileName: "{title}{extension}"
       frontMatter: """
-        layout: <layout>
-        title: "<title>"
-        date: "<date>"
+        layout: "{layout}"
+        title: "{title}"
+        date: "{date}"
         ---
         """
 
@@ -169,7 +186,9 @@ class Configuration
   keyPath: (key) -> "#{@constructor.prefix}.#{key}"
 
   get: (key) ->
-    @getProject(key) || @getUser(key) || @getEngine(key) || @getDefault(key)
+    for config in ['Project', 'User', 'Engine', 'Default']
+      val = @["get#{config}"](key)
+      return val if val?
 
   set: (key, val) ->
     atom.config.set(@keyPath(key), val)
@@ -200,22 +219,25 @@ class Configuration
 
   # get project specific config from project's config file
   getProject: (key) ->
-    return if !atom.project || atom.project.getPaths().length < 1
+    configFile = @getProjectConfigFile()
+    return unless configFile
 
-    project = atom.project.getPaths()[0]
-    config = @_loadProjectConfig(project)
-
+    config = @_loadProjectConfig(configFile)
     @_valueForKeyPath(config, key)
 
-  _loadProjectConfig: (project) ->
-    if @constructor.projectConfigs[project]
-      return @constructor.projectConfigs[project]
+  getProjectConfigFile: ->
+    return if !atom.project || atom.project.getPaths().length < 1
 
-    file = @getUser("projectConfigFile") || @getDefault("projectConfigFile")
-    filePath = path.join(project, file)
+    projectPath = atom.project.getPaths()[0]
+    fileName = @getUser("projectConfigFile") || @getDefault("projectConfigFile")
+    path.join(projectPath, fileName)
 
-    config = CSON.readFileSync(filePath) if fs.existsSync(filePath)
-    @constructor.projectConfigs[project] = config || {}
+  _loadProjectConfig: (configFile) ->
+    if @constructor.projectConfigs[configFile]
+      return @constructor.projectConfigs[configFile]
+
+    config = CSON.readFileSync(configFile) if fs.existsSync(configFile)
+    @constructor.projectConfigs[configFile] = config || {}
 
   _valueForKeyPath: (object, keyPath) ->
     keys = keyPath.split('.')
