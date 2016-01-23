@@ -75,14 +75,6 @@ setTabIndex = (elems) ->
 # ==================================================
 # Template
 #
-dirTemplate = (directory, date, editor) ->
-  if editor
-    @frontMatter = new FrontMatter(editor)
-    title = dasherize(@frontMatter.get("title") || getTitleSlug(editor.getPath()))
-    category = @frontMatter.get("category")
-  info =
-    title: title || dasherize("New Post")
-    category: category || "uncategorized"
 
 TEMPLATE_REGEX = ///
   [\<\{]        # start with < or {
