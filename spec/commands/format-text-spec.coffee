@@ -151,3 +151,24 @@ describe "FormatText", ->
       editor.setCursorBufferPosition([4, 3])
       formatText.trigger()
       expect(editor.getText()).toBe(expected)
+
+    it "format table with alignment (trailing spaces)", ->
+      editor.setText [
+        "| col 1 | col 2 | "
+        "| :------ | :----- | "
+        "| Item One    | Item Two  | "
+      ].join("\n")
+
+      expected = [
+        "| col 1    | col 2    |"
+        "|:---------|:---------|"
+        "| Item One | Item Two |"
+      ].join("\n")
+
+      editor.setCursorBufferPosition([2, 3])
+      formatText.trigger()
+
+      # trigger twice shouldn't change anything
+      editor.setCursorBufferPosition([1, 5])
+      formatText.trigger()
+      expect(editor.getText()).toBe(expected)
