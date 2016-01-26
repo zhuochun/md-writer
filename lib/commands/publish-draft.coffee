@@ -24,7 +24,7 @@ class PublishDraft
       try
         postassetfolder = path.join(path.dirname(@draftPath), templateHelper.parseFileSlug(@draftPath))
         fs.moveSync(postassetfolder,
-                    path.join(path.dirname(@postPath), @_getPostTitle())) if fs.existsSync(postassetfolder)
+                    path.join(path.dirname(@postPath), @getSlug())) if fs.existsSync(postassetfolder)
         @editor.saveAs(@postPath)
         shell.moveItemToTrash(@draftPath) if @draftPath
       catch error
@@ -61,7 +61,7 @@ class PublishDraft
 
     localDir = config.get("siteLocalDir") || utils.getProjectPath()
     postsDir = templateHelper.create("sitePostsDir", frontMatter, @dateTime)
-    fileName = templateHelper.create("newPostFileName", frontMatter, @dateTime)
+    fileName = @getSlug() + path.extname(@draftPath) || templateHelper.create("newPostFileName", frontMatter, @dateTime)
 
     path.join(localDir, postsDir, fileName)
 
