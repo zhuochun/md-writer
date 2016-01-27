@@ -53,6 +53,10 @@ class FrontMatter
 
   get: (field) -> @content[field]
 
+  getArray: (field) ->
+    @normalizeField(field)
+    @content[field]
+
   set: (field, content) -> @content[field] = content
 
   setIfExists: (field, content) ->
