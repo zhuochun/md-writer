@@ -30,7 +30,7 @@ getFrontMatter = (frontMatter) ->
   title: frontMatter.getTitle()
   slug: frontMatter.getSlug()
   date: frontMatter.getDate()
-  category: frontMatter.getCategory()
+  categories: frontMatter.getCategory()
   extension: frontMatter.getExtension()
 
 parseFileSlug = (filePath) ->

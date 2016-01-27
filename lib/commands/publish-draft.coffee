@@ -69,7 +69,7 @@ class PublishDraft
   getLayout: -> @frontMatter.get("layout")
   getPublished: -> @frontMatter.get("published")
   getTitle: -> @frontMatter.get("title")
-  getCategory: -> @frontMatter.get("category") || "uncategorized"
+  getCategory: -> @frontMatter.get("categories") || "uncategorized"
   getSlug: ->
     # derive slug from front matters if current file is not saved (not having a path), or
     # configured to rename base on title or the file path doen't exists.
