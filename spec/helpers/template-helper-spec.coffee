@@ -16,20 +16,20 @@ describe "templateHelper", ->
       expected = year: "2016", month: "01", day: "03", hour: "19", minute: "11"
       expect(dateTime[key]).toEqual(value) for key, value in expected
 
-  describe ".parseFileSlug", ->
+  describe ".getFileSlug", ->
     it "get title slug", ->
       slug = "hello-world"
       fixture = "abc/hello-world.markdown"
-      expect(helper.parseFileSlug(fixture)).toEqual(slug)
+      expect(helper.getFileSlug(fixture)).toEqual(slug)
       fixture = "abc/2014-02-12-hello-world.markdown"
-      expect(helper.parseFileSlug(fixture)).toEqual(slug)
+      expect(helper.getFileSlug(fixture)).toEqual(slug)
 
     it "get title slug", ->
       atom.config.set("markdown-writer.newPostFileName", "{slug}-{day}-{month}-{year}{extension}")
       slug = "hello-world"
       fixture = "abc/hello-world-02-12-2014.markdown"
-      expect(helper.parseFileSlug(fixture)).toEqual(slug)
+      expect(helper.getFileSlug(fixture)).toEqual(slug)
 
     it "get empty slug", ->
-      expect(helper.parseFileSlug(undefined)).toEqual("")
-      expect(helper.parseFileSlug("")).toEqual("")
+      expect(helper.getFileSlug(undefined)).toEqual("")
+      expect(helper.getFileSlug("")).toEqual("")

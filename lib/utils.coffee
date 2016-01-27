@@ -99,7 +99,7 @@ untemplate = (text, matcher = TEMPLATE_REGEX) ->
     else if ["month", "day", "hour", "minute", "second"].indexOf(attr) != -1 then "(\\d{2})"
     else if ["i_month", "i_day", "i_hour", "i_minute", "i_second"].indexOf(attr) != -1 then "(\\d{1,2})"
     else if ["extension"].indexOf(attr) != -1 then "(\\.\\w+)"
-    else "([\\s\\S]+)"
+    else "([\\s\\S]+?)"
 
   createUntemplateMatcher(keys, /// ^ #{text} $ ///)
 
