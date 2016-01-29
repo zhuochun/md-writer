@@ -71,6 +71,13 @@ describe "utils", ->
         _: "2016-01-03 12:19", year: "2016", month: "01",
         day: "03", hour: "12", minute: "19")
 
+    it "generate untemplate for template with regex chars", ->
+      fn = utils.untemplate("[{year}-{month}-{day}] - {hour}:{minute}")
+      expect(fn("2016-11-12")).toEqual(undefined)
+      expect(fn("[2016-01-03] - 12:19")).toEqual(
+        _: "[2016-01-03] - 12:19", year: "2016", month: "01",
+        day: "03", hour: "12", minute: "19")
+
 # ==================================================
 # Date and Time
 #
