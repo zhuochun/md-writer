@@ -1,3 +1,10 @@
+## 2.3.0
+
+* Add command `markdown-writer:create-project-configs`
+* Fix format table not working properly on lines with trailing spaces
+* More fields for template `{category}`, `{tag}`, `{directory}`
+* Fix exception when some user templates are not escaped
+
 ## 2.2.0
 
 * Refactoring frontMatter and template
