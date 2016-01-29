@@ -32,20 +32,29 @@ getFrontMatter = (frontMatter) ->
   date: frontMatter.getDate()
   extension: frontMatter.getExtension()
 
-parseFileSlug = (filePath) ->
+getFileSlug = (filePath) ->
   return "" unless filePath
 
   filename = path.basename(filePath)
   templates = [config.get("newPostFileName"), config.get("newDraftFileName"), "{slug}{extension}"]
-
   for template in templates
     hash = utils.untemplate(template)(filename)
-    if hash && (hash["slug"] || hash["title"])
+    if hash && (hash["slug"] || hash["title"]) # title is the legacy slug alias in filename
       return hash["slug"] || hash["title"]
 
+getFileRelativeDir = (filePath) ->
+  return "" unless filePath
+
+  fileDir = path.dirname(filePath)
+  path.relative(config.get("siteLocalDir") || utils.getProjectPath(), fileDir)
+
 getEditor = (editor) ->
-  data = new FrontMatter(editor, { silent: true }).getContent()
-  data["slug"] = parseFileSlug(editor.getPath()) || utils.slugize(data['title'], config.get('slugSeparator'))
+  frontMatter = new FrontMatter(editor, { silent: true })
+  data = frontMatter.getContent()
+  data["category"] = frontMatter.getArray(config.get("frontMatterNameCategories"))[0]
+  data["tag"] = frontMatter.getArray(config.get("frontMatterNameTags"))[0]
+  data["directory"] = getFileRelativeDir(editor.getPath())
+  data["slug"] = getFileSlug(editor.getPath()) || utils.slugize(data["title"], config.get("slugSeparator"))
   data["extension"] = path.extname(@draftPath) || config.get("fileExtension")
   data
 
@@ -57,4 +66,4 @@ module.exports =
   getFrontMatterDate: getFrontMatterDate
   parseFrontMatterDate: parseFrontMatterDate
   getEditor: getEditor
-  parseFileSlug: parseFileSlug
+  getFileSlug: getFileSlug

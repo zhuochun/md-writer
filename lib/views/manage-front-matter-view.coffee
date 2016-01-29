@@ -32,8 +32,7 @@ class ManageFrontMatterView extends View
     @fetchSiteFieldCandidates()
     @frontMatter = new FrontMatter(@editor)
     return @detach() if @frontMatter.parseError
-    @frontMatter.normalizeField(@constructor.fieldName)
-    @setEditorFieldItems(@frontMatter.get(@constructor.fieldName))
+    @setEditorFieldItems(@frontMatter.getArray(@constructor.fieldName))
 
     @panel.show()
     @fieldEditor.focus()
@@ -58,7 +57,7 @@ class ManageFrontMatterView extends View
   fetchSiteFieldCandidates: -> # override
 
   displaySiteFieldItems: (siteFieldItems) ->
-    fieldItems = @frontMatter.get(@constructor.fieldName) || []
+    fieldItems = @frontMatter.getArray(@constructor.fieldName) || []
     tagElems = siteFieldItems.map (tag) ->
       if fieldItems.indexOf(tag) < 0
         "<li>#{tag}</li>"

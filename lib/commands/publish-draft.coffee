@@ -71,7 +71,7 @@ class PublishDraft
     # configured to rename base on title or the file path doen't exists.
     useFrontMatter = !@draftPath || !!config.get("publishRenameBasedOnTitle")
     slug = utils.slugize(@frontMatter.get("title"), config.get('slugSeparator')) if useFrontMatter
-    slug || templateHelper.parseFileSlug(@draftPath) || utils.slugize("New Post", config.get('slugSeparator'))
+    slug || templateHelper.getFileSlug(@draftPath) || utils.slugize("New Post", config.get('slugSeparator'))
   getDate: -> templateHelper.getFrontMatterDate(@dateTime)
   getExtension: ->
     # keep file extension if path exists and has configured to keep it.

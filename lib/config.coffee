@@ -26,9 +26,13 @@ class Configuration
 
     # URLs to tags/posts/categories JSON files
     # https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters
-    urlForTags: ""
     urlForPosts: ""
+    urlForTags: ""
     urlForCategories: ""
+
+    # The front matter key name
+    frontMatterNameTags: "tags"
+    frontMatterNameCategories: "categories"
 
     # filename format of new drafts created
     newDraftFileName: "{slug}{extension}"
