@@ -1,8 +1,11 @@
 # Markdown-Writer for Atom
 # https://atom.io/packages/markdown-writer
 
-# To find all latest configurations, refer to:
+# To find latest and default configurations, refer to:
 # https://github.com/zhuochun/md-writer/blob/master/lib/config.cson
+#
+# After config edit, please run command `Window: Reload` or
+# use menu: View -> Developer -> Reload Window
 
 # website of your blog
 siteUrl: ""
