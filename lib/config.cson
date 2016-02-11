@@ -55,22 +55,23 @@ publishKeepFileExtname: false
 inlineNewLineContinuation: false
 
 # path to a .cson file that stores links added for automatic linking
-siteLinkPath: path.join(atom.getConfigDirPath(), "#{@prefix}-links.cson")
+siteLinkPath: ""
 
 # TextStyles and LineStyles
 #
 # In `regex{Before,After}`, `regexMatch{Before,After}`, DO NOT USE CAPTURE GROUP!
 # Capture group will break things! USE non-capturing group `(?:)` instead.
 #
-# Use `regexMatch{Before,After}` when you mean it is an exact match of the style.
-# If this match regex test = true, the style will be toggled.
+# Use `regexMatch{Before,After}` when an exact match of the style is needed.
+# If this regex matched true, the style will be toggled.
 #
-# Use `regex{Before,After}`, when you mean it is an general match of the style.
-# If this match regex test = true, the style will be replaced by new style.
+# Use `regex{Before,After}` when a general match of the style is wanted.
+# If this regex matched true, the style will be replaced by new style.
 #
 # When `regexMatch{Before,After}` is not specified, `regex{Before,After}` is used instead.
 #
-# text styles related
+# Use `before` and `after` to insert text around the selected text.
+#
 textStyles:
   code:
     before: "`", after: "`"
@@ -88,7 +89,6 @@ textStyles:
     regexBefore: "```(?:[\\w- ]+)?\\n"
     regexAfter: "\\n```"
 
-# line styles related
 lineStyles:
   h1: before: "# "
   h2: before: "## "
@@ -123,9 +123,9 @@ linkInlineTag: "[{text}]({url})"
 # reference link tag template
 referenceInlineTag: "[{text}][{label}]"
 referenceDefinitionTag: '{indent}[{label}]: {url} "{title}"'
-# reference link tag insert position (paragraph or article)
+# reference link tag insert position: "paragraph", "article"
 referenceInsertPosition: "paragraph"
-# reference link tag indent space (0 or 2)
+# reference link tag indent space: 0, 2
 referenceIndentLength: 2
 
 # table default alignments: "empty", "left", "right", "center"
@@ -133,7 +133,7 @@ tableAlignment: "empty"
 # insert extra pipes at the beginning and the end of table rows
 tableExtraPipes: false
 
-# template variables is a key-value map that used in template string
+# template variables is a key-value map used in template string
 # e.g. you can have `posts/{author}/{year}` in newPostFileName after you set author.
 templateVariables:
   author: ''
