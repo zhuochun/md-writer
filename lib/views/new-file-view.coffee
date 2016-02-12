@@ -71,7 +71,7 @@ class NewFileView extends View
 
   updatePath: ->
     @message.html """
-    <b>Site Directory:</b> #{@getFileDir()}/<br/>
+    <b>Site Directory:</b> #{@getFileDir()}<br/>
     <b>Create #{@constructor.fileType} At:</b> #{@getFilePath()}
     """
 

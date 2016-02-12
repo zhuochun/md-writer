@@ -1,8 +1,9 @@
 # Markdown-Writer for Atom
 
-[![Build Status](https://travis-ci.org/zhuochun/md-writer.svg)](https://travis-ci.org/zhuochun/md-writer)
-[![apm Version](https://img.shields.io/apm/v/markdown-writer.svg)](https://atom.io/packages/markdown-writer)
-[![apm Downloads](https://img.shields.io/apm/dm/markdown-writer.svg)](https://atom.io/packages/markdown-writer)
+[![Travis Build Status](https://travis-ci.org/zhuochun/md-writer.svg)](https://travis-ci.org/zhuochun/md-writer)
+[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/fv1unuiac1umt44f?svg=true)](https://ci.appveyor.com/project/zhuochun/md-writer)
+[![Apm Version](https://img.shields.io/apm/v/markdown-writer.svg)](https://atom.io/packages/markdown-writer)
+[![Apm Downloads](https://img.shields.io/apm/dm/markdown-writer.svg)](https://atom.io/packages/markdown-writer)
 
 Adds tons of features to make [Atom](https://atom.io/) an even better Markdown editor!
 
@@ -94,10 +95,11 @@ To **manage all configurations (e.g. project specific settings, change italic te
 ## Project
 
 - View [CHANGELOG][e45121fa] :notebook_with_decorative_cover:
-- Bugs, suggestions & feature requests, [open an issue][e6ad7ed1] :octocat:
+- Bugs, suggestions or feature requests, [open an issue][e6ad7ed1] :octocat:
 - Contribute to project, [view guide][ed53c4bd] :sparkles:
 - License in [MIT][6a9a3773] :unlock:
 - Shipped by [Zhuochun][41ae693b] :sunny: and [contributors][f303810e] :clap:
+- Star [GitHub repo][e8960946] and [Atom package][91a1b9c2] to support us :+1:
 
   [e45121fa]: https://github.com/zhuochun/md-writer/blob/master/CHANGELOG.md
   [e6ad7ed1]: https://github.com/zhuochun/md-writer/issues
@@ -105,3 +107,5 @@ To **manage all configurations (e.g. project specific settings, change italic te
   [41ae693b]: https://github.com/zhuochun
   [ed53c4bd]: https://github.com/zhuochun/md-writer/wiki/Contribute
   [f303810e]: https://github.com/zhuochun/md-writer/graphs/contributors
+  [e8960946]: https://github.com/zhuochun/md-writer
+  [91a1b9c2]: https://atom.io/packages/markdown-writer

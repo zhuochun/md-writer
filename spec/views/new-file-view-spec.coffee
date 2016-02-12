@@ -1,3 +1,4 @@
+path = require "path"
 NewFileView = require "../../lib/views/new-file-view"
 NewDraftView = require "../../lib/views/new-draft-view"
 NewPostView = require "../../lib/views/new-post-view"
@@ -40,8 +41,8 @@ describe "NewFileView", ->
         newDraftView.titleEditor.setText("Draft Title")
 
         expect(newDraftView.message.text()).toBe """
-        Site Directory: #{atom.project.getPaths()[0]}/
-        Create Draft At: _drafts/draft-title.markdown
+        Site Directory: #{atom.project.getPaths()[0]}
+        Create Draft At: #{path.join("_drafts", "draft-title.markdown")}
         """
 
     describe ".getFrontMatter", ->
@@ -76,8 +77,8 @@ describe "NewFileView", ->
         newPostView.titleEditor.setText("Post's Title")
 
         expect(newPostView.message.text()).toBe """
-        Site Directory: #{atom.project.getPaths()[0]}/
-        Create Post At: _posts/2015/2015-08-23-post-s-title.markdown
+        Site Directory: #{atom.project.getPaths()[0]}
+        Create Post At: #{path.join("_posts", "2015", "2015-08-23-post-s-title.markdown")}
         """
 
     describe ".getFrontMatter", ->

@@ -1,4 +1,3 @@
-os = require "os"
 yaml = require "js-yaml"
 
 FRONT_MATTER_REGEX = ///
@@ -67,9 +66,9 @@ class FrontMatter
   getContentText: ->
     text = yaml.safeDump(@content)
     if @leadingFence
-      ["---", "#{text}---", ""].join(os.EOL)
+      ["---", "#{text}---", ""].join("\n")
     else
-      ["#{text}---", ""].join(os.EOL)
+      ["#{text}---", ""].join("\n")
 
   save: ->
     @_findFrontMatter (match) => match.replace(@getContentText())
