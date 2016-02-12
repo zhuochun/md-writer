@@ -1,6 +1,7 @@
+config = require "../../lib/config"
 InsertImageView = require "../../lib/views/insert-image-view"
 
-config = require "../../lib/config"
+pathSep = "[/\\\\]"
 
 describe "InsertImageView", ->
   [editor, insertImageView] = []
@@ -68,7 +69,8 @@ describe "InsertImageView", ->
       fixture = "/assets/images/icons/emoji/octocat.png"
       expect(insertImageView.generateImageSrc(fixture)).toBe("octocat.png")
 
-    it "return image dir path", ->
+    it "return image dir path using config template", ->
       insertImageView.display()
       fixture = "octocat.png"
-      expect(insertImageView.generateImageSrc(fixture)).toMatch(/\d{4}\/\d{2}\/octocat\.png/)
+      expected = /// #{pathSep} images #{pathSep} \d{4} #{pathSep} \d\d #{pathSep} octocat\.png$ ///
+      expect(insertImageView.generateImageSrc(fixture)).toMatch(expected)
