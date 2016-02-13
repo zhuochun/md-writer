@@ -1,6 +1,7 @@
 {$} = require "atom-space-pen-views"
 path = require "path"
 wcswidth = require "wcwidth"
+FrontMatter = require "./helpers/front-matter"
 
 # ==================================================
 # General Utils

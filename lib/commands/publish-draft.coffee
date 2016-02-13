@@ -22,6 +22,9 @@ class PublishDraft
     @postPath = @getPostPath()
     @confirmPublish =>
       try
+        postassetfolder = path.join(path.dirname(@draftPath), templateHelper.parseFileSlug(@draftPath))
+        fs.moveSync(postassetfolder,
+                    path.join(path.dirname(@postPath), @getSlug())) if fs.existsSync(postassetfolder)
         @editor.saveAs(@postPath)
         shell.moveItemToTrash(@draftPath) if @draftPath
       catch error
@@ -58,7 +61,7 @@ class PublishDraft
 
     localDir = config.get("siteLocalDir") || utils.getProjectPath()
     postsDir = templateHelper.create("sitePostsDir", frontMatter, @dateTime)
-    fileName = templateHelper.create("newPostFileName", frontMatter, @dateTime)
+    fileName = @getSlug() + path.extname(@draftPath) || templateHelper.create("newPostFileName", frontMatter, @dateTime)
 
     path.join(localDir, postsDir, fileName)
 
@@ -66,6 +69,7 @@ class PublishDraft
   getLayout: -> @frontMatter.get("layout")
   getPublished: -> @frontMatter.get("published")
   getTitle: -> @frontMatter.get("title")
+  getCategory: -> @frontMatter.get("category") || "uncategorized"
   getSlug: ->
     # derive slug from front matters if current file is not saved (not having a path), or
     # configured to rename base on title or the file path doen't exists.

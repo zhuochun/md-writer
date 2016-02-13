@@ -32,7 +32,7 @@ class NewFileView extends View
     @pathEditor.getModel().onDidChange => @updatePath()
     # update pathEditor to reflect date changes, however this will overwrite user changes
     @dateEditor.getModel().onDidChange =>
-      @pathEditor.setText(templateHelper.create(@constructor.pathConfig, @getDateTime()))
+      @pathEditor.setText(templateHelper.create(@constructor.pathConfig, @getFrontMatter(), @getDateTime()))
 
     atom.commands.add @element,
       "core:confirm": => @createFile()
@@ -45,7 +45,7 @@ class NewFileView extends View
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
     @previouslyFocusedElement = $(document.activeElement)
     @dateEditor.setText(templateHelper.getFrontMatterDate(@dateTime))
-    @pathEditor.setText(templateHelper.create(@constructor.pathConfig, @dateTime))
+    @pathEditor.setText(templateHelper.create(@constructor.pathConfig, @getFrontMatter(), @dateTime))
     @panel.show()
     @titleEditor.focus()
 
@@ -81,6 +81,7 @@ class NewFileView extends View
   getTitle: -> @titleEditor.getText() || "New #{@constructor.fileType}"
   getSlug: -> utils.slugize(@getTitle(), config.get('slugSeparator'))
   getDate: -> templateHelper.getFrontMatterDate(@getDateTime())
+  getCategory: -> "uncategorized"
   getExtension: -> config.get("fileExtension")
 
   # new file and front matters

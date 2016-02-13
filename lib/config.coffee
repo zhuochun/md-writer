@@ -23,6 +23,8 @@ class Configuration
     sitePostsDir: "_posts/{year}/"
     # directory to images from the root of siteLocalDir
     siteImagesDir: "images/{year}/{month}/"
+    # Whether to use post asset folder
+    postAssetFolder: false
 
     # URLs to tags/posts/categories JSON files
     # https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters
