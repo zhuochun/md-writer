@@ -4,7 +4,7 @@
 # To find latest and default configurations, refer to:
 # https://github.com/zhuochun/md-writer/blob/master/lib/config.cson
 #
-# After config edit, please run command `Window: Reload` or
+# After edit, please run command `Window: Reload` or
 # use menu: View -> Developer -> Reload Window
 
 # website of your blog
@@ -57,8 +57,10 @@ publishKeepFileExtname: false
 # list continuation in middle of line
 inlineNewLineContinuation: false
 
-# path to a .cson file that stores links added for automatic linking
-siteLinkPath: ""
+# path to a cson file that stores links added for automatic linking
+# commented to use the default `markdown-writer-links.cson` file
+# under your Atom global config directory
+# siteLinkPath: "set/path/to/links.cson"
 
 # TextStyles and LineStyles
 #
@@ -139,4 +141,4 @@ tableExtraPipes: false
 # template variables is a key-value map used in template string
 # e.g. you can have `posts/{author}/{year}` in newPostFileName after you set author.
 templateVariables:
-  author: ''
+  author: 'your name'

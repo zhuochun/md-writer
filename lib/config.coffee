@@ -3,21 +3,21 @@ path = require "path"
 fs = require "fs-plus"
 
 prefix = "markdown-writer"
+packagePath = atom.packages.resolvePackagePath("markdown-writer")
 sampleConfigFile =
-  if packagePath = atom.packages.resolvePackagePath("markdown-writer")
-    path.join(packagePath, "lib", "config.cson")
-  else
-    path.join(__dirname, "config.cson")
+  if packagePath then path.join(packagePath, "lib", "config.cson")
+  else path.join(__dirname, "config.cson")
 
 # load sample config to defaults
 defaults = CSON.readFileSync(sampleConfigFile)
+
 # static engine of your blog, see `@engines`
 defaults["siteEngine"] = "general"
 # project specific configuration file name
 # https://github.com/zhuochun/md-writer/wiki/Settings-for-individual-projects
 defaults["projectConfigFile"] = "_mdwriter.cson"
 # path to a cson file that stores links added for automatic linking
-# default to user config directory `markdown-writer-links.cson` file
+# default to `markdown-writer-links.cson` file under user's config directory
 defaults["siteLinkPath"] = path.join(atom.getConfigDirPath(), "#{prefix}-links.cson")
 # filetypes markdown-writer commands apply
 defaults["grammars"] = [
@@ -64,7 +64,7 @@ module.exports =
   get: (key) ->
     for config in ["Project", "User", "Engine", "Default"]
       val = @["get#{config}"](key)
-      return val if val?
+      return val if val? # fallback only if val is undefined or null
 
   set: (key, val) ->
     atom.config.set(@keyPath(key), val)
@@ -82,8 +82,7 @@ module.exports =
              @getUser("siteEngine") ||
              @getDefault("siteEngine")
 
-    if engine in @engineNames()
-      @_valueForKeyPath(engines[engine], key)
+    @_valueForKeyPath(engines[engine] || {}, key)
 
   # get config based on engine set or global defaults
   getCurrentDefault: (key) ->
