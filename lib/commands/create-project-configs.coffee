@@ -1,8 +1,6 @@
 fs = require("fs-plus")
-path = require("path")
 
 config = require "../config"
-utils = require "../utils"
 
 module.exports =
 class CreateProjectConfigs
@@ -12,8 +10,7 @@ class CreateProjectConfigs
     return unless @inProjectFolder(configFile)
     return if @fileExists(configFile)
 
-    sampleConfigFile = utils.getPackagePath("lib", "config.cson")
-    content = fs.readFileSync(sampleConfigFile)
+    content = fs.readFileSync(config.getSampleConfigFile())
     err = fs.writeFileSync(configFile, content)
 
     atom.workspace.open(configFile) unless err
