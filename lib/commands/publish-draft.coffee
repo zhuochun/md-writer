@@ -74,7 +74,7 @@ class PublishDraft
     # derive slug from front matters if current file is not saved (not having a path), or
     # configured to rename base on title or the file path doen't exists.
     useFrontMatter = !@draftPath || !!config.get("publishRenameBasedOnTitle")
-    slug = utils.slugize(@frontMatter.get("title"), config.get('slugSeparator')) if useFrontMatter
+    slug = @frontMatter.get("slug") || utils.slugize(@frontMatter.get("title"), config.get('slugSeparator')) if useFrontMatter
     slug || templateHelper.parseFileSlug(@draftPath) || utils.slugize("New Post", config.get('slugSeparator'))
   getDate: -> templateHelper.getFrontMatterDate(@dateTime)
   getExtension: ->
