@@ -210,6 +210,9 @@ class InsertImageView extends View
 
   # generate a src that is used in markdown file based on user configuration or file location
   generateImageSrc: (file) ->
+    utils.normalizeFilePath(@_generateImageSrc(file))
+
+  _generateImageSrc: (file) ->
     return "" unless file
     return file if utils.isUrl(file)
     return path.relative(@currentFileDir(), file) if config.get('relativeImagePath')
@@ -218,6 +221,9 @@ class InsertImageView extends View
 
   # generate a relative src from the base path or from user's home directory
   generateRelativeImageSrc: (file, basePath) ->
+    utils.normalizeFilePath(@_generateRelativeImageSrc(file, basePath))
+
+  _generateRelativeImageSrc: (file, basePath) ->
     return "" unless file
     return file if utils.isUrl(file)
     return path.relative(basePath || "~", file)
