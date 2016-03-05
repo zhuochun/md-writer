@@ -18,8 +18,10 @@
 ## 2.2.0
 
 * Refactoring frontMatter and template
-  * Use `slug` instead of `title` in directory templates
-  * https://github.com/zhuochun/md-writer/pull/103
+  * Change to use `{slug}` instead of `{title}` in directory templates
+  * Added config `slugSeparator`
+  * Added config `templateVariables` for custom static variables
+  * Added config `frontMatterDate` for front matter date format
 * Add `language-markdown` package filetype to supported grammars
 * Support customization of link tags using template
 
