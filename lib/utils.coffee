@@ -432,6 +432,9 @@ URL_REGEX = ///
 
 isUrl = (url) -> URL_REGEX.test(url)
 
+# Normalize a file path to URL separator
+normalizeFilePath = (path) -> path.split(/[\\\/]/).join('/')
+
 # ==================================================
 # Atom TextEditor
 #
@@ -487,6 +490,7 @@ module.exports =
   getJSON: getJSON
   escapeRegExp: escapeRegExp
   slugize: slugize
+  normalizeFilePath: normalizeFilePath
 
   getPackagePath: getPackagePath
   getProjectPath: getProjectPath

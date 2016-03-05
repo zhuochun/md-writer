@@ -486,6 +486,15 @@ describe "utils", ->
     fixture = "/Users/zhuochun/md-writer"
     expect(utils.isUrl(fixture)).toBe(false)
 
+  it "normalize file path", ->
+    fixture = "https://github.com/zhuochun/md-writer"
+    expect(utils.normalizeFilePath(fixture)).toEqual(fixture)
+
+    fixture = "\\github.com\\zhuochun\\md-writer.gif"
+    expected = "/github.com/zhuochun/md-writer.gif"
+    expect(utils.normalizeFilePath(fixture)).toEqual(expected)
+    expect(utils.normalizeFilePath(expected)).toEqual(expected)
+
 # ==================================================
 # Atom TextEditor
 #
