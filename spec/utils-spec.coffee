@@ -40,7 +40,7 @@ describe "utils", ->
 
   describe ".getAbsolutePath", ->
     it "expand ~ to homedir", ->
-      absPath = utils.getAbsolutePath("~/markdown-writer")
+      absPath = utils.getAbsolutePath(path.join("~", "markdown-writer"))
       expect(absPath).toEqual(path.join(utils.getHomedir(), "markdown-writer"))
 
 # ==================================================
