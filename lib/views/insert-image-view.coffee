@@ -189,7 +189,7 @@ class InsertImageView extends View
         buttons: ['OK']
 
   # get user's site local directory
-  siteLocalDir: -> config.get("siteLocalDir") || utils.getProjectPath()
+  siteLocalDir: -> utils.getSitePath(config.get("siteLocalDir"))
 
   # get user's site images directory
   siteImagesDir: -> templateHelper.create("siteImagesDir", @frontMatter, @dateTime)

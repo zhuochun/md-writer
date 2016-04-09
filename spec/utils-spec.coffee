@@ -38,6 +38,11 @@ describe "utils", ->
       cheatsheetPath = path.join(root, "CHEATSHEET.md")
       expect(utils.getPackagePath("CHEATSHEET.md")).toEqual(cheatsheetPath)
 
+  describe ".getAbsolutePath", ->
+    it "expand ~ to homedir", ->
+      absPath = utils.getAbsolutePath("~/markdown-writer")
+      expect(absPath).toEqual(path.join(utils.getHomedir(), "markdown-writer"))
+
 # ==================================================
 # Template
 #

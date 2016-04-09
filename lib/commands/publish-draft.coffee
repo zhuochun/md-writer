@@ -56,7 +56,7 @@ class PublishDraft
   getPostPath: ->
     frontMatter= templateHelper.getFrontMatter(this)
 
-    localDir = config.get("siteLocalDir") || utils.getProjectPath()
+    localDir = utils.getSitePath(config.get("siteLocalDir"))
     postsDir = templateHelper.create("sitePostsDir", frontMatter, @dateTime)
     fileName = templateHelper.create("newPostFileName", frontMatter, @dateTime)
 
