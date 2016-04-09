@@ -1,4 +1,5 @@
 {$} = require "atom-space-pen-views"
+os = require "os"
 path = require "path"
 wcswidth = require "wcwidth"
 
@@ -63,6 +64,32 @@ getProjectPath = ->
     paths[0]
   else # Give the user a path if there's no project paths.
     atom.config.get("core.projectHome")
+
+getSitePath = (configPath) ->
+  getAbsolutePath(configPath || getProjectPath())
+
+# https://github.com/sindresorhus/os-homedir/blob/master/index.js
+getHomedir = ->
+  return os.homedir() if typeof(os.homedir) == "function"
+
+  env = process.env
+  home = env.HOME
+  user = env.LOGNAME || env.USER || env.LNAME || env.USERNAME
+
+  if process.platform == "win32"
+    env.USERPROFILE || env.HOMEDRIVE + env.HOMEPATH || home
+  else if process.platform == "darwin"
+    home || ("/Users/" + user if user)
+  else if process.platform == "linux"
+    home || ("/root" if process.getuid() == 0) || ("/home/" + user if user)
+  else
+    home
+
+# Basically expand ~/ to home directory
+# https://github.com/sindresorhus/untildify/blob/master/index.js
+getAbsolutePath = (path) ->
+  home = getHomedir()
+  if home then path.replace(/^~($|\/|\\)/, home + '$1') else path
 
 # ==================================================
 # General View Helpers
@@ -494,6 +521,9 @@ module.exports =
 
   getPackagePath: getPackagePath
   getProjectPath: getProjectPath
+  getSitePath: getSitePath
+  getHomedir: getHomedir
+  getAbsolutePath: getAbsolutePath
 
   setTabIndex: setTabIndex
 

@@ -45,8 +45,9 @@ getFileSlug = (filePath) ->
 getFileRelativeDir = (filePath) ->
   return "" unless filePath
 
+  siteDir = utils.getSitePath(config.get("siteLocalDir"))
   fileDir = path.dirname(filePath)
-  path.relative(config.get("siteLocalDir") || utils.getProjectPath(), fileDir)
+  path.relative(siteDir, fileDir)
 
 getEditor = (editor) ->
   frontMatter = new FrontMatter(editor, { silent: true })

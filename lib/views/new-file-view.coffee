@@ -84,7 +84,7 @@ class NewFileView extends View
   getExtension: -> config.get("fileExtension")
 
   # new file and front matters
-  getFileDir: -> config.get("siteLocalDir") || utils.getProjectPath()
+  getFileDir: -> utils.getSitePath(config.get("siteLocalDir"))
   getFilePath: -> path.join(@pathEditor.getText(), @getFileName())
 
   getFileName: -> templateHelper.create(@constructor.fileNameConfig, @getFrontMatter(), @getDateTime())
