@@ -77,13 +77,13 @@ getHomedir = ->
   user = env.LOGNAME || env.USER || env.LNAME || env.USERNAME
 
   if process.platform == "win32"
-    env.USERPROFILE || env.HOMEDRIVE + env.HOMEPATH || home || null
+    env.USERPROFILE || env.HOMEDRIVE + env.HOMEPATH || home
   else if process.platform == "darwin"
-    home || (user ? "/Users/" + user : null)
+    home || ("/Users/" + user if user)
   else if process.platform == "linux"
-    home || (process.getuid() == 0 ? "/root" : (user ? "/home/" + user : null))
+    home || ("/root" if process.getuid() == 0) || ("/home/" + user if user)
   else
-    home || null
+    home
 
 # Basically expand ~/ to home directory
 # https://github.com/sindresorhus/untildify/blob/master/index.js
