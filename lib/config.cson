@@ -1,11 +1,13 @@
 # Markdown-Writer for Atom
 # https://atom.io/packages/markdown-writer
-
+#
 # To find latest and default configurations, refer to:
 # https://github.com/zhuochun/md-writer/blob/master/lib/config.cson
 #
-# After edit, please run command `Window: Reload` or
-# use menu: View -> Developer -> Reload Window
+# NOTE 1: After edit, please run command `Window: Reload` or
+#         Use menu: View -> Developer -> Reload Window.
+#
+# NOTE 2: Strings need to be quoted.
 
 # website of your blog
 siteUrl: ""
@@ -141,4 +143,4 @@ tableExtraPipes: false
 # template variables is a key-value map used in template string
 # e.g. you can have `posts/{author}/{year}` in newPostFileName after you set author.
 templateVariables:
-  author: 'your name'
+  author: "your name"

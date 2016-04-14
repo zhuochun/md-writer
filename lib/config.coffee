@@ -1,6 +1,5 @@
 CSON = require "season"
 path = require "path"
-fs = require "fs-plus"
 
 prefix = "markdown-writer"
 packagePath = atom.packages.resolvePackagePath("markdown-writer")
@@ -112,10 +111,16 @@ module.exports =
   _loadProjectConfig: (configFile) ->
     return @projectConfigs[configFile] if @projectConfigs[configFile]
 
-    if fs.existsSync(configFile)
-      @projectConfigs[configFile] = CSON.readFileSync(configFile)
-    else
-      {}
+    try
+      # when configFile is empty, CSON return undefined, fallback to {}
+      @projectConfigs[configFile] = CSON.readFileSync(configFile) || {}
+    catch error
+      # log error message in dev mode for easier troubleshotting,
+      # but ignoring file not exists error
+      if atom.inDevMode() && !/ENOENT/.test(error.message)
+        console.info("Markdown Writer [config.coffee]: #{error}")
+
+      @projectConfigs[configFile] = {}
 
   _valueForKeyPath: (object, keyPath) ->
     keys = keyPath.split(".")

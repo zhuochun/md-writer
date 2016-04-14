@@ -1,6 +1,8 @@
 ## 2.3.3
 
 * Fix home directory '~' is not recognized in config siteLocalDir
+* Fix loading empty project config file error
+* Log project config file loading errors at dev mode
 
 ## 2.3.2
 

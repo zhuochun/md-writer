@@ -1,3 +1,4 @@
+path = require "path"
 config = require "../lib/config"
 
 describe "config", ->
@@ -50,3 +51,19 @@ describe "config", ->
     it "get value from invalid engine config", ->
       config.set("siteEngine", "not-exists")
       expect(config.getEngine("imageTag")).not.toBeDefined()
+
+  describe ".getProject", ->
+    originalGetProjectConfigFile = config.getProjectConfigFile
+    afterEach -> config.getProjectConfigFile = originalGetProjectConfigFile
+
+    it "get value when file found", ->
+      config.getProjectConfigFile = -> path.resolve(__dirname, "fixtures", "dummy.cson")
+      expect(config.getProject("imageTag")).toEqual("imageTag")
+
+    it "get empty when file is empty", ->
+      config.getProjectConfigFile = -> path.resolve(__dirname, "fixtures", "empty.cson")
+      expect(config.getProject("imageTag")).not.toBeDefined()
+
+    it "get empty when file is not found", ->
+      config.getProjectConfigFile = -> path.resolve(__dirname, "fixtures", "notfound.cson")
+      expect(config.getProject("imageTag")).not.toBeDefined()

@@ -96,7 +96,9 @@ module.exports =
   isMarkdown: ->
     editor = atom.workspace.getActiveTextEditor()
     return false unless editor?
-    return config.get("grammars").indexOf(editor.getGrammar().scopeName) >= 0
+
+    grammars = config.get("grammars") || []
+    return grammars.indexOf(editor.getGrammar().scopeName) >= 0
 
   inSkipList: (list) ->
     return false unless list?
