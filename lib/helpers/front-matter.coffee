@@ -24,7 +24,7 @@ class FrontMatter
     # find and parse front matter
     @_findFrontMatter (match) =>
       try
-        @content = yaml.safeLoad(match.match[1].trim())
+        @content = yaml.safeLoad(match.match[1].trim()) || {}
         @leadingFence = match.matchText.startsWith("---")
         @isEmpty = false
       catch error
@@ -41,14 +41,14 @@ class FrontMatter
 
   # normalize the field to an array
   normalizeField: (field) ->
-    if !@content[field]
-      @content[field] = []
+    if Object.prototype.toString.call(@content[field]) == "[object Array]"
+      @content[field]
     else if typeof @content[field] == "string"
       @content[field] = [@content[field]]
     else
-      @content[field]
+      @content[field] = []
 
-  has: (field) -> @content[field]?
+  has: (field) -> field && @content[field]?
 
   get: (field) -> @content[field]
 

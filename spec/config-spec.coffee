@@ -33,7 +33,12 @@ describe "config", ->
       config.set("codeblock.before", "")
       expect(config.get("codeblock.before")).toEqual("")
 
-    it "get value from default config if user config is empty string", ->
+    it "get value from default config if the config is empty string but not allow blank", ->
+      config.set("codeblock.before", "")
+      expect(config.get("codeblock.before", allow_blank: false))
+        .toEqual(config.getDefault("codeblock.before"))
+
+    it "get value from default config if user config is undefined", ->
       config.set("codeblock.before", undefined)
       expect(config.get("codeblock.before"))
         .toEqual(config.getDefault("codeblock.before"))

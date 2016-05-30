@@ -60,10 +60,14 @@ module.exports =
 
   keyPath: (key) -> "#{prefix}.#{key}"
 
-  get: (key) ->
+  get: (key, options = {}) ->
+    allow_blank = if options["allow_blank"]? then options["allow_blank"] else true
+
     for config in ["Project", "User", "Engine", "Default"]
       val = @["get#{config}"](key)
-      return val if val? # fallback only if val is undefined or null
+
+      if allow_blank then return val if val?
+      else return val if val
 
   set: (key, val) ->
     atom.config.set(@keyPath(key), val)
