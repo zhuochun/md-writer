@@ -6,7 +6,7 @@ ManageFrontMatterView = require "./manage-front-matter-view"
 module.exports =
 class ManagePostTagsView extends ManageFrontMatterView
   @labelName: "Manage Post Tags"
-  @fieldName: config.get("frontMatterNameTags")
+  @fieldName: config.get("frontMatterNameTags", allow_blank: false)
 
   fetchSiteFieldCandidates: ->
     uri = config.get("urlForTags")

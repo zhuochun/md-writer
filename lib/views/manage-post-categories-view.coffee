@@ -6,7 +6,7 @@ ManageFrontMatterView = require "./manage-front-matter-view"
 module.exports =
 class ManagePostCategoriesView extends ManageFrontMatterView
   @labelName: "Manage Post Categories"
-  @fieldName: config.get("frontMatterNameCategories")
+  @fieldName: config.get("frontMatterNameCategories", allow_blank: false)
 
   fetchSiteFieldCandidates: ->
     uri = config.get("urlForCategories")
