@@ -13,6 +13,7 @@ describe "FrontMatter", ->
     it "is empty when editor is empty", ->
       frontMatter = new FrontMatter(editor)
       expect(frontMatter.isEmpty).toBe(true)
+      expect(frontMatter.content).toEqual({})
 
     it "is empty when editor has no front matter", ->
       editor.setText """
@@ -22,6 +23,7 @@ describe "FrontMatter", ->
 
       frontMatter = new FrontMatter(editor)
       expect(frontMatter.isEmpty).toBe(true)
+      expect(frontMatter.content).toEqual({})
 
     it "is empty when editor has invalid front matter", ->
       editor.setText """
@@ -34,6 +36,7 @@ describe "FrontMatter", ->
 
       frontMatter = new FrontMatter(editor)
       expect(frontMatter.isEmpty).toBe(true)
+      expect(frontMatter.content).toEqual({})
 
   describe "editor with jekyll front matter", ->
     [editor, frontMatter] = []
