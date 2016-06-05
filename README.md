@@ -65,6 +65,9 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
   - Jump to reference marker/definition (`cmd-j cmd-d`)
 - **Markdown cheat sheet** (`markdown-writer:open-cheat-sheet`).
 - **Correct order list numbers** (`markdown-writer:correct-order-list-numbers`).
+- **Toolbar for markdown writer** found at [tool-bar-markdown-writer][82a2aced].
+
+  [82a2aced]: https://atom.io/packages/tool-bar-markdown-writer "Toobar for Markdown Writer"
 
 You can find and trigger all features in:
 
