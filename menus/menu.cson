@@ -103,7 +103,7 @@
             }
             {
               'label': 'Ordered List'
-              'command': 'markdown-writer:toggle-h5'
+              'command': 'markdown-writer:toggle-ol'
             }
             {
               'label': 'Task List'
