@@ -13,4 +13,4 @@ class OpenCheatSheet
 
   cheatsheetURL: ->
     cheatsheet = utils.getPackagePath("CHEATSHEET.md")
-    "markdown-preview://#{encodeURI(cheatsheet)}"
+    "markdown-preview://#{cheatsheet}"
