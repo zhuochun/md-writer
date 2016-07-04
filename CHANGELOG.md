@@ -1,6 +1,7 @@
 ## 2.3.6
 
 * Fix open cheat sheet path in Windows
+* Add `source.gfm.nvatom` grammar support
 
 ## 2.3.5
 
