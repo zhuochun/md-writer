@@ -21,6 +21,7 @@ defaults["siteLinkPath"] = path.join(atom.getConfigDirPath(), "#{prefix}-links.c
 # filetypes markdown-writer commands apply
 defaults["grammars"] = [
   'source.gfm'
+  'source.gfm.nvatom'
   'source.litcoffee'
   'text.md'
   'text.plain'
