@@ -5,3 +5,4 @@ describe "OpenCheatSheet", ->
     cmd = new OpenCheatSheet()
     expect(cmd.cheatsheetURL()).toMatch("markdown-preview://")
     expect(cmd.cheatsheetURL()).toMatch("CHEATSHEET.md")
+    expect(cmd.cheatsheetURL()).toNotMatch("%5C")
