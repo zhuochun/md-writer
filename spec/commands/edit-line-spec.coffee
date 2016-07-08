@@ -57,6 +57,20 @@ describe "EditLine", ->
         "  2. [ ] " # last item with trailing whitespace
       ].join("\n")
 
+    it "continue after alpha ordered task list line", ->
+      editor.setText """
+      1. [ ] Epic Tasks
+        y. [X] Sub-task A
+      """
+      editor.setCursorBufferPosition([1, 19])
+
+      editLine.trigger()
+      expect(editor.getText()).toBe [
+        "1. [ ] Epic Tasks"
+        "  y. [X] Sub-task A"
+        "  z. [ ] " # last item with trailing whitespace
+      ].join("\n")
+
     it "continue after blockquote line", ->
       editor.setText """
       > Your time is limited, so don’t waste it living someone else’s life.
