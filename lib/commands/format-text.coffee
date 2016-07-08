@@ -1,7 +1,6 @@
 config = require "../config"
 utils = require "../utils"
-
-LIST_OL_REGEX = /// ^ (\s*) (\d+)\. \s* (.*) $ ///
+LineMeta = require "../helpers/line-meta"
 
 module.exports =
 class FormatText
@@ -32,21 +31,32 @@ class FormatText
     indentStack = []
     orderStack = []
     for line, idx in lines
-      if matches = LIST_OL_REGEX.exec(line)
-        indent = matches[1]
+      lineMeta = new LineMeta(line)
+
+      if lineMeta.isList("ol")
+        indent = lineMeta.indent
 
         if indentStack.length == 0 || indent.length > indentStack[0].length # first ol/sub-ol match
           indentStack.unshift(indent)
-          orderStack.unshift(1)
+
+          if lineMeta.isList("al")
+            if utils.isUpperCase(lineMeta.head)
+              orderStack.unshift(lineMeta.head.replace(/./g, "A"))
+            else
+              orderStack.unshift(lineMeta.head.replace(/./g, "a"))
+          else
+            orderStack.unshift(1)
         else if indent.length < indentStack[0].length # end of a sub-ol match
-          indentStack.shift()
-          orderStack.shift()
+          # pop out stack until we are back to the same indent stack
+          while indent.length != indentStack[0].length
+            indentStack.shift()
+            orderStack.shift()
 
-          orderStack.unshift(orderStack.shift() + 1)
+          orderStack.unshift(LineMeta.incStr(orderStack.shift()))
         else # same level ol match
-          orderStack.unshift(orderStack.shift() + 1)
+          orderStack.unshift(LineMeta.incStr(orderStack.shift()))
 
-        correctedLines[idx] = "#{indentStack[0]}#{orderStack[0]}. #{matches[3]}"
+        correctedLines[idx] = "#{indentStack[0]}#{orderStack[0]}. #{lineMeta.body}"
       else
         correctedLines[idx] = line
 
