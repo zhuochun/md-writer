@@ -29,6 +29,9 @@ describe "FormatText", ->
 
       3. aaa
       9. bbb
+        a. 11aa
+        e. 22bb
+          DD. a1
       0. ccc
         9. aaa
           - aaa
@@ -53,6 +56,9 @@ describe "FormatText", ->
 
       1. aaa
       2. bbb
+        a. 11aa
+        b. 22bb
+          AA. a1
       3. ccc
         1. aaa
           - aaa

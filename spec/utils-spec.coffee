@@ -7,6 +7,21 @@ describe "utils", ->
 # General Utils
 #
 
+  describe ".incrementChars", ->
+    it "increment empty chars", ->
+      expect(utils.incrementChars("")).toEqual("a")
+
+    it "increment 1 char", ->
+      expect(utils.incrementChars("a")).toEqual("b")
+      expect(utils.incrementChars("f")).toEqual("g")
+      expect(utils.incrementChars("y")).toEqual("z")
+      expect(utils.incrementChars("z")).toEqual("aa")
+
+    it "increment 2 char", ->
+      expect(utils.incrementChars("AC")).toEqual("AD")
+      expect(utils.incrementChars("EZ")).toEqual("FA")
+      expect(utils.incrementChars("ZZ")).toEqual("AAA")
+
   describe ".slugize", ->
     it "slugize string", ->
       fixture = "hello world!"
