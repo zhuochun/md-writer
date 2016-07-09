@@ -1,7 +1,7 @@
 utils = require "../utils"
 
-LIST_UL_TASK_REGEX = /// ^ (\s*) ([*+-]) \s+ \[[xX\ ]\] \s* (.*) $ ///
-LIST_UL_REGEX      = /// ^ (\s*) ([*+-]) \s+ (.*) $ ///
+LIST_UL_TASK_REGEX = /// ^ (\s*) ([*+-\.]) \s+ \[[xX\ ]\] \s* (.*) $ ///
+LIST_UL_REGEX      = /// ^ (\s*) ([*+-\.]) \s+ (.*) $ ///
 LIST_OL_TASK_REGEX = /// ^ (\s*) (\d+)\. \s+ \[[xX\ ]\] \s* (.*) $ ///
 LIST_OL_REGEX      = /// ^ (\s*) (\d+)\. \s+ (.*) $ ///
 LIST_AL_TASK_REGEX = /// ^ (\s*) ([a-zA-Z]+)\. \s+ \[[xX\ ]\] \s* (.*) $ ///

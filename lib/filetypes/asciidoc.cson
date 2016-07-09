@@ -1,0 +1,46 @@
+# Configurations for AsciiDoc filetype
+# Based on: http://asciidoctor.org/docs/asciidoc-writers-guide/
+
+# front matter date format, determines the {date} in frontMatter
+frontMatterDate: "{year}-{month}-{day} {hour}:{minute}"
+# front matter template, set author and email in templateVariables
+frontMatter: """
+= {title}
+{author} <{email}>
+v1.0, {date}
+:toc:
+"""
+
+# file extension of posts/drafts
+fileExtension: ".adoc"
+# file slug separator
+slugSeparator: "-"
+
+# TextStyles and LineStyles
+textStyles:
+  bold:
+    before: "*", after: "*"
+
+lineStyles:
+  h1: before: "= "
+  h2: before: "== "
+  h3: before: "=== "
+  h4: before: "==== "
+  h5: before: "===== "
+  ul:
+    before: "* "
+    regexMatchBefore: "(?:-|\\*|\\+|\\.)\\s"
+    regexBefore: "(?:-|\\*|\\+|\\.|\\d+\\.|[a-zA-Z]+\\.)\\s"
+  ol:
+    before: "1. "
+    regexMatchBefore: "(?:\\d+\\.|[a-zA-Z]+\\.)\\s"
+    regexBefore: "(?:-|\\*|\\+|\\.|\\d+\\.|[a-zA-Z]+\\.)\\s"
+
+# image tag template
+imageTag: "image::{src}[{alt}]"
+
+# inline link tag template
+linkInlineTag: "{url}[{text}]"
+# reference link tag template (fallback to inline style, ignore title)
+referenceInlineTag: "{url}[{text}]"
+referenceDefinitionTag: ""
