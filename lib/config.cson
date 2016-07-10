@@ -9,19 +9,21 @@
 # NOTE 2: Strings need to be quoted.
 #
 
-# root directory of your blog (leave empty to source the current project path)
-siteLocalDir: ""
-
+# static engine of your blog
+# e.g. one of: general, html, jekyll, octopress, hexo
+siteEngine: "general"
 # website URL of your blog
 siteUrl: ""
-# static engine of your blog
-# one of these: general, html, jekyll, octopress, hexo
-siteEngine: "general"
+
+# root directory of your blog
+# e.g. leave empty to source the current project path (recommended)
+siteLocalDir: ""
 # directory to drafts from siteLocalDir
 siteDraftsDir: "_drafts/"
 # directory to posts from siteLocalDir
 sitePostsDir: "_posts/{year}/"
 # directory to images from siteLocalDir
+# e.g. to use the current filename directory, can use {directory}
 siteImagesDir: "images/{year}/{month}/"
 
 # URLs to tags/posts/categories JSON files
