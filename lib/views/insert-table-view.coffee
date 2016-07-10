@@ -1,3 +1,4 @@
+{CompositeDisposable} = require 'atom'
 {$, View, TextEditorView} = require "atom-space-pen-views"
 
 config = require "../config"
@@ -17,9 +18,12 @@ class InsertTableView extends View
   initialize: ->
     utils.setTabIndex([@rowEditor, @columnEditor])
 
-    atom.commands.add @element,
-      "core:confirm": => @onConfirm()
-      "core:cancel":  => @detach()
+    @disposables = new CompositeDisposable()
+    @disposables.add(atom.commands.add(
+      @element, {
+        "core:confirm": => @onConfirm(),
+        "core:cancel":  => @detach()
+      }))
 
   onConfirm: ->
     row = parseInt(@rowEditor.getText(), 10)
@@ -39,10 +43,14 @@ class InsertTableView extends View
     @rowEditor.focus()
 
   detach: ->
-    return unless @panel.isVisible()
-    @panel.hide()
-    @previouslyFocusedElement?.focus()
+    if @panel.isVisible()
+      @panel.hide()
+      @previouslyFocusedElement?.focus()
     super
+
+  detached: ->
+    @disposables?.dispose()
+    @disposables = null
 
   insertTable: (row, col) ->
     cursor = @editor.getCursorBufferPosition()

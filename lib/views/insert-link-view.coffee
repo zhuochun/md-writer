@@ -1,3 +1,4 @@
+{CompositeDisposable} = require 'atom'
 {$, View, TextEditorView} = require "atom-space-pen-views"
 CSON = require "season"
 fs = require "fs-plus"
@@ -40,9 +41,12 @@ class InsertLinkView extends View
       @updateSearch(@searchEditor.getText()) if posts
     @searchResult.on "click", "li", (e) => @useSearchResult(e)
 
-    atom.commands.add @element,
-      "core:confirm": => @onConfirm()
-      "core:cancel": => @detach()
+    @disposables = new CompositeDisposable()
+    @disposables.add(atom.commands.add(
+      @element, {
+        "core:confirm": => @onConfirm(),
+        "core:cancel":  => @detach()
+      }))
 
   onConfirm: ->
     link =
@@ -77,6 +81,10 @@ class InsertLinkView extends View
       @panel.hide()
       @previouslyFocusedElement?.focus()
     super
+
+  detached: ->
+    @disposables?.dispose()
+    @disposables = null
 
   _normalizeSelectionAndSetLinkFields: ->
     @range = utils.getTextBufferRange(@editor, "link")

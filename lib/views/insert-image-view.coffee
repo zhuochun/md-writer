@@ -1,3 +1,4 @@
+{CompositeDisposable} = require 'atom'
 {$, View, TextEditorView} = require "atom-space-pen-views"
 path = require "path"
 fs = require "fs-plus"
@@ -47,9 +48,12 @@ class InsertImageView extends View
     @imageEditor.on "blur", => @updateImageSource(@imageEditor.getText().trim())
     @openImageButton.on "click", => @openImageDialog()
 
-    atom.commands.add @element,
-      "core:confirm": => @onConfirm()
-      "core:cancel":  => @detach()
+    @disposables = new CompositeDisposable()
+    @disposables.add(atom.commands.add(
+      @element, {
+        "core:confirm": => @onConfirm(),
+        "core:cancel":  => @detach()
+      }))
 
   onConfirm: ->
     imgSource = @imageEditor.getText().trim()
@@ -72,10 +76,14 @@ class InsertImageView extends View
     @imageEditor.focus()
 
   detach: ->
-    return unless @panel.isVisible()
-    @panel.hide()
-    @previouslyFocusedElement?.focus()
+    if @panel.isVisible()
+      @panel.hide()
+      @previouslyFocusedElement?.focus()
     super
+
+  detached: ->
+    @disposables?.dispose()
+    @disposables = null
 
   setFieldsFromSelection: ->
     @range = utils.getTextBufferRange(@editor, "link")
