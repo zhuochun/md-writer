@@ -131,6 +131,8 @@ lineStyles:
 imageTag: "![{alt}]({src})"
 # use relative path to image from the opened file
 relativeImagePath: false
+# rename copyed image based on title/alt
+renameImageOnCopy: false
 
 # inline link tag template
 linkInlineTag: "[{text}]({url})"
