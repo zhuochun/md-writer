@@ -59,6 +59,11 @@ module.exports =
     description: "Use relative image path from the open file"
     type: "boolean"
     default: config.getCurrentDefault("relativeImagePath")
+  renameImageOnCopy:
+    title: "Rename Image File Name"
+    description: "Rename image filename when you chose to copy to image directory"
+    type: "boolean"
+    default: config.getCurrentDefault("renameImageOnCopy")
   tableAlignment:
     title: "Table Cell Alignment"
     type: "string"

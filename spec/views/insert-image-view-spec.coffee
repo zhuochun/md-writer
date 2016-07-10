@@ -45,6 +45,24 @@ describe "InsertImageView", ->
       expected = editor.getPath().replace("empty.markdown", "octocat.png")
       expect(insertImageView.resolveImagePath(fixture)).toBe(expected)
 
+  describe ".copyImageDestPath", ->
+    it "return the local path with original filename", ->
+      atom.config.set("markdown-writer.renameImageOnCopy", false)
+      fixture = "images/icons/emoji/octocat.png"
+      expect(insertImageView.copyImageDestPath(fixture, "name")).toMatch(/[\/\\]octocat\.png/)
+
+    it "return the local path with new filename", ->
+      atom.config.set("markdown-writer.renameImageOnCopy", true)
+      # normal case
+      fixture = "images/icons/emoji/octocat.png"
+      expect(insertImageView.copyImageDestPath(fixture, "New name")).toMatch(/[\/\\]new-name\.png/)
+      # no extension
+      fixture = "images/icons/emoji/octocat"
+      expect(insertImageView.copyImageDestPath(fixture, "New name")).toMatch(/[\/\\]new-name/)
+      # no alt text set
+      fixture = "images/icons/emoji/octocat.png"
+      expect(insertImageView.copyImageDestPath(fixture, "")).toMatch(/[\/\\]octocat.png/)
+
   describe ".generateImageSrc", ->
     it "return empty image path", ->
       fixture = ""
