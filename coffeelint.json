@@ -2,6 +2,9 @@
   "max_line_length": {
     "level": "ignore"
   },
+  "colon_assignment_spacing": {
+    "level": "ignore"
+  },
   "no_empty_param_list": {
     "level": "error"
   },

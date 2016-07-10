@@ -1,3 +1,4 @@
+{CompositeDisposable} = require 'atom'
 {$, View, TextEditorView} = require "atom-space-pen-views"
 path = require "path"
 fs = require "fs-plus"
@@ -28,18 +29,21 @@ class NewFileView extends View
   initialize: ->
     utils.setTabIndex([@titleEditor, @pathEditor, @dateEditor])
 
+    # save current date time as base
+    @dateTime = templateHelper.getDateTime()
+
     @titleEditor.getModel().onDidChange => @updatePath()
     @pathEditor.getModel().onDidChange => @updatePath()
     # update pathEditor to reflect date changes, however this will overwrite user changes
     @dateEditor.getModel().onDidChange =>
       @pathEditor.setText(templateHelper.create(@constructor.pathConfig, @getDateTime()))
 
-    atom.commands.add @element,
-      "core:confirm": => @createFile()
-      "core:cancel": => @detach()
-
-    # save current date time as base
-    @dateTime = templateHelper.getDateTime()
+    @disposables = new CompositeDisposable()
+    @disposables.add(atom.commands.add(
+      @element, {
+        "core:confirm": => @createFile()
+        "core:cancel": => @detach()
+      }))
 
   display: ->
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
@@ -54,6 +58,10 @@ class NewFileView extends View
       @panel.hide()
       @previouslyFocusedElement?.focus()
     super
+
+  detached: ->
+    @disposables?.dispose()
+    @disposables = null
 
   createFile: ->
     try
