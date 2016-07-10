@@ -235,24 +235,42 @@ parseImageTag = (input) ->
     img[elem[1]] = elem[3] if elem
   return img
 
+
+# ==================================================
+# Some shared regex basics
+#
+
+# [url|url "title"]
+URL_AND_TITLE = ///
+  (\S*?)                  # a url
+  (?:
+    \ +                   # spaces
+    ["'\\(]?(.*?)["'\\)]? # quoted title
+  )?                      # might not present
+  ///.source
+
+# [image|text]
+IMG_OR_TEXT = /// (!\[.*?\]\(.+?\) | .+?) ///.source
+# at head or not ![, workaround of no neg-lookbehind in JS
+OPEN_TAG = /// (?:^|[^!])(?=\[) ///.source
+# link id don't contains [ or ]
+LINK_ID = /// [^\[\]]+ ///.source
+
 # ==================================================
 # Image
 #
 
 IMG_REGEX  = ///
-  !\[(.+?)\]               # ![text]
-  \(                       # open (
-  ([^\)\s]+)\s?            # a image path
-  [\"\']?([^)]*?)[\"\']?   # any description
-  \)                       # close )
+  ! \[ (.*?) \]            # ![empty|text]
+    \( #{URL_AND_TITLE} \) # (image path, any description)
   ///
 
 isImage = (input) -> IMG_REGEX.test(input)
 parseImage = (input) ->
   image = IMG_REGEX.exec(input)
 
-  if image && image.length >= 3
-    return alt: image[1], src: image[2], title: image[3]
+  if image && image.length >= 2
+    return alt: image[1], src: image[2], title: image[3] || ""
   else
     return alt: input, src: "", title: ""
 
@@ -266,14 +284,16 @@ isImageFile = (file) ->
 #
 
 INLINE_LINK_REGEX = ///
-  \[(.+?)\]                # [text]
-  \(                       # open (
-  ([^\)\s]+)\s?            # a url
-  [\"\']?([^)]*?)[\"\']?   # any title
-  \)                       # close )
+  \[ #{IMG_OR_TEXT} \]   # [image|text]
+  \( #{URL_AND_TITLE} \) # (url "any title")
   ///
 
-isInlineLink = (input) -> INLINE_LINK_REGEX.test(input) and !isImage(input)
+INLINE_LINK_TEST_REGEX = ///
+  #{OPEN_TAG}
+  #{INLINE_LINK_REGEX.source}
+  ///
+
+isInlineLink = (input) -> INLINE_LINK_TEST_REGEX.test(input)
 parseInlineLink = (input) ->
   link = INLINE_LINK_REGEX.exec(input)
 
@@ -286,32 +306,40 @@ parseInlineLink = (input) ->
 # Reference link
 #
 
+# Match reference link [text][id]
 REFERENCE_LINK_REGEX_OF = (id, opts = {}) ->
   id = escapeRegExp(id) unless opts.noEscape
   ///
-  \[(#{id})\]\ ?\[\]            # [text][]
-  |                             # or
-  \[([^\[\]]+?)\]\ ?\[(#{id})\] # [text][id]
+  \[(#{id})\]\ ?\[\]               # [text][]
+  |                                # or
+  \[#{IMG_OR_TEXT}\]\ ?\[(#{id})\] # [image|text][id]
   ///
+
+# Match reference link definitions [id]: url
+REFERENCE_DEF_REGEX_OF = (id, opts = {}) ->
+  id = escapeRegExp(id) unless opts.noEscape
+  ///
+  ^                             # start of line
+  \ *                           # any leading spaces
+  \[(#{id})\]:\ +               # [id]: followed by spaces
+  #{URL_AND_TITLE}              # link "title"
+  $
+  ///m
 
 # REFERENCE_LINK_REGEX.exec("[text][id]")
 # => ["[text][id]", undefined, "text", "id"]
 #
 # REFERENCE_LINK_REGEX.exec("[text][]")
 # => ["[text][]", "text", undefined, undefined]
-REFERENCE_LINK_REGEX = REFERENCE_LINK_REGEX_OF(".+?", noEscape: true)
+REFERENCE_LINK_REGEX = REFERENCE_LINK_REGEX_OF(LINK_ID, noEscape: true)
+REFERENCE_LINK_TEST_REGEX = ///
+  #{OPEN_TAG}
+  #{REFERENCE_LINK_REGEX.source}
+  ///
 
-REFERENCE_DEF_REGEX_OF = (id, opts = {}) ->
-  id = escapeRegExp(id) unless opts.noEscape
-  /// ^\ *                      # start of line with any spaces
-  \[(#{id})\]:\ +               # [id]: followed by spaces
-  (\S*?)                        # link
-  (?:\ +['"\(]?(.+?)['"\)]?)?   # any "link title"
-  $ ///m
+REFERENCE_DEF_REGEX = REFERENCE_DEF_REGEX_OF(LINK_ID, noEscape: true)
 
-REFERENCE_DEF_REGEX = REFERENCE_DEF_REGEX_OF(".+?", noEscape: true)
-
-isReferenceLink = (input) -> REFERENCE_LINK_REGEX.test(input)
+isReferenceLink = (input) -> REFERENCE_LINK_TEST_REGEX.test(input)
 parseReferenceLink = (input, editor) ->
   link = REFERENCE_LINK_REGEX.exec(input)
   text = link[2] || link[1]
@@ -342,16 +370,18 @@ parseReferenceDefinition = (input, editor) ->
 # Table
 #
 
-TABLE_SEPARATOR_REGEX = /// ^
+TABLE_SEPARATOR_REGEX = ///
+  ^
   (\|)?                # starts with an optional |
   (
    (?:\s*(?:-+|:-*:|:-*|-*:)\s*\|)+ # one or more table cell
    (?:\s*(?:-+|:-*:|:-*|-*:)\s*)    # last table cell
   )
   (\|)?                # ends with an optional |
-  $ ///
+  $
+  ///
 
-TABLE_ONE_COLUMN_SEPARATOR_REGEX = /// ^ (\|)(\s*:?-+:?\s*)(\|) $ ///
+TABLE_ONE_COLUMN_SEPARATOR_REGEX = /// ^ (\|) (\s*:?-+:?\s*) (\|) $ ///
 
 isTableSeparator = (line) ->
   line = line.trim()
@@ -383,13 +413,15 @@ parseTableSeparator = (line) ->
         "empty"
   }
 
-TABLE_ROW_REGEX = /// ^
+TABLE_ROW_REGEX = ///
+  ^
   (\|)?                # starts with an optional |
   (.+?\|.+?)           # any content with at least 2 columns
   (\|)?                # ends with an optional |
-  $ ///
+  $
+  ///
 
-TABLE_ONE_COLUMN_ROW_REGEX = /// ^ (\|)([^\|]+?)(\|) $ ///
+TABLE_ONE_COLUMN_ROW_REGEX = /// ^ (\|) (.+?) (\|) $ ///
 
 isTableRow = (line) ->
   line = line.trimRight()
@@ -484,9 +516,11 @@ createTableRow = (columns, options) ->
 #
 
 URL_REGEX = ///
-  ^(?:\w+:)?\/\/
-  ([^\s\.]+\.\S{2}|localhost[\:?\d]*)
-  \S*$
+  ^
+  (?:\w+:)?\/\/                       # any prefix, e.g. http://
+  ([^\s\.]+\.\S{2}|localhost[\:?\d]*) # some domain
+  \S*                                 # path
+  $
   ///i
 
 isUrl = (url) -> URL_REGEX.test(url)
