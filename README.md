@@ -5,7 +5,7 @@
 [![Apm Version](https://img.shields.io/apm/v/markdown-writer.svg)](https://atom.io/packages/markdown-writer)
 [![Apm Downloads](https://img.shields.io/apm/dm/markdown-writer.svg)](https://atom.io/packages/markdown-writer)
 
-Adds tons of features to make [Atom](https://atom.io/) an even better Markdown editor!
+Adds tons of features to make [Atom](https://atom.io/) an even better Markdown/AsciiDoc editor!
 
 Works great with static blogging as well. Try it with [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) and any of your favorite static blog engines.
 
@@ -65,9 +65,11 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
   - Jump to reference marker/definition (`cmd-j cmd-d`)
 - **Markdown cheat sheet** (`markdown-writer:open-cheat-sheet`).
 - **Correct order list numbers** (`markdown-writer:correct-order-list-numbers`).
-- **Toolbar for markdown writer** found at [tool-bar-markdown-writer][82a2aced].
+- **Toolbar for Markdown Writer** is available at [tool-bar-markdown-writer][82a2aced].
+- **AsciiDoc support** with [language-asciidoc][2f0cb1f9].
 
   [82a2aced]: https://atom.io/packages/tool-bar-markdown-writer "Toobar for Markdown Writer"
+  [2f0cb1f9]: https://atom.io/packages/language-asciidoc "AsciiDoc Language Package for Atom"
 
 You can find and trigger all features in:
 

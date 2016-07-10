@@ -3,12 +3,12 @@ path = require "path"
 
 prefix = "markdown-writer"
 packagePath = atom.packages.resolvePackagePath("markdown-writer")
-sampleConfigFile =
-  if packagePath then path.join(packagePath, "lib", "config.cson")
-  else path.join(__dirname, "config.cson")
+configFile = (parts...) ->
+  if packagePath then path.join(packagePath, "lib", parts...)
+  else path.join(__dirname, parts...)
 
 # load sample config to defaults
-defaults = CSON.readFileSync(sampleConfigFile)
+defaults = CSON.readFileSync(configFile("config.cson"))
 
 # static engine of your blog, see `@engines`
 defaults["siteEngine"] = "general"
@@ -23,10 +23,15 @@ defaults["grammars"] = [
   'source.gfm'
   'source.gfm.nvatom'
   'source.litcoffee'
+  'source.asciidoc'
   'text.md'
   'text.plain'
   'text.plain.null-grammar'
 ]
+
+# filetype defaults
+filetypes =
+  'source.asciidoc': CSON.readFileSync(configFile("filetypes", "asciidoc.cson"))
 
 # engine defaults
 engines =
@@ -64,7 +69,7 @@ module.exports =
   get: (key, options = {}) ->
     allow_blank = if options["allow_blank"]? then options["allow_blank"] else true
 
-    for config in ["Project", "User", "Engine", "Default"]
+    for config in ["Project", "User", "Engine", "Filetype", "Default"]
       val = @["get#{config}"](key)
 
       if allow_blank then return val if val?
@@ -80,13 +85,26 @@ module.exports =
   getDefault: (key) ->
     @_valueForKeyPath(defaults, key)
 
+  # get config.filetypes[filetype] based on current file
+  getFiletype: (key) ->
+    editor = atom.workspace.getActiveTextEditor()
+    return undefined unless editor?
+
+    filetypeConfig = filetypes[editor.getGrammar().scopeName]
+    return undefined unless filetypeConfig?
+
+    @_valueForKeyPath(filetypeConfig, key)
+
   # get config.engines based on siteEngine set
   getEngine: (key) ->
     engine = @getProject("siteEngine") ||
              @getUser("siteEngine") ||
              @getDefault("siteEngine")
 
-    @_valueForKeyPath(engines[engine] || {}, key)
+    engineConfig = engines[engine]
+    return undefined unless engineConfig?
+
+    @_valueForKeyPath(engineConfig, key)
 
   # get config based on engine set or global defaults
   getCurrentDefault: (key) ->

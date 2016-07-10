@@ -6,18 +6,24 @@
 #
 # NOTE 1: After edit, please run command `Window: Reload` or
 #         Use menu: View -> Developer -> Reload Window.
-#
 # NOTE 2: Strings need to be quoted.
+#
 
-# website of your blog
+# static engine of your blog
+# e.g. one of: general, html, jekyll, octopress, hexo
+siteEngine: "general"
+# website URL of your blog
 siteUrl: ""
+
 # root directory of your blog
+# e.g. leave empty to source the current project path (recommended)
 siteLocalDir: ""
 # directory to drafts from siteLocalDir
 siteDraftsDir: "_drafts/"
 # directory to posts from siteLocalDir
 sitePostsDir: "_posts/{year}/"
 # directory to images from siteLocalDir
+# e.g. to use the current filename directory, can use {directory}
 siteImagesDir: "images/{year}/{month}/"
 
 # URLs to tags/posts/categories JSON files
@@ -66,18 +72,19 @@ inlineNewLineContinuation: false
 
 # TextStyles and LineStyles
 #
-# In `regex{Before,After}`, `regexMatch{Before,After}`, DO NOT USE CAPTURE GROUP!
-# Capture group will break things! USE non-capturing group `(?:)` instead.
+# - Use `before` and `after` to insert text around the selected text.
+# - Use `regexMatch{Before,After}` when an exact match of the style is needed.
+#   If this regex matched true, the style will be toggled.
+# - Use `regex{Before,After}` when a general match of the style is wanted.
+#   If this regex matched true, the style will be replaced by new style.
 #
-# Use `regexMatch{Before,After}` when an exact match of the style is needed.
-# If this regex matched true, the style will be toggled.
+# NOTE
 #
-# Use `regex{Before,After}` when a general match of the style is wanted.
-# If this regex matched true, the style will be replaced by new style.
-#
-# When `regexMatch{Before,After}` is not specified, `regex{Before,After}` is used instead.
-#
-# Use `before` and `after` to insert text around the selected text.
+# - In `regex{Before,After}`, `regexMatch{Before,After}`, DO NOT USE CAPTURE GROUP!
+#   Capture group will break things! USE non-capturing group `(?:)` instead.
+# - When `regexMatch{Before,After}` is not specified, `regex{Before,After}` is used instead.
+# - In nested settings, e.g. codeblock, ul, ol, all the within nested keys need to exists if
+#   you changed one setting.
 #
 textStyles:
   code:
@@ -103,19 +110,19 @@ lineStyles:
   h4: before: "#### "
   h5: before: "##### "
   ul:
-    before: "- ",
-    regexMatchBefore: "(?:-|\\*|\\+)\\s"
-    regexBefore: "(?:-|\\*|\\+|\\d+\\.|[a-zA-Z]+\\.)\\s"
+    before: "- "
+    regexMatchBefore: "(?:-|\\*|\\+|\\.)\\s"
+    regexBefore: "(?:-|\\*|\\+|\\.|\\d+\\.|[a-zA-Z]+\\.)\\s"
   ol:
-    before: "1. ",
+    before: "1. "
     regexMatchBefore: "(?:\\d+\\.|[a-zA-Z]+\\.)\\s"
-    regexBefore: "(?:-|\\*|\\+|\\d+\\.|[a-zA-Z]+\\.)\\s"
+    regexBefore: "(?:-|\\*|\\+|\\.|\\d+\\.|[a-zA-Z]+\\.)\\s"
   task:
-    before: "- [ ] ",
+    before: "- [ ] "
     regexMatchBefore: "(?:-|\\*|\\+|\\d+\\.)\\s+\\[ ]\\s"
     regexBefore: "(?:-|\\*|\\+|\\d+\\.|[a-zA-Z]+\\.)\\s*(?:\\[[xX ]])?\\s"
   taskdone:
-    before: "- [X] ",
+    before: "- [X] "
     regexMatchBefore: "(?:-|\\*|\\+|\\d+\\.)\\s+\\[[xX]]\\s"
     regexBefore: "(?:-|\\*|\\+|\\d+\\.|[a-zA-Z]+\\.)\\s*(?:\\[[xX ]])?\\s"
   blockquote: before: "> "
@@ -143,4 +150,4 @@ tableExtraPipes: false
 # template variables is a key-value map used in template string
 # e.g. you can have `posts/{author}/{year}` in newPostFileName after you set author.
 templateVariables:
-  author: "your name"
+  author: "Your Name"

@@ -5,6 +5,7 @@
   "description": "Make Atom a better Markdown editor and an easier static blogging tool.",
   "keywords": [
     "Markdown",
+    "AsciiDoc",
     "Jekyll",
     "Octopress",
     "Hexo",
