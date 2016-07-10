@@ -266,14 +266,21 @@ isImageFile = (file) ->
 #
 
 INLINE_LINK_REGEX = ///
-  \[(.+?)\]                # [text]
-  \(                       # open (
-  ([^\)\s]+)\s?            # a url
-  [\"\']?([^)]*?)[\"\']?   # any title
-  \)                       # close )
+  \[
+    (!\[.+?\]\(.+?\)|.+?)   # [image|text]
+  \]
+  \(                        # open (
+  ([^\)\s]+)\s?             # a url
+  [\"\']?([^)]*?)[\"\']?    # any title
+  \)                        # close )
   ///
 
-isInlineLink = (input) -> INLINE_LINK_REGEX.test(input) and !isImage(input)
+INLINE_LINK_TEST_REGEX = ///
+  (?:^|[^!])(?=\[)            # at head/not ![, workaround of no neg-lookbehind in JS
+  #{INLINE_LINK_REGEX.source}
+  ///
+
+isInlineLink = (input) -> INLINE_LINK_TEST_REGEX.test(input)
 parseInlineLink = (input) ->
   link = INLINE_LINK_REGEX.exec(input)
 
