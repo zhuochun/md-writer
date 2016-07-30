@@ -43,6 +43,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
   - Insert reference link with title. _Use `-` in title field to create an empty title reference link._
   - Remove link (and its reference) after URL is deleted.
   - Search published posts by title in your blog.
+- **Insert footnote** (`markdown-writer:insert-footnote`), and edit footnote labels.
 - **Insert image** (`shift-cmd-i`), auto-detect image height/width, and optionally copy images to your site's images directory.
 - **Insert table** (`markdown-writer:insert-table`), and a shortcut to **jump to next table cell** (`cmd-j cmd-t`).
 - **Format table** (`markdown-writer:format-table`) with table alignments.
