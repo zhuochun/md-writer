@@ -134,7 +134,7 @@ class InsertImageView extends View
       @copyImagePanel.removeClass("hidden")
 
   updateCopyImageDest: (file) ->
-    return if !file || @copyImagePanel.hasClass("hidden")
+    return unless file
     destFile = @copyImageDestPath(file, @titleEditor.getText())
     @copyImageMessage.text("Copy Image to #{destFile}")
 
@@ -187,19 +187,21 @@ class InsertImageView extends View
 
     @editor.setTextInBufferRange(@range, text)
 
-  # TODO make this a service, so other packages can tap in and copy to other places
   copyImage: (file, callback) ->
     return callback() if utils.isUrl(file) || !fs.existsSync(file)
 
     try
       destFile = @copyImageDestPath(file, @titleEditor.getText())
+      performWrite = true
 
       if fs.existsSync(destFile)
-        atom.confirm
+        confirmation = atom.confirm
           message: "File already exists!"
-          detailedMessage: "Another file already exists at:\n#{destPath}"
-          buttons: ['OK']
-      else
+          detailedMessage: "Another file already exists at:\n#{destFile}\nDo you want to overwrite it?"
+          buttons: ["No", "Yes"]
+        performWrite = (confirmation == 1)
+
+      if performWrite
         fs.copy file, destFile, =>
           @imageEditor.setText(destFile)
           callback()
