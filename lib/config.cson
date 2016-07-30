@@ -144,6 +144,12 @@ referenceInsertPosition: "paragraph"
 # reference link tag indent space: 0, 2
 referenceIndentLength: 2
 
+# footnote tag template
+footnoteReferenceTag: "[^{label}]"
+footnoteDefinitionTag: "[^{label}]: {content}"
+# footnote definition tag insert position: "paragraph", "article"
+footnoteInsertPosition: "paragraph"
+
 # table default alignments: "empty", "left", "right", "center"
 tableAlignment: "empty"
 # insert extra pipes at the beginning and the end of table rows

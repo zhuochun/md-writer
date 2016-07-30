@@ -320,6 +320,30 @@ describe "utils", ->
         id: "id", text: "Jekyll", url: "http://jekyll.com", title: "Jekyll Website"
         linkRange: {start: {row: 5, column: 48}, end: {row: 5, column: 60}}
 
+  describe ".isFootnote", ->
+    it "check is text invalid footnote", ->
+      fixture = "[text]"
+      expect(utils.isFootnote(fixture)).toBe(false)
+      fixture = "![abc]"
+      expect(utils.isFootnote(fixture)).toBe(false)
+
+    it "check is text valid footnote", ->
+      fixture = "[^1]"
+      expect(utils.isFootnote(fixture)).toBe(true)
+      fixture = "[^text]"
+      expect(utils.isFootnote(fixture)).toBe(true)
+      fixture = "[^text text]"
+      expect(utils.isFootnote(fixture)).toBe(true)
+      fixture = "[^12]:"
+      expect(utils.isFootnote(fixture)).toBe(true)
+
+  describe ".parseFootnote", ->
+    it "parse valid footnote", ->
+      fixture = "[^1]"
+      expect(utils.parseFootnote(fixture)).toEqual(label: "1", content: "", isDefinition: false)
+      fixture = "[^text]: "
+      expect(utils.parseFootnote(fixture)).toEqual(label: "text", content: "", isDefinition: true)
+
 # ==================================================
 # Table
 #

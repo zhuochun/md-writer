@@ -367,6 +367,21 @@ parseReferenceDefinition = (input, editor) ->
     id: id, text: "", url: def[2], title: def[3] || "", linkRange: null
 
 # ==================================================
+# Footnote
+#
+
+FOOTNOTE_REGEX = /// \[ \^ (.+?) \] (:)? ///
+FOOTNOTE_TEST_REGEX = ///
+  #{OPEN_TAG}
+  #{FOOTNOTE_REGEX.source}
+  ///
+
+isFootnote = (input) -> FOOTNOTE_TEST_REGEX.test(input)
+parseFootnote = (input) ->
+  footnote = FOOTNOTE_REGEX.exec(input)
+  label: footnote[1], isDefinition: footnote[2] == ":", content: ""
+
+# ==================================================
 # Table
 #
 
@@ -563,17 +578,20 @@ getBufferRangeForScope = (editor, cursor, scopeSelector) ->
 # buffer range if it is inside a scope selector, or the current word.
 #
 # selection is optional, when not provided, use the last selection
-getTextBufferRange = (editor, scopeSelector, selection) ->
+# opts nearestWord select nearest word, true by default
+getTextBufferRange = (editor, scopeSelector, selection, opts = {}) ->
   selection ?= editor.getLastSelection()
   cursor = selection.cursor
 
   if selection.getText()
     selection.getBufferRange()
-  else if (scope = getScopeDescriptor(cursor, scopeSelector))
+  else if scope = getScopeDescriptor(cursor, scopeSelector)
     getBufferRangeForScope(editor, cursor, scope)
-  else
+  else if opts["nearestWord"] != false
     wordRegex = cursor.wordRegExp(includeNonWordCharacters: false)
     cursor.getCurrentWordBufferRange(wordRegex: wordRegex)
+  else
+    selection.getBufferRange()
 
 # ==================================================
 # Exports
@@ -612,6 +630,9 @@ module.exports =
   parseReferenceLink: parseReferenceLink
   isReferenceDefinition: isReferenceDefinition
   parseReferenceDefinition: parseReferenceDefinition
+
+  isFootnote: isFootnote
+  parseFootnote: parseFootnote
 
   isTableSeparator: isTableSeparator
   parseTableSeparator: parseTableSeparator
