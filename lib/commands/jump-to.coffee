@@ -1,7 +1,7 @@
 utils = require "../utils"
 
 HEADING_REGEX   = /// ^\# {1,6} \ + .+$ ///
-REFERENCE_REGEX = /// \[? ([^\s\]]+) (?:\] | \]:)? ///
+REFERENCE_REGEX = /// \[? (\^? [^\s\]]+) (?: \] | \]:)? ///
 TABLE_COL_REGEX = /// ([^\|]*?) \s* \| ///
 
 module.exports =
@@ -48,13 +48,15 @@ class JumpTo
     return found
 
   referenceDefinition: ->
-    key = @editor.getSelectedText() || @editor.getWordUnderCursor()
-    return false unless key
+    range = utils.getTextBufferRange(@editor, "link")
+    selection = @editor.getTextInRange(range)
+    return false unless selection
 
-    key = utils.escapeRegExp(REFERENCE_REGEX.exec(key)[1])
+    link = REFERENCE_REGEX.exec(selection)
+    key = utils.escapeRegExp(link[1])
 
     found = false
-    @editor.buffer.scan /// \[ #{key} \] ///g, (match) =>
+    @editor.buffer.scan /// \[ \^? #{key} \] ///g, (match) =>
       end = match.range.end
       if end.row != @cursor.row
         found = [end.row, end.column - 1]

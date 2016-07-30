@@ -96,6 +96,10 @@ describe "JumpTo", ->
     link to [content][]
 
     [content]: http://content
+
+    footnotes[^fn] is a special link
+
+    [^fn]: footnote definition
     """
 
     it "finds nothing if no word under cursor", ->
@@ -109,19 +113,31 @@ describe "JumpTo", ->
       jumpTo = new JumpTo()
       expect(jumpTo.referenceDefinition()).toBe(false)
 
-    it "finds link reference", ->
-      editor.setText(text)
-      editor.setCursorBufferPosition([2, 2])
+    describe "links", ->
+      beforeEach -> editor.setText(text)
 
-      jumpTo = new JumpTo()
-      expect(jumpTo.referenceDefinition()).toEqual([0, 16])
+      it "finds definition", ->
+        editor.setCursorBufferPosition([0, 16])
+        jumpTo = new JumpTo()
+        expect(jumpTo.referenceDefinition()).toEqual([2, 8])
 
-    it "finds link definition", ->
-      editor.setText(text)
-      editor.setCursorBufferPosition([0, 16])
+      it "finds reference", ->
+        editor.setCursorBufferPosition([2, 2])
+        jumpTo = new JumpTo()
+        expect(jumpTo.referenceDefinition()).toEqual([0, 16])
 
-      jumpTo = new JumpTo()
-      expect(jumpTo.referenceDefinition()).toEqual([2, 8])
+    describe "foonotes", ->
+      beforeEach -> editor.setText(text)
+
+      it "finds definition", ->
+        editor.setCursorBufferPosition([4, 12])
+        jumpTo = new JumpTo()
+        expect(jumpTo.referenceDefinition()).toEqual([6, 4])
+
+      it "finds reference", ->
+        editor.setCursorBufferPosition([6, 4])
+        jumpTo = new JumpTo()
+        expect(jumpTo.referenceDefinition()).toEqual([4, 13])
 
   describe ".nextTableCell", ->
     beforeEach ->
