@@ -1,3 +1,7 @@
+## 2.5.1
+
+* Fix create project config regression bug
+
 ## 2.5.0
 
 * Add footnote support, works better with [language-markdown][ed5837b4]
