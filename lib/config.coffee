@@ -3,12 +3,12 @@ path = require "path"
 
 prefix = "markdown-writer"
 packagePath = atom.packages.resolvePackagePath("markdown-writer")
-configFile = (parts...) ->
+getConfigFile = (parts...) ->
   if packagePath then path.join(packagePath, "lib", parts...)
   else path.join(__dirname, parts...)
 
 # load sample config to defaults
-defaults = CSON.readFileSync(configFile("config.cson"))
+defaults = CSON.readFileSync(getConfigFile("config.cson"))
 
 # static engine of your blog, see `@engines`
 defaults["siteEngine"] = "general"
@@ -31,7 +31,7 @@ defaults["grammars"] = [
 
 # filetype defaults
 filetypes =
-  'source.asciidoc': CSON.readFileSync(configFile("filetypes", "asciidoc.cson"))
+  'source.asciidoc': CSON.readFileSync(getConfigFile("filetypes", "asciidoc.cson"))
 
 # engine defaults
 engines =
@@ -122,7 +122,7 @@ module.exports =
     config = @_loadProjectConfig(configFile)
     @_valueForKeyPath(config, key)
 
-  getSampleConfigFile: -> sampleConfigFile
+  getSampleConfigFile: -> getConfigFile("config.cson")
 
   getProjectConfigFile: ->
     return if !atom.project || atom.project.getPaths().length < 1
