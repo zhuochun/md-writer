@@ -89,3 +89,8 @@ describe "config", ->
     it "get empty when file is not found", ->
       config.getProjectConfigFile = -> path.resolve(__dirname, "fixtures", "notfound.cson")
       expect(config.getProject("imageTag")).not.toBeDefined()
+
+  describe ".getSampleConfigFile", ->
+    it "get the config file path", ->
+      configPath = path.join("lib", "config.cson")
+      expect(config.getSampleConfigFile()).toContain(configPath)
