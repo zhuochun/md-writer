@@ -69,7 +69,7 @@ module.exports =
       editorCommands["markdown-writer:#{command}"] =
         @registerCommand("./commands/format-text", args: command)
 
-    ["publish-draft"].forEach (command) =>
+    ["publish-draft", "open-link-in-browser"].forEach (command) =>
       editorCommands["markdown-writer:#{command}"] =
         @registerCommand("./commands/#{command}")
 
