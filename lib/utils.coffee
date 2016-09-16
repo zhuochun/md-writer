@@ -593,6 +593,27 @@ getTextBufferRange = (editor, scopeSelector, selection, opts = {}) ->
   else
     selection.getBufferRange()
 
+# Find a possible link tag in the range from editor, return the found link data or nil
+findLinkInRange = (editor, range) ->
+  selection = editor.getTextInRange(range)
+  return if selection == ""
+
+  return parseInlineLink(selection) if isInlineLink(selection)
+  return parseReferenceLink(selection, editor) if isReferenceLink(selection)
+
+  if isReferenceDefinition(selection)
+    # HACK correct the definition range, Atom's link scope does not include
+    # definition's title, so normalize to be the range start row
+    selection = editor.lineTextForBufferRow(range.start.row)
+    range = editor.bufferRangeForBufferRow(range.start.row)
+
+    link = parseReferenceDefinition(selection, editor)
+    link.definitionRange = range
+
+    # when link.linkRange is undefined, the definition is an orphan,
+    # will just ignore it and take it as normal text instead
+    return link if link.linkRange
+
 # ==================================================
 # Exports
 #
@@ -645,3 +666,4 @@ module.exports =
   isImageFile: isImageFile
 
   getTextBufferRange: getTextBufferRange
+  findLinkInRange: findLinkInRange

@@ -88,40 +88,22 @@ class InsertLinkView extends View
 
   _normalizeSelectionAndSetLinkFields: ->
     @range = utils.getTextBufferRange(@editor, "link")
-    link = @_findLinkInRange()
+    @currLink = @_findLinkInRange()
 
-    @referenceId = link.id
-    @range = link.linkRange || @range
-    @definitionRange = link.definitionRange
+    @referenceId = @currLink.id
+    @range = @currLink.linkRange || @range
+    @definitionRange = @currLink.definitionRange
 
-    @setLink(link)
-    @saveCheckbox.prop("checked", @isInSavedLink(link))
+    @setLink(@currLink)
+    @saveCheckbox.prop("checked", @isInSavedLink(@currLink))
 
   _findLinkInRange: ->
+    link = utils.findLinkInRange(@editor, @range)
+    return link if link?
+    # Find in saved link based on selection
     selection = @editor.getTextInRange(@range)
-
-    if utils.isInlineLink(selection)
-      return utils.parseInlineLink(selection)
-
-    if utils.isReferenceLink(selection)
-      return utils.parseReferenceLink(selection, @editor)
-
-    if utils.isReferenceDefinition(selection)
-      # HACK correct the definition range, Atom's link scope does not include
-      # definition's title, so normalize to be the range start row
-      selection = @editor.lineTextForBufferRow(@range.start.row)
-      @range = @editor.bufferRangeForBufferRow(@range.start.row)
-
-      link = utils.parseReferenceDefinition(selection, @editor)
-      link.definitionRange = @range
-
-      # when link.linkRange is undefined, the definition is an orphan,
-      # will just ignore it and take it as normal text instead
-      return link if link.linkRange
-
-    if @getSavedLink(selection)
-      return @getSavedLink(selection)
-
+    return @getSavedLink(selection) if @getSavedLink(selection)
+    # Default fallback
     text: selection, url: "", title: ""
 
   updateSearch: (query) ->
