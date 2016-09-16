@@ -566,13 +566,13 @@ getScopeDescriptor = (cursor, scopeSelector) ->
 getBufferRangeForScope = (editor, cursor, scopeSelector) ->
   pos = cursor.getBufferPosition()
 
-  range = editor.displayBuffer.bufferRangeForScopeAtPosition(scopeSelector, pos)
+  range = editor.bufferRangeForScopeAtPosition(scopeSelector, pos)
   return range if range
 
   # HACK if range is undefined, move the cursor position one char forward, and
   # try to get the buffer range for scope again
   pos = [pos.row, Math.max(0, pos.column - 1)]
-  editor.displayBuffer.bufferRangeForScopeAtPosition(scopeSelector, pos)
+  editor.bufferRangeForScopeAtPosition(scopeSelector, pos)
 
 # Get the text buffer range if selection is not empty, or get the
 # buffer range if it is inside a scope selector, or the current word.
