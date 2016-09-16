@@ -7,7 +7,7 @@
 
 Adds tons of features to make [Atom](https://atom.io/) an even better Markdown/AsciiDoc editor!
 
-Works great with static blogging as well. Try it with [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) and any of your favorite static blog engines.
+Works great with static blogging as well. Try it with [Jekyll](http://jekyllrb.com/), [Octopress](http://octopress.org/), [Hexo](http://hexo.io/) or any of your favorite static blog engines.
 
 ![Insert Image](http://i.imgur.com/s9ekMns.gif)
 
@@ -17,7 +17,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 
 > From version `1.5.0`, default keymaps that come with this package are removed (except `enter`/`tab`).
 >
-> You can execute command `Markdown Writer: Create Default keymaps` to append the original list of keymaps to your keymap config file, then modify them based on your needs. Refer to [wiki][31ebd53f].
+> Please execute command `Markdown Writer: Create Default keymaps` to append the original list of keymaps to your keymap config file, then modify them based on your needs. Refer to [wiki][31ebd53f].
 
   [31ebd53f]: https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps "Settings for Keymaps"
 
