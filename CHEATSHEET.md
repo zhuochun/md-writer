@@ -2,6 +2,10 @@
 
 Markdown Cheat Sheet for [Markdown-Writer](https://atom.io/packages/markdown-writer) Package.
 
+_To use the key mappings listed, please execute command `Markdown Writer: Create Default Keymaps`. Refer to [wiki][cad8eb1b] for more details._
+
+  [cad8eb1b]: https://github.com/zhuochun/md-writer/wiki/Settings-for-Keymaps "Settings for Keymaps"
+
 ## Headings
 
 **Key Mapping:** <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>1-5</kbd>
@@ -29,10 +33,11 @@ Markdown Cheat Sheet for [Markdown-Writer](https://atom.io/packages/markdown-wri
 ```
 1. List 1
   1. Inner list 1
+  2. Inner list 2
 2. List 2
 ```
 
-Use command `Markdown Writer:Correct Order List Numbers` to fix any wrong order numbers.
+_**TIP:** Use command `Markdown Writer:Correct Order List Numbers` to correct any wrongly ordered numbers._
 
 ### Unordered List
 
@@ -99,7 +104,7 @@ $(function() {
 
 ## Tables
 
-**Command Palette <kbd>shift</kbd> + <kbd>cmd</kbd> + <kbd>P</kbd>:** `Markdown Writer: Insert Table`
+**Command:** `Markdown Writer: Insert Table` (<kbd>shift</kbd> + <kbd>cmd</kbd> + <kbd>P</kbd>)
 
 ```
 First Header                | Second Header
@@ -108,7 +113,7 @@ Content from cell 1         | Content from cell 2
 Content in the first column | Content in the second column
 ```
 
-Use command `Markdown Writer:Format Table` to fix cell indentations.
+_**TIP:** Use command `Markdown Writer:Format Table` to format all table cells' spacing._
 
 ## Horizontal Rule
 
@@ -124,7 +129,7 @@ Next paragraph.
 
 ## Footnote
 
-_This syntax feature is not part of the standard Markdown syntax._
+**Command:** `Markdown Writer: Insert Footnote`
 
 ```
 This is some text.[^1]
@@ -146,7 +151,13 @@ You can also use raw HTML in your Markdown, and it'll mostly work pretty well.
 </dl>
 ```
 
-## Markdown Writer Commands
+## More
 
-- **Command Palette <kbd>shift</kbd> + <kbd>cmd</kbd> + <kbd>P</kbd>:** `Markdown Writer`
+All Markdown Writer commands can be found by:
+
+- **Command Palette** <kbd>shift</kbd> + <kbd>cmd</kbd> + <kbd>P</kbd> , type `Markdown Writer`
 - **Menu Bar -> Packages -> Markdown Writer**
+
+If you prefer to have editing buttons, please try out [Toolbar for Markdown-Writer][340d47db].
+
+  [340d47db]: https://atom.io/packages/tool-bar-markdown-writer "Toolbar for Markdown-Writer"
