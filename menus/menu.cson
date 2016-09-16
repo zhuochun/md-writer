@@ -121,6 +121,20 @@
           ]
         }
         {
+          'label': 'Table'
+          'submenu': [
+            {
+              'label': 'Format Table'
+              'command': 'markdown-writer:format-table'
+            }
+            { 'type': 'separator' }
+            {
+              'label': 'Jump to Next Table Cell'
+              'command': 'markdown-writer:jump-to-next-table-cell'
+            }
+          ]
+        }
+        {
           'label': 'Helpers'
           'submenu': [
             {
@@ -133,18 +147,13 @@
             }
             { 'type': 'separator' }
             {
-              'label': 'Jump to Definition'
+              'label': 'Jump to Link/Definition'
               'command': 'markdown-writer:jump-to-reference-definition'
             }
             { 'type': 'separator' }
             {
-              'label': 'Jump to Next Table Cell'
-              'command': 'markdown-writer:jump-to-next-table-cell'
-            }
-            { 'type': 'separator' }
-            {
-              'label': 'Format Table'
-              'command': 'markdown-writer:format-table'
+              'label': 'Open Link in Browser'
+              'command': 'markdown-writer:open-link-in-browser'
             }
           ]
         }
