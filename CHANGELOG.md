@@ -1,3 +1,10 @@
+## 2.6.0
+
+* Fix Atom deprecation warning in package
+* Bump minimum Atom version to v1.9.0
+* Add command `markdown-writer:open-link-in-browser`
+* Improve cheatsheet format and content
+
 ## 2.5.1
 
 * Fix create project config regression bug
