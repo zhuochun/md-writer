@@ -594,14 +594,22 @@ getTextBufferRange = (editor, scopeSelector, selection, opts = {}) ->
     selection.getBufferRange()
 
 # Find a possible link tag in the range from editor, return the found link data or nil
+#
+# Data format: { text: "", url: "", title: "", id: null, linkRange: null, definitionRange: null }
+#
+# NOTE: If id is not null, and any of linkRange/definitionRange is null, it means the link is an orphan
 findLinkInRange = (editor, range) ->
   selection = editor.getTextInRange(range)
   return if selection == ""
 
+  return text: "", url: selection, title: "" if isUrl(selection)
   return parseInlineLink(selection) if isInlineLink(selection)
-  return parseReferenceLink(selection, editor) if isReferenceLink(selection)
 
-  if isReferenceDefinition(selection)
+  if isReferenceLink(selection)
+    link = parseReferenceLink(selection, editor)
+    link.linkRange = range
+    return link
+  else if isReferenceDefinition(selection)
     # HACK correct the definition range, Atom's link scope does not include
     # definition's title, so normalize to be the range start row
     selection = editor.lineTextForBufferRow(range.start.row)
@@ -609,10 +617,7 @@ findLinkInRange = (editor, range) ->
 
     link = parseReferenceDefinition(selection, editor)
     link.definitionRange = range
-
-    # when link.linkRange is undefined, the definition is an orphan,
-    # will just ignore it and take it as normal text instead
-    return link if link.linkRange
+    return link
 
 # ==================================================
 # Exports

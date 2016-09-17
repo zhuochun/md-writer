@@ -99,8 +99,14 @@ class InsertLinkView extends View
 
   _findLinkInRange: ->
     link = utils.findLinkInRange(@editor, @range)
-    return link if link?
-    # Find in saved link based on selection
+    if link?
+      return link unless link.id
+      # Check is link it an orphan reference link
+      return link if link.id && link.linkRange && link.definitionRange
+      #  Remove link.id if it is orphan
+      link.id = null
+      return link
+    # Find selection in saved links, and auto-populate it
     selection = @editor.getTextInRange(@range)
     return @getSavedLink(selection) if @getSavedLink(selection)
     # Default fallback
