@@ -66,6 +66,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
   - Jump to reference marker/definition (`cmd-j cmd-d`)
 - **Markdown cheat sheet** (`markdown-writer:open-cheat-sheet`).
 - **Correct order list numbers** (`markdown-writer:correct-order-list-numbers`).
+- **Open link under cursor in browser** (`markdown-writer:open-link-in-browser`), and works on reference links.
 - **Toolbar for Markdown Writer** is available at [tool-bar-markdown-writer][82a2aced].
 - **AsciiDoc support** with [language-asciidoc][2f0cb1f9].
 
