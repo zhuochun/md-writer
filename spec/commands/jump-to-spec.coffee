@@ -93,13 +93,19 @@ describe "JumpTo", ->
 
   describe ".referenceDefinition", ->
     text = """
-    link to [content][]
+    empty line with no link
+    empty line with orphan [link][link]
 
-    [content]: http://content
+    link to [zhuochun/md-writer][cfc27b01] should work
+    link to [Markdown-Writer for Atom][] should work as well
 
-    footnotes[^fn] is a special link
+      [cfc27b01]: https://github.com/zhuochun/md-writer "Markdown-Writer for Atom"
+      [Markdown-Writer for Atom]: https://github.com/zhuochun/md-writer "Markdown-Writer for Atom"
+      [nofound]: https://example.com
 
-    [^fn]: footnote definition
+    footnotes[^fn] is a kind of special link
+
+      [^fn]: footnote definition
     """
 
     it "finds nothing if no word under cursor", ->
@@ -116,28 +122,48 @@ describe "JumpTo", ->
     describe "links", ->
       beforeEach -> editor.setText(text)
 
-      it "finds definition", ->
-        editor.setCursorBufferPosition([0, 16])
+      it "finds nothing if no link definition", ->
+        editor.setCursorBufferPosition([1, 2])
         jumpTo = new JumpTo()
-        expect(jumpTo.referenceDefinition()).toEqual([2, 8])
+        expect(jumpTo.referenceDefinition()).toBe(false)
 
-      it "finds reference", ->
-        editor.setCursorBufferPosition([2, 2])
+      it "finds nothing if no link reference", ->
+        editor.setCursorBufferPosition([8, 2])
         jumpTo = new JumpTo()
-        expect(jumpTo.referenceDefinition()).toEqual([0, 16])
+        expect(jumpTo.referenceDefinition()).toBe(false)
+
+      it "finds definition (on the line)", ->
+        editor.setCursorBufferPosition([3, 0])
+        jumpTo = new JumpTo()
+        expect(jumpTo.referenceDefinition()).toEqual([6, 0])
+
+      it "finds definition (empty id label)", ->
+        editor.setCursorBufferPosition([4, 8])
+        jumpTo = new JumpTo()
+        expect(jumpTo.referenceDefinition()).toEqual([7, 0])
+
+      it "finds reference (on the line)", ->
+        editor.setCursorBufferPosition([6, 0])
+        jumpTo = new JumpTo()
+        expect(jumpTo.referenceDefinition()).toEqual([3, 8])
+
+      it "finds reference (empty id label)", ->
+        editor.setCursorBufferPosition([7, 4])
+        jumpTo = new JumpTo()
+        expect(jumpTo.referenceDefinition()).toEqual([4, 8])
 
     describe "foonotes", ->
       beforeEach -> editor.setText(text)
 
       it "finds definition", ->
-        editor.setCursorBufferPosition([4, 12])
+        editor.setCursorBufferPosition([10, 12])
         jumpTo = new JumpTo()
-        expect(jumpTo.referenceDefinition()).toEqual([6, 4])
+        expect(jumpTo.referenceDefinition()).toEqual([12, 2])
 
       it "finds reference", ->
-        editor.setCursorBufferPosition([6, 4])
+        editor.setCursorBufferPosition([12, 6])
         jumpTo = new JumpTo()
-        expect(jumpTo.referenceDefinition()).toEqual([4, 13])
+        expect(jumpTo.referenceDefinition()).toEqual([10, 9])
 
   describe ".nextTableCell", ->
     beforeEach ->

@@ -61,7 +61,7 @@ class InsertFootnoteView extends View
     @disposables = null
 
   _normalizeSelectionAndSetFootnote: ->
-    @range = utils.getTextBufferRange(@editor, "link", null, nearestWord: false)
+    @range = utils.getTextBufferRange(@editor, "link", selectBy: "nope")
     selection = @editor.getTextInRange(@range)
 
     if utils.isFootnote(selection)
