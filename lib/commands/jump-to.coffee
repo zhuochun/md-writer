@@ -1,7 +1,7 @@
 utils = require "../utils"
 
 HEADING_REGEX   = /// ^\# {1,6} \ + .+$ ///
-REFERENCE_REGEX = /// \[? (\^? [^\s\]]+) (?: \] | \]:)? ///
+REFERENCE_REGEX = /// \[ ([^\[\]]+) (?:\]|\]:) ///
 TABLE_COL_REGEX = /// ([^\|]*?) \s* \| ///
 
 module.exports =
@@ -48,20 +48,30 @@ class JumpTo
     return found
 
   referenceDefinition: ->
-    range = utils.getTextBufferRange(@editor, "link")
-    selection = @editor.getTextInRange(range)
-    return false unless selection
+    range = utils.getTextBufferRange(@editor, "link", selectBy: "currentLine")
 
-    link = REFERENCE_REGEX.exec(selection)
-    key = utils.escapeRegExp(link[1])
+    if link = utils.findLinkInRange(@editor, range)
+      return false if !link.id # normal link
+      return false if !link.linkRange || !link.definitionRange # orphan link
 
-    found = false
-    @editor.buffer.scan /// \[ \^? #{key} \] ///g, (match) =>
-      end = match.range.end
-      if end.row != @cursor.row
-        found = [end.row, end.column - 1]
-        match.stop()
-    return found
+      if link.linkRange.start.row != @cursor.row && link.linkRange.end.row != @cursor.row
+        return [link.linkRange.start.row, link.linkRange.start.column]
+      else
+        return [link.definitionRange.start.row, link.definitionRange.start.column]
+
+    else
+      selection = @editor.getTextInRange(range)
+      return false unless selection
+
+      link = REFERENCE_REGEX.exec(selection)
+      return false unless link
+
+      found = false
+      @editor.buffer.scan /// \[ #{utils.escapeRegExp(link[1])} \] ///g, (match) =>
+        if match.range.start.row != @cursor.row && match.range.end.row != @cursor.row
+          found = [match.range.start.row, match.range.start.column]
+          match.stop()
+      return found
 
   nextTableCell: ->
     line = @editor.lineTextForBufferRow(@cursor.row)

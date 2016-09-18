@@ -288,6 +288,8 @@ describe "utils", ->
     it "check is text invalid reference definition", ->
       fixture = "[text] http"
       expect(utils.isReferenceDefinition(fixture)).toBe(false)
+      fixture = "[^text]: http"
+      expect(utils.isReferenceDefinition(fixture)).toBe(false)
 
     it "check is text valid reference definition", ->
       fixture = "[text text]: http"

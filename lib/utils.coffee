@@ -344,8 +344,10 @@ parseReferenceLink = (input, editor) ->
   link = REFERENCE_LINK_REGEX.exec(input)
   text = link[2] || link[1]
   id   = link[3] || link[1]
+
+  # find definition and definitionRange if editor is given
   def  = undefined
-  editor.buffer.scan REFERENCE_DEF_REGEX_OF(id), (match) -> def = match
+  editor && editor.buffer.scan REFERENCE_DEF_REGEX_OF(id), (match) -> def = match
 
   if def
     id: id, text: text, url: def.match[2], title: def.match[3] || "",
@@ -353,12 +355,17 @@ parseReferenceLink = (input, editor) ->
   else
     id: id, text: text, url: "", title: "", definitionRange: null
 
-isReferenceDefinition = (input) -> REFERENCE_DEF_REGEX.test(input)
+isReferenceDefinition = (input) ->
+  def = REFERENCE_DEF_REGEX.exec(input)
+  !!def && def[1][0] != "^" # not a footnote
+
 parseReferenceDefinition = (input, editor) ->
   def  = REFERENCE_DEF_REGEX.exec(input)
   id   = def[1]
+
+  # find link and linkRange if editor is given
   link = undefined
-  editor.buffer.scan REFERENCE_LINK_REGEX_OF(id), (match) -> link = match
+  editor && editor.buffer.scan REFERENCE_LINK_REGEX_OF(id), (match) -> link = match
 
   if link
     id: id, text: link.match[2] || link.match[1], url: def[2],
@@ -584,19 +591,29 @@ getBufferRangeForScope = (editor, cursor, scopeSelector) ->
 # Get the text buffer range if selection is not empty, or get the
 # buffer range if it is inside a scope selector, or the current word.
 #
-# selection is optional, when not provided, use the last selection
-# opts nearestWord select nearest word, true by default
+# selection: optional, when not provided or empty, use the last selection
+# opts["selectBy"]:
+#  - nope: do not use any select by
+#  - nearestWord: try select nearest word, default
+#  - currentLine: try select current line
 getTextBufferRange = (editor, scopeSelector, selection, opts = {}) ->
+  if typeof(selection) == "object"
+    opts = selection
+    selection = undefined
+
   selection ?= editor.getLastSelection()
   cursor = selection.cursor
+  selectBy = opts["selectBy"] || "nearestWord"
 
   if selection.getText()
     selection.getBufferRange()
   else if scope = getScopeDescriptor(cursor, scopeSelector)
     getBufferRangeForScope(editor, cursor, scope)
-  else if opts["nearestWord"] != false
+  else if selectBy == "nearestWord"
     wordRegex = cursor.wordRegExp(includeNonWordCharacters: false)
     cursor.getCurrentWordBufferRange(wordRegex: wordRegex)
+  else if selectBy == "currentLine"
+    cursor.getCurrentLineBufferRange()
   else
     selection.getBufferRange()
 
