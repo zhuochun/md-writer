@@ -559,20 +559,27 @@ getScopeDescriptor = (cursor, scopeSelector) ->
   else if scopes.length > 0
     return scopes[0]
 
-# Atom has a bug returning the correct buffer range when cursor is
-# at the end of scope, refer https://github.com/atom/atom/issues/7961
-#
-# This provides a temporary fix for the bug.
 getBufferRangeForScope = (editor, cursor, scopeSelector) ->
   pos = cursor.getBufferPosition()
 
   range = editor.bufferRangeForScopeAtPosition(scopeSelector, pos)
   return range if range
 
-  # HACK if range is undefined, move the cursor position one char forward, and
-  # try to get the buffer range for scope again
-  pos = [pos.row, Math.max(0, pos.column - 1)]
-  editor.bufferRangeForScopeAtPosition(scopeSelector, pos)
+  # Atom Bug 1: not returning the correct buffer range when cursor is at the end of a link with scope,
+  # refer https://github.com/atom/atom/issues/7961
+  #
+  # HACK move the cursor position one char backward, and try to get the buffer range for scope again
+  unless cursor.isAtBeginningOfLine()
+    range = editor.bufferRangeForScopeAtPosition(scopeSelector, [pos.row, pos.column - 1])
+    return range if range
+
+  # Atom Bug 2: not returning the correct buffer range when cursor is at the head of a list link with scope,
+  # refer https://github.com/atom/atom/issues/12714
+  #
+  # HACK move the cursor position one char forward, and try to get the buffer range for scope again
+  unless cursor.isAtEndOfLine()
+    range = editor.bufferRangeForScopeAtPosition(scopeSelector, [pos.row, pos.column + 1])
+    return range if range
 
 # Get the text buffer range if selection is not empty, or get the
 # buffer range if it is inside a scope selector, or the current word.
