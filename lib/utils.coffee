@@ -250,7 +250,7 @@ URL_AND_TITLE = ///
   ///.source
 
 # [image|text]
-IMG_OR_TEXT = /// (!\[.*?\]\(.+?\) | .+?) ///.source
+IMG_OR_TEXT = /// (!\[.*?\]\(.+?\) | [^\[]+?) ///.source
 # at head or not ![, workaround of no neg-lookbehind in JS
 OPEN_TAG = /// (?:^|[^!])(?=\[) ///.source
 # link id don't contains [ or ]

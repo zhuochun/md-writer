@@ -175,6 +175,10 @@ describe "utils", ->
       expect(utils.isInlineLink(fixture)).toBe(false)
       fixture = "[text][]"
       expect(utils.isInlineLink(fixture)).toBe(false)
+      fixture = "[![](image.png)][id]"
+      expect(utils.isInlineLink(fixture)).toBe(false)
+      fixture = "[![image title](image.png)][id]"
+      expect(utils.isInlineLink(fixture)).toBe(false)
 
     it "check is text valid inline link", ->
       fixture = "[text]()"
