@@ -1,3 +1,8 @@
+## 2.6.1
+
+* Fix `bufferRangeForScope` return `undefined` in a specific corner case
+* Improve `jump-to-reference-definition` to handle more cases
+
 ## 2.6.0
 
 * Fix Atom deprecation warning in package
