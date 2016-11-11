@@ -1,3 +1,8 @@
+## 2.6.2
+
+* Fix deprecated `remote.require` in insert-image view
+* Fix `path.extname` must be a string
+
 ## 2.6.1
 
 * Fix `bufferRangeForScope` return `undefined` in a specific corner case
