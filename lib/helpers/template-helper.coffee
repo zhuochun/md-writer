@@ -56,7 +56,7 @@ getEditor = (editor) ->
   data["tag"] = frontMatter.getArray(config.get("frontMatterNameTags", allow_blank: false))[0]
   data["directory"] = getFileRelativeDir(editor.getPath())
   data["slug"] = getFileSlug(editor.getPath()) || utils.slugize(data["title"], config.get("slugSeparator"))
-  data["extension"] = path.extname(@draftPath) || config.get("fileExtension")
+  data["extension"] = path.extname(editor.getPath()) || config.get("fileExtension")
   data
 
 module.exports =
