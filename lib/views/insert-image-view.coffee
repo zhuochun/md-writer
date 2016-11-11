@@ -3,7 +3,7 @@
 path = require "path"
 fs = require "fs-plus"
 remote = require "remote"
-dialog = remote.require "dialog"
+dialog = remote.dialog || remote.require "dialog"
 
 config = require "../config"
 utils = require "../utils"
