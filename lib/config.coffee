@@ -46,8 +46,8 @@ engines =
       codeblock:
         before: "{% highlight %}\n"
         after: "\n{% endhighlight %}"
-        regexBefore: "{% highlight(?: .+)? %}\n"
-        regexAfter: "\n{% endhighlight %}"
+        regexBefore: "{% highlight(?: .+)? %}\\r?\\n"
+        regexAfter: "\\r?\\n{% endhighlight %}"
   octopress:
     imageTag: "{% img {align} {src} {width} {height} '{alt}' %}"
   hexo:

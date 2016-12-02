@@ -18,11 +18,13 @@ class FormatText
 
       range = @editor.getSelectedBufferRange()
       range = paragraphRange.union(range) if paragraphRange
+      return if range.start.row == range.end.row
 
-      text = @editor.getTextInBufferRange(range)
-      return if range.start.row == range.end.row || text.trim() == ""
+      text = @editor.getTextInBufferRange(range).trim()
+      return if text == ""
 
-      formattedText = @[fn](e, range, text.split("\n"))
+      text = text.split(/\r?\n/)
+      formattedText = @[fn](e, range, text)
       @editor.setTextInBufferRange(range, formattedText) if formattedText
 
   correctOrderListNumbers: (e, range, lines) ->
