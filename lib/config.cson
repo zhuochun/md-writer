@@ -100,8 +100,8 @@ textStyles:
   codeblock:
     before: "```\n"
     after: "\n```"
-    regexBefore: "```(?:[\\w- ]+)?\\n"
-    regexAfter: "\\n```"
+    regexBefore: "```(?:[\\w- ]+)?\\r?\\n"
+    regexAfter: "\\r?\\n```"
 
 lineStyles:
   h1: before: "# "
