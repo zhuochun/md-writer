@@ -1,3 +1,8 @@
+## 2.6.3
+
+* Fix correct irregular order list numbers
+* Retain style text selection as needed
+
 ## 2.6.2
 
 * Fix deprecated `remote.require` in insert-image view
