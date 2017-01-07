@@ -31,6 +31,7 @@ describe "LineMeta", ->
     it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(false)
     it "has body", -> expect(lineMeta.body).toBe("line")
     it "has head", -> expect(lineMeta.head).toBe("-")
+    it "had default head", -> expect(lineMeta.defaultHead).toBe("-")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("- [ ] ")
 
   describe "unordered list line", ->
@@ -41,6 +42,7 @@ describe "LineMeta", ->
     it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(false)
     it "has body", -> expect(lineMeta.body).toBe("line")
     it "has head", -> expect(lineMeta.head).toBe("-")
+    it "had default head", -> expect(lineMeta.defaultHead).toBe("-")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("- ")
 
   describe "ordered task list line", ->
@@ -54,6 +56,7 @@ describe "LineMeta", ->
     it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(false)
     it "has body", -> expect(lineMeta.body).toBe("line")
     it "has head", -> expect(lineMeta.head).toBe("99")
+    it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("100. [ ] ")
 
   describe "ordered list line", ->
@@ -64,6 +67,7 @@ describe "LineMeta", ->
     it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(false)
     it "has body", -> expect(lineMeta.body).toBe("line")
     it "has head", -> expect(lineMeta.head).toBe("3")
+    it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("4. ")
 
   describe "ordered alpha list line", ->
@@ -74,6 +78,7 @@ describe "LineMeta", ->
     it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(false)
     it "has body", -> expect(lineMeta.body).toBe("line")
     it "has head", -> expect(lineMeta.head).toBe("a")
+    it "had default head", -> expect(lineMeta.defaultHead).toBe("a")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("b. ")
 
   describe "empty list line", ->
@@ -84,6 +89,7 @@ describe "LineMeta", ->
     it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(true)
     it "has body", -> expect(lineMeta.body).toBe("")
     it "has head", -> expect(lineMeta.head).toBe("3")
+    it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("4. ")
 
   describe "blockquote", ->
@@ -94,4 +100,5 @@ describe "LineMeta", ->
     it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(false)
     it "has body", -> expect(lineMeta.body).toBe("blockquote")
     it "has head", -> expect(lineMeta.head).toBe(">")
+    it "had default head", -> expect(lineMeta.defaultHead).toBe(">")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("  > ")
