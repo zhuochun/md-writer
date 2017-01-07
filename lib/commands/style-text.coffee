@@ -28,10 +28,11 @@ class StyleText
     @editor = atom.workspace.getActiveTextEditor()
     @editor.transact =>
       @editor.getSelections().forEach (selection) =>
+        retainSelection = !selection.isEmpty()
         @normalizeSelection(selection)
 
         if text = selection.getText()
-          @toggleStyle(selection, text)
+          @toggleStyle(selection, text, select: retainSelection)
         else
           @insertEmptyStyle(selection)
 
@@ -43,12 +44,13 @@ class StyleText
     range = utils.getTextBufferRange(@editor, scopeSelector, selection)
     selection.setBufferRange(range)
 
-  toggleStyle: (selection, text) ->
+  toggleStyle: (selection, text, opts) ->
     if @isStyleOn(text)
       text = @removeStyle(text)
     else
       text = @addStyle(text)
-    selection.insertText(text)
+
+    selection.insertText(text, opts)
 
   insertEmptyStyle: (selection) ->
     selection.insertText(@style.before)
