@@ -77,6 +77,29 @@ describe "FormatText", ->
       text after
       """
 
+    it "correct invalid order list numbers", ->
+      editor.setText """
+      text before
+
+        3. aaa
+      9. bbb
+        a. 11aa
+
+      text after
+      """
+      editor.setCursorBufferPosition([3, 1])
+
+      formatText.trigger()
+      expect(editor.getText()).toBe """
+      text before
+
+        1. aaa
+      1. bbb
+        a. 11aa
+
+      text after
+      """
+
   describe "formatTable", ->
     beforeEach -> formatText = new FormatText("format-table")
 
