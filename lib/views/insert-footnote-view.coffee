@@ -34,10 +34,11 @@ class InsertFootnoteView extends View
       label: @labelEditor.getText()
       content: @contentEditor.getText()
 
-    if @footnote
-      @updateFootnote(footnote)
-    else
-      @insertFootnote(footnote)
+    @editor.transact =>
+      if @footnote
+        @updateFootnote(footnote)
+      else
+        @insertFootnote(footnote)
 
     @detach()
 
@@ -62,10 +63,10 @@ class InsertFootnoteView extends View
 
   _normalizeSelectionAndSetFootnote: ->
     @range = utils.getTextBufferRange(@editor, "link", selectBy: "nope")
-    selection = @editor.getTextInRange(@range)
+    @selection = @editor.getTextInRange(@range) || ""
 
-    if utils.isFootnote(selection)
-      @footnote = utils.parseFootnote(selection)
+    if utils.isFootnote(@selection)
+      @footnote = utils.parseFootnote(@selection)
       @contentBox.hide()
       @labelEditor.setText(@footnote["label"])
     else
@@ -93,7 +94,7 @@ class InsertFootnoteView extends View
     referenceText = templateHelper.create("footnoteReferenceTag", footnote)
     definitionText = templateHelper.create("footnoteDefinitionTag", footnote).trim()
 
-    @editor.setTextInBufferRange(@range, referenceText)
+    @editor.setTextInBufferRange(@range, @selection + referenceText)
 
     if config.get("footnoteInsertPosition") == "article"
       helper.insertAtEndOfArticle(@editor, definitionText)

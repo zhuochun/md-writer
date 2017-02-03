@@ -65,7 +65,7 @@ class InsertImageView extends View
     return unless imgSource
 
     callback = =>
-      @insertImageTag()
+      @editor.transact => @insertImageTag()
       @detach()
 
     if !@copyImageCheckbox.hasClass('hidden') && @copyImageCheckbox.prop("checked")
