@@ -1,6 +1,6 @@
 # Markdown-Writer for Atom
 
-[![Travis Build Status](https://travis-ci.org/zhuochun/md-writer.svg)](https://travis-ci.org/zhuochun/md-writer)
+[![Travis Build Status](https://travis-ci.org/zhuochun/md-writer.svg?branch=master)](https://travis-ci.org/zhuochun/md-writer)
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/fv1unuiac1umt44f?svg=true)](https://ci.appveyor.com/project/zhuochun/md-writer)
 [![Apm Version](https://img.shields.io/apm/v/markdown-writer.svg)](https://atom.io/packages/markdown-writer)
 [![Apm Downloads](https://img.shields.io/apm/dm/markdown-writer.svg)](https://atom.io/packages/markdown-writer)
