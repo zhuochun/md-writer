@@ -351,7 +351,7 @@ parseReferenceLink = (input, editor) ->
 
   if def
     id: id, text: text, url: def.match[2], title: def.match[3] || "",
-    definitionRange: def.computedRange
+    definitionRange: def.range
   else
     id: id, text: text, url: "", title: "", definitionRange: null
 
@@ -369,7 +369,7 @@ parseReferenceDefinition = (input, editor) ->
 
   if link
     id: id, text: link.match[2] || link.match[1], url: def[2],
-    title: def[3] || "", linkRange: link.computedRange
+    title: def[3] || "", linkRange: link.range
   else
     id: id, text: "", url: def[2], title: def[3] || "", linkRange: null
 
