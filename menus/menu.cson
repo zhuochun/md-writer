@@ -50,6 +50,10 @@
               'label': 'Insert Table',
               'command': 'markdown-writer:insert-table'
             }
+            {
+              'label': 'Insert Footnote',
+              'command': 'markdown-writer:insert-footnote'
+            }
             { 'type': 'separator' }
             {
               'label': 'Code',
