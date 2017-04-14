@@ -1,3 +1,7 @@
+## 2.6.5
+
+* Support open cheatsheet in `markdown-preview-plus`
+
 ## 2.6.4
 
 * Fix jump to reference spec failure in Atom v1.14.2

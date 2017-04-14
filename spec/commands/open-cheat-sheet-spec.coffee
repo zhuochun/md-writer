@@ -3,6 +3,7 @@ OpenCheatSheet = require "../../lib/commands/open-cheat-sheet"
 describe "OpenCheatSheet", ->
   it "returns correct cheatsheetURL", ->
     cmd = new OpenCheatSheet()
-    expect(cmd.cheatsheetURL()).toMatch("markdown-preview://")
-    expect(cmd.cheatsheetURL()).toMatch("CHEATSHEET.md")
-    expect(cmd.cheatsheetURL()).toNotMatch("%5C")
+
+    expect(cmd.cheatsheetURL("markdown-preview")).toMatch("markdown-preview://")
+    expect(cmd.cheatsheetURL("markdown-preview")).toMatch("CHEATSHEET.md")
+    expect(cmd.cheatsheetURL("markdown-preview")).toNotMatch("%5C")
