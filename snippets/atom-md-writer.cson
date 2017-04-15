@@ -1,0 +1,538 @@
+# this covers everything (almost) from https://shopify.github.io/liquid/
+'.source.gfm':
+  # Basics > Introduction
+  'Objects':
+    'prefix': '{{'
+    'body': '{{ ${1:variable} '
+    'description': 'Objects tell Liquid where to show content on a page. Objects and variable names are denoted by double curly braces: {{ and }}.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/basics/introduction/#objects'
+  'Tags':
+    'prefix': '{%'
+    'body': '{% $1 %'
+    'description': 'Tags create the logic and control flow for templates. They are denoted by curly braces and percent signs: {% and %}.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/basics/introduction/#tags'
+  'Filters':
+    'prefix': 'filters'
+    'body': '{{ ${1:foo} | ${2:filter}: ${3:bar} }}'
+    'description': 'A filter block allows you to call a filter with the contents of the block. Instead passing a value with the | syntax, the render contents from the block will be passed.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/basics/introduction/#filters'
+  # Basics > Operators
+  'equals':
+    'prefix': 'equals'
+    'body': '=='
+    'description': 'Comparison equals operator'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/basics/operators/'
+  'doesnotequal':
+    'prefix': 'notequals'
+    'body': '!='
+    'description': 'Comparison not equals operator'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/basics/operators/'
+  'greaterthan':
+    'prefix': 'gt'
+    'body': '>'
+    'description': 'Comparison greater than operator'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/basics/operators/'
+  'lessthan':
+    'prefix': 'lt'
+    'body': '<'
+    'description': 'Comparison less than operator'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/basics/operators/'
+  'greaterthanorequalto':
+    'prefix': 'gte'
+    'body': '>='
+    'description': 'Comparison greater than or equal to operator'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/basics/operators/'
+  'lessthanorequalto':
+    'prefix': 'lte'
+    'body': '<='
+    'description': 'Comparison less than or equal to operator'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/basics/operators/'
+  'logicalor':
+    'prefix': 'or'
+    'body': 'or'
+    'description': 'Logical or operator'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/basics/operators/'
+  'logicaland':
+    'prefix': 'and'
+    'body': 'and'
+    'description': 'Logical and operator'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/basics/operators/'
+  'contains':
+    'prefix': 'contains'
+    'body': '${1:string} contains {2:substring}'
+    'description': 'contains checks for the presence of a substring inside a string.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/basics/operators/#contains'
+  # Tags > Control flow
+  'case':
+    'prefix': 'case'
+    'body': '{% case ${1:name} %}\n\t{% when \'${2:foo}\' %}\n\tThis is a foo\n\t{% else %}\n\tThis is not a foo\n{% endcase %}'
+    'description': 'Creates a switch statement to compare a variable with different values. case initializes the switch statement, and when compares its values.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/control-flow/#casewhen'
+  'If':
+    'prefix': 'if'
+    'body': '{% if ${1:condition} %}\n\t$2\n{% endif %}'
+    'description': 'if tests a condition and lets you selectively display content. It behaves exactly as javascript\'s if behaves.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/control-flow/#if'
+  'If Else':
+    'prefix': 'ife'
+    'body': '{% if ${1:condition} %}\n\t$2\n{% else %}\n\t$3\n{% endif %}'
+    'description': 'It creates the if else block.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/control-flow/#elsif--else'
+  'If Elif':
+    'prefix': 'ifel'
+    'body': '{% if ${1:condition} %}\n\t$2\n{% elif ${3:condition} %}\n\t$4\n{% else %}\n\t$5\n{% endif %}'
+    'description': 'Alternate condition with the if or unless block'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/control-flow/#elsif--else'
+  'Elif':
+    'prefix': 'elif'
+    'body': '{% elif ${1:condition} %}\n\t$2'
+    'description': 'Alternate condition in the if or unless block'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/control-flow/#elsif--else'
+  'Else':
+    'prefix': 'else'
+    'body': '{% else ${1:condition} %}\n\t$2'
+    'description': 'Alternate condition in the if or unless block'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/control-flow/#elsif--else'
+  'Unless':
+    'prefix': 'unless'
+    'body': '{% unless ${1:condition} %}\n\t$2\n{% endunless %}'
+    'description': 'The opposite of if – executes a block of code only if a certain condition is not met.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/control-flow/#unless'
+  # Tags > Iteration
+  'For':
+    'prefix': 'for'
+    'body': '{% for ${1:item} in ${2:sequence} %}\n\t{{ $3 }}\n{% endfor %}'
+    'description': 'Repeatedly executes a block of code. For a full list of attributes available within a for loop, see forloop (object).'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/iteration/#for'
+  'continue':
+    'prefix': 'continue'
+    'body': '{% continue %}'
+    'description': 'Causes the loop to skip the current iteration when it encounters the continue tag.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/iteration/#continue'
+  'break':
+    'prefix': 'break'
+    'body': '{% break %}'
+    'description': 'Causes the loop to stop iterating when it encounters the break tag.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/iteration/#break'
+  'limit':
+    'prefix': 'limit'
+    'body': 'limit:${1:count}'
+    'description': 'Limits the loop to the specified number of iterations or Exits the tablerow after a specific index.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/iteration/#limit'
+  'offset':
+    'prefix': 'offset'
+    'body': 'offset:${1:count}'
+    'description': 'Begins the loop at the specified index or Starts the tablerow after a specific index.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/iteration/#offset'
+  'range':
+    'prefix': 'range'
+    'body': '(${1:start}..${2:end})'
+    'description': 'Defines a range of numbers to loop through. The range can be defined by both literal and variable numbers.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/iteration/#range'
+  'reversed':
+    'prefix': 'reversed'
+    'body': 'reversed '
+    'description': 'Reverses the order of the loop.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/iteration/#reversed'
+  'cycle':
+    'prefix': 'cycle'
+    'body': '{% cycle ${1:parameters} %}'
+    'description': 'Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/iteration/#cycle'
+  'cycle group':
+    'prefix': 'cycleg'
+    'body': '{% cycle \'group ${1:name}\': ${2:parameters} %}'
+    'description': 'cycle accepts a parameter called cycle group in cases where you need multiple cycle blocks in one template. If no name is supplied for the cycle group, then it is assumed that multiple calls with the same parameters are one group.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/iteration/#cycle-parameters'
+  'tablerow':
+    'prefix': 'tablerow'
+    'body': '{% tablerow ${1:item} in ${2:sequence} %}\n\t{{ $3 }}\n{% tablerow %}'
+    'description': 'Generates an HTML table. Must be wrapped in opening <table> and closing </table> HTML tags.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/iteration/#tablerow'
+  'cols':
+    'prefix': 'cols'
+    'body': 'cols:${1:name}'
+    'description': 'Defines how many columns the tables should have.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/iteration/#cols'
+  # Tags > Variable
+  'assign':
+    'prefix': 'assign'
+    'body': '{% assign ${1:variable} = ${2:value} %}'
+    'description': 'Creates a new variable.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/variable/#assign'
+  'capture':
+    'prefix': 'capture'
+    'body': '{% capture ${1:variable} %}'
+    'description': 'Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through {% capture %} are strings.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/variable/#capture'
+  'increment':
+    'prefix': 'increment'
+    'body': '{% increment ${1:counter} %}'
+    'description': 'Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/variable/#increment'
+  'decrement':
+    'prefix': 'decrement'
+    'body': '{% decrement ${1:counter} %}'
+    'description': 'Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/tags/variable/#decrement'
+  'Alt Variable':
+    'prefix': 'var'
+    'body': '{{ ${1:var} }}'
+    'description': 'A variable looks up a value from the template context. If you wanted to simply display a variable, you would do: {{ username }}'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/basics/introduction#variables'
+  # Filters
+  'abs':
+    'prefix': 'abs'
+    'body': 'abs'
+    'description': 'Returns the absolute value of a number.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/abs/'
+  'append':
+    'prefix': 'append'
+    'body': 'append: ${1:variable}'
+    'description': 'Concatenates two strings and returns the concatenated value.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/append/'
+  'capitalize':
+    'prefix': 'capitalize'
+    'body': 'capitalize'
+    'description': 'Makes the first character of a string capitalized.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/capitalize/'
+  'ceil':
+    'prefix': 'ceil'
+    'body': 'ceil'
+    'description': 'Rounds the input up to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/ceil/'
+  'date':
+    'prefix': 'date'
+    'body': 'date: "${1:format}"'
+    'description': 'Converts a timestamp into another date format. The format for this syntax is the same as strftime.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/date/'
+  'default':
+    'prefix': 'default'
+    'body': 'default: ${1:value}'
+    'description': 'Allows you to specify a fallback in case a value doesn’t exist. default will show its value if the left side is nil, false, or empty.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/default/'
+  'divided_by':
+    'prefix': 'divided_by'
+    'body': 'divided_by: ${1:number}'
+    'description': 'Divides a number by the specified number. The result is rounded down to the nearest integer (that is, the floor).'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/divided_by/'
+  'downcase':
+    'prefix': 'downcase'
+    'body': 'downcase'
+    'description': 'Makes each character in a string lowercase. It has no effect on strings which are already all lowercase.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/downcase/'
+  'escape':
+    'prefix': 'escape'
+    'body': 'escape'
+    'description': 'Escapes a string by replacing characters with escape sequences (so that the string can be used in a URL, for example). It doesn’t change strings that don’t have anything to escape.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/escape/'
+  'escape_once':
+    'prefix': 'escape_once'
+    'body': 'escape_once'
+    'description': 'Escapes a string without changing existing escaped entities. It doesn’t change strings that don’t have anything to escape.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/escape_once/'
+  'first':
+    'prefix': 'first'
+    'body': 'first'
+    'description': 'Returns the first item of an array.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/first/'
+  'floor':
+    'prefix': 'floor'
+    'body': 'floor'
+    'description': 'Rounds a number down to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/floor/'
+  'join':
+    'prefix': 'join'
+    'body': 'join: "${1:string}"'
+    'description': 'Combines the items in an array into a single string using the argument as a separator.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/join/'
+  'last':
+    'prefix': 'last'
+    'body': 'last'
+    'description': 'Returns the last item of an array.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/last/'
+  'lstrip':
+    'prefix': 'lstrip'
+    'body': 'lstrip'
+    'description': 'Removes all whitespaces (tabs, spaces, and newlines) from the beginning of a string. The filter does not affect spaces between words.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/lstrip/'
+  'map':
+    'prefix': 'map'
+    'body': 'map: ${1:property}'
+    'description': 'Creates an array of values by extracting the values of a named property from another object.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/map/'
+  'minus':
+    'prefix': 'minus'
+    'body': 'minus: ${1:number}'
+    'description': 'Subtracts a number from another number.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/minus/'
+  'modulo':
+    'prefix': 'modulo'
+    'body': 'modulo: ${1:number}'
+    'description': 'Returns the remainder of a division operation.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/modulo/'
+  'newline_to_br':
+    'prefix': 'newline_to_br'
+    'body': 'newline_to_br'
+    'description': 'Replaces every newline (\\n) with an HTML line break (<br>).'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/newline_to_br/'
+  'plus':
+    'prefix': 'plus'
+    'body': 'plus ${1:number}'
+    'description': 'Adds a number to another number.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/plus/'
+  'prepend':
+    'prefix': 'prepend'
+    'body': 'prepend'
+    'description': 'Adds the specified string to the beginning of another string.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/prepend/'
+  'remove':
+    'prefix': 'remove'
+    'body': 'remove: ${1:string}'
+    'description': 'Removes every occurrence of the specified substring from a string.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/remove/'
+  'remove_first':
+    'prefix': 'remove_first'
+    'body': 'remove_first: ${1:string}'
+    'description': 'Removes only the first occurrence of the specified substring from a string.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/remove_first/'
+  'replace':
+    'prefix': 'replace'
+    'body': 'replace: ${1:string}, ${2:with}'
+    'description': 'Replaces every occurrence of an argument in a string with the second argument.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/replace/'
+  'replace_first':
+    'prefix': 'replace_first'
+    'body': 'replace_first: ${1:string}, ${2:with}'
+    'description': 'Replaces only the first occurrence of the first argument in a string with the second argument.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/replace_first/'
+  'reverse':
+    'prefix': 'reverse'
+    'body': 'reverse'
+    'description': 'Reverses the order of the items in an array. reverse cannot reverse a string.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/reverse/'
+  'round':
+    'prefix': 'round'
+    'body': 'round'
+    'description': 'Rounds an input number to the nearest integer or, if a number is specified as an argument, to that number of decimal places.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/round/'
+  'rstrip':
+    'prefix': 'rstrip'
+    'body': 'rstrip'
+    'description': 'Removes all whitespace (tabs, spaces, and newlines) from the right side of a string.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/rstrip/'
+  'size':
+    'prefix': 'size'
+    'body': 'size'
+    'description': 'Returns the number of characters in a string or the number of items in an array. size can also be used with dot notation (for example, {{ my_string.size }}). This allows you to use size inside tags such as conditionals.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/size/'
+  'slice':
+    'prefix': 'slice'
+    'body': 'slice: ${1:variable}, ${2:length}'
+    'description': 'Returns a substring of 1 character beginning at the index specified by the argument passed in. An optional second argument specifies the length of the substring to be returned.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/slice/'
+  'sort':
+    'prefix': 'sort'
+    'body': 'sort'
+    'description': 'Sorts items in an array by a property of an item in the array. The order of the sorted array is case-sensitive.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/sort/'
+  'split':
+    'prefix': 'split'
+    'body': 'split: ${1:with}'
+    'description': 'Divides an input string into an array using the argument as a separator. split is commonly used to convert comma-separated items from a string to an array.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/split/'
+  'strip':
+    'prefix': 'strip'
+    'body': 'strip'
+    'description': 'Removes all whitespace (tabs, spaces, and newlines) from both the left and right side of a string. It does not affect spaces between words.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/strip/'
+  'strip_html':
+    'prefix': 'strip_html'
+    'body': 'strip_html'
+    'description': 'Removes any HTML tags from a string.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/strip_html/'
+  'strip_newlines':
+    'prefix': 'strip_newlines'
+    'body': 'strip_newlines'
+    'description': 'Removes any newline characters (line breaks) from a string.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/strip_newlines/'
+  'times':
+    'prefix': 'times'
+    'body': 'times: ${1:number}'
+    'description': 'Multiplies a number by another number.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/times/'
+  'truncate':
+    'prefix': 'truncate'
+    'body': 'truncate: ${1:count}'
+    'description': 'truncate shortens a string down to the number of characters passed as a parameter. If the number of characters specified is less than the length of the string, an ellipsis (…) is appended to the string and is included in the character count.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/truncate/'
+  'truncatewords':
+    'prefix': 'truncatewords'
+    'body': 'truncatewords: ${1:count}'
+    'description': 'Shortens a string down to the number of words passed as the argument. If the specified number of words is less than the number of words in the string, an ellipsis (…) is appended to the string.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/truncatewords/'
+  'uniq':
+    'prefix': 'uniq'
+    'body': 'uniq'
+    'description': 'Removes any duplicate elements in an array.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/uniq/'
+  'upcase':
+    'prefix': 'upcase'
+    'body': 'upcase'
+    'description': 'Makes each character in a string uppercase. It has no effect on strings which are already all uppercase.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/upcase/'
+  'url_encode':
+    'prefix': 'url_encode'
+    'body': 'url_encode'
+    'description': 'Converts any URL-unsafe characters in a string into percent-encoded characters.'
+    'descriptionMoreURL': 'https://shopify.github.io/liquid/filters/url_encode/'
+  # Filters from https://jekyllrb.com/docs/templates/
+  'date_to_xmlschema':
+    'prefix': 'date_to_xmlschema'
+    'body': 'date_to_xmlschema'
+    'description': 'Convert a Date into XML Schema (ISO 8601) format.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'date_to_rfc822':
+    'prefix': 'date_to_rfc822'
+    'body': 'date_to_rfc822'
+    'description': 'Convert a Date into the RFC-822 format used for RSS feeds.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'date_to_string':
+    'prefix': 'date_to_string'
+    'body': 'date_to_string'
+    'description': 'Convert a date to short format.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'date_to_long_string':
+    'prefix': 'date_to_long_string'
+    'body': 'date_to_long_string'
+    'description': 'Format a date to long format.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'where':
+    'prefix': 'where'
+    'body': 'where:"${1:string}"'
+    'description': 'Select all the objects in an array where the key has the given value.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'where_exp':
+    'prefix': 'where_exp'
+    'body': 'where_exp: "${1:string}", ${2:condition}'
+    'description': 'Select all the objects in an array where the expression is true.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'group_by':
+    'prefix': 'group_by'
+    'body': 'group_by:"${1:string}"'
+    'description': 'Group an array\'s items by a given property.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'xml_escape':
+    'prefix': 'xml_escape'
+    'body': 'xml_escape'
+    'description': 'Escape some text for use in XML.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'cgi_escape':
+    'prefix': 'cgi_escape'
+    'body': 'cgi_escape'
+    'description': 'CGI escape a string for use in a URL. Replaces any special characters with appropriate %XX replacements.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'uri_escape':
+    'prefix': 'uri_escape'
+    'body': 'uri_escape'
+    'description': 'URI escape a string.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'number_of_words':
+    'prefix': 'number_of_words'
+    'body': 'number_of_words'
+    'description': 'Count the number of words in some text.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'array_to_sentence_string':
+    'prefix': 'array_to_sentence_string'
+    'body': 'array_to_sentence_string'
+    'description': 'Convert an array into a sentence. Useful for listing tags.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'markdownify':
+    'prefix': 'markdownify'
+    'body': 'markdownify'
+    'description': 'Convert a Markdown-formatted string into HTML.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'smartify':
+    'prefix': 'smartify'
+    'body': 'smartify'
+    'description': 'Convert "quotes" into “smart quotes.”'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'scssify':
+    'prefix': 'scssify'
+    'body': 'scssify'
+    'description': 'Convert a Sass- or SCSS-formatted string into CSS.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'slugify':
+    'prefix': 'slugify'
+    'body': 'slugify'
+    'description': 'Convert a string into a lowercase URL "slug". See below for options.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'jsonify':
+    'prefix': 'jsonify'
+    'body': 'jsonify'
+    'description': 'Convert Hash or Array to JSON.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'sort':
+    'prefix': 'sort'
+    'body': 'sort'
+    'description': 'Sort an array. Optional arguments for hashes: 1. property name 2. nils order (first or last).'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'sample':
+    'prefix': 'sample'
+    'body': 'sample'
+    'description': 'Pick a random value from an array. Optional: pick multiple values.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  # Filters > Array Filters
+  'push':
+    'prefix': 'push'
+    'body': 'push: "${1:string}"'
+    'description': 'Perform operation on an array and not mutate it, but rather make a copy and mutate that.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'pop':
+    'prefix': 'pop'
+    'body': 'pop'
+    'description': 'Perform operation on an array and not mutate it, but rather make a copy and mutate that.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'shift':
+    'prefix': 'shift'
+    'body': 'shift'
+    'description': 'Perform operation on an array and not mutate it, but rather make a copy and mutate that.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'unshift':
+    'prefix': 'unshift'
+    'body': 'unshift: "${1:string}"'
+    'description': 'Perform operation on an array and not mutate it, but rather make a copy and mutate that.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  # Some tags from https://jekyllrb.com/docs/templates/#tags
+  'include':
+    'prefix': 'include'
+    'body': '{% include ${1:filename}.html %}'
+    'description': 'If you have small page fragments that you wish to include in multiple places on your site, you can use the include tag.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/#includes'
+  'highlight':
+    'prefix': 'highlight'
+    'body': '{% highlight ${1:language} %}\n${2:code}\n{% endhighlight %}'
+    'description': 'Jekyll has built in support for syntax highlighting of over 60 languages thanks to Rouge. Rouge is the default highlighter in Jekyll 3 and above. To use it in Jekyll 2, set highlighter to rouge and ensure the rouge gem is installed properly.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/'
+  'linenos':
+    'prefix': 'linenos'
+    'body': 'linenos'
+    'description': 'There is a second argument to highlight called linenos that is optional. Including the linenos argument will force the highlighted code to include line numbers.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/#line-numbers'
+  'post_url':
+    'prefix': 'post_url'
+    'body': '{% post_url ${1:path-to-post} %}'
+    'description': 'If you would like to include a link to a post on your site, the post_url tag will generate the correct permalink URL for the post you specify.'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/#post-url'
+  'gist':
+    'prefix': 'gist'
+    'body': 'gist'
+    'description': '{% post_url ${1:path-to-gist} %}'
+    'descriptionMoreURL': 'https://jekyllrb.com/docs/templates/#gist'
+  # This is a sample tag just in case someone wants to add more to it
+  # More Filters
+  # '':
+  #   'prefix': ''
+  #   'body': ''
+  #   'description': ''
+  #   'descriptionMoreURL': ''
