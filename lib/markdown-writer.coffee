@@ -27,8 +27,7 @@ module.exports =
       workspaceCommands["markdown-writer:new-#{file}"] =
         @registerView("./views/new-#{file}-view", optOutGrammars: true)
 
-    ["open-cheat-sheet", "create-default-keymaps",
-     "create-project-configs"].forEach (command) =>
+    ["open-cheat-sheet", "create-default-keymaps", "create-project-configs"].forEach (command) =>
       workspaceCommands["markdown-writer:#{command}"] =
         @registerCommand("./commands/#{command}", optOutGrammars: true)
 
@@ -45,18 +44,15 @@ module.exports =
       editorCommands["markdown-writer:insert-#{media}"] =
         @registerView("./views/insert-#{media}-view")
 
-    ["code", "codeblock", "bold", "italic",
-     "keystroke", "strikethrough"].forEach (style) =>
+    ["code", "codeblock", "bold", "italic", "strikethrough", "keystroke"].forEach (style) =>
       editorCommands["markdown-writer:toggle-#{style}-text"] =
         @registerCommand("./commands/style-text", args: style)
 
-    ["h1", "h2", "h3", "h4", "h5", "ul", "ol",
-     "task", "taskdone", "blockquote"].forEach (style) =>
+    ["h1", "h2", "h3", "h4", "h5", "ul", "ol", "task", "taskdone", "blockquote"].forEach (style) =>
       editorCommands["markdown-writer:toggle-#{style}"] =
         @registerCommand("./commands/style-line", args: style)
 
-    ["previous-heading", "next-heading", "next-table-cell",
-     "reference-definition"].forEach (command) =>
+    ["previous-heading", "next-heading", "next-table-cell", "reference-definition"].forEach (command) =>
       editorCommands["markdown-writer:jump-to-#{command}"] =
         @registerCommand("./commands/jump-to", args: command)
 

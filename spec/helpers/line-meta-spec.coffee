@@ -9,8 +9,10 @@ describe "LineMeta", ->
     it "is unordered task list", -> expect(LineMeta.isList("- [ ]list")).toBe(true)
     it "is unordered task list", -> expect(LineMeta.isList("- [ ] list")).toBe(true)
     it "is ordered list", -> expect(LineMeta.isList("12. list")).toBe(true)
+    it "is ordered list (bracket)", -> expect(LineMeta.isList("1) list")).toBe(true)
     it "is ordered task list", -> expect(LineMeta.isList("12. [ ]list")).toBe(true)
     it "is ordered task list", -> expect(LineMeta.isList("12. [ ] list")).toBe(true)
+    it "is ordered task list (bracket)", -> expect(LineMeta.isList("12) [ ] list")).toBe(true)
     it "is alpha ordered list", -> expect(LineMeta.isList("aa. list")).toBe(true)
     it "is alpha ordered task list", -> expect(LineMeta.isList("aaz. [ ]list")).toBe(true)
     it "is alpha ordered task list", -> expect(LineMeta.isList("A. [ ]list")).toBe(true)
@@ -70,6 +72,28 @@ describe "LineMeta", ->
     it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("4. ")
 
+  describe "ordered list line (bracket)", ->
+    lineMeta = new LineMeta("3) line")
+
+    it "is list", -> expect(lineMeta.isList()).toBe(true)
+    it "is continuous", -> expect(lineMeta.isContinuous()).toBe(true)
+    it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(false)
+    it "has body", -> expect(lineMeta.body).toBe("line")
+    it "has head", -> expect(lineMeta.head).toBe("3")
+    it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
+    it "has nextLine", -> expect(lineMeta.nextLine).toBe("4) ")
+
+  describe "ordered list line (empty)", ->
+    lineMeta = new LineMeta("3.     ")
+
+    it "is list", -> expect(lineMeta.isList()).toBe(true)
+    it "is continuous", -> expect(lineMeta.isContinuous()).toBe(true)
+    it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(true)
+    it "has body", -> expect(lineMeta.body).toBe("")
+    it "has head", -> expect(lineMeta.head).toBe("3")
+    it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
+    it "has nextLine", -> expect(lineMeta.nextLine).toBe("4. ")
+
   describe "ordered alpha list line", ->
     lineMeta = new LineMeta("a. line")
 
@@ -81,16 +105,16 @@ describe "LineMeta", ->
     it "had default head", -> expect(lineMeta.defaultHead).toBe("a")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("b. ")
 
-  describe "empty list line", ->
-    lineMeta = new LineMeta("3.     ")
+  describe "ordered alpha list line (bracket)", ->
+    lineMeta = new LineMeta("E) line")
 
     it "is list", -> expect(lineMeta.isList()).toBe(true)
     it "is continuous", -> expect(lineMeta.isContinuous()).toBe(true)
-    it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(true)
-    it "has body", -> expect(lineMeta.body).toBe("")
-    it "has head", -> expect(lineMeta.head).toBe("3")
-    it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
-    it "has nextLine", -> expect(lineMeta.nextLine).toBe("4. ")
+    it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(false)
+    it "has body", -> expect(lineMeta.body).toBe("line")
+    it "has head", -> expect(lineMeta.head).toBe("E")
+    it "had default head", -> expect(lineMeta.defaultHead).toBe("A")
+    it "has nextLine", -> expect(lineMeta.nextLine).toBe("F) ")
 
   describe "blockquote", ->
     lineMeta = new LineMeta("  > blockquote")

@@ -72,12 +72,12 @@
               'command': 'markdown-writer:toggle-italic-text'
             }
             {
-              'label': 'Keystroke',
-              'command': 'markdown-writer:toggle-keystroke-text'
-            }
-            {
               'label': 'Strikethrough',
               'command': 'markdown-writer:toggle-strikethrough-text'
+            }
+            {
+              'label': 'Keystroke',
+              'command': 'markdown-writer:toggle-keystroke-text'
             }
             { 'type': 'separator' }
             {

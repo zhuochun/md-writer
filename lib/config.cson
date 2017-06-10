@@ -112,19 +112,19 @@ lineStyles:
   ul:
     before: "- "
     regexMatchBefore: "(?:-|\\*|\\+|\\.)\\s"
-    regexBefore: "(?:-|\\*|\\+|\\.|\\d+\\.|[a-zA-Z]+\\.)\\s"
+    regexBefore: "(?:-|\\*|\\+|\\.|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
   ol:
     before: "1. "
-    regexMatchBefore: "(?:\\d+\\.|[a-zA-Z]+\\.)\\s"
-    regexBefore: "(?:-|\\*|\\+|\\.|\\d+\\.|[a-zA-Z]+\\.)\\s"
+    regexMatchBefore: "(?:\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
+    regexBefore: "(?:-|\\*|\\+|\\.|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
   task:
     before: "- [ ] "
-    regexMatchBefore: "(?:-|\\*|\\+|\\d+\\.)\\s+\\[ ]\\s"
-    regexBefore: "(?:-|\\*|\\+|\\d+\\.|[a-zA-Z]+\\.)\\s*(?:\\[[xX ]])?\\s"
+    regexMatchBefore: "(?:-|\\*|\\+|\\d+[\\.\\)])\\s+\\[ ]\\s"
+    regexBefore: "(?:-|\\*|\\+|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s*(?:\\[[xX ]])?\\s"
   taskdone:
     before: "- [X] "
-    regexMatchBefore: "(?:-|\\*|\\+|\\d+\\.)\\s+\\[[xX]]\\s"
-    regexBefore: "(?:-|\\*|\\+|\\d+\\.|[a-zA-Z]+\\.)\\s*(?:\\[[xX ]])?\\s"
+    regexMatchBefore: "(?:-|\\*|\\+|\\d+[\\.\\)])\\s+\\[[xX]]\\s"
+    regexBefore: "(?:-|\\*|\\+|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s*(?:\\[[xX ]])?\\s"
   blockquote: before: "> "
 
 # image tag template
