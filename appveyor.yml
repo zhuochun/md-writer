@@ -1,21 +1,23 @@
 # Build config based on https://github.com/atom/ci
+environment:
+  APM_TEST_PACKAGES:
+  ATOM_LINT_WITH_BUNDLED_NODE: "true"
+
+  matrix:
+  - ATOM_CHANNEL: stable
+  - ATOM_CHANNEL: beta
+
+### Generic setup follows ###
+build_script:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/atom/ci/master/build-package.ps1'))
+
+branches:
+  only:
+    - master
 
 version: "{build}"
-os: Windows Server 2012 R2
+platform: x64
 clone_depth: 10
-
+skip_tags: true
 test: off
 deploy: off
-
-init:
-  - cmd: rd /s /q %CHOCOLATEYINSTALL%
-  - ps: iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
-
-install:
-  - cinst atom -y
-  - cd %APPVEYOR_BUILD_FOLDER%
-  - "%LOCALAPPDATA%/atom/bin/apm install"
-
-build_script:
-  - cd %APPVEYOR_BUILD_FOLDER%
-  - "%LOCALAPPDATA%/atom/bin/apm test --path %LOCALAPPDATA%/atom/bin/atom.cmd"
