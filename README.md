@@ -83,7 +83,7 @@ You can find and trigger all features in:
 - In Atom, go to Settings (`cmd-,`) -> Install -> Search `Markdown Writer`.
 - Or, run `apm install markdown-writer`.
 
-> If you saw errors after this plugin updated, please try restart Atom to allow it reloads the updated code.
+> If you see errors after this plugin updates, please restart Atom so that it reloads the updated code.
 
 ## Setup
 
