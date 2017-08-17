@@ -35,6 +35,7 @@ describe "LineMeta", ->
     it "has head", -> expect(lineMeta.head).toBe("-")
     it "had default head", -> expect(lineMeta.defaultHead).toBe("-")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("- [ ] ")
+    it "create lineHead", -> expect(lineMeta.lineHead("*")).toBe("* [ ] ")
 
   describe "unordered list line", ->
     lineMeta = new LineMeta("- line")
@@ -46,6 +47,7 @@ describe "LineMeta", ->
     it "has head", -> expect(lineMeta.head).toBe("-")
     it "had default head", -> expect(lineMeta.defaultHead).toBe("-")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("- ")
+    it "create lineHead", -> expect(lineMeta.lineHead("*")).toBe("* ")
 
   describe "ordered task list line", ->
     lineMeta = new LineMeta("99. [X] line")
@@ -60,6 +62,7 @@ describe "LineMeta", ->
     it "has head", -> expect(lineMeta.head).toBe("99")
     it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("100. [ ] ")
+    it "create lineHead", -> expect(lineMeta.lineHead("1")).toBe("1. [ ] ")
 
   describe "ordered list line", ->
     lineMeta = new LineMeta("3. line")
@@ -71,6 +74,7 @@ describe "LineMeta", ->
     it "has head", -> expect(lineMeta.head).toBe("3")
     it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("4. ")
+    it "create lineHead", -> expect(lineMeta.lineHead("1")).toBe("1. ")
 
   describe "ordered list line (bracket)", ->
     lineMeta = new LineMeta("3) line")
@@ -82,6 +86,7 @@ describe "LineMeta", ->
     it "has head", -> expect(lineMeta.head).toBe("3")
     it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("4) ")
+    it "create lineHead", -> expect(lineMeta.lineHead("1")).toBe("1) ")
 
   describe "ordered list line (empty)", ->
     lineMeta = new LineMeta("3.     ")
@@ -93,6 +98,7 @@ describe "LineMeta", ->
     it "has head", -> expect(lineMeta.head).toBe("3")
     it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("4. ")
+    it "create lineHead", -> expect(lineMeta.lineHead("1")).toBe("1. ")
 
   describe "ordered alpha list line", ->
     lineMeta = new LineMeta("a. line")
@@ -104,6 +110,7 @@ describe "LineMeta", ->
     it "has head", -> expect(lineMeta.head).toBe("a")
     it "had default head", -> expect(lineMeta.defaultHead).toBe("a")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("b. ")
+    it "create lineHead", -> expect(lineMeta.lineHead("a")).toBe("a. ")
 
   describe "ordered alpha list line (bracket)", ->
     lineMeta = new LineMeta("E) line")
@@ -115,6 +122,7 @@ describe "LineMeta", ->
     it "has head", -> expect(lineMeta.head).toBe("E")
     it "had default head", -> expect(lineMeta.defaultHead).toBe("A")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("F) ")
+    it "create lineHead", -> expect(lineMeta.lineHead("A")).toBe("A) ")
 
   describe "blockquote", ->
     lineMeta = new LineMeta("  > blockquote")

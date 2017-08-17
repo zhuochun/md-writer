@@ -69,19 +69,34 @@ class EditLine
 
     cursor = selection.getHeadBufferPosition()
     line = @editor.lineTextForBufferRow(cursor.row)
+    lineMeta = new LineMeta(line)
 
-    if LineMeta.isList(line)
-      selection.indentSelectedRows()
+    if lineMeta.isList("ol")
+      line = "#{@editor.getTabText()}#{lineMeta.lineHead(lineMeta.defaultHead)}#{lineMeta.body}"
+      @_replaceLine(selection, cursor.row, line)
+
+    else if lineMeta.isList("ul")
+      bullet = config.get("templateVariables.ulBullet#{@editor.indentationForBufferRow(cursor.row)+1}")
+      bullet = bullet || config.get("templateVariables.ulBullet") || lineMeta.defaultHead
+
+      line = "#{@editor.getTabText()}#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
+      @_replaceLine(selection, cursor.row, line)
+
     else if @_isAtLineBeginning(line, cursor.column) # indent on start of line
       selection.indent()
     else
       e.abortKeyBinding()
-
-  _isAtLineBeginning: (line, col) ->
-    col == 0 || line.substring(0, col).trim() == ""
 
   _isRangeSelection: (selection) ->
     head = selection.getHeadBufferPosition()
     tail = selection.getTailBufferPosition()
 
     head.row != tail.row || head.column != tail.column
+
+  _replaceLine: (selection, row, line) ->
+    selection.cursor.setBufferPosition([row, 0])
+    selection.selectToEndOfLine()
+    selection.insertText(line)
+
+  _isAtLineBeginning: (line, col) ->
+    col == 0 || line.substring(0, col).trim() == ""

@@ -142,12 +142,19 @@ describe "EditLine", ->
       editLine.trigger()
       expect(editor.getText()).toBe("    normal line")
 
-    it "indent line if it is a list", ->
+    it "indent line if it is an unordered list", ->
       editor.setText "- list"
       editor.setCursorBufferPosition([0, 5])
 
       editLine.trigger()
       expect(editor.getText()).toBe("  - list")
+
+    it "indent line if it is an ordered list", ->
+      editor.setText "3. list"
+      editor.setCursorBufferPosition([0, 5])
+
+      editLine.trigger()
+      expect(editor.getText()).toBe("  1. list")
 
     it "insert space if it is text", ->
       editor.setText "texttext"

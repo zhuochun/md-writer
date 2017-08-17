@@ -6,7 +6,7 @@ LIST_OL_TASK_REGEX = /// ^ (\s*) (\d+)([\.\)]) \s+ \[[xX\ ]\] \s* (.*) $ ///
 LIST_OL_REGEX      = /// ^ (\s*) (\d+)([\.\)]) \s+ (.*) $ ///
 LIST_AL_TASK_REGEX = /// ^ (\s*) ([a-zA-Z]+)([\.\)]) \s+ \[[xX\ ]\] \s* (.*) $ ///
 LIST_AL_REGEX      = /// ^ (\s*) ([a-zA-Z]+)([\.\)]) \s+ (.*) $ ///
-BLOCKQUOTE_REGEX   = /// ^ (\s*) (>)     \s* (.*) $ ///
+BLOCKQUOTE_REGEX   = /// ^ (\s*) (>) \s* (.*) $ ///
 
 incStr = (str) ->
   num = parseInt(str, 10)
@@ -17,31 +17,34 @@ TYPES = [
   {
     name: ["list", "ul", "task"],
     regex: LIST_UL_TASK_REGEX,
-    nextLine: (matches) -> "#{matches[1]}#{matches[2]} [ ] "
+    lineHead: (indent, head, suffix) -> "#{indent}#{head} [ ] "
     defaultHead: (head) -> head
   }
   {
     name: ["list", "ul"],
     regex: LIST_UL_REGEX,
-    nextLine: (matches) -> "#{matches[1]}#{matches[2]} "
+    lineHead: (indent, head, suffix) -> "#{indent}#{head} "
     defaultHead: (head) -> head
   }
   {
     name: ["list", "ol", "task"],
     regex: LIST_OL_TASK_REGEX,
-    nextLine: (matches) -> "#{matches[1]}#{incStr(matches[2])}#{matches[3]} [ ] "
+    lineHead: (indent, head, suffix) -> "#{indent}#{head}#{suffix} [ ] "
+    nextLine: (indent, head, suffix) -> "#{indent}#{incStr(head)}#{suffix} [ ] "
     defaultHead: (head) -> "1"
   }
   {
     name: ["list", "ol"],
     regex: LIST_OL_REGEX,
-    nextLine: (matches) -> "#{matches[1]}#{incStr(matches[2])}#{matches[3]} "
+    lineHead: (indent, head, suffix) -> "#{indent}#{head}#{suffix} "
+    nextLine: (indent, head, suffix) -> "#{indent}#{incStr(head)}#{suffix} "
     defaultHead: (head) -> "1"
   }
   {
     name: ["list", "ol", "al", "task"],
     regex: LIST_AL_TASK_REGEX,
-    nextLine: (matches) -> "#{matches[1]}#{incStr(matches[2])}#{matches[3]} [ ] "
+    lineHead: (indent, head, suffix) -> "#{indent}#{head}#{suffix} [ ] "
+    nextLine: (indent, head, suffix) -> "#{indent}#{incStr(head)}#{suffix} [ ] "
     defaultHead: (head) ->
       c = if utils.isUpperCase(head) then "A" else "a"
       head.replace(/./g, c)
@@ -49,7 +52,8 @@ TYPES = [
   {
     name: ["list", "ol", "al"],
     regex: LIST_AL_REGEX,
-    nextLine: (matches) -> "#{matches[1]}#{incStr(matches[2])}#{matches[3]} "
+    lineHead: (indent, head, suffix) -> "#{indent}#{head}#{suffix} "
+    nextLine: (indent, head, suffix) -> "#{indent}#{incStr(head)}#{suffix} "
     defaultHead: (head) ->
       c = if utils.isUpperCase(head) then "A" else "a"
       head.replace(/./g, c)
@@ -57,7 +61,7 @@ TYPES = [
   {
     name: ["blockquote"],
     regex: BLOCKQUOTE_REGEX,
-    nextLine: (matches) -> "#{matches[1]}> "
+    lineHead: (indent, head, suffix) -> "#{indent}> "
     defaultHead: (head) -> ">"
   }
 ]
@@ -82,10 +86,12 @@ class LineMeta
         @indent = matches[1]
         @head = matches[2]
         @defaultHead = type.defaultHead(matches[2])
+        @suffix = if matches.length >= 4 then matches[3] else ""
         @body = matches[matches.length-1]
-        @nextLine = type.nextLine(matches)
-
+        @nextLine = if type.nextLine then type.nextLine(@indent, @head, @suffix) else @type.lineHead(@indent, @head, @suffix)
         break
+
+  lineHead: (head) -> @type.lineHead(@indent, head, @suffix)
 
   isTaskList: -> @type && @type.name.indexOf("task") != -1
   isList: (type) -> @type && @type.name.indexOf("list") != -1 && (!type || @type.name.indexOf(type) != -1)
