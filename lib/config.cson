@@ -114,7 +114,7 @@ lineStyles:
     regexMatchBefore: "(?:-|\\*|\\+|\\.)\\s"
     regexBefore: "(?:-|\\*|\\+|\\.|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
   ol:
-    before: "1. "
+    before: "{i}. "
     regexMatchBefore: "(?:\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
     regexBefore: "(?:-|\\*|\\+|\\.|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
   task:

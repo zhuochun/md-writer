@@ -43,6 +43,11 @@ describe "StyleLine", ->
       fixture = "blockquote"
       expect(cmd.addStyle(fixture)).toBe("> blockquote")
 
+    it "applies ordered list template styles", ->
+      cmd = new StyleLine("ol")
+      fixture = "ordered line"
+      expect(cmd.addStyle(fixture, { i: 3 })).toBe("3. ordered line")
+
   describe ".removeStyle", ->
     it "applies heading 1 styles", ->
       atom.config.set("markdown-writer.lineStyles.h1", before: "# ", after: " #")

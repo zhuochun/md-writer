@@ -30,29 +30,33 @@ class StyleLine
       @editor.getSelections().forEach (selection) =>
         range = selection.getBufferRange()
         # when selection contains multiple rows, apply style to each row
-        rows  = selection.getBufferRowRange()
-        for row in [rows[0]..rows[1]]
+        rows = selection.getBufferRowRange()
+        # rows[0] = start of buffer rows, rows[1] = end of buffer rows
+        for row, i in ([rows[0]..rows[1]])
+          data = { i: i + 1 }
+
           selection.cursor.setBufferPosition([row, 0])
           selection.selectToEndOfLine()
 
           if line = selection.getText()
-            @toggleStyle(selection, line)
+            @toggleStyle(selection, line, data)
           else
-            @insertEmptyStyle(selection)
+            @insertEmptyStyle(selection, data)
         # select the whole range, if selection contains multiple rows
         selection.setBufferRange(range) if rows[0] != rows[1]
 
-  toggleStyle: (selection, text) ->
-    if @isStyleOn(text)
-      text = @removeStyle(text)
+  toggleStyle: (selection, line, data) ->
+    if @isStyleOn(line)
+      text = @removeStyle(line)
     else
-      text = @addStyle(text)
+      text = @addStyle(line, data)
+
     selection.insertText(text)
 
-  insertEmptyStyle: (selection) ->
-    selection.insertText(@style.before)
+  insertEmptyStyle: (selection, data) ->
+    selection.insertText(utils.template(@style.before, data))
     position = selection.cursor.getBufferPosition()
-    selection.insertText(@style.after)
+    selection.insertText(utils.template(@style.after, data))
     selection.cursor.setBufferPosition(position)
 
   # use regexMatchBefore/regexMatchAfter to match the string
@@ -63,12 +67,15 @@ class StyleLine
     #{@style.regexMatchAfter}    # style end
     (\s*)$ ///i.test(text)
 
-  addStyle: (text) ->
+  addStyle: (text, data) ->
+    before = utils.template(@style.before, data)
+    after = utils.template(@style.after, data)
+
     match = @getStylePattern().exec(text)
     if match
-      "#{match[1]}#{@style.before}#{match[2]}#{@style.after}#{match[3]}"
+      "#{match[1]}#{before}#{match[2]}#{after}#{match[3]}"
     else
-      "#{@style.before}#{@style.after}"
+      "#{before}#{after}"
 
   removeStyle: (text) ->
     matches = @getStylePattern().exec(text)
