@@ -110,7 +110,7 @@ lineStyles:
   h4: before: "#### "
   h5: before: "##### "
   ul:
-    before: "- "
+    before: "{ul} "
     regexMatchBefore: "(?:-|\\*|\\+|\\.)\\s"
     regexBefore: "(?:-|\\*|\\+|\\.|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
   ol:
@@ -118,11 +118,11 @@ lineStyles:
     regexMatchBefore: "(?:\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
     regexBefore: "(?:-|\\*|\\+|\\.|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
   task:
-    before: "- [ ] "
+    before: "{ul} [ ] "
     regexMatchBefore: "(?:-|\\*|\\+|\\d+[\\.\\)])\\s+\\[ ]\\s"
     regexBefore: "(?:-|\\*|\\+|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s*(?:\\[[xX ]])?\\s"
   taskdone:
-    before: "- [X] "
+    before: "{ul} [X] "
     regexMatchBefore: "(?:-|\\*|\\+|\\d+[\\.\\)])\\s+\\[[xX]]\\s"
     regexBefore: "(?:-|\\*|\\+|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s*(?:\\[[xX ]])?\\s"
   blockquote: before: "> "
@@ -158,4 +158,6 @@ tableExtraPipes: false
 # template variables is a key-value map used in template string
 # e.g. you can have `posts/{author}/{year}` in newPostFileName after you set author.
 templateVariables:
-  author: "Your Name"
+  # bullet for unordered list. add ulBullet1, ulBullet2 if you want different bullet for nested list
+  # https://github.com/zhuochun/md-writer/issues/154
+  ulBullet: "-"

@@ -43,6 +43,11 @@ describe "StyleLine", ->
       fixture = "blockquote"
       expect(cmd.addStyle(fixture)).toBe("> blockquote")
 
+    it "applies unordered list template styles", ->
+      cmd = new StyleLine("ul")
+      fixture = "  unordered line"
+      expect(cmd.addStyle(fixture, { ul: "*" })).toBe("  * unordered line")
+
     it "applies ordered list template styles", ->
       cmd = new StyleLine("ol")
       fixture = "ordered line"

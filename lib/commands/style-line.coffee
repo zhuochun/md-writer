@@ -33,7 +33,9 @@ class StyleLine
         rows = selection.getBufferRowRange()
         # rows[0] = start of buffer rows, rows[1] = end of buffer rows
         for row, i in ([rows[0]..rows[1]])
-          data = { i: i + 1 }
+          data =
+            i: i + 1,
+            ul: config.get("templateVariables.ulBullet#{@editor.indentationForBufferRow(row)}") || config.get("templateVariables.ulBullet")
 
           selection.cursor.setBufferPosition([row, 0])
           selection.selectToEndOfLine()
