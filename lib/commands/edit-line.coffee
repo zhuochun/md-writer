@@ -25,13 +25,13 @@ class EditLine
     cursor = selection.getHeadBufferPosition()
     line = @editor.lineTextForBufferRow(cursor.row)
 
-    # when cursor is at middle of line, do a normal insert line
-    # unless inline continuation is enabled
-    if cursor.column < line.length && !config.get("inlineNewLineContinuation")
-      return e.abortKeyBinding()
-
     lineMeta = new LineMeta(line)
     if lineMeta.isContinuous()
+      # when cursor is at middle of line, do a normal insert line
+      # unless inline continuation is enabled
+      if cursor.column < line.length && !config.get("inlineNewLineContinuation")
+        return e.abortKeyBinding()
+
       if lineMeta.isEmptyBody()
         @_insertNewlineWithoutContinuation(cursor)
       else
@@ -53,31 +53,35 @@ class EditLine
     @editor.insertText("\n#{nextLine}")
 
   _insertNewlineWithoutContinuation: (cursor) ->
-    nextLine = "\n"
-
     currentIndentation = @editor.indentationForBufferRow(cursor.row)
+
+    nextLine = "\n"
+    # if this is an list without indentation, or at beginning of the file
+    if currentIndentation < 1 || cursor.row < 1
+      @editor.selectToBeginningOfLine()
+      @editor.insertText(nextLine)
+      return
+
+    emptyLineSkipped = 0
     # if this is an indented empty list, we will go up lines and try to find
     # its parent's list prefix and use that if possible
-    if currentIndentation > 0 && cursor.row > 1
-      emptyLineSkipped = 0
+    for row in [(cursor.row - 1)..0]
+      line = @editor.lineTextForBufferRow(row)
 
-      for row in [(cursor.row - 1)..0]
-        line = @editor.lineTextForBufferRow(row)
-
-        if line.trim() == "" # skip empty lines in case of list paragraphs
-          break if emptyLineSkipped > MAX_SKIP_EMPTY_LINE_ALLOWED
-          emptyLineSkipped += 1
-        else # find parent with indentation = current indentation - 1
-          indentation = @editor.indentationForBufferRow(row)
-          continue if indentation >= currentIndentation
-          nextLine = new LineMeta(line).nextLine if indentation == currentIndentation - 1 && LineMeta.isList(line)
-          break
+      if line.trim() == "" # skip empty lines in case of list paragraphs
+        break if emptyLineSkipped > MAX_SKIP_EMPTY_LINE_ALLOWED
+        emptyLineSkipped += 1
+      else # find parent with indentation = current indentation - 1
+        indentation = @editor.indentationForBufferRow(row)
+        continue if indentation >= currentIndentation
+        nextLine = new LineMeta(line).nextLine if indentation == currentIndentation - 1 && LineMeta.isList(line)
+        break
 
     @editor.selectToBeginningOfLine()
     @editor.insertText(nextLine)
 
   _insertNewlineWithoutTableColumns: ->
-    @editor.selectToBeginningOfLine()
+    @editor.selectLinesContainingCursors()
     @editor.insertText("\n")
 
   _insertNewlineWithTableColumns: (row) ->
@@ -90,8 +94,10 @@ class EditLine
       alignments: []
 
     newLine = utils.createTableRow([], options)
+    @editor.moveToEndOfLine()
     @editor.insertText("\n#{newLine}")
     @editor.moveToBeginningOfLine()
+    @editor.moveToNextWordBoundary() if options.extraPipes
 
   indentListLine: (e, selection) ->
     return e.abortKeyBinding() if @_isRangeSelection(selection)
