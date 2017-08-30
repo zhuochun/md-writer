@@ -1,3 +1,11 @@
+## 2.7.0
+
+* Support continue table row when press `Enter`
+* Support [differnt unorder list bullet][33590db0] on nested indentation
+* Support continue order list with correct bullet number
+
+  [33590db0]: https://github.com/zhuochun/md-writer/issues/154 "Nested Unorder List Bullet"
+
 ## 2.6.5
 
 * Support open cheatsheet in `markdown-preview-plus`
