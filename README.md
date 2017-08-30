@@ -37,7 +37,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 
 ### General
 
-- **Continue lists** when you press `enter`.
+- **Continue lists or table rows** when you press `enter` ([customize nested unorder list][adaa9527]).
 - **Insert link** (`shift-cmd-k`) and **automatically link to the text next time**.
   - Insert inline link.
   - Insert reference link with title. _Use `-` in title field to create an empty title reference link._
@@ -45,10 +45,10 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
   - Search published posts by title in your blog.
 - **Insert footnote** (`markdown-writer:insert-footnote`), and edit footnote labels.
 - **Insert image** (`shift-cmd-i`), auto-detect image height/width, and optionally copy images to your site's images directory.
-- **Insert table** (`markdown-writer:insert-table`), and a shortcut to **jump to next table cell** (`cmd-j cmd-t`).
+- **Insert table** (`markdown-writer:insert-table`), and quick **jump to next table cell** (`cmd-j cmd-t`).
 - **Format table** (`markdown-writer:format-table`) with table alignments.
 - **Toggle headings**: `ctrl-alt-[1-5]` to switch among `H1` to `H5`.
-- **Toggle text styles** ([customization supported][7ddaeaf4]):
+- **Toggle text styles** ([customize styles][7ddaeaf4]):
   - `code` (`cmd-'`)
   - **bold** (`cmd-b`)
   - _italic_ (`cmd-i`)
@@ -72,6 +72,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 
   [82a2aced]: https://atom.io/packages/tool-bar-markdown-writer "Toobar for Markdown Writer"
   [2f0cb1f9]: https://atom.io/packages/language-asciidoc "AsciiDoc Language Package for Atom"
+  [adaa9527]: https://github.com/zhuochun/md-writer/issues/154 "Customization on nested unorder list"
 
 You can find and trigger all features in:
 
