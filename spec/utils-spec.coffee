@@ -370,9 +370,13 @@ describe "utils", ->
       fixture = "----|"
       expect(utils.isTableSeparator(fixture)).toBe(false)
 
-      fixture = "|--|"
+      fixture = "----| "
       expect(utils.isTableSeparator(fixture)).toBe(true)
       fixture = "--|--"
+      expect(utils.isTableSeparator(fixture)).toBe(true)
+      fixture = "|--|"
+      expect(utils.isTableSeparator(fixture)).toBe(true)
+      fixture = "-|--|- "
       expect(utils.isTableSeparator(fixture)).toBe(true)
       fixture = "---- |------ | ---"
       expect(utils.isTableSeparator(fixture)).toBe(true)
@@ -414,6 +418,14 @@ describe "utils", ->
         alignments: ["empty", "empty"]
         columns: ["--", "--"]
         columnWidths: [2, 2]})
+
+      fixture = "-|--|--| "
+      expect(utils.parseTableSeparator(fixture)).toEqual({
+        separator: true
+        extraPipes: false
+        alignments: ["empty", "empty", "empty", "empty"]
+        columns: ["-", "--", "--", ""]
+        columnWidths: [1, 2, 2, 0]})
 
       fixture = "---- |------ | ---"
       expect(utils.parseTableSeparator(fixture)).toEqual({
@@ -477,6 +489,8 @@ describe "utils", ->
       expect(utils.isTableRow(fixture)).toBe(true)
       fixture = "|   abc |efg | |"
       expect(utils.isTableRow(fixture)).toBe(true)
+      fixture = "| abc|efg | | "
+      expect(utils.isTableRow(fixture)).toBe(true)
 
   describe ".parseTableRow", ->
     it "parse table separator by table row ", ->
@@ -502,6 +516,13 @@ describe "utils", ->
         extraPipes: false
         columns: ["abc", "feg"]
         columnWidths: [3, 3]})
+
+      fixture = "abc| "
+      expect(utils.parseTableRow(fixture)).toEqual({
+        separator: false
+        extraPipes: false
+        columns: ["abc", ""]
+        columnWidths: [3, 0]})
 
       fixture = "|   abc |efg | |"
       expect(utils.parseTableRow(fixture)).toEqual({

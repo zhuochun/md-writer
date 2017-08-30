@@ -192,9 +192,9 @@ describe "FormatText", ->
       ].join("\n")
 
       expected = [
-        "| col 1    | col 2    |"
-        "|:---------|:---------|"
-        "| Item One | Item Two |"
+        "| col 1    | col 2    |   |"
+        "|:---------|:---------|---|"
+        "| Item One | Item Two |   |"
       ].join("\n")
 
       editor.setCursorBufferPosition([2, 3])
