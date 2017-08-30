@@ -32,6 +32,17 @@ describe "EditLine", ->
       ].join("\n")
       expect(editor.getCursorBufferPosition().toString()).toBe("(1, 0)")
 
+    it "continue in a table row", ->
+      editor.setText "a | b | c"
+      editor.setCursorBufferPosition([0, 3])
+
+      editLine.trigger()
+      expect(editor.getText()).toBe [
+        "a | b | c",
+        "  |   |  "
+      ].join("\n")
+      expect(editor.getCursorBufferPosition().toString()).toBe("(1, 0)")
+
     it "continue after table separator", ->
       editor.setText """
       a | b | c
