@@ -1,4 +1,6 @@
 config = require "../config"
+utils = require "../utils"
+
 LineMeta = require "../helpers/line-meta"
 
 MAX_SKIP_EMPTY_LINE_ALLOWED = 5
@@ -34,17 +36,27 @@ class EditLine
         @_insertNewlineWithoutContinuation(cursor)
       else
         @_insertNewlineWithContinuation(lineMeta.nextLine)
-    else
-      e.abortKeyBinding()
+      return
+
+    if utils.isTableRow(line)
+      row = utils.parseTableRow(line)
+      columnWidths = row.columnWidths.reduce((sum, i) -> sum + i)
+      if columnWidths == 0
+        @_insertNewlineWithoutTableColumns()
+      else
+        @_insertNewlineWithTableColumns(row)
+      return
+
+    return e.abortKeyBinding()
 
   _insertNewlineWithContinuation: (nextLine) ->
     @editor.insertText("\n#{nextLine}")
 
   _insertNewlineWithoutContinuation: (cursor) ->
     nextLine = "\n"
-    currentIndentation = @editor.indentationForBufferRow(cursor.row)
 
-    # if it is an indented empty list, we will go up lines and try to find
+    currentIndentation = @editor.indentationForBufferRow(cursor.row)
+    # if this is an indented empty list, we will go up lines and try to find
     # its parent's list prefix and use that if possible
     if currentIndentation > 0 && cursor.row > 1
       emptyLineSkipped = 0
@@ -63,6 +75,23 @@ class EditLine
 
     @editor.selectToBeginningOfLine()
     @editor.insertText(nextLine)
+
+  _insertNewlineWithoutTableColumns: ->
+    @editor.selectToBeginningOfLine()
+    @editor.insertText("\n")
+
+  _insertNewlineWithTableColumns: (row) ->
+    options =
+      numOfColumns: Math.max(1, row.columns.length)
+      extraPipes: row.extraPipes
+      columnWidth: 1
+      columnWidths: []
+      alignment: config.get("tableAlignment")
+      alignments: []
+
+    newLine = utils.createTableRow([], options)
+    @editor.insertText("\n#{newLine}")
+    @editor.moveToBeginningOfLine()
 
   indentListLine: (e, selection) ->
     return e.abortKeyBinding() if @_isRangeSelection(selection)
