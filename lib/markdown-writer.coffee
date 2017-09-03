@@ -76,7 +76,7 @@ module.exports =
       if (options.optOutGrammars || @isMarkdown()) && !@inSkipList(options.skipList)
         @modules[path] ?= require(path)
         moduleInstance = new @modules[path](options.args)
-        moduleInstance.display() unless config.get("_skipAction")?
+        moduleInstance.display(e) unless config.get("_skipAction")?
       else
         e.abortKeyBinding()
 

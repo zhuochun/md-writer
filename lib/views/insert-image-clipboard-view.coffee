@@ -71,10 +71,13 @@ class InsertImageClipboardView extends View
         detailedMessage: "Saving Image:\n#{error.message}"
         buttons: ['OK']
 
-  display: ->
+  display: (e) ->
     # read image from clipboard
     @clipboardImage = clipboard.readImage()
-    return if @clipboardImage.isEmpty()
+    # skip and return
+    if @clipboardImage.isEmpty()
+      e.abortKeyBinding()
+      return
     # display view
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
     @previouslyFocusedElement = $(document.activeElement)
