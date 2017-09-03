@@ -29,7 +29,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 - **Create new draft** with front matters ([setup required][ca8870d7]).
 - **Publish draft** moves a draft to post's directory with front matters (`date`, `published`) updated.
 - **Manage tags and categories** in front matters ([setup required][9be76601]).
-- **Site specific settings** ([view setup][1561ed4c]).
+- **Project/blog specific settings** ([view setup][1561ed4c]).
 
   [ca8870d7]: https://github.com/zhuochun/md-writer/wiki/Quick-Start "Markdown-Writer Setup Guide"
   [9be76601]: https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters "Setup Tags/Categories/Posts"
@@ -37,14 +37,15 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 
 ### General
 
-- **Continue lists or table rows** when you press `enter` ([customize nested unorder list][adaa9527]).
+- **Continue lists or table rows** when you press `enter` ([customize][adaa9527]).
+  - **Correct ordered list numbers** (`markdown-writer:correct-order-list-numbers`).
 - **Insert link** (`shift-cmd-k`) and **automatically link to the text next time**.
   - Insert inline link.
   - Insert reference link with title. _Use `-` in title field to create an empty title reference link._
   - Remove link (and its reference) after URL is deleted.
   - Search published posts by title in your blog.
 - **Insert footnote** (`markdown-writer:insert-footnote`), and edit footnote labels.
-- **Insert image** (`shift-cmd-i`), auto-detect image height/width, and optionally copy images to your site's images directory.
+- **Insert image from file or clipboard** (`shift-cmd-i`), preview image and able to copy image to your blog's images directory.
 - **Insert table** (`markdown-writer:insert-table`), and quick **jump to next table cell** (`cmd-j cmd-t`).
 - **Format table** (`markdown-writer:format-table`) with table alignments.
 - **Toggle headings**: `ctrl-alt-[1-5]` to switch among `H1` to `H5`.
@@ -64,15 +65,14 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
   - Jump to next heading (`cmd-j cmd-n`)
   - Jump to next table cell (`cmd-j cmd-t`)
   - Jump to reference marker/definition (`cmd-j cmd-d`)
-- **Markdown cheat sheet** (`markdown-writer:open-cheat-sheet`).
-- **Correct order list numbers** (`markdown-writer:correct-order-list-numbers`).
 - **Open link under cursor in browser** (`markdown-writer:open-link-in-browser`), and works on reference links.
+- **Markdown cheat sheet** (`markdown-writer:open-cheat-sheet`).
 - **Toolbar for Markdown Writer** is available at [tool-bar-markdown-writer][82a2aced].
 - **AsciiDoc support** with [language-asciidoc][2f0cb1f9].
 
   [82a2aced]: https://atom.io/packages/tool-bar-markdown-writer "Toobar for Markdown Writer"
   [2f0cb1f9]: https://atom.io/packages/language-asciidoc "AsciiDoc Language Package for Atom"
-  [adaa9527]: https://github.com/zhuochun/md-writer/issues/154 "Customization on nested unorder list"
+  [adaa9527]: https://github.com/zhuochun/md-writer/wiki/Settings#use-different-unordered-list-styles "Customizations"
 
 You can find and trigger all features in:
 
@@ -88,7 +88,7 @@ You can find and trigger all features in:
 
 ## Setup
 
-Go to Settings (`cmd-,`) -> Packages -> `Markdown-Writer` -> Settings.
+Go to Settings (`cmd-,`) -> Packages -> Markdown-Writer -> Settings.
 
 > If you do not see any settings (due to a [Atom's bug][3ecd2daa]), please activate Markdown-Writer using command (e.g. `Open Cheat Sheet`). Close and reopen the Settings page.
 
