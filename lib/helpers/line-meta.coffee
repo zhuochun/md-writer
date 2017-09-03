@@ -88,7 +88,7 @@ class LineMeta
         @defaultHead = type.defaultHead(matches[2])
         @suffix = if matches.length >= 4 then matches[3] else ""
         @body = matches[matches.length-1]
-        @nextLine = if type.nextLine then type.nextLine(@indent, @head, @suffix) else @type.lineHead(@indent, @head, @suffix)
+        @nextLine = (type.nextLine || type.lineHead).call(null, @indent, @head, @suffix)
         break
 
   lineHead: (head) -> @type.lineHead(@indent, head, @suffix)

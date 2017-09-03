@@ -68,6 +68,10 @@ inlineNewLineContinuation: false
 # path to a cson file that stores links added for automatic linking
 # commented to use the default `markdown-writer-links.cson` file
 # under your Atom global config directory
+# Ordered list number continuation
+# - Enable to continue numbers from previous number in ordered lists
+# - Disable to always use 1. as the number in ordered lists
+orderedNewLineNumberContinuation: true
 # siteLinkPath: "set/path/to/links.cson"
 
 # TextStyles and LineStyles

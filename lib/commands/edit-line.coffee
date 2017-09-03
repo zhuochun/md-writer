@@ -35,7 +35,7 @@ class EditLine
       if lineMeta.isEmptyBody()
         @_insertNewlineWithoutContinuation(cursor)
       else
-        @_insertNewlineWithContinuation(lineMeta.nextLine)
+        @_insertNewlineWithContinuation(lineMeta)
       return
 
     if utils.isTableRow(line)
@@ -49,7 +49,12 @@ class EditLine
 
     return e.abortKeyBinding()
 
-  _insertNewlineWithContinuation: (nextLine) ->
+  _insertNewlineWithContinuation: (lineMeta) ->
+    nextLine = lineMeta.nextLine
+    # don't continue numbers in OL
+    if lineMeta.isList("ol") && !config.get("orderedNewLineNumberContinuation")
+      nextLine = lineMeta.lineHead(lineMeta.defaultHead)
+
     @editor.insertText("\n#{nextLine}")
 
   _insertNewlineWithoutContinuation: (cursor) ->
