@@ -12,7 +12,7 @@ templateHelper = require "../helpers/template-helper"
 lastInsertImageDir = null # remember last inserted image directory
 
 module.exports =
-class InsertImageView extends View
+class InsertImageFileView extends View
   @content: ->
     @div class: "markdown-writer markdown-writer-dialog", =>
       @label "Insert Image", class: "icon icon-device-camera"
@@ -37,7 +37,7 @@ class InsertImageView extends View
         @label for: "markdown-writer-copy-image-checkbox", =>
           @input id: "markdown-writer-copy-image-checkbox",
             type:"checkbox", outlet: "copyImageCheckbox"
-          @span "Copy Image to Site Image Directory", class: "side-label", outlet: "copyImageMessage"
+          @span "Copy Image To: Missing Image Path (src) or Title (alt)", class: "side-label", outlet: "copyImageMessage"
       @div class: "image-container", =>
         @img outlet: 'imagePreview'
 
@@ -135,8 +135,8 @@ class InsertImageView extends View
 
   updateCopyImageDest: (file) ->
     return unless file
-    destFile = @copyImageDestPath(file, @titleEditor.getText())
-    @copyImageMessage.text("Copy Image to #{destFile}")
+    destFile = @getCopiedImageDestPath(file, @titleEditor.getText())
+    @copyImageMessage.text("Copy Image To: #{destFile}")
 
   displayImagePreview: (file) ->
     return if @imageOnPreview == file
@@ -191,7 +191,7 @@ class InsertImageView extends View
     return callback() if utils.isUrl(file) || !fs.existsSync(file)
 
     try
-      destFile = @copyImageDestPath(file, @titleEditor.getText())
+      destFile = @getCopiedImageDestPath(file, @titleEditor.getText())
       performWrite = true
 
       if fs.existsSync(destFile)
@@ -208,23 +208,20 @@ class InsertImageView extends View
     catch error
       atom.confirm
         message: "[Markdown Writer] Error!"
-        detailedMessage: "Copy Image:\n#{error.message}"
+        detailedMessage: "Copying Image:\n#{error.message}"
         buttons: ['OK']
 
   # get user's site local directory
   siteLocalDir: -> utils.getSitePath(config.get("siteLocalDir"))
-
   # get user's site images directory
   siteImagesDir: -> templateHelper.create("siteImagesDir", @frontMatter, @dateTime)
-
   # get current open file directory
   currentFileDir: -> path.dirname(@editor.getPath() || "")
-
   # check the file is in the site directory
   isInSiteDir: (file) -> file && file.startsWith(@siteLocalDir())
 
   # get copy image destination file path
-  copyImageDestPath: (file, title) ->
+  getCopiedImageDestPath: (file, title) ->
     filename = path.basename(file)
 
     if config.get("renameImageOnCopy") && title
