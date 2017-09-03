@@ -21,65 +21,13 @@ describe "EditLine", ->
       editLine.trigger(event)
       expect(event.abortKeyBinding).toHaveBeenCalled()
 
-    it "continue after table row", ->
-      editor.setText "a | b | c"
-      editor.setCursorBufferPosition([0, 9])
-
-      editLine.trigger()
-      expect(editor.getText()).toBe [
-        "a | b | c",
-        "  |   |  "
-      ].join("\n")
-      expect(editor.getCursorBufferPosition().toString()).toBe("(1, 0)")
-
-    it "continue in a table row", ->
-      editor.setText "a | b | c"
-      editor.setCursorBufferPosition([0, 3])
-
-      editLine.trigger()
-      expect(editor.getText()).toBe [
-        "a | b | c",
-        "  |   |  "
-      ].join("\n")
-      expect(editor.getCursorBufferPosition().toString()).toBe("(1, 0)")
-
-    it "continue after table separator", ->
-      editor.setText """
-      a | b | c
-      --|---|--
-      """
-      editor.setCursorBufferPosition([1, 9])
-
-      editLine.trigger()
-      expect(editor.getText()).toBe [
-        "a | b | c",
-        "--|---|--",
-        "  |   |  "
-      ].join("\n")
-      expect(editor.getCursorBufferPosition().toString()).toBe("(2, 0)")
-
-    it "not continue after empty table row", ->
-      editor.setText """
-      a | b | c
-        |   |
-      """
-      editor.setCursorBufferPosition([1, 9])
-
-      editLine.trigger()
-      expect(editor.getText()).toBe [
-        "a | b | c",
-        ""
-        ""
-      ].join("\n")
-      expect(editor.getCursorBufferPosition().toString()).toBe("(2, 0)")
-
     it "continue if config inlineNewLineContinuation enabled", ->
       atom.config.set("markdown-writer.inlineNewLineContinuation", true)
 
       editor.setText "- inline line"
       editor.setCursorBufferPosition([0, 8])
 
-      editLine.trigger()
+      editLine.trigger(event)
       expect(editor.getText()).toBe """
       - inline
       -  line
@@ -89,7 +37,7 @@ describe "EditLine", ->
       editor.setText "- line"
       editor.setCursorBufferPosition([0, 6])
 
-      editLine.trigger()
+      editLine.trigger(event)
       expect(editor.getText()).toBe [
         "- line"
         "- " # last item with trailing whitespace
@@ -102,11 +50,25 @@ describe "EditLine", ->
       """
       editor.setCursorBufferPosition([1, 19])
 
-      editLine.trigger()
+      editLine.trigger(event)
       expect(editor.getText()).toBe [
         "1. [ ] Epic Tasks"
         "  1. [X] Sub-task A"
         "  2. [ ] " # last item with trailing whitespace
+      ].join("\n")
+
+    it "continue after ordered task list line (without number continuation)", ->
+      atom.config.set("markdown-writer.orderedNewLineNumberContinuation", false)
+
+      editor.setText """
+      1. Epic Order One
+      """
+      editor.setCursorBufferPosition([0, 17])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "1. Epic Order One"
+        "1. " # last item with trailing whitespace
       ].join("\n")
 
     it "continue after alpha ordered task list line", ->
@@ -116,7 +78,7 @@ describe "EditLine", ->
       """
       editor.setCursorBufferPosition([1, 19])
 
-      editLine.trigger()
+      editLine.trigger(event)
       expect(editor.getText()).toBe [
         "1. [ ] Epic Tasks"
         "  y. [X] Sub-task A"
@@ -129,7 +91,7 @@ describe "EditLine", ->
       """
       editor.setCursorBufferPosition([0, 69])
 
-      editLine.trigger()
+      editLine.trigger(event)
       expect(editor.getText()).toBe [
         "> Your time is limited, so don’t waste it living someone else’s life."
         "> " # last item with trailing whitespace
@@ -141,7 +103,7 @@ describe "EditLine", ->
       """
       editor.setCursorBufferPosition([0, 5])
 
-      editLine.trigger()
+      editLine.trigger(event)
       expect(editor.getText()).toBe ["", ""].join("\n")
 
     it "not continue after empty ordered list line", ->
@@ -152,7 +114,7 @@ describe "EditLine", ->
       ].join("\n")
       editor.setCursorBufferPosition([2, 4])
 
-      editLine.trigger()
+      editLine.trigger(event)
       expect(editor.getText()).toBe [
         "1. [ ] parent"
         "  - child"
@@ -172,7 +134,7 @@ describe "EditLine", ->
       ].join("\n")
       editor.setCursorBufferPosition([7, 4])
 
-      editLine.trigger()
+      editLine.trigger(event)
       expect(editor.getText()).toBe [
         "1. parent"
         "  - child has a paragraph"
@@ -184,6 +146,134 @@ describe "EditLine", ->
         "2. " # last item with trailing whitespace
       ].join("\n")
 
+  describe "insertNewLine (Table)", ->
+    beforeEach ->
+      editLine = new EditLine("insert-new-line")
+      editor.setText [
+        "a | b | c"
+        "a | b | c"
+        ""
+        "random line | with bar"
+        ""
+        "a | b | c"
+        "--|---|--"
+        "a | b | c"
+        "a | b | c"
+        "  |   |  "
+      ].join("\n")
+
+    it "continue after table separator", ->
+      editor.setCursorBufferPosition([6, 5])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "a | b | c"
+        "a | b | c"
+        ""
+        "random line | with bar"
+        ""
+        "a | b | c"
+        "--|---|--"
+        "  |   |  "
+        "a | b | c"
+        "a | b | c"
+        "  |   |  "
+      ].join("\n")
+      expect(editor.getCursorBufferPosition().toString()).toBe("(7, 0)")
+
+    it "continue after table rows", ->
+      editor.setCursorBufferPosition([1, 9])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "a | b | c"
+        "a | b | c"
+        "  |   |  "
+        ""
+        "random line | with bar"
+        ""
+        "a | b | c"
+        "--|---|--"
+        "a | b | c"
+        "a | b | c"
+        "  |   |  "
+      ].join("\n")
+      expect(editor.getCursorBufferPosition().toString()).toBe("(2, 0)")
+
+    it "continue in a table row", ->
+      editor.setCursorBufferPosition([7, 3])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "a | b | c"
+        "a | b | c"
+        ""
+        "random line | with bar"
+        ""
+        "a | b | c"
+        "--|---|--"
+        "a | b | c"
+        "  |   |  "
+        "a | b | c"
+        "  |   |  "
+      ].join("\n")
+      expect(editor.getCursorBufferPosition().toString()).toBe("(8, 0)")
+
+    it "not continue after empty table row", ->
+      editor.setCursorBufferPosition([9, 8])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "a | b | c"
+        "a | b | c"
+        ""
+        "random line | with bar"
+        ""
+        "a | b | c"
+        "--|---|--"
+        "a | b | c"
+        "a | b | c"
+        ""
+        ""
+      ].join("\n")
+      expect(editor.getCursorBufferPosition().toString()).toBe("(10, 0)")
+
+    it "has not effect at table head", ->
+      editor.setCursorBufferPosition([5, 9])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "a | b | c"
+        "a | b | c"
+        ""
+        "random line | with bar"
+        ""
+        "a | b | c"
+        "--|---|--"
+        "a | b | c"
+        "a | b | c"
+        "  |   |  "
+      ].join("\n")
+      expect(editor.getCursorBufferPosition().toString()).toBe("(5, 9)")
+
+    it "has not effect at random line", ->
+      editor.setCursorBufferPosition([3, 9])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "a | b | c"
+        "a | b | c"
+        ""
+        "random line | with bar"
+        ""
+        "a | b | c"
+        "--|---|--"
+        "a | b | c"
+        "a | b | c"
+        "  |   |  "
+      ].join("\n")
+      expect(editor.getCursorBufferPosition().toString()).toBe("(3, 9)")
+
   describe "indentListLine", ->
     beforeEach -> editLine = new EditLine("indent-list-line")
 
@@ -191,21 +281,21 @@ describe "EditLine", ->
       editor.setText "  normal line"
       editor.setCursorBufferPosition([0, 1])
 
-      editLine.trigger()
+      editLine.trigger(event)
       expect(editor.getText()).toBe("    normal line")
 
     it "indent line if it is an unordered list", ->
       editor.setText "- list"
       editor.setCursorBufferPosition([0, 5])
 
-      editLine.trigger()
+      editLine.trigger(event)
       expect(editor.getText()).toBe("  - list")
 
     it "indent line if it is an ordered list", ->
       editor.setText "3. list"
       editor.setCursorBufferPosition([0, 5])
 
-      editLine.trigger()
+      editLine.trigger(event)
       expect(editor.getText()).toBe("  1. list")
 
     it "insert space if it is text", ->

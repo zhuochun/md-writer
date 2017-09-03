@@ -72,6 +72,10 @@ inlineNewLineContinuation: false
 # - Enable to continue numbers from previous number in ordered lists
 # - Disable to always use 1. as the number in ordered lists
 orderedNewLineNumberContinuation: true
+# Table row continuation
+# - Enable to auto insert table columns when you press enter in a table row
+tableNewLineContinuation: true
+
 # siteLinkPath: "set/path/to/links.cson"
 
 # TextStyles and LineStyles

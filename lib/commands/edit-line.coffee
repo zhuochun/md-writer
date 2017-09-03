@@ -38,7 +38,7 @@ class EditLine
         @_insertNewlineWithContinuation(lineMeta)
       return
 
-    if utils.isTableRow(line)
+    if @_isTableRow(cursor, line)
       row = utils.parseTableRow(line)
       columnWidths = row.columnWidths.reduce((sum, i) -> sum + i)
       if columnWidths == 0
@@ -84,6 +84,17 @@ class EditLine
 
     @editor.selectToBeginningOfLine()
     @editor.insertText(nextLine)
+
+  _isTableRow: (cursor, line) ->
+    return false if !config.get("tableNewLineContinuation")
+    # first row or not a row
+    return false if cursor.row < 1 || !utils.isTableRow(line)
+    # case 0, at table separator, continue table row
+    return true if utils.isTableSeparator(line)
+    # case 1, at table row, previous line is a row, continue row
+    return true if utils.isTableRow(@editor.lineTextForBufferRow(cursor.row-1))
+    # else, at table head, previous line is not a row, do not continue row
+    return false
 
   _insertNewlineWithoutTableColumns: ->
     @editor.selectLinesContainingCursors()
