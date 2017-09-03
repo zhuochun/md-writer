@@ -4,26 +4,28 @@
 # To find latest and default configurations, refer to:
 # https://github.com/zhuochun/md-writer/blob/master/lib/config.cson
 #
+# Examples: https://github.com/zhuochun/md-writer/wiki/Settings#example-customizations
+#
 # NOTE 1: After edit, please run command `Window: Reload` or
 #         Use menu: View -> Developer -> Reload Window.
 # NOTE 2: Strings need to be quoted.
 #
 
-# static engine of your blog
-# e.g. one of: general, html, jekyll, octopress, hexo
+# Static engine of your blog
+# - One of: general, html, jekyll, octopress, hexo
 siteEngine: "general"
-# website URL of your blog
+# Website URL of your blog
 siteUrl: ""
 
-# root directory of your blog
-# e.g. leave empty to source the current project path (recommended)
+# Root directory to your blog
+# - Leave it empty to use the current project path (recommended)
 siteLocalDir: ""
-# directory to drafts from siteLocalDir
+# Directory to drafts from siteLocalDir
 siteDraftsDir: "_drafts/"
-# directory to posts from siteLocalDir
+# Directory to posts from siteLocalDir
 sitePostsDir: "_posts/{year}/"
-# directory to images from siteLocalDir
-# e.g. to use the current filename directory, can use {directory}
+# Directory to images from siteLocalDir
+# - E.g. to use the current filename directory, can use {directory}
 siteImagesDir: "images/{year}/{month}/"
 
 # URLs to tags/posts/categories JSON files
@@ -36,14 +38,14 @@ urlForCategories: ""
 frontMatterNameTags: "tags"
 frontMatterNameCategories: "categories"
 
-# filename format of new drafts created
+# Filename format of new drafts created
 newDraftFileName: "{slug}{extension}"
-# filename format of new posts created
+# Filename format of new posts created
 newPostFileName: "{year}-{month}-{day}-{slug}{extension}"
 
-# front matter date format, determines the {date} in frontMatter
+# Front matter date format, determines the {date} in frontMatter
 frontMatterDate: "{year}-{month}-{day} {hour}:{minute}"
-# front matter template
+# Front matter template
 frontMatter: """
 ---
 layout: "{layout}"
@@ -52,22 +54,20 @@ date: "{date}"
 ---
 """
 
-# file extension of posts/drafts
+# File extension of posts/drafts
 fileExtension: ".markdown"
-# file slug separator
+# File slug separator
 slugSeparator: "-"
 
-# whether rename filename based on title in front matter when publishing
+# Rename filename based on title in front matter when publishing
 publishRenameBasedOnTitle: false
-# whether publish keep draft's extension name used
+# Publish keep draft's extension name used
 publishKeepFileExtname: false
 
-# list continuation in middle of line
+# List continuation in the middle of line
+# - Enable to start a new list whenever you press enter in a list
+# - Disable to start a new list only when you press enter at the end of a list
 inlineNewLineContinuation: false
-
-# path to a cson file that stores links added for automatic linking
-# commented to use the default `markdown-writer-links.cson` file
-# under your Atom global config directory
 # Ordered list number continuation
 # - Enable to continue numbers from previous number in ordered lists
 # - Disable to always use 1. as the number in ordered lists
@@ -76,6 +76,9 @@ orderedNewLineNumberContinuation: true
 # - Enable to auto insert table columns when you press enter in a table row
 tableNewLineContinuation: true
 
+# Path to a cson file that stores links added for automatic linking
+# - Config is commented so to use the default `markdown-writer-links.cson` file
+#   under your Atom global config directory
 # siteLinkPath: "set/path/to/links.cson"
 
 # TextStyles and LineStyles
@@ -130,42 +133,41 @@ lineStyles:
     regexMatchBefore: "(?:-|\\*|\\+|\\d+[\\.\\)])\\s+\\[ ]\\s"
     regexBefore: "(?:-|\\*|\\+|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s*(?:\\[[xX ]])?\\s"
   taskdone:
-    before: "{ul} [X] "
+    before: "{ul} [x] "
     regexMatchBefore: "(?:-|\\*|\\+|\\d+[\\.\\)])\\s+\\[[xX]]\\s"
     regexBefore: "(?:-|\\*|\\+|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s*(?:\\[[xX ]])?\\s"
   blockquote: before: "> "
 
-# image tag template
+# Image tag template
 imageTag: "![{alt}]({src})"
-# use relative path to image from the opened file
+# Use relative path to image from the opened file
 relativeImagePath: false
-# rename copyed image based on title/alt
+# Rename copyed image based on title/alt
 renameImageOnCopy: false
 
-# inline link tag template
+# Inline link tag template
 linkInlineTag: "[{text}]({url})"
-# reference link tag template
+# Reference link tag template
 referenceInlineTag: "[{text}][{label}]"
 referenceDefinitionTag: '{indent}[{label}]: {url} "{title}"'
-# reference link tag insert position: "paragraph", "article"
+# Reference link tag insert position: "paragraph", "article"
 referenceInsertPosition: "paragraph"
-# reference link tag indent space: 0, 2
+# Reference link tag indent space: 0, 2
 referenceIndentLength: 2
 
-# footnote tag template
+# Footnote tag template
 footnoteReferenceTag: "[^{label}]"
 footnoteDefinitionTag: "[^{label}]: {content}"
-# footnote definition tag insert position: "paragraph", "article"
+# Footnote definition tag insert position: "paragraph", "article"
 footnoteInsertPosition: "paragraph"
 
-# table default alignments: "empty", "left", "right", "center"
+# Table default alignments: "empty", "left", "right", "center"
 tableAlignment: "empty"
-# insert extra pipes at the beginning and the end of table rows
+# Insert extra pipes at the beginning and the end of table rows
 tableExtraPipes: false
 
-# template variables is a key-value map used in template string
-# e.g. you can have `posts/{author}/{year}` in newPostFileName after you set author.
+# Template variables is a key-value map used in template string
 templateVariables:
-  # bullet for unordered list. add ulBullet1, ulBullet2 if you want different bullet for nested list
-  # https://github.com/zhuochun/md-writer/issues/154
+  # Bullet for unordered list. add ulBullet1, ulBullet2 if you want different bullet for nested list
+  # https://github.com/zhuochun/md-writer/wiki/Settings#use-different-unorder-list
   ulBullet: "-"

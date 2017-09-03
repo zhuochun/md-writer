@@ -114,7 +114,7 @@ describe "StyleLine", ->
       expect(editor.getText()).toBe("- [ ] task")
 
       new StyleLine("taskdone").trigger()
-      expect(editor.getText()).toBe("- [X] task")
+      expect(editor.getText()).toBe("- [x] task")
 
       new StyleLine("task").trigger()
       expect(editor.getText()).toBe("- [ ] task")
