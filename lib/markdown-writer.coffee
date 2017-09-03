@@ -40,7 +40,7 @@ module.exports =
       editorCommands["markdown-writer:manage-post-#{attr}"] =
         @registerView("./views/manage-post-#{attr}-view")
 
-    ["link", "footnote", "image", "table"].forEach (media) =>
+    ["link", "footnote", "image-file", "image-clipboard", "table"].forEach (media) =>
       editorCommands["markdown-writer:insert-#{media}"] =
         @registerView("./views/insert-#{media}-view")
 
@@ -65,7 +65,7 @@ module.exports =
       editorCommands["markdown-writer:#{command}"] =
         @registerCommand("./commands/format-text", args: command)
 
-    ["publish-draft", "open-link-in-browser"].forEach (command) =>
+    ["publish-draft", "open-link-in-browser", "insert-image"].forEach (command) =>
       editorCommands["markdown-writer:#{command}"] =
         @registerCommand("./commands/#{command}")
 
