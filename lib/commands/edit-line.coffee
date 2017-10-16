@@ -145,8 +145,8 @@ class EditLine
     head.row != tail.row || head.column != tail.column
 
   _replaceLine: (selection, row, line) ->
-    selection.cursor.setBufferPosition([row, 0])
-    selection.selectToEndOfLine()
+    range = selection.cursor.getCurrentLineBufferRange()
+    selection.setBufferRange(range)
     selection.insertText(line)
 
   _isAtLineBeginning: (line, col) ->

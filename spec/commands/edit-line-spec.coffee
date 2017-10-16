@@ -298,6 +298,29 @@ describe "EditLine", ->
       editLine.trigger(event)
       expect(editor.getText()).toBe("  1. list")
 
+    it "indent long line if it is an ordered list", ->
+      editor.setText [
+          "3. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+          ""
+          "This behaviour is not observed when the list item does not extend to the next line."
+        ].join("\n")
+      editor.setCursorBufferPosition([0, 5])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "  1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+        ""
+        "This behaviour is not observed when the list item does not extend to the next line."
+      ].join("\n")
+
+      # indent one more time
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "    1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+        ""
+        "This behaviour is not observed when the list item does not extend to the next line."
+      ].join("\n")
+
     it "insert space if it is text", ->
       editor.setText "texttext"
       editor.setCursorBufferPosition([0, 4])
