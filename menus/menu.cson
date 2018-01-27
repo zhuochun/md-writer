@@ -81,6 +81,29 @@
             }
             { 'type': 'separator' }
             {
+              'label': 'deletion',
+              'command': 'markdown-writer:toggle-deletion-text'
+            }
+            {
+              'label': 'addition',
+              'command': 'markdown-writer:toggle-addition-text'
+            }
+            {
+              'label': 'substitution',
+              'command': 'markdown-writer:toggle-substitution-text'
+            }
+            {
+              'label': 'comment',
+              'command': 'markdown-writer:toggle-comment-text'
+            }
+            {
+              'label': 'highlight',
+              'command': 'markdown-writer:toggle-highlight-text'
+            }
+
+
+            { 'type': 'separator' }
+            {
               'label': 'Heading 1'
               'command': 'markdown-writer:toggle-h1'
             }
