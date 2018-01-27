@@ -118,7 +118,7 @@ textStyles:
   addition:
     before: "{++", after: "++}"
   substitution:
-    before: "{~~", after: "~>  ~~}"
+    before: "{~~", after: "~>~~}"
   comment:
     before: "{>>", after: "<<}"
   highlight:

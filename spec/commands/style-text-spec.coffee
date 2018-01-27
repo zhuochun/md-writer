@@ -29,13 +29,13 @@ describe "StyleText", ->
       expect(cmd.isStyleOn(fixture)).toBe(true)
 
     it "check any addition is in string", ->
-      cmd = new StyleText("addition")
+      cmd = new StyleTehttps://github.com/zhuochun/md-writer/issues/221xt("addition")
       fixture = "**bold** one {++addition++} two _italic_"
       expect(cmd.isStyleOn(fixture)).toBe(true)
 
     it "check any substitution is in string", ->
       cmd = new StyleText("substitution")
-      fixture = "**bold** one {~~substitution of~>to~~} two _italic_"
+      fixture = "**bold** one {~~substitution of~>~~} two _italic_"
       expect(cmd.isStyleOn(fixture)).toBe(true)
 
     it "check any comment is in string", ->
@@ -45,7 +45,7 @@ describe "StyleText", ->
 
     it "check any highlight is in string", ->
       cmd = new StyleText("highlight")
-      fixture = "**bold** one {==highlighted==}{>>comment<<} two _italic_"
+      fixture = "**bold** one {==highlighted==}{>><<} two _italic_"
       expect(cmd.isStyleOn(fixture)).toBe(true)
 
     it "check a style is not added", ->
