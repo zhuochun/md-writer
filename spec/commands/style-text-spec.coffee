@@ -29,7 +29,7 @@ describe "StyleText", ->
       expect(cmd.isStyleOn(fixture)).toBe(true)
 
     it "check any addition is in string", ->
-      cmd = new StyleTehttps://github.com/zhuochun/md-writer/issues/221xt("addition")
+      cmd = new StyleText("addition")
       fixture = "**bold** one {++addition++} two _italic_"
       expect(cmd.isStyleOn(fixture)).toBe(true)
 
