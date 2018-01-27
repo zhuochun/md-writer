@@ -113,6 +113,17 @@ textStyles:
     after: "\n```"
     regexBefore: "```(?:[\\w- ]+)?\\r?\\n"
     regexAfter: "\\r?\\n```"
+  deletion:
+    before: "{--", after: "--}"
+  addition:
+    before: "{++", after: "++}"
+  substitution:
+    before: "{~~", after: "~>~~}"
+  comment:
+    before: "{>>", after: "<<}"
+  highlight:
+    before: "{==", after: "==}{>><<}"
+
 
 lineStyles:
   h1: before: "# "
