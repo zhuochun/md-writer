@@ -44,7 +44,7 @@ module.exports =
       editorCommands["markdown-writer:insert-#{media}"] =
         @registerView("./views/insert-#{media}-view")
 
-    ["code", "codeblock", "bold", "italic", "strikethrough", "keystroke"].forEach (style) =>
+    ["code", "codeblock", "bold", "italic", "strikethrough", "keystroke","deletion","addition","substitution","comment","highlight"].forEach (style) =>
       editorCommands["markdown-writer:toggle-#{style}-text"] =
         @registerCommand("./commands/style-text", args: style)
 
