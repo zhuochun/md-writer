@@ -26,6 +26,10 @@ class EditLine
     line = @editor.lineTextForBufferRow(cursor.row)
 
     lineMeta = new LineMeta(line)
+    # don't continue alpha OL
+    if lineMeta.isList("al")
+      return e.abortKeyBinding()
+
     if lineMeta.isContinuous()
       # when cursor is at middle of line, do a normal insert line
       # unless inline continuation is enabled
