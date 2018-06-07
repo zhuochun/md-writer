@@ -28,6 +28,20 @@ sitePostsDir: "_posts/{year}/"
 # - E.g. to use the current filename directory, can use {directory}
 siteImagesDir: "images/{year}/{month}/"
 
+# Qiniu Uploader
+qiniuAccessKey: ""
+qiniuSecretKey: ""
+qiniuBucket: ""
+# qiniu bucket public domain http(s)://www.example.com
+qiniuDomain: ""
+# qiniu key prefix #{domain}/#{prefix}/{generate}
+qiniuKeyPrefix: ""
+# Qiniu Style Separtor https://portal.qiniu.com/bucket/default/separator
+qiniuSepartor: "-"
+qiniuStyle: ""
+# Qiniu Image: https://developer.qiniu.com/dora/manual/3683/img-directions-for-use
+qiniuParam: ""
+
 # URLs to tags/posts/categories JSON files
 # https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters
 urlForPosts: ""

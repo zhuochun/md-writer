@@ -74,3 +74,23 @@ module.exports =
     description: "Insert extra pipes at the start and the end of the table rows"
     type: "boolean"
     default: config.getDefault("tableExtraPipes")
+  qiniuAccessKey:
+    title: "Qiniu AccessKey"
+    description: "Qiniu AccessKey"
+    type: "string"
+    default: config.getDefault("qiniuAccessKey")
+  qiniuSecretKey:
+    title: "Qiniu SecretKey"
+    description: "Qiniu SecretKey"
+    type: "string"
+    default: config.getDefault("qiniuSecretKey")
+  qiniuBucket:
+    title: "Qiniu Bucket"
+    description: "Qiniu Bucket Name"
+    type: "string"
+    default: config.getDefault("qiniuBucket")
+  qiniuDomain:
+    title: "Qiniu Domain"
+    description: "Qiniu Bucket public domain"
+    type: "string"
+    default: config.getDefault("qiniuDomain")

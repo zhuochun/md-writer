@@ -8,6 +8,7 @@ dialog = remote.dialog || remote.require "dialog"
 config = require "../config"
 utils = require "../utils"
 templateHelper = require "../helpers/template-helper"
+qiniu = require "../helpers/qiniu-uploader"
 
 lastInsertImageDir = null # remember last inserted image directory
 
@@ -68,10 +69,11 @@ class InsertImageFileView extends View
       @editor.transact => @insertImageTag()
       @detach()
 
+    file = @resolveImagePath(imgSource)
     if !@copyImageCheckbox.hasClass('hidden') && @copyImageCheckbox.prop("checked")
-      @copyImage(@resolveImagePath(imgSource), callback)
+      @copyImage(file, callback)
     else
-      callback()
+      @uploadImage(file, callback)
 
   display: ->
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
@@ -186,6 +188,25 @@ class InsertImageFileView extends View
       text = img.alt
 
     @editor.setTextInBufferRange(@range, text)
+
+  uploadImage: (file, callback) ->
+    return callback() if utils.isUrl(file) || !fs.existsSync(file)
+    errorConfirm = (errorMessage) =>
+      atom.confirm
+        message: "[Markdown Writer] Error!"
+        detailedMessage: "Uploading Image:\n#{errorMessage}"
+        buttons: ['OK']
+    try
+      qiniu.upload(file, @titleEditor.getText(), path.extname(file),  @dateTime,
+        (data) =>
+          if data.success
+            @imageEditor.setText(data.src)
+            callback()
+          else
+            errorConfirm(data.message)
+      )
+    catch error
+      errorConfirm(error.message)
 
   copyImage: (file, callback) ->
     return callback() if utils.isUrl(file) || !fs.existsSync(file)

@@ -23,6 +23,18 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 
 ## Features
 
+### UPDATEING：在原有基础的功能上做了微量修改（图片传到七牛）
+#### 1. 本地图片文件如果选择复制到站点则不会上传到七牛 同原逻辑
+#### 2. ！！本地图片不选择复制到站点只会上传到七牛 原功能缺失！！
+#### 3. 截图图片文件如果选择保存到站点则不会上传到七牛 同原逻辑
+
+> ** clone后的文件夹名称必须是markdown-writer和packagename一致 否则功能会有问题 **
+> ```bash
+> cd ~/.atom/packages
+> git clone https://github.com/chenghm123/md-writer-qiniu.git markdown-writer
+> ```
+> 如果有任何BUG可以联系我修改、联系方式： [QQ邮箱](mailto:xxxxx@qq.com)
+
 ### Blogging
 
 - **Create new post** with front matters ([setup required][ca8870d7]).

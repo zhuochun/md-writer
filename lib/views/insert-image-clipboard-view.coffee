@@ -7,6 +7,7 @@ clipboard = require 'clipboard'
 config = require "../config"
 utils = require "../utils"
 templateHelper = require "../helpers/template-helper"
+qiniu = require "../helpers/qiniu-uploader"
 
 module.exports =
 class InsertImageClipboardView extends View
@@ -26,7 +27,10 @@ class InsertImageClipboardView extends View
           @label "Alignment", class: "message"
           @subview "alignEditor", new TextEditorView(mini: true)
       @div class: "dialog-row", =>
-        @span "Save Image To: Missing Title (alt)", outlet: "copyImageMessage"
+        @label for: "markdown-writer-copy-image-checkbox", =>
+          @input id: "markdown-writer-copy-image-checkbox",
+            type:"checkbox", outlet: "copyImageCheckbox"
+        @span "Save Image To: Missing Title (alt)", class: "side-label", outlet: "copyImageMessage"
       @div class: "image-container", =>
         @img outlet: 'imagePreview'
 
@@ -43,33 +47,16 @@ class InsertImageClipboardView extends View
       }))
 
   onConfirm: ->
-    title = @titleEditor.getText().trim()
-    return unless title
-
-    try
-      destFile = @getCopiedImageDestPath(title)
-
-      if fs.existsSync(destFile)
-        confirmation = atom.confirm
-          message: "File already exists!"
-          detailedMessage: "Another file already exists at:\n#{destFile}\nDo you want to overwrite it?"
-          buttons: ["No", "Yes"]
-        # abort overwrite and edit title
-        if confirmation == 0
-          @titleEditor.focus()
-          return
-
-      fs.writeFileSync(destFile, @clipboardImage.toPng())
-      # write dest path to clipboard
-      clipboard.writeText(destFile)
-
-      @editor.transact => @insertImageTag(destFile)
+    callback = (src) =>
+      @editor.transact => @insertImageTag(src)
       @detach()
-    catch error
-      atom.confirm
-        message: "[Markdown Writer] Error!"
-        detailedMessage: "Saving Image:\n#{error.message}"
-        buttons: ['OK']
+
+    if !@copyImageCheckbox.hasClass('hidden') && @copyImageCheckbox.prop("checked")
+      title = @titleEditor.getText().trim()
+      return unless title
+      @copyImage(title, callback)
+    else
+      @uploadImage(title, callback)
 
   display: (e) ->
     # read image from clipboard
@@ -139,6 +126,48 @@ class InsertImageClipboardView extends View
       text = img.alt
 
     @editor.insertText(text)
+
+  uploadImage: (title, callback) ->
+    errorConfirm= (errorMessage) =>
+      atom.confirm
+        message: "[Markdown Writer] Error!"
+        detailedMessage: "Uploading Image:\n#{errorMessage}"
+        buttons: ['OK']
+    try
+      qiniu.upload(@clipboardImage.toPng(), title, ".png",  @dateTime,
+        (data) =>
+          if data.success
+            callback(data.src)
+          else
+            errorConfirm(data.message)
+      )
+    catch error
+      errorConfirm(error.message)
+
+  copyImage: (title, callback) ->
+    try
+      destFile = @getCopiedImageDestPath(title)
+
+      if fs.existsSync(destFile)
+        confirmation = atom.confirm
+          message: "File already exists!"
+          detailedMessage: "Another file already exists at:\n#{destFile}\nDo you want to overwrite it?"
+          buttons: ["No", "Yes"]
+        # abort overwrite and edit title
+        if confirmation == 0
+          @titleEditor.focus()
+          return
+
+      fs.writeFileSync(destFile, @clipboardImage.toPng())
+      # write dest path to clipboard
+      clipboard.writeText(destFile)
+      # insertImageTag
+      callback(destFile)
+    catch error
+      atom.confirm
+        message: "[Markdown Writer] Error!"
+        detailedMessage: "Saving Image:\n#{error.message}"
+        buttons: ['OK']
 
   # get user's site local directory
   siteLocalDir: -> utils.getSitePath(config.get("siteLocalDir"))
