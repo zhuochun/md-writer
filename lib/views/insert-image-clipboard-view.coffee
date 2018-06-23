@@ -134,7 +134,7 @@ class InsertImageClipboardView extends View
         detailedMessage: "Uploading Image:\n#{errorMessage}"
         buttons: ['OK']
     try
-      qiniu.upload(@clipboardImage.toPng(), title, ".png",  @dateTime,
+      qiniu.upload(@clipboardImage.toPNG(), title, ".png",  @dateTime,
         (data) =>
           if data.success
             callback(data.src)
