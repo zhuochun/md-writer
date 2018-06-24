@@ -43,6 +43,30 @@ describe "EditLine", ->
         "- " # last item with trailing whitespace
       ].join("\n")
 
+    it "continue after nested unordered list line", ->
+      editor.setText """
+      - line 0
+        * line 1
+          + line 2
+      """
+      editor.setCursorBufferPosition([2, 12])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "- line 0"
+        "  * line 1"
+        "    + line 2"
+        "    + " # last item with trailing whitespace
+      ].join("\n")
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "- line 0"
+        "  * line 1"
+        "    + line 2"
+        "  * " # last item with trailing whitespace
+      ].join("\n")
+
     it "continue after ordered task list line", ->
       editor.setText """
       1. [ ] Epic Tasks
@@ -69,6 +93,15 @@ describe "EditLine", ->
       expect(editor.getText()).toBe [
         "1. Epic Order One"
         "1. " # last item with trailing whitespace
+      ].join("\n")
+
+    it "not continue after unindented alpha ordered list line", ->
+      editor.setText """a. Epic Tasks"""
+      editor.setCursorBufferPosition([0, 13])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "a. Epic Tasks"
       ].join("\n")
 
     it "continue after alpha ordered task list line", ->
@@ -277,13 +310,6 @@ describe "EditLine", ->
   describe "indentListLine", ->
     beforeEach -> editLine = new EditLine("indent-list-line")
 
-    it "indent line if it is at head of line", ->
-      editor.setText "  normal line"
-      editor.setCursorBufferPosition([0, 1])
-
-      editLine.trigger(event)
-      expect(editor.getText()).toBe("    normal line")
-
     it "indent line if it is an unordered list", ->
       editor.setText "- list"
       editor.setCursorBufferPosition([0, 5])
@@ -321,7 +347,54 @@ describe "EditLine", ->
         "This behaviour is not observed when the list item does not extend to the next line."
       ].join("\n")
 
-    it "insert space if it is text", ->
+    it "abort event if it is normal text", ->
+      editor.setText "texttext"
+      editor.setCursorBufferPosition([0, 4])
+
+      editLine.trigger(event)
+      expect(event.abortKeyBinding).toHaveBeenCalled()
+
+  describe "undentListLine", ->
+    beforeEach -> editLine = new EditLine("undent-list-line")
+
+    it "undent line if it is an unordered list", ->
+      editor.setText "  * list"
+      editor.setCursorBufferPosition([0, 5])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe("- list")
+
+    it "undent line if it is an ordered list", ->
+      editor.setText "    3. list"
+      editor.setCursorBufferPosition([0, 9])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe("  1. list")
+
+    it "indent long line if it is an ordered list", ->
+      editor.setText [
+          "    3. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+          ""
+          "This behaviour is not observed when the list item does not extend to the next line."
+        ].join("\n")
+      editor.setCursorBufferPosition([0, 9])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "  1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+        ""
+        "This behaviour is not observed when the list item does not extend to the next line."
+      ].join("\n")
+
+      # indent one more time
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+        ""
+        "This behaviour is not observed when the list item does not extend to the next line."
+      ].join("\n")
+
+    it "abort event if it is normal text", ->
       editor.setText "texttext"
       editor.setCursorBufferPosition([0, 4])
 

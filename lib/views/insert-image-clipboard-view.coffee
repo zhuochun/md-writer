@@ -51,12 +51,14 @@ class InsertImageClipboardView extends View
       @editor.transact => @insertImageTag(src)
       @detach()
 
+    pngBody = if @clipboardImage.toPNG then @clipboardImage.toPNG() else @clipboardImage.toPng()
+    
     if !@copyImageCheckbox.hasClass('hidden') && @copyImageCheckbox.prop("checked")
       title = @titleEditor.getText().trim()
       return unless title
-      @copyImage(title, callback)
+      @copyImage(pngBody, title, callback)
     else
-      @uploadImage(title, callback)
+      @uploadImage(pngBody, title, callback)
 
   display: (e) ->
     # read image from clipboard
@@ -82,7 +84,8 @@ class InsertImageClipboardView extends View
     if @panel.isVisible()
       @panel.hide()
       @previouslyFocusedElement?.focus()
-    super
+
+    super()
 
   detached: ->
     @disposables?.dispose()
@@ -127,14 +130,14 @@ class InsertImageClipboardView extends View
 
     @editor.insertText(text)
 
-  uploadImage: (title, callback) ->
+  uploadImage: (pngBody, title, callback) ->
     errorConfirm= (errorMessage) =>
       atom.confirm
         message: "[Markdown Writer] Error!"
         detailedMessage: "Uploading Image:\n#{errorMessage}"
         buttons: ['OK']
     try
-      qiniu.upload(@clipboardImage.toPNG(), title, ".png",  @dateTime,
+      qiniu.upload(pngBody, title, ".png",  @dateTime,
         (data) =>
           if data.success
             callback(data.src)
@@ -144,7 +147,7 @@ class InsertImageClipboardView extends View
     catch error
       errorConfirm(error.message)
 
-  copyImage: (title, callback) ->
+  copyImage: (pngBody, title, callback) ->
     try
       destFile = @getCopiedImageDestPath(title)
 
@@ -158,7 +161,7 @@ class InsertImageClipboardView extends View
           @titleEditor.focus()
           return
 
-      fs.writeFileSync(destFile, @clipboardImage.toPng())
+      fs.writeFileSync(destFile, pngBody)
       # write dest path to clipboard
       clipboard.writeText(destFile)
       # insertImageTag
