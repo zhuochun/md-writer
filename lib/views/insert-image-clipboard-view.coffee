@@ -59,7 +59,10 @@ class InsertImageClipboardView extends View
           @titleEditor.focus()
           return
 
-      fs.writeFileSync(destFile, @clipboardImage.toPng())
+      if @clipboardImage.toPNG
+        fs.writeFileSync(destFile, @clipboardImage.toPNG())
+      else # this is fallback
+        fs.writeFileSync(destFile, @clipboardImage.toPng())
       # write dest path to clipboard
       clipboard.writeText(destFile)
 
@@ -95,7 +98,8 @@ class InsertImageClipboardView extends View
     if @panel.isVisible()
       @panel.hide()
       @previouslyFocusedElement?.focus()
-    super
+
+    super()
 
   detached: ->
     @disposables?.dispose()
