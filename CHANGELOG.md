@@ -3,6 +3,7 @@
 * Add Critic-Markup support ([#221](https://github.com/zhuochun/md-writer/issues/221))
 * Fix NativeImage `toPng` ([#238](https://github.com/zhuochun/md-writer/pull/238))
 * Improve Alpha order list indentation ([#235](https://github.com/zhuochun/md-writer/pull/235))
+* Add `undent-list-line` command ([#240](https://github.com/zhuochun/md-writer/pull/240))
 
 ## 2.7.3
 
