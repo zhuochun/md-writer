@@ -9,8 +9,9 @@
 #
 
 "atom-workspace atom-text-editor:not([mini])":
-  "enter": "markdown-writer:insert-new-line"
-  "tab":   "markdown-writer:indent-list-line"
+  "enter":     "markdown-writer:insert-new-line"
+  "tab":       "markdown-writer:indent-list-line"
+  "shift-tab": "markdown-writer:undent-list-line"
 
 ".markdown-writer atom-text-editor[mini]":
   "enter":  "core:confirm"

@@ -66,7 +66,8 @@
       "markdown-writer:format-table",
       "markdown-writer:correct-order-list-numbers",
       "markdown-writer:insert-new-line",
-      "markdown-writer:indent-list-line"
+      "markdown-writer:indent-list-line",
+      "markdown-writer:undent-list-line"
     ]
   },
   "engines": {

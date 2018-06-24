@@ -44,7 +44,9 @@ module.exports =
       editorCommands["markdown-writer:insert-#{media}"] =
         @registerView("./views/insert-#{media}-view")
 
-    ["code", "codeblock", "bold", "italic", "strikethrough", "keystroke", "deletion", "addition", "substitution", "comment", "highlight"].forEach (style) =>
+    ["code", "codeblock", "bold", "italic", "strikethrough", "keystroke",
+     "deletion", "addition", "substitution", "comment", "highlight"
+    ].forEach (style) =>
       editorCommands["markdown-writer:toggle-#{style}-text"] =
         @registerCommand("./commands/style-text", args: style)
 
@@ -56,7 +58,7 @@ module.exports =
       editorCommands["markdown-writer:jump-to-#{command}"] =
         @registerCommand("./commands/jump-to", args: command)
 
-    ["insert-new-line", "indent-list-line"].forEach (command) =>
+    ["insert-new-line", "indent-list-line", "undent-list-line"].forEach (command) =>
       editorCommands["markdown-writer:#{command}"] =
         @registerCommand("./commands/edit-line",
           args: command, skipList: ["autocomplete-active"])
