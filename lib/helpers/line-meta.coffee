@@ -97,6 +97,7 @@ class LineMeta
   isList: (type) -> @type && @type.name.indexOf("list") != -1 && (!type || @type.name.indexOf(type) != -1)
   isContinuous: -> !!@nextLine
   isEmptyBody: -> !@body
+  isIndented: -> !!@indent && @indent.length > 0
 
   # Static methods
 

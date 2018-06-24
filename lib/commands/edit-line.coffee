@@ -26,6 +26,10 @@ class EditLine
     line = @editor.lineTextForBufferRow(cursor.row)
 
     lineMeta = new LineMeta(line)
+    # don't continue alpha OL if the line is unindented
+    if lineMeta.isList("al") && !lineMeta.isIndented()
+      return e.abortKeyBinding()
+
     if lineMeta.isContinuous()
       # when cursor is at middle of line, do a normal insert line
       # unless inline continuation is enabled
@@ -79,7 +83,10 @@ class EditLine
       else # find parent with indentation = current indentation - 1
         indentation = @editor.indentationForBufferRow(row)
         continue if indentation >= currentIndentation
-        nextLine = new LineMeta(line).nextLine if indentation == currentIndentation - 1 && LineMeta.isList(line)
+
+        if indentation == currentIndentation - 1 && LineMeta.isList(line)
+          lineMeta = new LineMeta(line)
+          nextLine = lineMeta.nextLine unless lineMeta.isList("al") && !lineMeta.isIndented()
         break
 
     @editor.selectToBeginningOfLine()

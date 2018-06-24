@@ -71,6 +71,15 @@ describe "EditLine", ->
         "1. " # last item with trailing whitespace
       ].join("\n")
 
+    it "not continue after unindented alpha ordered list line", ->
+      editor.setText """a. Epic Tasks"""
+      editor.setCursorBufferPosition([0, 13])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe [
+        "a. Epic Tasks"
+      ].join("\n")
+
     it "continue after alpha ordered task list line", ->
       editor.setText """
       1. [ ] Epic Tasks
