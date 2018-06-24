@@ -140,8 +140,6 @@ class EditLine
       line = "#{@editor.getTabText()}#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
       @_replaceLine(selection, cursor.row, line)
 
-    else if @_isAtLineBeginning(line, cursor.column) # indent on start of line
-      selection.indent()
     else
       e.abortKeyBinding()
 
@@ -158,3 +156,29 @@ class EditLine
 
   _isAtLineBeginning: (line, col) ->
     col == 0 || line.substring(0, col).trim() == ""
+
+  undentListLine: (e, selection) ->
+    return e.abortKeyBinding() if @_isRangeSelection(selection)
+
+    cursor = selection.getHeadBufferPosition()
+    currentIndentation = @editor.indentationForBufferRow(cursor.row)
+    return e.abortKeyBinding() if currentIndentation < 1
+
+    line = @editor.lineTextForBufferRow(cursor.row)
+    lineMeta = new LineMeta(line)
+
+    if lineMeta.isList("ol")
+      line = "#{lineMeta.lineHead(lineMeta.defaultHead)}#{lineMeta.body}"
+      line = line.substring(@editor.getTabText().length) # remove one indent
+      @_replaceLine(selection, cursor.row, line)
+
+    else if lineMeta.isList("ul")
+      bullet = config.get("templateVariables.ulBullet#{currentIndentation-1}")
+      bullet = bullet || config.get("templateVariables.ulBullet") || lineMeta.defaultHead
+
+      line = "#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
+      line = line.substring(@editor.getTabText().length) # remove one indent
+      @_replaceLine(selection, cursor.row, line)
+
+    else
+      e.abortKeyBinding()
