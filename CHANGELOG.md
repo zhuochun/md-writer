@@ -1,3 +1,7 @@
+## 2.7.5
+
+* Fix handling frontMatter parsing ([#136](https://github.com/zhuochun/md-writer/issues/136))
+
 ## 2.7.4
 
 * Add Critic-Markup support ([#221](https://github.com/zhuochun/md-writer/issues/221))
