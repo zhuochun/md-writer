@@ -25,8 +25,14 @@ class FrontMatter
     @_findFrontMatter (match) =>
       try
         @content = yaml.safeLoad(match.match[1].trim()) || {}
-        @leadingFence = match.matchText.startsWith("---")
-        @isEmpty = false
+
+        if typeof @content != "object" # error parsing #136
+          @content = {}
+          @leadingFence = true
+          @isEmpty = true
+        else
+          @leadingFence = match.matchText.startsWith("---")
+          @isEmpty = false
       catch error
         @parseError = error
         @content = {}
