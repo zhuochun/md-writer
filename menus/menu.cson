@@ -100,8 +100,6 @@
               'label': 'highlight',
               'command': 'markdown-writer:toggle-highlight-text'
             }
-
-
             { 'type': 'separator' }
             {
               'label': 'Heading 1'
@@ -162,6 +160,19 @@
           ]
         }
         {
+          'label': 'Folding'
+          'submenu': [
+            {
+              'label': 'Fold All Links'
+              'command': 'markdown-writer:fold-links'
+            }
+            {
+              'label': 'Unfold All'
+              'command': 'editor:unfold-all'
+            }
+          ]
+        }
+        {
           'label': 'Helpers'
           'submenu': [
             {
@@ -176,6 +187,11 @@
             {
               'label': 'Jump to Link/Definition'
               'command': 'markdown-writer:jump-to-reference-definition'
+            }
+            { 'type': 'separator' }
+            {
+              'label': 'Fold All Links'
+              'command': 'markdown-writer:fold-links'
             }
             { 'type': 'separator' }
             {
