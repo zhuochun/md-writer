@@ -302,6 +302,13 @@ parseInlineLink = (input) ->
   else
     text: input, url: "", title: ""
 
+scanLinks = (editor, cb) ->
+  editor.buffer.scan /// #{INLINE_LINK_REGEX.source} ///g, (match) ->
+    rg = match.range
+    rg.start.column += match.match[1].length + 3 # [](
+    rg.end.column -= 1
+    cb(rg)
+
 # ==================================================
 # Reference link
 #
@@ -672,6 +679,7 @@ module.exports =
   isImage: isImage
   parseImage: parseImage
 
+  scanLinks: scanLinks
   isInlineLink: isInlineLink
   parseInlineLink: parseInlineLink
   isReferenceLink: isReferenceLink
