@@ -23,11 +23,27 @@ class NewFileView extends View
         @subview "dateEditor", new TextEditorView(mini: true)
         @label "Title", class: "message"
         @subview "titleEditor", new TextEditorView(mini: true)
+        # render custom fields
+        for f in @getCustomFields()
+          @label f["name"], class: "message"
+          @subview f["editor"], new TextEditorView(mini: true)
+
       @p class: "message", outlet: "message"
       @p class: "error", outlet: "error"
 
+  # custom fields
+  @getCustomFields: ->
+    for field, value of config.get("frontMatterCustomFields") || {}
+      id: utils.slugize(field)
+      editor: "#{utils.slugize(field)}CustomEditor"
+      name: utils.capitalize(field)
+      value: value
+
   initialize: ->
-    utils.setTabIndex([@titleEditor, @pathEditor, @dateEditor])
+    editors = [@titleEditor, @pathEditor, @dateEditor]
+    editors.push(@[f["editor"]]) for f in @constructor.getCustomFields()
+    # set tab orders
+    utils.setTabIndex(editors)
 
     # save current date time as base
     @dateTime = templateHelper.getDateTime()
@@ -50,6 +66,7 @@ class NewFileView extends View
     @previouslyFocusedElement = $(document.activeElement)
     @dateEditor.setText(templateHelper.getFrontMatterDate(@dateTime))
     @pathEditor.setText(templateHelper.create(@constructor.pathConfig, @dateTime))
+    @[f["editor"]].setText(f["value"]) for f in @constructor.getCustomFields() when !!f["value"]
     @panel.show()
     @titleEditor.focus()
 
@@ -97,4 +114,8 @@ class NewFileView extends View
 
   getFileName: -> templateHelper.create(@constructor.fileNameConfig, @getFrontMatter(), @getDateTime())
   getDateTime: -> templateHelper.parseFrontMatterDate(@dateEditor.getText()) || @dateTime
-  getFrontMatter: -> templateHelper.getFrontMatter(this)
+  getFrontMatter: ->
+    base = templateHelper.getFrontMatter(this)
+    # add custom fields to frontMatter
+    base[f["id"]] = @[f["editor"]].getText() for f in @constructor.getCustomFields()
+    base

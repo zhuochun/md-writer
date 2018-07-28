@@ -43,6 +43,11 @@ newDraftFileName: "{slug}{extension}"
 # Filename format of new posts created
 newPostFileName: "{year}-{month}-{day}-{slug}{extension}"
 
+# Front matter add custom fields
+# - Configured as a key-value pair (fieldName: defaultValue)
+# - Referenced by fieldName
+# frontMatterCustomFields:
+#   author: "Your Name Here"
 # Front matter date format, determines the {date} in frontMatter
 frontMatterDate: "{year}-{month}-{day} {hour}:{minute}"
 # Front matter template

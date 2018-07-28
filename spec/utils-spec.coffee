@@ -6,6 +6,12 @@ describe "utils", ->
 # ==================================================
 # General Utils
 #
+  describe ".capitalize", ->
+    it "capitalize string", ->
+      expect(utils.capitalize("")).toEqual("")
+      expect(utils.capitalize("Author")).toEqual("Author")
+      expect(utils.capitalize("authorName")).toEqual("AuthorName")
+      expect(utils.capitalize("中文")).toEqual("中文")
 
   describe ".incrementChars", ->
     it "increment empty chars", ->

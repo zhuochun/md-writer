@@ -15,6 +15,10 @@ escapeRegExp = (str) ->
   return "" unless str
   str.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")
 
+capitalize = (str) ->
+  return "" unless str
+  str.replace /^[a-z]/, (c) -> c.toUpperCase()
+
 isUpperCase = (str) ->
   if str.length > 0 then (str[0] >= 'A' && str[0] <= 'Z')
   else false
@@ -655,6 +659,7 @@ findLinkInRange = (editor, range) ->
 module.exports =
   getJSON: getJSON
   escapeRegExp: escapeRegExp
+  capitalize: capitalize
   isUpperCase: isUpperCase
   incrementChars: incrementChars
   slugize: slugize
