@@ -66,7 +66,7 @@ class NewFileView extends View
     @previouslyFocusedElement = $(document.activeElement)
     @dateEditor.setText(templateHelper.getFrontMatterDate(@dateTime))
     @pathEditor.setText(templateHelper.create(@constructor.pathConfig, @dateTime))
-    @[f["editor"]].setText(f["value"]) if f["value"] for f in @constructor.getCustomFields()
+    @[f["editor"]].setText(f["value"]) for f in @constructor.getCustomFields() when !!f["value"]
     @panel.show()
     @titleEditor.focus()
 
