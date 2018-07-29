@@ -22,19 +22,23 @@ Issues and features are recorded in [Issues](https://github.com/zhuochun/md-writ
 
 [Milestones](https://github.com/zhuochun/md-writer/milestones) are used to group tasks that trying to be solved, based on preceived importance/difficulties.
 
-### Project Setup
+### Submit Changes
 
 - Fork https://github.com/zhuochun/md-writer to your GitHub repository.
-- Clone it to your local computer.
-- Run `apm link --dev` in the repository.
+- Clone the repo to your local computer.
+- In command line, navigate to your cloned repository directory.
+- In command line, run `apm link --dev` to register this package to Atom.
+- In command line, run `atom --dev .` to open Atom in development mode with this package loaded.
+- In Atom editor, run command `Update Package Dependencies: Update` to install all package dependencies.
 
-### Submit a Pull Request
+### Submit a new Pull Request
 
 - Start a new branch `git checkout -b branch-name`.
-- Run `atom --dev .` and edit files in Atom.
-- Commit your changes, with a few tests if possible.
+- Run `atom --dev .` and make changes.
+- Perform manual tests, use command `Window: Reload` to load your latest changes.
+- Commit your changes, with a few unit tests whenever possible.
 - Push your branch `git push -u origin branch-name` to GitHub.
-- Submit a Pull Request through GitHub with a clear description.
+- Submit a Pull Request through GitHub with a clear description on what's the change about.
 
 ## References
 
