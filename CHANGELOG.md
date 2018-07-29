@@ -1,3 +1,8 @@
+## 2.8.0
+
+* Add custom front matter fields to new Post/Draft ([#242](https://github.com/zhuochun/md-writer/pull/242))
+* Add folding inline links command ([#243](https://github.com/zhuochun/md-writer/pull/243))
+
 ## 2.7.5
 
 * Fix handling frontMatter parsing ([#136](https://github.com/zhuochun/md-writer/issues/136))
