@@ -1,3 +1,8 @@
+## 2.8.1
+
+* Fix indent/outdent changes cursor position ([#244](https://github.com/zhuochun/md-writer/pull/244))
+* Support different range selection mechanism for text styles ([#245](https://github.com/zhuochun/md-writer/pull/245))
+
 ## 2.8.0
 
 * Add custom front matter fields to new Post/Draft ([#242](https://github.com/zhuochun/md-writer/pull/242))
