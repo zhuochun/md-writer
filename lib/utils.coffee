@@ -576,8 +576,9 @@ getScopeDescriptor = (cursor, scopeSelector) ->
     return scopes[0]
 
 getBufferRangeForScope = (editor, cursor, scopeSelector) ->
-  pos = cursor.getBufferPosition()
+  return unless scopeSelector # remove undefined scopeSelector
 
+  pos = cursor.getBufferPosition()
   range = editor.bufferRangeForScopeAtPosition(scopeSelector, pos)
   return range if range
 
@@ -600,19 +601,15 @@ getBufferRangeForScope = (editor, cursor, scopeSelector) ->
 # Get the text buffer range if selection is not empty, or get the
 # buffer range if it is inside a scope selector, or the current word.
 #
-# selection: optional, when not provided or empty, use the last selection
+# opts["selection"]: optional, when not provided or empty, use the last selection
 # opts["selectBy"]:
 #  - nope: do not use any select by
 #  - nearestWord: try select nearest word, default
 #  - currentLine: try select current line
-getTextBufferRange = (editor, scopeSelector, selection, opts = {}) ->
-  if typeof(selection) == "object"
-    opts = selection
-    selection = undefined
-
-  selection ?= editor.getLastSelection()
+getTextBufferRange = (editor, scopeSelector, opts = {}) ->
+  selection = opts.selection || editor.getLastSelection()
+  selectBy = opts.selectBy || "nearestWord"
   cursor = selection.cursor
-  selectBy = opts["selectBy"] || "nearestWord"
 
   if selection.getText()
     selection.getBufferRange()
@@ -621,8 +618,19 @@ getTextBufferRange = (editor, scopeSelector, selection, opts = {}) ->
   else if selectBy == "nearestWord"
     wordRegex = cursor.wordRegExp(includeNonWordCharacters: false)
     cursor.getCurrentWordBufferRange(wordRegex: wordRegex)
+  else if selectBy == "currentWord"
+    cursor.getCurrentWordBufferRange()
+  else if selectBy == "currentNonTrailWord"
+    wordRange = cursor.getCurrentWordBufferRange()
+    # test if cursor is at the end of word
+    if wordRange.end.column == cursor.getBufferColumn()
+      selection.getBufferRange()
+    else
+      wordRange
   else if selectBy == "currentLine"
     cursor.getCurrentLineBufferRange()
+  else if selectBy == "currentParagraph"
+    cursor.getCurrentParagraphBufferRange()
   else
     selection.getBufferRange()
 

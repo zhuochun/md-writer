@@ -2,11 +2,8 @@ config = require "../config"
 utils = require "../utils"
 
 # Map markdown-writer text style keys to official gfm style scope selectors
-scopeSelectors =
-  code: ".raw"
-  bold: ".bold"
-  italic: ".italic"
-  strikethrough: ".strike"
+# DEPRECATED use config.textStyles.{style}.scopeSelector instead
+scopeSelectors = code: ".raw", bold: ".bold", italic: ".italic", strikethrough: ".strike"
 
 module.exports =
 class StyleText
@@ -16,6 +13,8 @@ class StyleText
   # - after (required)
   # - regexBefore (optional) overwrites before when to match/replace string
   # - regexAfter (optional) overwrites after when to match/replace string
+  # - scopeSelector (optional) defines an gfm style scope selectors
+  # - selectBy (option) empty or "nearestWord"
   #
   constructor: (style) ->
     @styleName = style
@@ -38,10 +37,12 @@ class StyleText
 
   # try to act smart to correct the selection if needed
   normalizeSelection: (selection) ->
-    scopeSelector = scopeSelectors[@styleName]
-    return unless scopeSelector
+    scopeSelector = @style.scopeSelector || scopeSelectors[@styleName]
+    opts =
+      selection: selection,
+      selectBy: @style.selectBy || config.get("textRangeSelectBy")
 
-    range = utils.getTextBufferRange(@editor, scopeSelector, selection)
+    range = utils.getTextBufferRange(@editor, scopeSelector, opts)
     selection.setBufferRange(range)
 
   toggleStyle: (selection, text, opts) ->
