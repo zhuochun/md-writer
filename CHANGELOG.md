@@ -1,7 +1,7 @@
-## 2.8.1
+## 2.9.0
 
+* Support range selection mechanisms for text styles ([#245](https://github.com/zhuochun/md-writer/pull/245))
 * Fix indent/outdent changes cursor position ([#244](https://github.com/zhuochun/md-writer/pull/244))
-* Support different range selection mechanism for text styles ([#245](https://github.com/zhuochun/md-writer/pull/245))
 
 ## 2.8.0
 
