@@ -323,6 +323,7 @@ describe "EditLine", ->
 
       editLine.trigger(event)
       expect(editor.getText()).toBe("  1. list")
+      expect(editor.getCursorBufferPosition().toString()).toBe("(0, 7)")
 
     it "indent long line if it is an ordered list", ->
       editor.setText [
@@ -338,6 +339,7 @@ describe "EditLine", ->
         ""
         "This behaviour is not observed when the list item does not extend to the next line."
       ].join("\n")
+      expect(editor.getCursorBufferPosition().toString()).toBe("(0, 7)")
 
       # indent one more time
       editLine.trigger(event)
@@ -346,6 +348,7 @@ describe "EditLine", ->
         ""
         "This behaviour is not observed when the list item does not extend to the next line."
       ].join("\n")
+      expect(editor.getCursorBufferPosition().toString()).toBe("(0, 9)")
 
     it "abort event if it is normal text", ->
       editor.setText "texttext"
@@ -363,6 +366,7 @@ describe "EditLine", ->
 
       editLine.trigger(event)
       expect(editor.getText()).toBe("- list")
+      expect(editor.getCursorBufferPosition().toString()).toBe("(0, 3)")
 
     it "undent line if it is an ordered list", ->
       editor.setText "    3. list"
@@ -371,7 +375,7 @@ describe "EditLine", ->
       editLine.trigger(event)
       expect(editor.getText()).toBe("  1. list")
 
-    it "indent long line if it is an ordered list", ->
+    it "undent long line if it is an ordered list", ->
       editor.setText [
           "    3. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
           ""
@@ -397,6 +401,13 @@ describe "EditLine", ->
     it "abort event if it is normal text", ->
       editor.setText "texttext"
       editor.setCursorBufferPosition([0, 4])
+
+      editLine.trigger(event)
+      expect(event.abortKeyBinding).toHaveBeenCalled()
+
+    it "abort event if it has nothing to unindent", ->
+      editor.setText "- list"
+      editor.setCursorBufferPosition([0, 2])
 
       editLine.trigger(event)
       expect(event.abortKeyBinding).toHaveBeenCalled()
