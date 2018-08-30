@@ -1,7 +1,7 @@
 {
   "name": "markdown-writer",
   "main": "./lib/markdown-writer",
-  "version": "2.7.5",
+  "version": "2.9.0",
   "description": "Make Atom a better Markdown editor and an easier static blogging tool.",
   "keywords": [
     "Markdown",
@@ -63,6 +63,7 @@
       "markdown-writer:jump-to-reference-definition",
       "markdown-writer:publish-draft",
       "markdown-writer:open-link-in-browser",
+      "markdown-writer:fold-links",
       "markdown-writer:format-table",
       "markdown-writer:correct-order-list-numbers",
       "markdown-writer:insert-new-line",

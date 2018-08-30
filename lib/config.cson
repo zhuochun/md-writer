@@ -57,6 +57,11 @@ newDraftFileName: "{slug}{extension}"
 # Filename format of new posts created
 newPostFileName: "{year}-{month}-{day}-{slug}{extension}"
 
+# Front matter add custom fields
+# - Configured as a key-value pair (fieldName: defaultValue)
+# - Referenced by fieldName
+# frontMatterCustomFields:
+#   author: "Your Name Here"
 # Front matter date format, determines the {date} in frontMatter
 frontMatterDate: "{year}-{month}-{day} {hour}:{minute}"
 # Front matter template
@@ -95,50 +100,75 @@ tableNewLineContinuation: true
 #   under your Atom global config directory
 # siteLinkPath: "set/path/to/links.cson"
 
-# TextStyles and LineStyles
+# Default text range selection, can be overwritten individually in textStyles:
 #
-# - Use `before` and `after` to insert text around the selected text.
-# - Use `regexMatch{Before,After}` when an exact match of the style is needed.
-#   If this regex matched true, the style will be toggled.
-# - Use `regex{Before,After}` when a general match of the style is wanted.
-#   If this regex matched true, the style will be replaced by new style.
+# - "nope" (disabled), "nearestWord" (alphanum word, default), "currentWord",
+#   "currentNonTrailWord" (current word except at the end of a word),
+#   "currentLine", "currentParagraph"
+#
+textRangeSelectBy: "nearestWord"
+
+# TextStyles adjust text/word styles
+#
+# - Use `before` and `after` to define insert characters around the selected text.
+# - Use `regex{Before,After}` (optional) to define a regex match of any similar style.
+#   If this regex is matched, the matched style will be replaced by this style.
 #
 # NOTE
 #
-# - In `regex{Before,After}`, `regexMatch{Before,After}`, DO NOT USE CAPTURE GROUP!
-#   Capture group will break things! USE non-capturing group `(?:)` instead.
-# - When `regexMatch{Before,After}` is not specified, `regex{Before,After}` is used instead.
-# - In nested settings, e.g. codeblock, ul, ol, all the within nested keys need to exists if
-#   you changed one setting.
+# - DO NOT USE CAPTURE GROUP IN `regex{Before,After}`! Capture group break things,
+#   use non-capturing group `(?:)` instead.
+# - When you modify one style, make sure all configurations for this style are present.
+#   E.g. when you modify italic.before and italic.after, keep italic.scopeSelector intact.
+# - If you don't plan to modify any of these settings, remove them. So the settings
+#   fallback to defaults and enjoy updates when the package is upgraded.
 #
 textStyles:
   code:
-    before: "`", after: "`"
+    before: "`", after: "`", scopeSelector: ".raw"
   bold:
-    before: "**", after: "**"
+    before: "**", after: "**", scopeSelector: ".bold"
   italic:
-    before: "_", after: "_"
+    before: "_", after: "_", scopeSelector: ".italic"
   keystroke:
     before: "<kbd>", after: "</kbd>"
   strikethrough:
-    before: "~~", after: "~~"
+    before: "~~", after: "~~", scopeSelector: ".strike"
   codeblock:
     before: "```\n"
     after: "\n```"
     regexBefore: "```(?:[\\w- ]+)?\\r?\\n"
     regexAfter: "\\r?\\n```"
+    selectBy: "currentParagraph"
   deletion:
-    before: "{--", after: "--}"
+    before: "{--", after: "--}", scopeSelector: "critic."
   addition:
-    before: "{++", after: "++}"
+    before: "{++", after: "++}", scopeSelector: "critic."
   substitution:
     before: "{~~", after: "~>~~}"
   comment:
-    before: "{>>", after: "<<}"
+    before: "{>>", after: "<<}", scopeSelector: "critic."
   highlight:
     before: "{==", after: "==}{>><<}"
 
-
+# LineStyles adjust line/sentence styles
+#
+# - Use `before` and `after` to define insert characters around the selected text.
+# - Use `regex{Before,After}` (optional) to define a regex match of any similar style.
+#   If this regex is matched, the matched style will be replaced by this style.
+# - Use `regexMatch{Before,After}` (optional) to define an exact match of this style.
+#   If this regex is matched, this style will be toggled. This config takes the highest
+#   matching priority.
+#
+# NOTE
+#
+# - DO NOT USE CAPTURE GROUP IN `regex{Before,After}`, `regexMatch{Before,After}`!
+#    Capture group break things, use non-capturing group `(?:)` instead.
+# - When you modify one style, make sure all configurations for this style are present.
+#   E.g. when you modify ul.before, keep ul.regexMatchBefore etc intact.
+# - If you don't plan to modify any of these settings, remove them. So the settings
+#   fallback to defaults and enjoy updates when the package is upgraded.
+#
 lineStyles:
   h1: before: "# "
   h2: before: "## "
