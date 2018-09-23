@@ -317,6 +317,18 @@ describe "EditLine", ->
       editLine.trigger(event)
       expect(editor.getText()).toBe("  - list")
 
+    it "indent line if it is an unordered list (ulBullet config)", ->
+      atom.config.set("markdown-writer.templateVariables.ulBullet1", "*")
+      atom.config.set("markdown-writer.templateVariables.ulBullet2", "+")
+
+      editor.setText "- list"
+      editor.setCursorBufferPosition([0, 5])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe("  * list")
+      editLine.trigger(event)
+      expect(editor.getText()).toBe("    + list")
+
     it "indent line if it is an ordered list", ->
       editor.setText "3. list"
       editor.setCursorBufferPosition([0, 5])
@@ -367,6 +379,17 @@ describe "EditLine", ->
       editLine.trigger(event)
       expect(editor.getText()).toBe("- list")
       expect(editor.getCursorBufferPosition().toString()).toBe("(0, 3)")
+
+    it "undent line if it is an unordered list (ulBullet config)", ->
+      atom.config.set("markdown-writer.templateVariables.ulBullet1", "*")
+
+      editor.setText "    + list"
+      editor.setCursorBufferPosition([0, 5])
+
+      editLine.trigger(event)
+      expect(editor.getText()).toBe("  * list")
+      editLine.trigger(event)
+      expect(editor.getText()).toBe("- list")
 
     it "undent line if it is an ordered list", ->
       editor.setText "    3. list"
