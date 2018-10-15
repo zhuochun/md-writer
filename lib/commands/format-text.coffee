@@ -27,7 +27,10 @@ class FormatText
       formattedText = @[fn](e, range, text)
       @editor.setTextInBufferRange(range, formattedText) if formattedText
 
-  correctOrderListNumbers: (e, range, lines) ->
+  correctOrderListNumbers: (e, range, lines) -> # DEPRECATED
+    @formatOrderList(e, range, lines)
+  
+  formatOrderList: (e, range, lines) ->
     correctedLines = []
 
     indentStack = []
