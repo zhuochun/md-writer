@@ -7,6 +7,7 @@
 ".platform-darwin atom-text-editor:not([mini])":
   "shift-cmd-K": "markdown-writer:insert-link"
   "shift-cmd-I": "markdown-writer:insert-image"
+  "shift-cmd-X": "markdown-writer:toggle-taskdone"
   "cmd-i":       "markdown-writer:toggle-italic-text"
   "cmd-b":       "markdown-writer:toggle-bold-text"
   "cmd-'":       "markdown-writer:toggle-code-text"
