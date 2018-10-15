@@ -47,22 +47,10 @@
               'command': 'markdown-writer:insert-image'
             }
             {
-              'label': 'Insert Table',
-              'command': 'markdown-writer:insert-table'
-            }
-            {
               'label': 'Insert Footnote',
               'command': 'markdown-writer:insert-footnote'
             }
             { 'type': 'separator' }
-            {
-              'label': 'Code',
-              'command': 'markdown-writer:toggle-code-text'
-            }
-            {
-              'label': 'Code Block',
-              'command': 'markdown-writer:toggle-codeblock-text'
-            }
             {
               'label': 'Bold',
               'command': 'markdown-writer:toggle-bold-text'
@@ -81,24 +69,20 @@
             }
             { 'type': 'separator' }
             {
-              'label': 'deletion',
-              'command': 'markdown-writer:toggle-deletion-text'
+              'label': 'Code',
+              'command': 'markdown-writer:toggle-code-text'
             }
             {
-              'label': 'addition',
-              'command': 'markdown-writer:toggle-addition-text'
+              'label': 'Code Block',
+              'command': 'markdown-writer:toggle-codeblock-text'
             }
             {
-              'label': 'substitution',
-              'command': 'markdown-writer:toggle-substitution-text'
+              'label': 'Math',
+              'command': 'markdown-writer:toggle-math-text'
             }
             {
-              'label': 'comment',
-              'command': 'markdown-writer:toggle-comment-text'
-            }
-            {
-              'label': 'highlight',
-              'command': 'markdown-writer:toggle-highlight-text'
+              'label': 'Math Block',
+              'command': 'markdown-writer:toggle-mathblock-text'
             }
             { 'type': 'separator' }
             {
@@ -135,7 +119,7 @@
               'command': 'markdown-writer:toggle-task'
             }
             {
-              'label': 'Task List (Done)'
+              'label': 'Toggle Task List'
               'command': 'markdown-writer:toggle-taskdone'
             }
             { 'type': 'separator' }
@@ -146,8 +130,37 @@
           ]
         }
         {
+          'label': 'CriticMarkup'
+          'submenu': [
+            {
+              'label': 'Addition',
+              'command': 'markdown-writer:toggle-addition-text'
+            }
+            {
+              'label': 'Deletion',
+              'command': 'markdown-writer:toggle-deletion-text'
+            }
+            {
+              'label': 'Substitution',
+              'command': 'markdown-writer:toggle-substitution-text'
+            }
+            {
+              'label': 'Comment',
+              'command': 'markdown-writer:toggle-comment-text'
+            }
+            {
+              'label': 'Highlight',
+              'command': 'markdown-writer:toggle-highlight-text'
+            }
+          ]
+        }
+        {
           'label': 'Table'
           'submenu': [
+            {
+              'label': 'Insert Table',
+              'command': 'markdown-writer:insert-table'
+            }
             {
               'label': 'Format Table'
               'command': 'markdown-writer:format-table'
@@ -166,6 +179,7 @@
               'label': 'Fold All Links'
               'command': 'markdown-writer:fold-links'
             }
+            { 'type': 'separator' }
             {
               'label': 'Unfold All'
               'command': 'editor:unfold-all'
@@ -190,8 +204,8 @@
             }
             { 'type': 'separator' }
             {
-              'label': 'Fold All Links'
-              'command': 'markdown-writer:fold-links'
+              'label': 'Format Ordered List'
+              'command': 'markdown-writer:format-order-list'
             }
             { 'type': 'separator' }
             {
