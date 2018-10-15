@@ -38,6 +38,8 @@
       "markdown-writer:insert-table",
       "markdown-writer:toggle-code-text",
       "markdown-writer:toggle-codeblock-text",
+      "markdown-writer:toggle-math-text",
+      "markdown-writer:toggle-mathblock-text",
       "markdown-writer:toggle-bold-text",
       "markdown-writer:toggle-italic-text",
       "markdown-writer:toggle-keystroke-text",

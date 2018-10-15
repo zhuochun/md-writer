@@ -112,6 +112,8 @@ textRangeSelectBy: "nearestWord"
 textStyles:
   code:
     before: "`", after: "`", scopeSelector: ".raw"
+  math:
+    before: "$$", after: "$$", scopeSelector: ".math"
   bold:
     before: "**", after: "**", scopeSelector: ".bold"
   italic:
@@ -125,6 +127,12 @@ textStyles:
     after: "\n```"
     regexBefore: "```(?:[\\w- ]+)?\\r?\\n"
     regexAfter: "\\r?\\n```"
+    selectBy: "currentParagraph"
+  mathblock:
+    before: "$$\n"
+    after: "\n$$"
+    regexBefore: "\\$\\$\\r?\\n"
+    regexAfter: "\\r?\\n\\$\\$"
     selectBy: "currentParagraph"
   deletion:
     before: "{--", after: "--}", scopeSelector: "critic."
