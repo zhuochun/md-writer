@@ -1,12 +1,12 @@
 utils = require "../utils"
 
-LIST_UL_TASK_REGEX = /// ^ (\s*) ([*+-\.]) \s+ \[[xX\ ]\] \s* (.*) $ ///
-LIST_UL_REGEX      = /// ^ (\s*) ([*+-\.]) \s+ (.*) $ ///
-LIST_OL_TASK_REGEX = /// ^ (\s*) (\d+)([\.\)]) \s+ \[[xX\ ]\] \s* (.*) $ ///
-LIST_OL_REGEX      = /// ^ (\s*) (\d+)([\.\)]) \s+ (.*) $ ///
-LIST_AL_TASK_REGEX = /// ^ (\s*) ([a-zA-Z]+)([\.\)]) \s+ \[[xX\ ]\] \s* (.*) $ ///
-LIST_AL_REGEX      = /// ^ (\s*) ([a-zA-Z]+)([\.\)]) \s+ (.*) $ ///
-BLOCKQUOTE_REGEX   = /// ^ (\s*) (>) \s* (.*) $ ///
+LIST_UL_TASK_REGEX = /// ^ (\s*) ([*+-\.]) \s+ \[[xX\ ]\] (?:\s+ (.*))? $ ///
+LIST_UL_REGEX      = /// ^ (\s*) ([*+-\.]) (?:\s+ (.*))? $ ///
+LIST_OL_TASK_REGEX = /// ^ (\s*) (\d+)([\.\)]) \s+ \[[xX\ ]\] (?:\s+ (.*))? $ ///
+LIST_OL_REGEX      = /// ^ (\s*) (\d+)([\.\)]) (?:\s+ (.*))? $ ///
+LIST_AL_TASK_REGEX = /// ^ (\s*) ([a-zA-Z]+)([\.\)]) \s+ \[[xX\ ]\] (?:\s+ (.*))? $ ///
+LIST_AL_REGEX      = /// ^ (\s*) ([a-zA-Z]+)([\.\)]) (?:\s+ (.*))? $ ///
+BLOCKQUOTE_REGEX   = /// ^ (\s*) (>) (?:\s+ (.*))? $ ///
 
 incStr = (str) ->
   num = parseInt(str, 10)
@@ -87,7 +87,7 @@ class LineMeta
         @head = matches[2]
         @defaultHead = type.defaultHead(matches[2])
         @suffix = if matches.length >= 4 then matches[3] else ""
-        @body = matches[matches.length-1]
+        @body = matches[matches.length-1] || ""
         @nextLine = (type.nextLine || type.lineHead).call(null, @indent, @head, @suffix)
         break
 

@@ -37,29 +37,25 @@ class StyleLine
             i: i + 1,
             ul: config.get("templateVariables.ulBullet#{@editor.indentationForBufferRow(row)}") || config.get("templateVariables.ulBullet")
 
-          selection.cursor.setBufferPosition([row, 0])
-          selection.selectToEndOfLine()
-
-          if line = selection.getText()
+          if line = @editor.lineTextForBufferRow(row)
             @toggleStyle(selection, line, data)
           else
             @insertEmptyStyle(selection, data)
+
         # select the whole range, if selection contains multiple rows
         selection.setBufferRange(range) if rows[0] != rows[1]
-
-  toggleStyle: (selection, line, data) ->
-    if @isStyleOn(line)
-      text = @removeStyle(line)
-    else
-      text = @addStyle(line, data)
-
-    selection.insertText(text)
 
   insertEmptyStyle: (selection, data) ->
     selection.insertText(utils.template(@style.before, data))
     position = selection.cursor.getBufferPosition()
     selection.insertText(utils.template(@style.after, data))
     selection.cursor.setBufferPosition(position)
+
+  toggleStyle: (selection, line, data) ->
+    if @isStyleOn(line)
+      @removeStyle(selection, line, data)
+    else
+      @addStyle(selection, line, data)
 
   # use regexMatchBefore/regexMatchAfter to match the string
   isStyleOn: (text) ->
@@ -69,22 +65,61 @@ class StyleLine
     #{@style.regexMatchAfter}    # style end
     (\s*)$ ///i.test(text)
 
-  addStyle: (text, data) ->
-    before = utils.template(@style.before, data)
-    after = utils.template(@style.after, data)
-
+  addStyle: (selection, text, data) ->
+    # ["- [ ] body", "", "- [ ] ", "body", undefined, ""]
     match = @getStylePattern().exec(text)
-    if match
-      "#{match[1]}#{before}#{match[2]}#{after}#{match[3]}"
-    else
-      "#{before}#{after}"
+    return unless match # ignore cases that not match, which shouldn't be
+    # ["- [ ] body", "", "- [ ] ", "-", "body", undefined, ""] (with capture=true)
+    if @style.captureBefore
+      data["captureBefore"] = match.splice(3, 1)[0] || data[@style.captureBefore]
 
-  removeStyle: (text) ->
-    matches = @getStylePattern().exec(text)
-    return matches[1..].join("")
+    # construct new before/after text
+    newBefore = utils.template(@style.before, data)
+    newAfter = utils.template(@style.after, data)
+    @applyStyle(selection, match, newBefore, newAfter)
+
+  removeStyle: (selection, text, data) ->
+    # ["- [ ] body", "", "- [ ] ", "body", undefined, ""]
+    match = @getStylePattern().exec(text)
+    return unless match # ignore cases that not match, which shouldn't be
+    # ["- [ ] body", "", "- [ ] ", "-", "body", undefined, ""] (with capture=true)
+    if @style.captureBefore
+      data["captureBefore"] = match.splice(3, 1)[0] || data[@style.captureBefore]
+
+    # construct new before/after text
+    newBefore = utils.template(@style.emptyBefore || "", data)
+    newAfter = utils.template(@style.emptyAfter || "", data)
+    @applyStyle(selection, match, newBefore, newAfter)
+
+  applyStyle: (selection, match, newBefore, newAfter) ->
+    position = selection.cursor.getBufferPosition()
+
+    # replace text in line
+    selection.cursor.setBufferPosition([position.row, 0])
+    selection.selectToEndOfLine()
+    selection.insertText("#{match[1]}#{newBefore}#{match[3]}#{newAfter}#{match[5]}")
+
+    # recover original position in the new text
+    m1 = match[1].length
+    m2 = (match[2] || "").length
+    m3 = match[3].length
+    m4 = (match[4] || "").length
+    # find new position
+    if position.column < m1
+      # no change
+    else if position.column < m1 + m2
+      position.column = m1 + newBefore.length # move to end of newBefore
+    else if position.column < m1 + m2 + m3
+      position.column += newBefore.length - m2
+    else if position.column < m1 + m2 + m3 + m4
+      position.column += m1 + m2 + m3 + newAfter.length # move to end of newAfter
+    else # at the end of line
+      position = selection.cursor.getBufferPosition()
+    # set cursor position
+    selection.cursor.setBufferPosition(position)
 
   getStylePattern: ->
     before = @style.regexBefore || utils.escapeRegExp(@style.before)
     after = @style.regexAfter || utils.escapeRegExp(@style.after)
 
-    /// ^(\s*) (?:#{before})? (.*?) (?:#{after})? (\s*)$ ///i
+    /// ^(\s*) (#{before})? (.*?) (#{after})? (\s*)$ ///i

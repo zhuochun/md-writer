@@ -126,6 +126,8 @@ textRangeSelectBy: "nearestWord"
 textStyles:
   code:
     before: "`", after: "`", scopeSelector: ".raw"
+  math:
+    before: "$$", after: "$$", scopeSelector: ".math"
   bold:
     before: "**", after: "**", scopeSelector: ".bold"
   italic:
@@ -139,6 +141,12 @@ textStyles:
     after: "\n```"
     regexBefore: "```(?:[\\w- ]+)?\\r?\\n"
     regexAfter: "\\r?\\n```"
+    selectBy: "currentParagraph"
+  mathblock:
+    before: "$$\n"
+    after: "\n$$"
+    regexBefore: "\\$\\$\\r?\\n"
+    regexAfter: "\\r?\\n\\$\\$"
     selectBy: "currentParagraph"
   deletion:
     before: "{--", after: "--}", scopeSelector: "critic."
@@ -184,16 +192,28 @@ lineStyles:
     regexMatchBefore: "(?:\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
     regexBefore: "(?:-|\\*|\\+|\\.|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
   task:
-    before: "{ul} [ ] "
+    before: "{captureBefore} [ ] "
     regexMatchBefore: "(?:-|\\*|\\+|\\d+[\\.\\)])\\s+\\[ ]\\s"
-    regexBefore: "(?:-|\\*|\\+|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s*(?:\\[[xX ]])?\\s"
+    regexBefore: "(-|\\*|\\+|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s*(?:\\[[xX ]])?\\s"
+    captureBefore: "ul"
   taskdone:
-    before: "{ul} [x] "
+    before: "{captureBefore} [x] "
     regexMatchBefore: "(?:-|\\*|\\+|\\d+[\\.\\)])\\s+\\[[xX]]\\s"
-    regexBefore: "(?:-|\\*|\\+|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s*(?:\\[[xX ]])?\\s"
+    regexBefore: "(-|\\*|\\+|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s*(?:\\[[xX ]])?\\s"
+    captureBefore: "ul"
+    emptyBefore: "{captureBefore} [ ] "
   blockquote: before: "> "
 
-# Image tag template
+# Image tag template, available variables:
+#
+# - src: image path in local if copied or same as rawSrc
+# - relativeFileSrc: image path relative to your edit file
+# - relativeSiteSrc: image path relative to your open project
+# - alt: alt text
+# - width: width of image
+# - height: height of image
+# - align: alignment of image
+#
 imageTag: "![{alt}]({src})"
 # Use relative path to image from the opened file
 relativeImagePath: false
