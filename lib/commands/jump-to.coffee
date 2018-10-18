@@ -1,6 +1,6 @@
 utils = require "../utils"
 
-HEADING_REGEX   = /// ^\# {1,6} \ + .+$ ///
+HEADING_REGEX   = /// ^\#{1,6} \ + .+$ ///
 REFERENCE_REGEX = /// \[ ([^\[\]]+) (?:\]|\]:) ///
 TABLE_COL_REGEX = /// ([^\|]*?) \s* \| ///
 
@@ -22,29 +22,24 @@ class JumpTo
 
   previousHeading: ->
     range = [[0, 0], [@cursor.row - 1, 0]]
-
-    found = false
-    @editor.buffer.backwardsScanInRange HEADING_REGEX, range, (match) ->
-      found = match.range.start
-      match.stop()
-    return found
+    return @_findNextHeading(range, "backwardsScanInRange")
 
   nextHeading: ->
     eof = @editor.getEofBufferPosition()
+    # find to end of file
+    range = @_findNextHeading([[@cursor.row + 1, 0], [eof.row + 1, 0]])
+    return range if range
+    # find around the top of file
+    return @_findNextHeading([[0, 0], [eof.row + 1, 0]])
 
-    range =
-      # find to end of file
-      @_findNextHeading([[@cursor.row + 1, 0], [eof.row + 1, 0]]) ||
-      # find around the top of file
-      @_findNextHeading([[0, 0], [eof.row + 1, 0]])
-
-    return range
-
-  _findNextHeading: (range) ->
+  _findNextHeading: (range, scan = "scanInRange") ->
     found = false
-    @editor.buffer.scanInRange HEADING_REGEX, range, (match) ->
-      found = match.range.start
-      match.stop()
+    @editor.buffer[scan] /// #{HEADING_REGEX.source} ///g, range, (match) =>
+      descriptors = @editor.scopeDescriptorForBufferPosition(match.range.start).getScopesArray()
+      # exclude headings in comments/code blocks
+      if descriptors.find((descriptor) -> descriptor.indexOf("heading") >= 0)
+        found = match.range.start
+        match.stop()
     return found
 
   referenceDefinition: ->
