@@ -5,6 +5,7 @@ describe "JumpTo", ->
 
   beforeEach ->
     waitsForPromise -> atom.workspace.open("empty.markdown")
+    waitsForPromise -> atom.packages.activatePackage("language-gfm")
     runs -> editor = atom.workspace.getActiveTextEditor()
 
   describe ".trigger", ->
@@ -32,6 +33,10 @@ describe "JumpTo", ->
 
     content content
 
+    ```
+    ### Code title
+    ```
+
     ## Subtitle
 
     content content
@@ -50,10 +55,10 @@ describe "JumpTo", ->
 
     it "finds previous subtitle", ->
       editor.setText(text)
-      editor.setCursorBufferPosition([6, 6])
+      editor.setCursorBufferPosition([10, 6])
 
       jumpTo = new JumpTo()
-      expect(jumpTo.previousHeading()).toEqual(row: 4, column: 0)
+      expect(jumpTo.previousHeading()).toEqual(row: 8, column: 0)
 
     it "finds previous title", ->
       editor.setText(text)
@@ -61,6 +66,14 @@ describe "JumpTo", ->
 
       jumpTo = new JumpTo()
       expect(jumpTo.previousHeading()).toEqual(row: 0, column: 0)
+
+    it "skip code blocks in markdown", ->
+      editor.setText(text)
+      editor.setCursorBufferPosition([8, 6])
+
+      jumpTo = new JumpTo()
+      expect(jumpTo.previousHeading()).toEqual(row: 0, column: 0)
+
 
   describe ".nextHeading", ->
     text = """
@@ -71,6 +84,10 @@ describe "JumpTo", ->
     ## Subtitle
 
     content content
+
+    ```
+    ### Code title
+    ```
     """
 
     it "finds nothing if no headings", ->
