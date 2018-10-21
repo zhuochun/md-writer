@@ -72,7 +72,7 @@ describe "StyleLine", ->
       list 2
       - list 3
       """
-      editor.setSelectedBufferRange([[0,0], [3, 0]])
+      editor.setSelectedBufferRange([[0, 0], [3, 0]])
 
       new StyleLine("ol").trigger()
       expect(editor.getText()).toBe """
