@@ -1,3 +1,7 @@
+## 2.10.1
+
+* Fix style multiple lines ([#256](https://github.com/zhuochun/md-writer/pull/256))
+
 ## 2.10.0
 
 * Preserve cursor position when toggle line styles ([#255](https://github.com/zhuochun/md-writer/pull/255))
