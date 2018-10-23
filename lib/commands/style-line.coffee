@@ -123,7 +123,7 @@ class StyleLine
 
     # replace text in line
     selection.cursor.setBufferPosition([position.row, 0])
-    selection.selectToEndOfLine()
+    selection.selectToEndOfBufferLine()
     selection.insertText("#{match[1]}#{newBefore}#{match[3]}#{newAfter}#{match[5]}")
 
     # recover original position in the new text
