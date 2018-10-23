@@ -1,3 +1,7 @@
+## 2.10.2
+
+* Fix style line that spans multiple screen lines ([#257](https://github.com/zhuochun/md-writer/issues/257))
+
 ## 2.10.1
 
 * Fix style multiple lines ([#256](https://github.com/zhuochun/md-writer/pull/256))
@@ -35,7 +39,7 @@
 
 ## 2.7.3
 
-* Fix indent list that spans multiple lines
+* Fix indent list that spans multiple screen lines [#222](https://github.com/zhuochun/md-writer/issues/222)
 
 ## 2.7.2
 

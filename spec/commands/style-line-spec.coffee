@@ -13,6 +13,15 @@ describe "StyleLine", ->
       expect(editor.getText()).toBe("> ")
       expect(editor.getCursorBufferPosition().column).toBe(2)
 
+    it "insert blockquote in long text", ->
+      text = "3. Consider a (ordered or unordered) markdown list. On apply style to the line, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/257"
+      editor.setText(text)
+      editor.setCursorBufferPosition([0, 4])
+
+      new StyleLine("blockquote").trigger()
+      expect(editor.getText()).toBe("> #{text}")
+      expect(editor.getCursorBufferPosition().column).toBe(6)
+
     it "remove blockquote", ->
       editor.setText("> blockquote")
       editor.setCursorBufferPosition([0, 4])
