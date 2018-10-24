@@ -1,3 +1,7 @@
+## 2.10.3
+
+* Fix undefined `getCurrentParagraphBufferRange` ([#259](https://github.com/zhuochun/md-writer/pull/259))
+
 ## 2.10.2
 
 * Fix style line that spans multiple screen lines ([#257](https://github.com/zhuochun/md-writer/issues/257))
