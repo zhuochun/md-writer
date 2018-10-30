@@ -1,3 +1,25 @@
+## 2.10.3
+
+* Fix undefined `getCurrentParagraphBufferRange` ([#259](https://github.com/zhuochun/md-writer/pull/259))
+
+## 2.10.2
+
+* Fix style line that spans multiple screen lines ([#257](https://github.com/zhuochun/md-writer/issues/257))
+
+## 2.10.1
+
+* Fix style multiple lines ([#256](https://github.com/zhuochun/md-writer/pull/256))
+
+## 2.10.0
+
+* Preserve cursor position when toggle line styles ([#255](https://github.com/zhuochun/md-writer/pull/255))
+* Command `toggle-taskdone` now toggles between done and not done
+  * Default keymap suggestion: `shift-ctrl-X`
+* Add `format-order-list` command (aka `correct-order-list-numbers`)
+* Add `toggle-mathblock-text` and `toggle-math-text` commands ([#254](https://github.com/zhuochun/md-writer/issues/254))
+* Update and reorganize package menus
+* Improve line meta detections ([#253](https://github.com/zhuochun/md-writer/pull/253))
+
 ## 2.9.0
 
 * Support range selection mechanisms for text styles ([#245](https://github.com/zhuochun/md-writer/pull/245))
@@ -16,12 +38,12 @@
 
 * Add Critic-Markup support ([#221](https://github.com/zhuochun/md-writer/issues/221))
 * Fix NativeImage `toPng` ([#238](https://github.com/zhuochun/md-writer/pull/238))
-* Improve Alpha order list indentation ([#235](https://github.com/zhuochun/md-writer/pull/235))
+* Improve alpha order list indentation ([#235](https://github.com/zhuochun/md-writer/pull/235))
 * Add `undent-list-line` command ([#240](https://github.com/zhuochun/md-writer/pull/240))
 
 ## 2.7.3
 
-* Fix indent list that spans multiple lines
+* Fix indent list that spans multiple screen lines [#222](https://github.com/zhuochun/md-writer/issues/222)
 
 ## 2.7.2
 
@@ -113,7 +135,7 @@
 
 ## 2.3.3
 
-* Fix home directory '~' is not recognized in config siteLocalDir
+* Fix home directory '~' is not recognized in config `siteLocalDir`
 * Fix loading empty project config file error
 * Log project config file loading errors at dev mode
 
@@ -180,9 +202,12 @@
 
 ## 1.9.3
 
-* Fix publish-draft require missing file
+* Fix publish-draft required missing source file
 
 ## 1.9.2
+
+* Same as v1.9.1 (Published by mistake)
+
 ## 1.9.1
 
 * Fix insert link exception when try to get a saved link
@@ -342,13 +367,13 @@
 ## 0.7.4
 
 * Change key mappings of headings to `Ctrl-Alt-[1-5]`
-* Add new key mappings for jump-* commands
+* Add new key mappings for `jump-*` commands
 * Insert reference link with empty title
 
 ## 0.7.3
 
-* Rename move-* commands to jump-*
-* Add jump-between-reference-definition command
+* Rename `move-*` commands to `jump-*`
+* Add `jump-between-reference-definition` command
 * Fix aborted key bindings
 
 ## 0.7.2
@@ -435,7 +460,7 @@
 
 ## 0.5.0
 
-* Make sure package name is CORRECT! (**require re-install**)
+* Make sure package name is CORRECT! (**require re-installation**)
 * Create new draft dialog
 * Publish draft
 

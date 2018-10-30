@@ -13,6 +13,15 @@ describe "StyleLine", ->
       expect(editor.getText()).toBe("> ")
       expect(editor.getCursorBufferPosition().column).toBe(2)
 
+    it "insert blockquote in long text", ->
+      text = "3. Consider a (ordered or unordered) markdown list. On apply style to the line, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/257"
+      editor.setText(text)
+      editor.setCursorBufferPosition([0, 4])
+
+      new StyleLine("blockquote").trigger()
+      expect(editor.getText()).toBe("> #{text}")
+      expect(editor.getCursorBufferPosition().column).toBe(6)
+
     it "remove blockquote", ->
       editor.setText("> blockquote")
       editor.setCursorBufferPosition([0, 4])
@@ -65,6 +74,28 @@ describe "StyleLine", ->
       new StyleLine("ul").trigger()
       expect(editor.getText()).toBe("- list")
       expect(editor.getCursorBufferPosition().column).toBe(6)
+
+    it "apply ordered/unordered list on multiple rows", ->
+      editor.setText """
+      - list 1
+      list 2
+      - list 3
+      """
+      editor.setSelectedBufferRange([[0, 0], [3, 0]])
+
+      new StyleLine("ol").trigger()
+      expect(editor.getText()).toBe """
+      1. list 1
+      2. list 2
+      3. list 3
+      """
+
+      new StyleLine("ul").trigger()
+      expect(editor.getText()).toBe """
+      - list 1
+      - list 2
+      - list 3
+      """
 
     it "apply task list", ->
       editor.setText("task")

@@ -28,34 +28,61 @@ class StyleLine
     @editor = atom.workspace.getActiveTextEditor()
     @editor.transact =>
       @editor.getSelections().forEach (selection) =>
-        range = selection.getBufferRange()
-        # when selection contains multiple rows, apply style to each row
+        # get rows covered by the range, e.g. single row=[83, 83], multiple rows=[81, 83]
         rows = selection.getBufferRowRange()
-        # rows[0] = start of buffer rows, rows[1] = end of buffer rows
-        for row, i in ([rows[0]..rows[1]])
-          data =
-            i: i + 1,
-            ul: config.get("templateVariables.ulBullet#{@editor.indentationForBufferRow(row)}") || config.get("templateVariables.ulBullet")
+        # check the range has multiple rows, apply different rules
+        if rows[0] == rows[1]
+          @applySingleRow(selection, rows)
+        else
+          @applyMultiRows(selection, rows)
 
-          if line = @editor.lineTextForBufferRow(row)
-            @toggleStyle(selection, line, data)
-          else
-            @insertEmptyStyle(selection, data)
+  applySingleRow: (selection, rows) ->
+    row = rows[0]
+    indent = @editor.indentationForBufferRow(row)
+    data =
+      i: 1,
+      ul: config.get("templateVariables.ulBullet#{indent}") || config.get("templateVariables.ulBullet")
 
-        # select the whole range, if selection contains multiple rows
-        selection.setBufferRange(range) if rows[0] != rows[1]
+    if line = @editor.lineTextForBufferRow(row)
+      if @isStyleOn(line)
+        @removeStyle(selection, line, data)
+      else
+        @addStyle(selection, line, data)
+    else
+      @insertEmptyStyle(selection, data)
+
+  applyMultiRows: (selection, rows) ->
+    range = selection.getBufferRange() # cache current selection range
+
+    # find the action of first row as the indication
+    line = @editor.lineTextForBufferRow(rows[0])
+    isRemoveStyle = line && @isStyleOn(line) # else add style
+
+    # rows[0] = start of buffer rows, rows[1] = end of buffer rows
+    for row, i in ([rows[0]..rows[1]])
+      indent = @editor.indentationForBufferRow(row)
+      data =
+        i: i + 1,
+        ul: config.get("templateVariables.ulBullet#{indent}") || config.get("templateVariables.ulBullet")
+
+      # we need to move cursor to each row start to perform action on line
+      selection.cursor.setBufferPosition([row, 0])
+
+      line = @editor.lineTextForBufferRow(row)
+      if line && isRemoveStyle
+        @removeStyle(selection, line, data)
+      else if line
+        @addStyle(selection, line, data)
+      else if !isRemoveStyle
+        @insertEmptyStyle(selection, data)
+
+    selection.setBufferRange(range) # reselect the previously selected range
 
   insertEmptyStyle: (selection, data) ->
     selection.insertText(utils.template(@style.before, data))
     position = selection.cursor.getBufferPosition()
     selection.insertText(utils.template(@style.after, data))
     selection.cursor.setBufferPosition(position)
-
-  toggleStyle: (selection, line, data) ->
-    if @isStyleOn(line)
-      @removeStyle(selection, line, data)
-    else
-      @addStyle(selection, line, data)
 
   # use regexMatchBefore/regexMatchAfter to match the string
   isStyleOn: (text) ->
@@ -96,7 +123,7 @@ class StyleLine
 
     # replace text in line
     selection.cursor.setBufferPosition([position.row, 0])
-    selection.selectToEndOfLine()
+    selection.selectToEndOfBufferLine()
     selection.insertText("#{match[1]}#{newBefore}#{match[3]}#{newAfter}#{match[5]}")
 
     # recover original position in the new text

@@ -37,7 +37,7 @@ _To use the key mappings listed, please execute command `Markdown Writer: Create
 2. List 2
 ```
 
-_**TIP:** Use command `Markdown Writer:Correct Order List Numbers` to correct any wrongly ordered numbers._
+_**TIP:** Use command `Markdown Writer:Format Order List` if the order numbers are messed up._
 
 ### Unordered List
 
@@ -47,6 +47,20 @@ _**TIP:** Use command `Markdown Writer:Correct Order List Numbers` to correct an
 - List 1
   - Inner list 1
 - List 2
+```
+
+_**TIP:** You can config different bullet styles at different nested levels. Refer to [wiki][6ed86335]._
+
+  [6ed86335]: https://github.com/zhuochun/md-writer/wiki/Settings#use-different-unordered-list-styles "Settings"
+
+### Task List
+
+**Key Mapping:** <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd>
+
+```
+- [ ] List 1
+  - [x] Inner list 1
+  - [ ] Inner list 2
 ```
 
 ## Links
@@ -113,7 +127,7 @@ Content from cell 1         | Content from cell 2
 Content in the first column | Content in the second column
 ```
 
-_**TIP:** Use command `Markdown Writer:Format Table` to format all table cells' spacing._
+_**TIP:** Use command `Markdown Writer:Format Table` to format table cells._
 
 ## Horizontal Rule
 
