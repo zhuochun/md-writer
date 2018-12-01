@@ -33,11 +33,8 @@ class EditToc
     toc = { found: false, opts: Object.assign({}, config.get("toc")) }
 
     # find first TOC head tag
-    @editor.buffer.scan /^<!-- +TOC +(.+? +)-->$/, (match) =>
-      toc.head = {
-        pos: match.range.start,
-        text: match.match[0],
-      }
+    @editor.buffer.scan /^<!-- +TOC +(.+? +)-->$/, (match) ->
+      toc.head = { pos: match.range.start, text: match.match[0] }
       # parse TOC options: depthFrom, depthTo, insertAnchor, anchorMode
       for opt in match.match[1].split(" ")
         [k, v] = opt.split(":")
@@ -52,11 +49,8 @@ class EditToc
     return toc unless toc.head # no TOC found
 
     # find first TOC tail tag
-    @editor.buffer.scan /^<!-- +\/TOC +-->$/, (match) =>
-      toc.tail = {
-        pos: match.range.end,
-        text: match.match[0]
-      }
+    @editor.buffer.scan /^<!-- +\/TOC +-->$/, (match) ->
+      toc.tail = { pos: match.range.end, text: match.match[0] }
 
     toc.found = true if toc.head.pos.row < toc.tail.pos.row # check range
     return toc
