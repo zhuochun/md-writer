@@ -65,6 +65,10 @@ module.exports =
         @registerCommand("./commands/edit-line",
           args: command, skipList: ["autocomplete-active"])
 
+    ["insert-toc"].forEach (command) =>
+      editorCommands["markdown-writer:#{command}"] =
+        @registerCommand("./commands/edit-toc", args: command)
+
     ["correct-order-list-numbers", "format-order-list", "format-table"].forEach (command) =>
       editorCommands["markdown-writer:#{command}"] =
         @registerCommand("./commands/format-text", args: command)

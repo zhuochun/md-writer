@@ -1,3 +1,7 @@
+## 2.11.0
+
+* Add Table of Contents (TOC) support ([#261](https://github.com/zhuochun/md-writer/pull/261))
+
 ## 2.10.3
 
 * Fix undefined `getCurrentParagraphBufferRange` ([#259](https://github.com/zhuochun/md-writer/pull/259))
