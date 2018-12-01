@@ -22,6 +22,8 @@ describe "EditTOC", ->
       editTOC.trigger()
       expect(editor.getText()).toBe """
       <!-- TOC -->
+
+
       <!-- /TOC -->
 
       this is a sentence
@@ -57,6 +59,7 @@ describe "EditTOC", ->
       # Markdown-Writer for Atom
 
       <!-- TOC -->
+
       - [Markdown-Writer for Atom](#markdown-writer-for-atom)
         - [Features](#features)
           - [Blogging](#blogging)
@@ -65,6 +68,7 @@ describe "EditTOC", ->
         - [Setup](#setup)
         - [Contributing](#contributing)
         - [Project](#project)
+
       <!-- /TOC -->
 
       ## Features
@@ -87,6 +91,7 @@ describe "EditTOC", ->
       # Markdown-Writer for Atom
 
       <!-- TOC depthFrom:2 -->
+
       - [Markdown-Writer for Atom](#markdown-writer-for-atom)
         - [Features](#features)
           - [Blogging](#blogging)
@@ -95,6 +100,7 @@ describe "EditTOC", ->
         - [Setup](#setup)
         - [Contributing](#contributing)
         - [Project](#project)
+
       <!-- /TOC -->
 
       ## Features
@@ -118,6 +124,7 @@ describe "EditTOC", ->
       # Markdown-Writer for Atom
 
       <!-- TOC depthFrom:2 -->
+
       - [Features](#features)
         - [Blogging](#blogging)
         - [General](#general)
@@ -125,6 +132,7 @@ describe "EditTOC", ->
       - [Setup](#setup)
       - [Contributing](#contributing)
       - [Project](#project)
+
       <!-- /TOC -->
 
       ## Features
