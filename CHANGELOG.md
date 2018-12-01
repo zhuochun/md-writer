@@ -1,6 +1,7 @@
 ## 2.11.0
 
 * Add Table of Contents (TOC) support ([#261](https://github.com/zhuochun/md-writer/pull/261))
+* Add Fold Headings support ([#262](https://github.com/zhuochun/md-writer/pull/262)
 
 ## 2.10.3
 
