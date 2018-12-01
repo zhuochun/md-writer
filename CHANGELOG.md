@@ -1,3 +1,7 @@
+## 2.11.1
+
+* Minor improvement to TOC support ([#263](https://github.com/zhuochun/md-writer/pull/263))
+
 ## 2.11.0
 
 * Add Table of Contents (TOC) support ([#261](https://github.com/zhuochun/md-writer/pull/261))
