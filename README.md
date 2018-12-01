@@ -76,7 +76,10 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
   - Jump to next heading (`cmd-j cmd-n`)
   - Jump to next table cell (`cmd-j cmd-t`)
   - Jump to reference marker/definition (`cmd-j cmd-d`)
-- **Folding commands**: fold all inline links (`markdown-writer:fold-links`).
+- **Folding commands**:
+  - Fold all headings (`markdown-writer:fold-headings`)
+  - Focus current heading (`markdown-writer:focus-current-heading`)
+  - Fold all inline links (`markdown-writer:fold-links`)
 - **Open a link under cursor** in browser (`markdown-writer:open-link-in-browser`), and this works on reference links.
 - **Markdown cheat sheet** (`markdown-writer:open-cheat-sheet`).
 - **Toolbar for Markdown Writer** is available at [tool-bar-markdown-writer][82a2aced].
