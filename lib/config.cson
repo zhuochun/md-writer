@@ -69,6 +69,16 @@ publishRenameBasedOnTitle: false
 # Publish keep draft's extension name used
 publishKeepFileExtname: false
 
+# Table of content (TOC) default options
+toc:
+  # Depth from/to, Number between 1-6
+  depthFrom: 1
+  depthTo: 6
+  # Insert anchor link
+  insertAnchor: true
+  # Chose Anchor method, one of: "github.com", "bitbucket.org", "ghost.org", "gitlab.com"
+  anchorMode: "github.com"
+
 # List continuation in the middle of line
 # - Enable to start a new list whenever you press enter in a list
 # - Disable to start a new list only when you press enter at the end of a list

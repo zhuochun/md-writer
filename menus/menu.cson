@@ -190,6 +190,11 @@
           'label': 'Helpers'
           'submenu': [
             {
+              'label': 'Insert/Update Table of Content (TOC)'
+              'command': 'markdown-writer:insert-toc'
+            }
+            { 'type': 'separator' }
+            {
               'label': 'Jump to Next Heading'
               'command': 'markdown-writer:jump-to-next-heading'
             }
