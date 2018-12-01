@@ -62,7 +62,11 @@ class EditToc
     else
       lines.push("<!-- TOC -->")
 
+    lines.push("") # empty separator
+
   _writeTocTail: (lines, toc) ->
+    lines.push("") # empty separator
+
     if toc.found
       lines.push(toc.tail.text)
     else

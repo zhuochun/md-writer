@@ -18,6 +18,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
   <summary><strong>Table of Contents</strong> (click to expand)</summary>
 
 <!-- TOC depthFrom:2 -->
+
 - [Features](#features)
   - [Blogging](#blogging)
   - [General](#general)
@@ -25,6 +26,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 - [Setup](#setup)
 - [Contributing](#contributing)
 - [Project](#project)
+
 <!-- /TOC -->
 </details>
 
