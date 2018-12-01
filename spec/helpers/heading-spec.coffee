@@ -57,6 +57,5 @@ describe "heading", ->
       # heading 3
       h3 = h2[1].children
       expect(h3.length).toBe(1)
-      expect(h3[0]).toBe({})
       expect(h3[0].title).toBe("General")
       expect(h3[0].repetition).toBe(1)

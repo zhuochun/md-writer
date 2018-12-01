@@ -73,7 +73,7 @@ module.exports =
       editorCommands["markdown-writer:#{command}"] =
         @registerCommand("./commands/format-text", args: command)
 
-    ["fold-links", "fold-headings", "focus-current-heading"].forEach (command) =>
+    ["fold-links", "fold-headings", "fold-h1", "fold-h2", "fold-h3", "focus-current-heading"].forEach (command) =>
       editorCommands["markdown-writer:#{command}"] =
         @registerCommand("./commands/fold-text", args: command)
 

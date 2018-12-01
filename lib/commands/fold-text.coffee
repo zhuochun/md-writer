@@ -16,9 +16,19 @@ class FoldText
   foldLinks: ->
     utils.scanLinks @editor, (range) => @editor.foldBufferRange(range)
 
-  foldHeadings: ->
-    headers = @_flattenHeaders([], heading.listAll(@editor))
+  foldHeadings: (depth = 6) ->
+    headers = @_flattenHeaders([], heading.listAll(@editor), depth)
+    @_foldHeaders(headers)
 
+  _flattenHeaders: (list, headers, depth) ->
+    for header in headers
+      continue if header.depth > depth
+
+      list.push(header.range)
+      @_flattenHeaders(list, header.children, depth)
+    return list
+
+  _foldHeaders: (headers) ->
     eof = @editor.getEofBufferPosition()
     while pos = headers.shift()
       endPos = if headers[0] then headers[0].start else eof
@@ -32,11 +42,9 @@ class FoldText
       # skip fold if endPos is at the same line now
       @editor.foldBufferRange([pos.end, endPos]) unless pos.end.row == endPos.row
 
-  _flattenHeaders: (list, headers) ->
-    for header in headers
-      list.push(header.range)
-      @_flattenHeaders(list, header.children)
-    return list
+  foldH1: -> @foldHeadings(1)
+  foldH2: -> @foldHeadings(2)
+  foldH3: -> @foldHeadings(3)
 
   focusCurrentHeading: ->
     @foldHeadings()
