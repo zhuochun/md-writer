@@ -1,6 +1,7 @@
 anchor = require "anchor-markdown-header"
 
 config = require "../config"
+heading = require "../helpers/heading"
 
 module.exports =
 class EditToc
@@ -15,7 +16,7 @@ class EditToc
 
   insertToc: (e) ->
     toc = @_findToc()
-    headers = @_listHeaders(toc.opts)
+    headers = heading.listAll(@editor)
 
     lines = []
     @_writeTocHead(lines, toc)
@@ -55,46 +56,6 @@ class EditToc
     toc.found = true if toc.head.pos.row < toc.tail.pos.row # check range
     return toc
 
-  _listHeaders: (opts) ->
-    duplicate = {} # num of duplicated header titles
-
-    headers = []
-    curHeader = undefined
-
-    @editor.buffer.scan /^(\#{1,6}) +(.+?) *$/g, (match) =>
-      descriptors = @editor.scopeDescriptorForBufferPosition(match.range.start).getScopesArray()
-      # exclude headings in comments/code blocks
-      return unless descriptors.find((descriptor) -> descriptor.indexOf("heading") >= 0)
-
-      header = {
-        text: match.match[0],
-        title: match.match[2],
-        depth: match.match[1].length,
-        children: []
-      }
-
-      # generate anchor text
-      if duplicate[header.title] == null
-        duplicate[header.title] = 0
-      else
-        duplicate[header.title] += 1
-      # duplicate number is used to differentiate same title
-      header.anchor = anchor(header.title, opts.anchorMode, duplicate[header.title])
-
-      # find position in header tree
-      parent = curHeader
-      parent = parent.parent while parent && parent.depth >= header.depth
-      # attach to parent
-      if parent
-        header.parent = parent
-        parent.children.push(header)
-      else # top-level header
-        headers.push(header)
-
-      curHeader = header
-
-    return headers
-
   _writeTocHead: (lines, toc) ->
     if toc.found
       lines.push(toc.head.text)
@@ -116,7 +77,7 @@ class EditToc
         nextIndent += @editor.getTabText()
 
         if opts.insertAnchor
-          lines.push("#{indent}- #{header.anchor}")
+          lines.push("#{indent}- #{anchor(header.title, opts.anchorMode, header.repetition)}")
         else
           lines.push("#{indent}- #{header.title}")
 

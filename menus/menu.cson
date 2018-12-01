@@ -176,6 +176,14 @@
           'label': 'Folding'
           'submenu': [
             {
+              'label': 'Fold All Headings'
+              'command': 'markdown-writer:fold-headings'
+            }
+            {
+              'label': 'Focus Current Heading'
+              'command': 'markdown-writer:focus-current-heading'
+            }
+            {
               'label': 'Fold All Links'
               'command': 'markdown-writer:fold-links'
             }
@@ -183,6 +191,10 @@
             {
               'label': 'Unfold All'
               'command': 'editor:unfold-all'
+            }
+            {
+              'label': 'Unfold Current Row'
+              'command': 'editor:unfold-current-row'
             }
           ]
         }
