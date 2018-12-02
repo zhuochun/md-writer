@@ -17,17 +17,14 @@ class EditToc
   insertToc: (e) ->
     toc = @_findToc()
     headers = heading.listAll(@editor)
+    @_writeToc(toc, headers)
 
-    lines = []
-    @_writeTocHead(lines, toc)
-    @_writeHeaders(lines, toc.opts, "", headers)
-    @_writeTocTail(lines, toc)
-    text = lines.join("\n")
+  updateToc: (e) ->
+    toc = @_findToc()
+    return unless toc.found
 
-    if toc.found # replace
-      @editor.setTextInBufferRange([toc.head.pos, toc.tail.pos], text)
-    else
-      @editor.insertText(text)
+    headers = heading.listAll(@editor)
+    @_writeToc(toc, headers)
 
   # <!-- TOC --> [list] <!-- /TOC -->
   _findToc: ->
@@ -55,6 +52,18 @@ class EditToc
 
     toc.found = true if toc.head.pos.row < toc.tail.pos.row # check range
     return toc
+
+  _writeToc: (toc, headers) ->
+    lines = []
+    @_writeTocHead(lines, toc)
+    @_writeHeaders(lines, toc.opts, "", headers)
+    @_writeTocTail(lines, toc)
+    text = lines.join("\n")
+
+    if toc.found # replace
+      @editor.setTextInBufferRange([toc.head.pos, toc.tail.pos], text)
+    else
+      @editor.insertText(text)
 
   _writeTocHead: (lines, toc) ->
     if toc.found

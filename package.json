@@ -64,6 +64,7 @@
       "markdown-writer:jump-to-next-table-cell",
       "markdown-writer:jump-to-reference-definition",
       "markdown-writer:insert-toc",
+      "markdown-writer:update-toc",
       "markdown-writer:publish-draft",
       "markdown-writer:open-link-in-browser",
       "markdown-writer:fold-links",
