@@ -45,7 +45,7 @@ getFileSlug = (filePath) ->
 getFileRelativeDir = (filePath) ->
   return "" unless filePath
 
-  siteDir = utils.getSitePath(config.get("siteLocalDir"))
+  siteDir = utils.getSitePath(config.get("siteLocalDir"), filePath)
   fileDir = path.dirname(filePath)
   path.relative(siteDir, fileDir)
 
