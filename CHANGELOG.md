@@ -1,3 +1,8 @@
+## 2.11.2
+
+* Add command `update-toc` to update TOC ([264](https://github.com/zhuochun/md-writer/pull/264))
+* Fix multiple opened projects handling ([266](https://github.com/zhuochun/md-writer/pull/266))
+
 ## 2.11.1
 
 * Minor improvement to TOC support ([#263](https://github.com/zhuochun/md-writer/pull/263))
