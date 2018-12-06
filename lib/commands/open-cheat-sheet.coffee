@@ -6,15 +6,19 @@ pkgs =
   "markdown-preview-plus": "markdown-preview-plus://file/",
   "markdown-preview-enhanced": "mpe://"
 
+errTitle = "Cannot Open Cheat Sheet"
+errMsg = """Please install and enable one of the following package:
+
+- [markdown-preview](https://atom.io/packages/markdown-preview)
+- [markdown-preview-plus](https://atom.io/packages/markdown-preview-plus)
+"""
+
 module.exports =
 class OpenCheatSheet
   trigger: (e) ->
     protocal = @getProtocal()
-    # abort if we cant find preview packages
-    if !protocal
-      atom.notifications.addError "Failed to Open Cheat Sheet",
-        description: "Require package [markdown-preview](https://atom.io/packages/markdown-preview) or [markdown-preview-plus](https://atom.io/packages/markdown-preview-plus).",
-        dismissable: true
+    if !protocal # abort if we cant find preview packages
+      atom.notifications.addError(errTitle, description: errMsg, dismissable: true)
       return e.abortKeyBinding()
 
     atom.workspace.open @cheatsheetURL(protocal),
