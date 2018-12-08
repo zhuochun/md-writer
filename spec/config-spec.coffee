@@ -53,6 +53,7 @@ describe "config", ->
 
     it "get value from filestyle config", ->
       atom.workspace.getActiveTextEditor = ->
+        getPath: -> null
         getGrammar: -> { scopeName: "source.asciidoc" }
 
       expect(config.getFiletype("linkInlineTag")).not.toBeNull()
@@ -60,6 +61,7 @@ describe "config", ->
 
     it "get value from invalid filestyle config", ->
       atom.workspace.getActiveTextEditor = ->
+        getPath: -> null
         getGrammar: -> { scopeName: null }
 
       expect(config.getEngine("siteEngine")).not.toBeDefined()
