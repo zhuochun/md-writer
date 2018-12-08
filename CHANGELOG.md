@@ -1,3 +1,8 @@
+## 2.11.3
+
+* Update `open-cheat-sheet` command ([268](https://github.com/zhuochun/md-writer/pull/268))
+* Update multiple project config files support [269](https://github.com/zhuochun/md-writer/pull/269)
+
 ## 2.11.2
 
 * Add command `update-toc` to update TOC ([264](https://github.com/zhuochun/md-writer/pull/264))
