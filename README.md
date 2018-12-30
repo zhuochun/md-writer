@@ -22,6 +22,9 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 - [Features](#features)
   - [Blogging](#blogging)
   - [General](#general)
+  - [CriticMarkup](#criticmarkup)
+  - [AsciiDoc](#asciidoc)
+  - [Plugins](#plugins)
 - [Installation](#installation)
 - [Setup](#setup)
 - [Contributing](#contributing)
@@ -47,22 +50,25 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 
 ### General
 
-- **Continue lists or table rows** when you press `enter` ([customize][adaa9527]).
-  - **Correct ordered list numbers** (`markdown-writer:correct-order-list-numbers`).
-- **Table of contents (TOC)** (`markdown-writer:insert-toc`), and support following options (global or inline):
-  - `depthFrom`, `depthTo`: range of headings to be displayed.
-  - `insertAnchor`: insert TOC with anchor link.
-- **Insert link** (`shift-cmd-k`), and **automatically link to the text next time**.
+- **Table of contents (TOC)** (`markdown-writer:insert-toc`).
+  - Update table of content (`markdown-writer:update-toc`).
+  - Following options (global/inline) are supported:
+    - `depthFrom`, `depthTo`: range of headings to be displayed.
+    - `insertAnchor`: insert TOC with anchor link.
+- **Insert link** (`shift-cmd-k`) and save links for next time.
   - Insert inline link.
   - Insert reference link with title. _Use `-` in title field to create an empty title reference link._
   - Remove link (and its reference) after URL is deleted.
-  - Search published posts by title in your blog.
+  - Search and insert published posts by title in blog ([setup*][9be76601]).
 - **Insert footnote** (`markdown-writer:insert-footnote`), and edit footnote labels.
-- **Insert image from file or clipboard** (`shift-cmd-i`), preview image and able to copy image to your blog's images directory.
-- **Insert table** (`markdown-writer:insert-table`), and quick **jump to next table cell** (`cmd-j cmd-t`).
-- **Format table** (`markdown-writer:format-table`) with table alignments.
+- **Insert image from file or clipboard** (`shift-cmd-i`) with preview.
+  - Save or copy the image to your blog's images directory ([customize][e6198daa]).
+- **Insert table** (`markdown-writer:insert-table`) and **jump to next table cell** (`cmd-j cmd-t`).
+- **Format table** (`markdown-writer:format-table`) with customizable table alignments.
+- **Continue lists and table rows** when press `enter` ([customize][adaa9527]).
+- **Correct ordered list numbers** (`markdown-writer:correct-order-list-numbers`).
 - **Toggle headings**: `ctrl-alt-[1-5]` to switch among `H1` to `H5`.
-- **Toggle text styles** ([customize styles][7ddaeaf4]):
+- **Toggle text styles** ([customize][7ddaeaf4]):
   - `code` (`cmd-'`)
   - **bold** (`cmd-b`)
   - _italic_ (`cmd-i`)
@@ -80,40 +86,54 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
   - Jump to reference marker/definition (`cmd-j cmd-d`)
 - **Folding commands**:
   - Fold all headings (`markdown-writer:fold-headings`)
-  - Focus current heading (`markdown-writer:focus-current-heading`)
+  - Fold and focus current heading (`markdown-writer:focus-current-heading`)
   - Fold all inline links (`markdown-writer:fold-links`)
-- **Open a link under cursor** in browser (`markdown-writer:open-link-in-browser`), and this works on reference links.
+- **Open links**:
+  - **Open link under cursor in browser** (`markdown-writer:open-link-in-browser`).
+  - **Open link under cursor in editor** (`markdown-writer:open-link-in-file`).
 - **Markdown cheat sheet** (`markdown-writer:open-cheat-sheet`).
-- **Toolbar for Markdown Writer** is available at [tool-bar-markdown-writer][82a2aced].
-- **[CriticMarkup][f99bc01e] support**:
-  - Addition `{++ ++}` (`markdown-writer:toggle-addition-text`)
-  - Deletion `{-- --}` (`markdown-writer:toggle-deletion-text`)
-  - Substitution `{~~ ~> ~~}` (`markdown-writer:toggle-substitution-text`)
-  - Comment `{>> <<}` (`markdown-writer:toggle-comment-text`)
-  - Highlight `{== ==}{>> <<}` (`markdown-writer:toggle-highlight-text`)
-- **[AsciiDoc][0e2299b8] support** with [language-asciidoc][2f0cb1f9].
+
+[adaa9527]: https://github.com/zhuochun/md-writer/wiki/Settings#use-different-unordered-list-styles "Customizations"
+[e6198daa]: https://github.com/zhuochun/md-writer/wiki/Settings#change-image-directory "Change Image Directory"
+
+### CriticMarkup
+
+Following [CriticMarkup][f99bc01e] commands are supported:
+
+- Addition `{++ ++}` (`markdown-writer:toggle-addition-text`)
+- Deletion `{-- --}` (`markdown-writer:toggle-deletion-text`)
+- Substitution `{~~ ~> ~~}` (`markdown-writer:toggle-substitution-text`)
+- Comment `{>> <<}` (`markdown-writer:toggle-comment-text`)
+- Highlight `{== ==}{>> <<}` (`markdown-writer:toggle-highlight-text`)
+
+[f99bc01e]: http://criticmarkup.com/users-guide.php "CriticMarkup"
+
+### AsciiDoc
+
+[AsciiDoc][0e2299b8] is supported with [language-asciidoc][2f0cb1f9] installed.
+
+[0e2299b8]: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/ "AsciiDoc Quick Reference"
+[2f0cb1f9]: https://atom.io/packages/language-asciidoc "AsciiDoc Language Package for Atom"
+
+### Plugins
+
+**Toolbar for Markdown Writer** is available at [tool-bar-markdown-writer][82a2aced].
 
 [82a2aced]: https://atom.io/packages/tool-bar-markdown-writer "Toobar for Markdown Writer"
-[2f0cb1f9]: https://atom.io/packages/language-asciidoc "AsciiDoc Language Package for Atom"
-[adaa9527]: https://github.com/zhuochun/md-writer/wiki/Settings#use-different-unordered-list-styles "Customizations"
-[f99bc01e]: http://criticmarkup.com/users-guide.php "CriticMarkup"
-[0e2299b8]: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/ "AsciiDoc Quick Reference"
-
-You can find and trigger all features through:
-
-- Open Command Palette (`shift-cmd-P`), enter `Markdown Writer`
-- Or, go to menu `Packages -> Markdown Writer`.
 
 ## Installation
 
 - In Atom, go to Settings (`cmd-,`) -> Install -> Search `Markdown Writer`.
 - Or, run `apm install markdown-writer`.
 
-> If you see errors after this plugin updates, please restart Atom so that it reloads the updated code.
+After installation, you can find and trigger any feature through:
+
+- Open Command Palette (`shift-cmd-P`), enter `Markdown Writer` and find all the commands
+- Or, go to menu `Packages -> Markdown Writer`.
 
 ## Setup
 
-Execute command `Markdown Writer: Create Default keymaps` to add recommended keymaps to your configs, and start modifying them based on your needs ([wiki][31ebd53f]).
+Execute command `Markdown Writer: Create Default keymaps` to add the recommended keymaps to your configs. You can modify them based on your needs ([wiki][31ebd53f]).
 
 - `Enter`, `Tab`, `Shift-Tab` are registered by default. You can disable them in _Package's Settings > Keybindings_.
 
