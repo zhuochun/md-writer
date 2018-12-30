@@ -67,6 +67,7 @@
       "markdown-writer:update-toc",
       "markdown-writer:publish-draft",
       "markdown-writer:open-link-in-browser",
+      "markdown-writer:open-link-in-file",
       "markdown-writer:fold-links",
       "markdown-writer:fold-headings",
       "markdown-writer:fold-h1",
