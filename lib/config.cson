@@ -238,7 +238,7 @@ tableAlignment: "empty"
 tableExtraPipes: false
 
 # Fold inline links/images at insertion
-foldInlineLinks: true
+foldInlineLinks: false
 
 # Template variables is a key-value map used in template string
 templateVariables:
