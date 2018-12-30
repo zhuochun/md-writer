@@ -237,6 +237,9 @@ tableAlignment: "empty"
 # Insert extra pipes at the beginning and the end of table rows
 tableExtraPipes: false
 
+# Fold inline links/images at insertion
+foldInlineLinks: true
+
 # Template variables is a key-value map used in template string
 templateVariables:
   # Bullet for unordered list. add ulBullet1, ulBullet2 if you want different bullet for nested list
