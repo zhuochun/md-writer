@@ -237,7 +237,7 @@ tableAlignment: "empty"
 # Insert extra pipes at the beginning and the end of table rows
 tableExtraPipes: false
 
-# Fold inline links/images at insertion
+# Fold inline links at insertion
 foldInlineLinks: false
 
 # Template variables is a key-value map used in template string
