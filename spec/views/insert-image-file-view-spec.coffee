@@ -10,6 +10,7 @@ describe "InsertImageFileView", ->
     runs ->
       editor = atom.workspace.getActiveTextEditor()
       insertImageView = new InsertImageFileView({})
+      insertImageView.display()
 
   describe ".isInSiteDir", ->
     beforeEach ->
@@ -33,12 +34,10 @@ describe "InsertImageFileView", ->
       expect(insertImageView.resolveImagePath(fixture)).toBe(fixture)
 
     it "return relative image path", ->
-      insertImageView.editor = editor
       fixture = editor.getPath().replace("empty.markdown", "octocat.png")
       expect(insertImageView.resolveImagePath(fixture)).toBe(fixture)
 
     it "return absolute image path", ->
-      insertImageView.editor = editor
       atom.config.set("markdown-writer.siteLocalDir", editor.getPath().replace("empty.markdown", ""))
 
       fixture = "octocat.png"
@@ -73,7 +72,6 @@ describe "InsertImageFileView", ->
       expect(insertImageView.generateImageSrc(fixture)).toBe(fixture)
 
     it "return relative image path from file", ->
-      insertImageView.editor = editor
       atom.config.set("markdown-writer.relativeImagePath", true)
 
       fixture = editor.getPath().replace("empty.markdown", "octocat.png")
@@ -86,7 +84,6 @@ describe "InsertImageFileView", ->
       expect(insertImageView.generateImageSrc(fixture)).toBe("octocat.png")
 
     it "return image dir path using config template", ->
-      insertImageView.display()
       fixture = "octocat.png"
       expected = /// ^ \/images\/\d{4}\/\d\d\/octocat\.png $ ///
       expect(insertImageView.generateImageSrc(fixture)).toMatch(expected)

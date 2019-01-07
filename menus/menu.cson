@@ -176,6 +176,14 @@
           'label': 'Folding'
           'submenu': [
             {
+              'label': 'Fold All Headings'
+              'command': 'markdown-writer:fold-headings'
+            }
+            {
+              'label': 'Focus Current Heading'
+              'command': 'markdown-writer:focus-current-heading'
+            }
+            {
               'label': 'Fold All Links'
               'command': 'markdown-writer:fold-links'
             }
@@ -184,11 +192,20 @@
               'label': 'Unfold All'
               'command': 'editor:unfold-all'
             }
+            {
+              'label': 'Unfold Current Row'
+              'command': 'editor:unfold-current-row'
+            }
           ]
         }
         {
           'label': 'Helpers'
           'submenu': [
+            {
+              'label': 'Insert/Update Table of Content (TOC)'
+              'command': 'markdown-writer:insert-toc'
+            }
+            { 'type': 'separator' }
             {
               'label': 'Jump to Next Heading'
               'command': 'markdown-writer:jump-to-next-heading'
@@ -208,6 +225,10 @@
               'command': 'markdown-writer:format-order-list'
             }
             { 'type': 'separator' }
+            {
+              'label': 'Open Link in File'
+              'command': 'markdown-writer:open-link-in-file'
+            }
             {
               'label': 'Open Link in Browser'
               'command': 'markdown-writer:open-link-in-browser'

@@ -1,3 +1,22 @@
+## 2.11.3
+
+* Update `open-cheat-sheet` command ([268](https://github.com/zhuochun/md-writer/pull/268))
+* Update multiple project config files support [269](https://github.com/zhuochun/md-writer/pull/269)
+
+## 2.11.2
+
+* Add command `update-toc` to update TOC ([264](https://github.com/zhuochun/md-writer/pull/264))
+* Fix multiple opened projects handling ([266](https://github.com/zhuochun/md-writer/pull/266))
+
+## 2.11.1
+
+* Minor improvement to TOC support ([#263](https://github.com/zhuochun/md-writer/pull/263))
+
+## 2.11.0
+
+* Add Table of Contents (TOC) support ([#261](https://github.com/zhuochun/md-writer/pull/261))
+* Add Fold Headings support ([#262](https://github.com/zhuochun/md-writer/pull/262)
+
 ## 2.10.3
 
 * Fix undefined `getCurrentParagraphBufferRange` ([#259](https://github.com/zhuochun/md-writer/pull/259))

@@ -109,7 +109,9 @@ class NewFileView extends View
   getExtension: -> config.get("fileExtension")
 
   # new file and front matters
-  getFileDir: -> utils.getSitePath(config.get("siteLocalDir"))
+  getFileDir: ->
+    filePath = atom.workspace.getActiveTextEditor()?.getPath() # Nullable
+    utils.getSitePath(config.get("siteLocalDir"), filePath)
   getFilePath: -> path.join(@pathEditor.getText(), @getFileName())
 
   getFileName: -> templateHelper.create(@constructor.fileNameConfig, @getFrontMatter(), @getDateTime())

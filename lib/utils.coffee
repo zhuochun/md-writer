@@ -94,15 +94,19 @@ getPackagePath = (segments...) ->
   segments.unshift(atom.packages.resolvePackagePath("markdown-writer"))
   path.join.apply(null, segments)
 
-getProjectPath = ->
+# Project path is resolved relative the reference file path, needed when multiple
+# projects are opened in Atom
+getProjectPath = (filePath) ->
+  projectPath = atom.project.relativizePath(filePath)[0]
+  return projectPath if projectPath
+  # fallback to first project opened
   paths = atom.project.getPaths()
-  if paths && paths.length > 0
-    paths[0]
-  else # Give the user a path if there's no project paths.
-    atom.config.get("core.projectHome")
+  return paths[0] if paths && paths.length > 0
+  # fallback to always give a path if there's no project paths
+  atom.config.get("core.projectHome")
 
-getSitePath = (configPath) ->
-  getAbsolutePath(configPath || getProjectPath())
+getSitePath = (configPath, filePath) ->
+  getAbsolutePath(configPath || getProjectPath(filePath))
 
 # https://github.com/sindresorhus/os-homedir/blob/master/index.js
 getHomedir = ->
