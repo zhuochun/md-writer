@@ -58,6 +58,12 @@ engines =
       date: "{date}"
       ---
       """
+  hugo:
+    siteDraftsDir: "content/posts/"
+    sitePostsDir: "content/posts/"
+    siteImagesDir: "{directory}/images/"
+    relativeImagePath: true
+    renameImageOnCopy: true
 
 module.exports =
   projectConfigs: {}

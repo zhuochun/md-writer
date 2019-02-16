@@ -92,6 +92,13 @@ describe "FrontMatter", ->
       frontMatter.set("title", "Markdown Writer")
       expect(frontMatter.get("title")).toBe("Markdown Writer")
 
+    it "set field value if exists", ->
+      frontMatter.setIfExists("unknown", "Markdown Writer")
+      expect(frontMatter.get("unknown")).toBe(undefined)
+
+      frontMatter.setIfExists("title", "Markdown Writer (Wow)")
+      expect(frontMatter.get("title")).toBe("Markdown Writer (Wow)")
+
     it "normalize field to an array", ->
       expect(frontMatter.normalizeField("field")).toEqual([])
       expect(frontMatter.normalizeField("categories")).toEqual(["Markdown"])
