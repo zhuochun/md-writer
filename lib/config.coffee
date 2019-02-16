@@ -58,6 +58,11 @@ engines =
       date: "{date}"
       ---
       """
+  hugo:
+    siteDraftsDir: "content/posts/"
+    sitePostsDir: "content/posts/"
+    # hugo uses page-relative resources
+    siteImagesDir: "{directory}/images/"
 
 module.exports =
   projectConfigs: {}
