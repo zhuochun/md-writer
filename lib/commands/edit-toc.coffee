@@ -50,6 +50,8 @@ class EditToc
     @editor.buffer.scan /^<!-- +\/TOC +-->$/, (match) ->
       toc.tail = { pos: match.range.end, text: match.match[0] }
 
+    return toc unless toc.tail # TOC is not complete
+
     toc.found = true if toc.head.pos.row < toc.tail.pos.row # check range
     return toc
 
