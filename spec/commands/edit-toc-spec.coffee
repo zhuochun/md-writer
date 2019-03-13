@@ -150,7 +150,7 @@ describe "EditTOC", ->
   describe "Update TOC", ->
     beforeEach -> editTOC = new EditTOC("update-toc")
 
-    it "update no TOC", ->
+    it "skip update if no TOC", ->
       editor.setText """
 
       this is a sentence
@@ -159,6 +159,25 @@ describe "EditTOC", ->
 
       editTOC.trigger()
       expect(editor.getText()).toBe """
+
+      this is a sentence
+      """
+
+    it "skip update if TOC is incomplete", ->
+      editor.setText """
+      <!-- TOC -->
+
+      - [Features](#features)
+
+      this is a sentence
+      """
+      editor.setCursorBufferPosition([0, 0])
+
+      editTOC.trigger()
+      expect(editor.getText()).toBe """
+      <!-- TOC -->
+
+      - [Features](#features)
 
       this is a sentence
       """
