@@ -1,3 +1,13 @@
+## 2.11.5
+
+* Fix indent/outdent on Alpha List ([#276](https://github.com/zhuochun/md-writer/pull/276))
+* Add `Hugo` Engine configs ([#277](https://github.com/zhuochun/md-writer/pull/277))
+
+## 2.11.4
+
+* Add config `foldInlineLinks` to fold links at insertion ([#272](https://github.com/zhuochun/md-writer/pull/272))
+* Add command `markdown-writer:open-link-in-file` to open a local file linked ([#271](https://github.com/zhuochun/md-writer/pull/271))
+
 ## 2.11.3
 
 * Update `open-cheat-sheet` command ([268](https://github.com/zhuochun/md-writer/pull/268))

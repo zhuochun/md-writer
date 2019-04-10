@@ -14,8 +14,8 @@ describe "LineMeta", ->
     it "is ordered task list", -> expect(LineMeta.isList("12. [ ] list")).toBe(true)
     it "is ordered task list (bracket)", -> expect(LineMeta.isList("12) [ ] list")).toBe(true)
     it "is alpha ordered list", -> expect(LineMeta.isList("aa. list")).toBe(true)
-    it "is alpha ordered task list", -> expect(LineMeta.isList("aaz. [ ]list")).toBe(true)
     it "is alpha ordered task list", -> expect(LineMeta.isList("A. [ ]list")).toBe(true)
+    it "is not alpha ordered task list (3 chars)", -> expect(LineMeta.isList("aaz. [ ]list")).toBe(false)
 
   # instance
   describe "normal line", ->
@@ -146,18 +146,18 @@ describe "LineMeta", ->
       it "has nextLine", -> expect(lineMeta.nextLine).toBe("4. ")
       it "create lineHead", -> expect(lineMeta.lineHead("1")).toBe("1. ")
 
-  describe "3) line", ->
-    lineMeta = new LineMeta("3) line")
-    it "is list", -> expect(lineMeta.isList()).toBe(true)
-    it "is continuous", -> expect(lineMeta.isContinuous()).toBe(true)
-    it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(false)
-    it "is not indented", -> expect(lineMeta.isIndented()).toBe(false)
-    it "has body", -> expect(lineMeta.body).toBe("line")
-    it "has head", -> expect(lineMeta.head).toBe("3")
-    it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
-    it "has indent", -> expect(lineMeta.indent).toBe("")
-    it "has nextLine", -> expect(lineMeta.nextLine).toBe("4) ")
-    it "create lineHead", -> expect(lineMeta.lineHead("1")).toBe("1) ")
+    describe "3) line", ->
+      lineMeta = new LineMeta("3) line")
+      it "is list", -> expect(lineMeta.isList()).toBe(true)
+      it "is continuous", -> expect(lineMeta.isContinuous()).toBe(true)
+      it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(false)
+      it "is not indented", -> expect(lineMeta.isIndented()).toBe(false)
+      it "has body", -> expect(lineMeta.body).toBe("line")
+      it "has head", -> expect(lineMeta.head).toBe("3")
+      it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
+      it "has indent", -> expect(lineMeta.indent).toBe("")
+      it "has nextLine", -> expect(lineMeta.nextLine).toBe("4) ")
+      it "create lineHead", -> expect(lineMeta.lineHead("1")).toBe("1) ")
 
   describe "ordered alpha list line", ->
     describe "a. line", ->
@@ -173,18 +173,23 @@ describe "LineMeta", ->
       it "has nextLine", -> expect(lineMeta.nextLine).toBe("b. ")
       it "create lineHead", -> expect(lineMeta.lineHead("a")).toBe("a. ")
 
-    describe "E) line", ->
-      lineMeta = new LineMeta("E) line")
+    describe "EA) line", ->
+      lineMeta = new LineMeta("EA) line")
       it "is list", -> expect(lineMeta.isList()).toBe(true)
       it "is continuous", -> expect(lineMeta.isContinuous()).toBe(true)
       it "is not empty body", -> expect(lineMeta.isEmptyBody()).toBe(false)
       it "is not indented", -> expect(lineMeta.isIndented()).toBe(false)
       it "has body", -> expect(lineMeta.body).toBe("line")
-      it "has head", -> expect(lineMeta.head).toBe("E")
-      it "had default head", -> expect(lineMeta.defaultHead).toBe("A")
+      it "has head", -> expect(lineMeta.head).toBe("EA")
+      it "had default head", -> expect(lineMeta.defaultHead).toBe("AA")
       it "has indent", -> expect(lineMeta.indent).toBe("")
-      it "has nextLine", -> expect(lineMeta.nextLine).toBe("F) ")
+      it "has nextLine", -> expect(lineMeta.nextLine).toBe("EB) ")
       it "create lineHead", -> expect(lineMeta.lineHead("A")).toBe("A) ")
+
+    describe "aaa. not a list line", ->
+      lineMeta = new LineMeta("aaa. not a list line")
+      it "is not list", -> expect(lineMeta.isList()).toBe(false)
+      it "is not continuous", -> expect(lineMeta.isContinuous()).toBe(false)
 
   describe "blockquote", ->
     lineMeta = new LineMeta("  > blockquote")
