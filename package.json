@@ -89,7 +89,7 @@
     "atom-space-pen-views": "^2.0.3",
     "anchor-markdown-header": "0.5.7",
     "fs-plus": "^2.0.0",
-    "js-yaml": "^3.2.0",
+    "js-yaml": "^3.13.1",
     "guid": "0.0.12",
     "qiniu": "^7.1.7",
     "season": "^5.1.0",
