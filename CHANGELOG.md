@@ -1,3 +1,8 @@
+## 2.11.6
+
+* Fix logic on incomplete TOC section ([#279](https://github.com/zhuochun/md-writer/issues/279))
+* Update `js-yaml` package
+
 ## 2.11.5
 
 * Fix indent/outdent on Alpha List ([#276](https://github.com/zhuochun/md-writer/pull/276))
