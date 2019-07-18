@@ -58,17 +58,27 @@ class StyleLine
     line = @editor.lineTextForBufferRow(rows[0])
     isRemoveStyle = line && @isStyleOn(line) # else add style
 
+    lineIdx = 0
+    rowsToRemove = []
+
     # rows[0] = start of buffer rows, rows[1] = end of buffer rows
-    for row, i in ([rows[0]..rows[1]])
+    for row in ([rows[0]..rows[1]])
+      line = @editor.lineTextForBufferRow(row)
+      # record lines to be removed
+      if !line && @style.removeEmptyLine
+        rowsToRemove.push(row)
+        continue
+
+      lineIdx += 1
+
       indent = @editor.indentationForBufferRow(row)
       data =
-        i: i + 1,
+        i: lineIdx,
         ul: config.get("templateVariables.ulBullet#{indent}") || config.get("templateVariables.ulBullet")
 
       # we need to move cursor to each row start to perform action on line
       selection.cursor.setBufferPosition([row, 0])
 
-      line = @editor.lineTextForBufferRow(row)
       if line && isRemoveStyle
         @removeStyle(selection, line, data)
       else if line
@@ -76,7 +86,17 @@ class StyleLine
       else if !isRemoveStyle
         @insertEmptyStyle(selection, data)
 
-    selection.setBufferRange(range) # reselect the previously selected range
+    # remove deleted line
+    for row, i in rowsToRemove
+      @editor.getBuffer().deleteRow(row - i)
+
+    # reselect from start of char in range
+    range.start.column = 0
+    # to end of last char
+    range.end.row -= rowsToRemove.length
+    range.end.column = @editor.lineTextForBufferRow(range.end.row).length
+
+    selection.setBufferRange(range) # reselect the spreviously selected range
 
   insertEmptyStyle: (selection, data) ->
     selection.insertText(utils.template(@style.before, data))
