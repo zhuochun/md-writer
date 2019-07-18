@@ -20,7 +20,7 @@ class StyleLine
     # use regexBefore, regexAfter if not specified
     @style.regexMatchBefore ?= @style.regexBefore || @style.before
     @style.regexMatchAfter ?= @style.regexAfter || @style.after
-    # set regexBefore for headings that only need to check the 1st char
+    # set regexBefore for styles (e.g. headings) that need only the 1st char as pattern
     @style.regexBefore ?= "#{@style.before[0]}+\\s" if @style.before
     @style.regexAfter ?= "\\s#{@style.after[@style.after.length - 1]}*" if @style.after
 
@@ -112,6 +112,13 @@ class StyleLine
     #{@style.regexMatchAfter}    # style end
     (\s*)$ ///i.test(text)
 
+  # use regexBefore/regexAfter to get the pattern to extract parts
+  getStylePattern: ->
+    before = @style.regexBefore || utils.escapeRegExp(@style.before)
+    after = @style.regexAfter || utils.escapeRegExp(@style.after)
+
+    /// ^(\s*) (#{before})? (.*?) (#{after})? (\s*)$ ///i
+
   addStyle: (selection, text, data) ->
     # ["- [ ] body", "", "- [ ] ", "body", undefined, ""]
     match = @getStylePattern().exec(text)
@@ -140,33 +147,44 @@ class StyleLine
 
   applyStyle: (selection, match, newBefore, newAfter) ->
     position = selection.cursor.getBufferPosition()
+    # each parts original length for re-position reference later
+    m1 = match[1].length
+    m2 = (match[2] || "").length # current before
+    m3 = match[3].length
+    m4 = (match[4] || "").length # current after
 
     # replace text in line
     selection.cursor.setBufferPosition([position.row, 0])
     selection.selectToEndOfBufferLine()
-    selection.insertText("#{match[1]}#{newBefore}#{match[3]}#{newAfter}#{match[5]}")
 
-    # recover original position in the new text
-    m1 = match[1].length
-    m2 = (match[2] || "").length
-    m3 = match[3].length
-    m4 = (match[4] || "").length
-    # find new position
-    if position.column < m1
-      # no change
-    else if position.column < m1 + m2
-      position.column = m1 + newBefore.length # move to end of newBefore
-    else if position.column < m1 + m2 + m3
-      position.column += newBefore.length - m2
-    else if position.column < m1 + m2 + m3 + m4
-      position.column += m1 + m2 + m3 + newAfter.length # move to end of newAfter
-    else # at the end of line
-      position = selection.cursor.getBufferPosition()
+    # special logic for insert at beginning of line
+    if @style.beginningOfLine
+      selection.insertText("#{newBefore}#{match[1]}#{match[3]}#{newAfter}#{match[5]}")
+      # find new position
+      if position.column < m1
+        position.column += newBefore.length
+      else if position.column < m1 + m2
+        position.column = newBefore.length + m1 # move to end of newBefore
+      else if position.column < m1 + m2 + m3
+        position.column += newBefore.length - m2
+      else if position.column < m1 + m2 + m3 + m4
+        position.column = newBefore.length + m1 + m3 + newAfter.length # move to end of newAfter
+      else # at the end of line
+        position = selection.cursor.getBufferPosition()
+
+    else
+      selection.insertText("#{match[1]}#{newBefore}#{match[3]}#{newAfter}#{match[5]}")
+      # find new position
+      if position.column < m1
+        # no change
+      else if position.column < m1 + m2
+        position.column = m1 + newBefore.length # move to end of newBefore
+      else if position.column < m1 + m2 + m3
+        position.column += newBefore.length - m2
+      else if position.column < m1 + m2 + m3 + m4
+        position.column = m1 + newBefore.length + m3 + newAfter.length # move to end of newAfter
+      else # at the end of line
+        position = selection.cursor.getBufferPosition()
+
     # set cursor position
     selection.cursor.setBufferPosition(position)
-
-  getStylePattern: ->
-    before = @style.regexBefore || utils.escapeRegExp(@style.before)
-    after = @style.regexAfter || utils.escapeRegExp(@style.after)
-
-    /// ^(\s*) (#{before})? (.*?) (#{after})? (\s*)$ ///i

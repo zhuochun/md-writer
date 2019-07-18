@@ -22,6 +22,15 @@ describe "StyleLine", ->
       expect(editor.getText()).toBe("> #{text}")
       expect(editor.getCursorBufferPosition().column).toBe(6)
 
+    it "insert blockquote in indented text", ->
+      text = "  In every day, there are 1,440 minutes. That means we have 1,440 daily opportunities to make a positive impact."
+      editor.setText(text)
+      editor.setCursorBufferPosition([0, 10])
+
+      new StyleLine("blockquote").trigger()
+      expect(editor.getText()).toBe("> #{text}")
+      expect(editor.getCursorBufferPosition().column).toBe(12)
+
     it "remove blockquote", ->
       editor.setText("> blockquote")
       editor.setCursorBufferPosition([0, 4])
