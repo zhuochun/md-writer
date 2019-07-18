@@ -97,6 +97,40 @@ describe "StyleLine", ->
       - list 3
       """
 
+    it "apply ordered list on multiple rows (removeEmptyLine)", ->
+      editor.setText """
+      list 1
+
+      list 2
+
+      list 3
+      """
+      editor.setSelectedBufferRange([[0, 0], [4, 3]])
+
+      new StyleLine("ol").trigger()
+      expect(editor.getText()).toBe """
+      1. list 1
+      2. list 2
+      3. list 3
+      """
+
+    it "apply unordered list on multiple rows (removeEmptyLine)", ->
+      editor.setText """
+      list 1
+
+      list 2
+
+      list 3
+      """
+      editor.setSelectedBufferRange([[0, 0], [4, 3]])
+
+      new StyleLine("ul").trigger()
+      expect(editor.getText()).toBe """
+      - list 1
+      - list 2
+      - list 3
+      """
+
     it "apply task list", ->
       editor.setText("task")
 
