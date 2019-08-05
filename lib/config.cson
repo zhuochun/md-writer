@@ -197,22 +197,26 @@ lineStyles:
     before: "{ul} "
     regexMatchBefore: "(?:-|\\*|\\+|\\.)\\s"
     regexBefore: "(?:-|\\*|\\+|\\.|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
+    removeEmptyLine: true
   ol:
     before: "{i}. "
     regexMatchBefore: "(?:\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
     regexBefore: "(?:-|\\*|\\+|\\.|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s"
+    removeEmptyLine: true
   task:
     before: "{captureBefore} [ ] "
     regexMatchBefore: "(?:-|\\*|\\+|\\d+[\\.\\)])\\s+\\[ ]\\s"
     regexBefore: "(-|\\*|\\+|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s*(?:\\[[xX ]])?\\s"
     captureBefore: "ul"
+    removeEmptyLine: true
   taskdone:
     before: "{captureBefore} [x] "
     regexMatchBefore: "(?:-|\\*|\\+|\\d+[\\.\\)])\\s+\\[[xX]]\\s"
     regexBefore: "(-|\\*|\\+|\\d+[\\.\\)]|[a-zA-Z]+[\\.\\)])\\s*(?:\\[[xX ]])?\\s"
     captureBefore: "ul"
     emptyBefore: "{captureBefore} [ ] "
-  blockquote: before: "> "
+    removeEmptyLine: true
+  blockquote: before: "> ", beginningOfLine: true
 
 # Image tag template, available variables:
 #

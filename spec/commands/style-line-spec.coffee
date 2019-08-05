@@ -22,6 +22,15 @@ describe "StyleLine", ->
       expect(editor.getText()).toBe("> #{text}")
       expect(editor.getCursorBufferPosition().column).toBe(6)
 
+    it "insert blockquote in indented text", ->
+      text = "  In every day, there are 1,440 minutes. That means we have 1,440 daily opportunities to make a positive impact."
+      editor.setText(text)
+      editor.setCursorBufferPosition([0, 10])
+
+      new StyleLine("blockquote").trigger()
+      expect(editor.getText()).toBe("> #{text}")
+      expect(editor.getCursorBufferPosition().column).toBe(12)
+
     it "remove blockquote", ->
       editor.setText("> blockquote")
       editor.setCursorBufferPosition([0, 4])
@@ -89,6 +98,40 @@ describe "StyleLine", ->
       2. list 2
       3. list 3
       """
+
+      new StyleLine("ul").trigger()
+      expect(editor.getText()).toBe """
+      - list 1
+      - list 2
+      - list 3
+      """
+
+    it "apply ordered list on multiple rows (removeEmptyLine)", ->
+      editor.setText """
+      list 1
+
+      list 2
+
+      list 3
+      """
+      editor.setSelectedBufferRange([[0, 0], [4, 3]])
+
+      new StyleLine("ol").trigger()
+      expect(editor.getText()).toBe """
+      1. list 1
+      2. list 2
+      3. list 3
+      """
+
+    it "apply unordered list on multiple rows (removeEmptyLine)", ->
+      editor.setText """
+      list 1
+
+      list 2
+
+      list 3
+      """
+      editor.setSelectedBufferRange([[0, 0], [4, 3]])
 
       new StyleLine("ul").trigger()
       expect(editor.getText()).toBe """
