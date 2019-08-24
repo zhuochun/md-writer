@@ -17,34 +17,41 @@ TYPES = [
   {
     name: ["list", "ul", "task"],
     regex: LIST_UL_TASK_REGEX,
-    lineHead: (indent, head, suffix) -> "#{indent}#{head} [ ] "
+    lineHead: (m) -> "#{m.indent}#{m.head} [ ] "
+    nextLine: (m) -> "#{m.indent}#{m.head} [ ] "
+    nextIndent: (m) -> m.head.length + 1
     defaultHead: (head) -> head
   }
   {
     name: ["list", "ul"],
     regex: LIST_UL_REGEX,
-    lineHead: (indent, head, suffix) -> "#{indent}#{head} "
+    lineHead: (m) -> "#{m.indent}#{m.head} "
+    nextLine: (m) -> "#{m.indent}#{m.head} "
+    nextIndent: (m) -> m.head.length + 1
     defaultHead: (head) -> head
   }
   {
     name: ["list", "ol", "task"],
     regex: LIST_OL_TASK_REGEX,
-    lineHead: (indent, head, suffix) -> "#{indent}#{head}#{suffix} [ ] "
-    nextLine: (indent, head, suffix) -> "#{indent}#{incStr(head)}#{suffix} [ ] "
+    lineHead: (m) -> "#{m.indent}#{m.head}#{m.suffix} [ ] "
+    nextLine: (m) -> "#{m.indent}#{incStr(m.head)}#{m.suffix} [ ] "
+    nextIndent: (m) -> m.head.length + m.suffix.length + 1
     defaultHead: (head) -> "1"
   }
   {
     name: ["list", "ol"],
     regex: LIST_OL_REGEX,
-    lineHead: (indent, head, suffix) -> "#{indent}#{head}#{suffix} "
-    nextLine: (indent, head, suffix) -> "#{indent}#{incStr(head)}#{suffix} "
+    lineHead: (m) -> "#{m.indent}#{m.head}#{m.suffix} "
+    nextLine: (m) -> "#{m.indent}#{incStr(m.head)}#{m.suffix} "
+    nextIndent: (m) -> m.head.length + m.suffix.length + 1
     defaultHead: (head) -> "1"
   }
   {
     name: ["list", "ol", "al", "task"],
     regex: LIST_AL_TASK_REGEX,
-    lineHead: (indent, head, suffix) -> "#{indent}#{head}#{suffix} [ ] "
-    nextLine: (indent, head, suffix) -> "#{indent}#{incStr(head)}#{suffix} [ ] "
+    lineHead: (m) -> "#{m.indent}#{m.head}#{m.suffix} [ ] "
+    nextLine: (m) -> "#{m.indent}#{incStr(m.head)}#{m.suffix} [ ] "
+    nextIndent: (m) -> m.head.length + m.suffix.length + 1
     defaultHead: (head) ->
       c = if utils.isUpperCase(head) then "A" else "a"
       head.replace(/./g, c)
@@ -52,8 +59,9 @@ TYPES = [
   {
     name: ["list", "ol", "al"],
     regex: LIST_AL_REGEX,
-    lineHead: (indent, head, suffix) -> "#{indent}#{head}#{suffix} "
-    nextLine: (indent, head, suffix) -> "#{indent}#{incStr(head)}#{suffix} "
+    lineHead: (m) -> "#{m.indent}#{m.head}#{m.suffix} "
+    nextLine: (m) -> "#{m.indent}#{incStr(m.head)}#{m.suffix} "
+    nextIndent: (m) -> m.head.length + m.suffix.length + 1
     defaultHead: (head) ->
       c = if utils.isUpperCase(head) then "A" else "a"
       head.replace(/./g, c)
@@ -61,7 +69,9 @@ TYPES = [
   {
     name: ["blockquote"],
     regex: BLOCKQUOTE_REGEX,
-    lineHead: (indent, head, suffix) -> "#{indent}> "
+    lineHead: (m) -> "#{m.indent}> "
+    nextLine: (m) -> "#{m.indent}> "
+    nextIndent: (m) -> 2
     defaultHead: (head) -> ">"
   }
 ]
@@ -88,11 +98,16 @@ class LineMeta
         @defaultHead = type.defaultHead(matches[2])
         @suffix = if matches.length >= 4 then matches[3] else ""
         @body = matches[matches.length-1] || ""
-        @nextLine = (type.nextLine || type.lineHead).call(null, @indent, @head, @suffix)
+        @nextLine = type.nextLine(@)
         break
 
-  lineHead: (head) -> @type.lineHead(@indent, head, @suffix)
+  lineHead: (head) -> @type.lineHead({ indent: @indent, head: head, suffix: @suffix })
 
+  # If line to be indented
+  indentLineTabText: -> " ".repeat(@indentLineTabLength())
+  indentLineTabLength: -> @type.nextIndent(@)
+
+  # Checks
   isTaskList: -> !!@type && @type.name.indexOf("task") != -1
   isList: (type) -> !!@type && @type.name.indexOf("list") != -1 && (!type || @type.name.indexOf(type) != -1)
   isContinuous: -> !!@nextLine
@@ -100,7 +115,6 @@ class LineMeta
   isIndented: -> !!@indent && @indent.length > 0
 
   # Static methods
-
   @isList: (line) -> LIST_UL_REGEX.test(line) || LIST_OL_REGEX.test(line) || LIST_AL_REGEX.test(line)
   @isOrderedList: (line) -> LIST_OL_REGEX.test(line) || LIST_AL_REGEX.test(line)
   @isUnorderedList: (line) -> LIST_UL_REGEX.test(line)

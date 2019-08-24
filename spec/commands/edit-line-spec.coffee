@@ -70,15 +70,15 @@ describe "EditLine", ->
     it "continue after ordered task list line", ->
       editor.setText """
       1. [ ] Epic Tasks
-        1. [X] Sub-task A
+         1. [X] Sub-task A
       """
-      editor.setCursorBufferPosition([1, 19])
+      editor.setCursorBufferPosition([1, 20])
 
       editLine.trigger(event)
       expect(editor.getText()).toBe [
         "1. [ ] Epic Tasks"
-        "  1. [X] Sub-task A"
-        "  2. [ ] " # last item with trailing whitespace
+        "   1. [X] Sub-task A"
+        "   2. [ ] " # last item with trailing whitespace
       ].join("\n")
 
     it "continue after ordered task list line (without number continuation)", ->
@@ -107,15 +107,15 @@ describe "EditLine", ->
     it "continue after alpha ordered task list line", ->
       editor.setText """
       1. [ ] Epic Tasks
-        y. [X] Sub-task A
+         y. [X] Sub-task A
       """
-      editor.setCursorBufferPosition([1, 19])
+      editor.setCursorBufferPosition([1, 20])
 
       editLine.trigger(event)
       expect(editor.getText()).toBe [
         "1. [ ] Epic Tasks"
-        "  y. [X] Sub-task A"
-        "  z. [ ] " # last item with trailing whitespace
+        "   y. [X] Sub-task A"
+        "   z. [ ] " # last item with trailing whitespace
       ].join("\n")
 
     it "continue after blockquote line", ->
@@ -142,39 +142,39 @@ describe "EditLine", ->
     it "not continue after empty ordered list line", ->
       editor.setText [
         "1. [ ] parent"
-        "  - child"
-        "  - " # last item with trailing whitespace
+        "   - child"
+        "   - " # last item with trailing whitespace
       ].join("\n")
-      editor.setCursorBufferPosition([2, 4])
+      editor.setCursorBufferPosition([2, 5])
 
       editLine.trigger(event)
       expect(editor.getText()).toBe [
         "1. [ ] parent"
-        "  - child"
+        "   - child"
         "2. [ ] " # last item with trailing whitespace
       ].join("\n")
 
     it "not continue after empty ordered paragraph", ->
       editor.setText [
         "1. parent"
-        "  - child has a paragraph"
+        "   - child has a paragraph"
         ""
-        "    paragraph one"
+        "     paragraph one"
         ""
-        "    paragraph two"
+        "     paragraph two"
         ""
-        "  - " # last item with trailing whitespace
+        "   - " # last item with trailing whitespace
       ].join("\n")
-      editor.setCursorBufferPosition([7, 4])
+      editor.setCursorBufferPosition([7, 5])
 
       editLine.trigger(event)
       expect(editor.getText()).toBe [
         "1. parent"
-        "  - child has a paragraph"
+        "   - child has a paragraph"
         ""
-        "    paragraph one"
+        "     paragraph one"
         ""
-        "    paragraph two"
+        "     paragraph two"
         ""
         "2. " # last item with trailing whitespace
       ].join("\n")
@@ -310,127 +310,222 @@ describe "EditLine", ->
   describe "indentListLine", ->
     beforeEach -> editLine = new EditLine("indent-list-line")
 
-    it "indent line if it is an unordered list", ->
-      editor.setText "- list"
-      editor.setCursorBufferPosition([0, 5])
+    describe "unordered list", ->
+      beforeEach ->
+        editor.setText [
+            "- list"
+            "- list line 2"
+            "  - list line 3"
+          ].join("\n")
 
-      editLine.trigger(event)
-      expect(editor.getText()).toBe("  - list")
+      it "pass 1st line", ->
+        editor.setCursorBufferPosition([0, 5])
+        editLine.trigger(event)
+        expect(event.abortKeyBinding).toHaveBeenCalled()
 
-    it "indent line if it is an unordered list (ulBullet config)", ->
-      atom.config.set("markdown-writer.templateVariables.ulBullet1", "*")
-      atom.config.set("markdown-writer.templateVariables.ulBullet2", "+")
+      it "indent 2nd line", ->
+        editor.setCursorBufferPosition([1, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "- list"
+            "  - list line 2"
+            "  - list line 3"
+          ].join("\n")
+        expect(editor.getCursorBufferPosition().toString()).toBe("(1, 7)")
 
-      editor.setText "- list"
-      editor.setCursorBufferPosition([0, 5])
+      it "indent 2nd line with ulBullet config", ->
+        atom.config.set("markdown-writer.templateVariables.ulBullet1", "*")
+        atom.config.set("markdown-writer.templateVariables.ulBullet2", "+")
 
-      editLine.trigger(event)
-      expect(editor.getText()).toBe("  * list")
-      editLine.trigger(event)
-      expect(editor.getText()).toBe("    + list")
+        editor.setCursorBufferPosition([1, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "- list"
+            "  * list line 2"
+            "  - list line 3"
+          ].join("\n")
 
-    it "indent line if it is an ordered list", ->
-      editor.setText "3. list"
-      editor.setCursorBufferPosition([0, 5])
+        editor.setCursorBufferPosition([2, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "- list"
+            "  * list line 2"
+            "    + list line 3"
+          ].join("\n")
 
-      editLine.trigger(event)
-      expect(editor.getText()).toBe("  1. list")
-      expect(editor.getCursorBufferPosition().toString()).toBe("(0, 7)")
+    describe "ordered list", ->
+      beforeEach ->
+        editor.setText [
+            "1. list"
+            "2. list line 2"
+            "3. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+            ""
+            "This behaviour is not observed when the list item does not extend to the next line."
+          ].join("\n")
 
-    it "indent long line if it is an ordered list", ->
-      editor.setText [
-          "3. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
-          ""
-          "This behaviour is not observed when the list item does not extend to the next line."
-        ].join("\n")
-      editor.setCursorBufferPosition([0, 5])
+      it "pass 1st line", ->
+        editor.setCursorBufferPosition([0, 5])
+        editLine.trigger(event)
+        expect(event.abortKeyBinding).toHaveBeenCalled()
 
-      editLine.trigger(event)
-      expect(editor.getText()).toBe [
-        "  1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
-        ""
-        "This behaviour is not observed when the list item does not extend to the next line."
-      ].join("\n")
-      expect(editor.getCursorBufferPosition().toString()).toBe("(0, 7)")
+      it "indent 2nd line", ->
+        editor.setCursorBufferPosition([1, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "1. list"
+            "   1. list line 2"
+            "3. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+            ""
+            "This behaviour is not observed when the list item does not extend to the next line."
+          ].join("\n")
+        expect(editor.getCursorBufferPosition().toString()).toBe("(1, 8)")
 
-      # indent one more time
-      editLine.trigger(event)
-      expect(editor.getText()).toBe [
-        "    1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
-        ""
-        "This behaviour is not observed when the list item does not extend to the next line."
-      ].join("\n")
-      expect(editor.getCursorBufferPosition().toString()).toBe("(0, 9)")
+      it "indent 3rd long text line", ->
+        editor.setCursorBufferPosition([2, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "1. list"
+            "2. list line 2"
+            "   1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+            ""
+            "This behaviour is not observed when the list item does not extend to the next line."
+          ].join("\n")
+        expect(editor.getCursorBufferPosition().toString()).toBe("(2, 8)")
 
-    it "abort event if it is normal text", ->
-      editor.setText "texttext"
-      editor.setCursorBufferPosition([0, 4])
+    describe "mixed ordered list", ->
+      beforeEach ->
+        editor.setText [
+            "1. list"
+            "- list line 2"
+            "- list line 3"
+          ].join("\n")
 
-      editLine.trigger(event)
-      expect(event.abortKeyBinding).toHaveBeenCalled()
+      it "indent 2nd line", ->
+        editor.setCursorBufferPosition([1, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "1. list"
+            "   - list line 2"
+            "- list line 3"
+          ].join("\n")
+        expect(editor.getCursorBufferPosition().toString()).toBe("(1, 8)")
+
+      it "indent 2nd/3rd line with ulBullet config", ->
+        atom.config.set("markdown-writer.templateVariables.ulBullet1", "*")
+        atom.config.set("markdown-writer.templateVariables.ulBullet2", "+")
+
+        editor.setCursorBufferPosition([1, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "1. list"
+            "   * list line 2"
+            "- list line 3"
+          ].join("\n")
+
+        editor.setCursorBufferPosition([2, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "1. list"
+            "   * list line 2"
+            "   * list line 3"
+          ].join("\n")
+
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "1. list"
+            "   * list line 2"
+            "     + list line 3"
+          ].join("\n")
 
   describe "undentListLine", ->
     beforeEach -> editLine = new EditLine("undent-list-line")
 
-    it "undent line if it is an unordered list", ->
-      editor.setText "  * list"
-      editor.setCursorBufferPosition([0, 5])
+    describe "unordered list", ->
+      beforeEach ->
+        editor.setText [
+            "- list"
+            "  * list line 2"
+            "    + list line 3"
+          ].join("\n")
 
-      editLine.trigger(event)
-      expect(editor.getText()).toBe("- list")
-      expect(editor.getCursorBufferPosition().toString()).toBe("(0, 3)")
+      it "pass 1st line", ->
+        editor.setCursorBufferPosition([0, 5])
+        editLine.trigger(event)
+        expect(event.abortKeyBinding).toHaveBeenCalled()
 
-    it "undent line if it is an unordered list (ulBullet config)", ->
-      atom.config.set("markdown-writer.templateVariables.ulBullet1", "*")
+      it "undent 2nd line", ->
+        editor.setCursorBufferPosition([1, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "- list"
+            "- list line 2"
+            "    + list line 3"
+          ].join("\n")
+        expect(editor.getCursorBufferPosition().toString()).toBe("(1, 3)")
 
-      editor.setText "    + list"
-      editor.setCursorBufferPosition([0, 5])
+        editor.setCursorBufferPosition([2, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "- list"
+            "- list line 2"
+            "  - list line 3"
+          ].join("\n")
 
-      editLine.trigger(event)
-      expect(editor.getText()).toBe("  * list")
-      editLine.trigger(event)
-      expect(editor.getText()).toBe("- list")
+      it "undent 2nd line with ulBullet config", ->
+        editor.setCursorBufferPosition([2, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "- list"
+            "  * list line 2"
+            "  * list line 3"
+          ].join("\n")
 
-    it "undent line if it is an ordered list", ->
-      editor.setText "    3. list"
-      editor.setCursorBufferPosition([0, 9])
+    describe "mixed ordered list", ->
+      beforeEach ->
+        editor.setText [
+            "1. list"
+            "   - list line 2"
+            "     1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+            ""
+            "This behaviour is not observed when the list item does not extend to the next line."
+          ].join("\n")
 
-      editLine.trigger(event)
-      expect(editor.getText()).toBe("  1. list")
+      it "pass 1st line", ->
+        editor.setCursorBufferPosition([0, 5])
+        editLine.trigger(event)
+        expect(event.abortKeyBinding).toHaveBeenCalled()
 
-    it "undent long line if it is an ordered list", ->
-      editor.setText [
-          "    3. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
-          ""
-          "This behaviour is not observed when the list item does not extend to the next line."
-        ].join("\n")
-      editor.setCursorBufferPosition([0, 9])
+      it "undent 2nd line", ->
+        editor.setCursorBufferPosition([1, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "1. list"
+            "1. list line 2"
+            "     1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+            ""
+            "This behaviour is not observed when the list item does not extend to the next line."
+          ].join("\n")
+        expect(editor.getCursorBufferPosition().toString()).toBe("(1, 3)")
 
-      editLine.trigger(event)
-      expect(editor.getText()).toBe [
-        "  1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
-        ""
-        "This behaviour is not observed when the list item does not extend to the next line."
-      ].join("\n")
+        editor.setCursorBufferPosition([2, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "1. list"
+            "1. list line 2"
+            "     1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+            ""
+            "This behaviour is not observed when the list item does not extend to the next line."
+          ].join("\n")
+        expect(event.abortKeyBinding).toHaveBeenCalled()
 
-      # indent one more time
-      editLine.trigger(event)
-      expect(editor.getText()).toBe [
-        "1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
-        ""
-        "This behaviour is not observed when the list item does not extend to the next line."
-      ].join("\n")
-
-    it "abort event if it is normal text", ->
-      editor.setText "texttext"
-      editor.setCursorBufferPosition([0, 4])
-
-      editLine.trigger(event)
-      expect(event.abortKeyBinding).toHaveBeenCalled()
-
-    it "abort event if it has nothing to unindent", ->
-      editor.setText "- list"
-      editor.setCursorBufferPosition([0, 2])
-
-      editLine.trigger(event)
-      expect(event.abortKeyBinding).toHaveBeenCalled()
+      it "undent 3rd long text line", ->
+        editor.setCursorBufferPosition([2, 1])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "1. list"
+            "   - list line 2"
+            "   - Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+            ""
+            "This behaviour is not observed when the list item does not extend to the next line."
+          ].join("\n")
+        expect(editor.getCursorBufferPosition().toString()).toBe("(2, 0)")
