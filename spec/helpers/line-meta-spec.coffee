@@ -38,6 +38,7 @@ describe "LineMeta", ->
         it "had default head", -> expect(lineMeta.defaultHead).toBe("-")
         it "has indent", -> expect(lineMeta.indent).toBe("")
         it "has nextLine", -> expect(lineMeta.nextLine).toBe("- [ ] ")
+        it "has indentLineTabLength", -> expect(lineMeta.indentLineTabLength()).toBe(2)
         it "create lineHead", -> expect(lineMeta.lineHead("*")).toBe("* [ ] ")
 
     describe "- [X] line", ->
@@ -54,6 +55,7 @@ describe "LineMeta", ->
       it "had default head", -> expect(lineMeta.defaultHead).toBe("-")
       it "has indent", -> expect(lineMeta.indent).toBe("")
       it "has nextLine", -> expect(lineMeta.nextLine).toBe("- [ ] ")
+      it "has indentLineTabLength", -> expect(lineMeta.indentLineTabLength()).toBe(2)
       it "create lineHead", -> expect(lineMeta.lineHead("*")).toBe("* [ ] ")
 
   describe "unordered list line", ->
@@ -69,6 +71,7 @@ describe "LineMeta", ->
         it "had default head", -> expect(lineMeta.defaultHead).toBe("-")
         it "has indent", -> expect(lineMeta.indent).toBe("")
         it "has nextLine", -> expect(lineMeta.nextLine).toBe("- ")
+        it "has indentLineTabLength", -> expect(lineMeta.indentLineTabLength()).toBe(2)
         it "create lineHead", -> expect(lineMeta.lineHead("*")).toBe("* ")
 
     describe "  - line", ->
@@ -82,6 +85,7 @@ describe "LineMeta", ->
       it "had default head", -> expect(lineMeta.defaultHead).toBe("-")
       it "has indent", -> expect(lineMeta.indent).toBe("  ")
       it "has nextLine", -> expect(lineMeta.nextLine).toBe("  - ")
+      it "has indentLineTabLength", -> expect(lineMeta.indentLineTabLength()).toBe(2)
       it "create lineHead", -> expect(lineMeta.lineHead("*")).toBe("  * ")
 
   describe "ordered task list line", ->
@@ -100,6 +104,7 @@ describe "LineMeta", ->
         it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
         it "has indent", -> expect(lineMeta.indent).toBe("")
         it "has nextLine", -> expect(lineMeta.nextLine).toBe("2. [ ] ")
+        it "has indentLineTabLength", -> expect(lineMeta.indentLineTabLength()).toBe(3)
         it "create lineHead", -> expect(lineMeta.lineHead("1")).toBe("1. [ ] ")
 
     describe "    99. [X] line", ->
@@ -116,6 +121,7 @@ describe "LineMeta", ->
       it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
       it "has indent", -> expect(lineMeta.indent).toBe("    ")
       it "has nextLine", -> expect(lineMeta.nextLine).toBe("    100. [ ] ")
+      it "has indentLineTabLength", -> expect(lineMeta.indentLineTabLength()).toBe(4)
       it "create lineHead", -> expect(lineMeta.lineHead("1")).toBe("    1. [ ] ")
 
   describe "ordered list line", ->
@@ -131,6 +137,7 @@ describe "LineMeta", ->
         it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
         it "has indent", -> expect(lineMeta.indent).toBe("")
         it "has nextLine", -> expect(lineMeta.nextLine).toBe("4. ")
+        it "has indentLineTabLength", -> expect(lineMeta.indentLineTabLength()).toBe(3)
         it "create lineHead", -> expect(lineMeta.lineHead("1")).toBe("1. ")
 
     describe "3. line", ->
@@ -144,6 +151,7 @@ describe "LineMeta", ->
       it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
       it "has indent", -> expect(lineMeta.indent).toBe("")
       it "has nextLine", -> expect(lineMeta.nextLine).toBe("4. ")
+      it "has indentLineTabLength", -> expect(lineMeta.indentLineTabLength()).toBe(3)
       it "create lineHead", -> expect(lineMeta.lineHead("1")).toBe("1. ")
 
     describe "3) line", ->
@@ -157,6 +165,7 @@ describe "LineMeta", ->
       it "had default head", -> expect(lineMeta.defaultHead).toBe("1")
       it "has indent", -> expect(lineMeta.indent).toBe("")
       it "has nextLine", -> expect(lineMeta.nextLine).toBe("4) ")
+      it "has indentLineTabLength", -> expect(lineMeta.indentLineTabLength()).toBe(3)
       it "create lineHead", -> expect(lineMeta.lineHead("1")).toBe("1) ")
 
   describe "ordered alpha list line", ->
@@ -171,6 +180,7 @@ describe "LineMeta", ->
       it "had default head", -> expect(lineMeta.defaultHead).toBe("a")
       it "has indent", -> expect(lineMeta.indent).toBe("")
       it "has nextLine", -> expect(lineMeta.nextLine).toBe("b. ")
+      it "has indentLineTabLength", -> expect(lineMeta.indentLineTabLength()).toBe(3)
       it "create lineHead", -> expect(lineMeta.lineHead("a")).toBe("a. ")
 
     describe "EA) line", ->
@@ -184,6 +194,7 @@ describe "LineMeta", ->
       it "had default head", -> expect(lineMeta.defaultHead).toBe("AA")
       it "has indent", -> expect(lineMeta.indent).toBe("")
       it "has nextLine", -> expect(lineMeta.nextLine).toBe("EB) ")
+      it "has indentLineTabLength", -> expect(lineMeta.indentLineTabLength()).toBe(4)
       it "create lineHead", -> expect(lineMeta.lineHead("A")).toBe("A) ")
 
     describe "aaa. not a list line", ->
@@ -202,3 +213,4 @@ describe "LineMeta", ->
     it "had default head", -> expect(lineMeta.defaultHead).toBe(">")
     it "has indent", -> expect(lineMeta.indent).toBe("  ")
     it "has nextLine", -> expect(lineMeta.nextLine).toBe("  > ")
+    it "has indentLineTabLength", -> expect(lineMeta.indentLineTabLength()).toBe(2)
