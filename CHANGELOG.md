@@ -1,3 +1,7 @@
+## 2.11.8
+
+- Fix OL Indentation Alignment ([#274](https://github.com/zhuochun/md-writer/issues/274))
+
 ## 2.11.7
 
 - Improve UL/OL "toggle on" behaviors to `removeEmptyLine` ([#273](https://github.com/zhuochun/md-writer/issues/273))
