@@ -1,6 +1,6 @@
 ## 2.11.9
 
-- Use 2 spaces instead of TabLength in edit-line command ([#293](https://github.com/zhuochun/md-writer/issues/293))
+- Improve edit-line command in different TabLength ([#293](https://github.com/zhuochun/md-writer/issues/293))
 
 ## 2.11.8
 
