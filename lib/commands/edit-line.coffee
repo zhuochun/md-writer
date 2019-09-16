@@ -156,7 +156,7 @@ class EditLine
       return
 
     if lineMeta.isList("ul")
-      bullet = config.get("templateVariables.ulBullet#{Math.round(currentIndentation)}")
+      bullet = @_ulBullet(@editor, currentIndentation)
       bullet = bullet || config.get("templateVariables.ulBullet") || lineMeta.defaultHead
 
       newline = "#{parentLineMeta.indentLineTabText()}#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
@@ -181,6 +181,18 @@ class EditLine
   _isAtLineBeginning: (line, col) ->
     col == 0 || line.substring(0, col).trim() == ""
 
+  # FIXME this is a hack to handle different tab length. to fix we need to change to parse
+  # the complete list items to know the correct indentation and rewrite all logic in this file
+  _ulBullet: (editor, indentation) ->
+    label = ""
+    # best effort to be correct in the first 3 levels
+    if editor.getTabLength() <= 2
+      label = Math.floor(indentation)
+    else
+      label = Math.round(indentation)
+
+    config.get("templateVariables.ulBullet#{label}")
+
   undentListLine: (e, selection) ->
     return e.abortKeyBinding() if @_isRangeSelection(selection)
 
@@ -195,7 +207,7 @@ class EditLine
 
     parentLineMeta = @_findListLineBackward(cursor.row, currentIndentation)
     if !parentLineMeta && lineMeta.isList("ul")
-      bullet = config.get("templateVariables.ulBullet#{Math.round(currentIndentation-1)}")
+      bullet = @_ulBullet(@editor, currentIndentation-1)
       bullet = bullet || config.get("templateVariables.ulBullet") || lineMeta.defaultHead
 
       newline = "#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
