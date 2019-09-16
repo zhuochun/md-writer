@@ -353,6 +353,51 @@ describe "EditLine", ->
             "    + list line 3"
           ].join("\n")
 
+    describe "4-space tab unordered list", ->
+      beforeEach ->
+        atom.config.set("editor.tabLength", 4)
+
+        editor.setText [
+            "- list"
+            "- list line 2"
+            "  - list line 3"
+          ].join("\n")
+
+      it "pass 1st line", ->
+        editor.setCursorBufferPosition([0, 5])
+        editLine.trigger(event)
+        expect(event.abortKeyBinding).toHaveBeenCalled()
+
+      it "indent 2nd line", ->
+        editor.setCursorBufferPosition([1, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "- list"
+            "  - list line 2"
+            "  - list line 3"
+          ].join("\n")
+        expect(editor.getCursorBufferPosition().toString()).toBe("(1, 7)")
+
+      it "indent 2nd line with ulBullet config", ->
+        atom.config.set("markdown-writer.templateVariables.ulBullet1", "*")
+        atom.config.set("markdown-writer.templateVariables.ulBullet2", "+")
+
+        editor.setCursorBufferPosition([1, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "- list"
+            "  * list line 2"
+            "  - list line 3"
+          ].join("\n")
+
+        editor.setCursorBufferPosition([2, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "- list"
+            "  * list line 2"
+            "    + list line 3"
+          ].join("\n")
+
     describe "ordered list", ->
       beforeEach ->
         editor.setText [

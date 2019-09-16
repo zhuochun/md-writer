@@ -77,7 +77,7 @@ class EditLine
   # when a list line is indented, we need to look backward (go up) lines to find
   # its parent list line if possible and use that line as reference for new indentation etc
   _findListLineBackward: (currentRow, currentIndentation) ->
-    return if currentRow < 1 || currentIndentation < 1
+    return if currentRow < 1 || currentIndentation <= 0
 
     emptyLineSkipped = 0
     for row in [(currentRow - 1)..0]
@@ -87,15 +87,21 @@ class EditLine
         return if emptyLineSkipped > MAX_SKIP_EMPTY_LINE_ALLOWED
         emptyLineSkipped += 1
 
-      else # find parent list line with indentation < current indentation
+      else # find parent list line
         indentation = @editor.indentationForBufferRow(row)
-        continue if indentation >= currentIndentation
-        continue unless LineMeta.isList(line)
+        continue if indentation >= currentIndentation # ignore larger indentation
+
+        # handle case when the line is not a list line
+        if indentation == 0
+          return unless LineMeta.isList(line) # early stop on a paragraph
+        else
+          continue unless LineMeta.isList(line) # skip on a paragraph in a list
 
         lineMeta = new LineMeta(line)
+        # calculate the expected indentation
         indentation = (lineMeta.indent.length + lineMeta.indentLineTabLength()) / @editor.getTabLength()
-        # return iff the line is the immediate parent
-        if indentation >= currentIndentation
+        # return iff the line is the immediate parent (within 1 indentation)
+        if currentIndentation > indentation-1 && currentIndentation < indentation+1
           return lineMeta
         else
           return
@@ -150,7 +156,7 @@ class EditLine
       return
 
     if lineMeta.isList("ul")
-      bullet = config.get("templateVariables.ulBullet#{Math.floor(currentIndentation)}")
+      bullet = @_ulBullet(@editor, currentIndentation)
       bullet = bullet || config.get("templateVariables.ulBullet") || lineMeta.defaultHead
 
       newline = "#{parentLineMeta.indentLineTabText()}#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
@@ -175,6 +181,18 @@ class EditLine
   _isAtLineBeginning: (line, col) ->
     col == 0 || line.substring(0, col).trim() == ""
 
+  # FIXME this is a hack to handle different tab length. to fix we need to change to parse
+  # the complete list items to know the correct indentation and rewrite all logic in this file
+  _ulBullet: (editor, indentation) ->
+    label = ""
+    # best effort to be correct in the first 3 levels
+    if editor.getTabLength() <= 2
+      label = Math.floor(indentation)
+    else
+      label = Math.round(indentation)
+
+    config.get("templateVariables.ulBullet#{label}")
+
   undentListLine: (e, selection) ->
     return e.abortKeyBinding() if @_isRangeSelection(selection)
 
@@ -185,15 +203,15 @@ class EditLine
     return e.abortKeyBinding() if !lineMeta.isList() || lineMeta.isList("al")
 
     currentIndentation = @editor.indentationForBufferRow(cursor.row)
-    return e.abortKeyBinding() if currentIndentation < 1
+    return e.abortKeyBinding() if currentIndentation <= 0
 
     parentLineMeta = @_findListLineBackward(cursor.row, currentIndentation)
     if !parentLineMeta && lineMeta.isList("ul")
-      bullet = config.get("templateVariables.ulBullet#{Math.floor(currentIndentation-1)}")
+      bullet = @_ulBullet(@editor, currentIndentation-1)
       bullet = bullet || config.get("templateVariables.ulBullet") || lineMeta.defaultHead
 
       newline = "#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
-      newline = newline.substring(Math.min(@editor.getTabText().length, lineMeta.indent.length)) # remove one indent
+      newline = newline.substring(Math.min(lineMeta.indent.length, @editor.getTabLength())) # remove one indent
       newcursor = [cursor.row, Math.max(cursor.column + newline.length - line.length, 0)]
       @_replaceLine(selection, newline, newcursor)
       return

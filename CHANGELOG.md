@@ -1,3 +1,7 @@
+## 2.11.9
+
+- Improve edit-line command in different TabLength ([#293](https://github.com/zhuochun/md-writer/issues/293))
+
 ## 2.11.8
 
 - Fix OL Indentation Alignment ([#274](https://github.com/zhuochun/md-writer/issues/274))
