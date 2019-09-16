@@ -98,10 +98,10 @@ class EditLine
           continue unless LineMeta.isList(line) # skip on a paragraph in a list
 
         lineMeta = new LineMeta(line)
-        # divide by 2 spaces assuming tab -> 2 spaces
-        indentation = (lineMeta.indent.length + lineMeta.indentLineTabLength()) / 2
-        # return iff the line is the immediate parent
-        if indentation >= currentIndentation
+        # calculate the expected indentation
+        indentation = (lineMeta.indent.length + lineMeta.indentLineTabLength()) / @editor.getTabLength()
+        # return iff the line is the immediate parent (within 1 indentation)
+        if currentIndentation > indentation-1 && currentIndentation < indentation+1
           return lineMeta
         else
           return
@@ -156,7 +156,7 @@ class EditLine
       return
 
     if lineMeta.isList("ul")
-      bullet = config.get("templateVariables.ulBullet#{Math.floor(currentIndentation)}")
+      bullet = config.get("templateVariables.ulBullet#{Math.round(currentIndentation)}")
       bullet = bullet || config.get("templateVariables.ulBullet") || lineMeta.defaultHead
 
       newline = "#{parentLineMeta.indentLineTabText()}#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
@@ -191,15 +191,15 @@ class EditLine
     return e.abortKeyBinding() if !lineMeta.isList() || lineMeta.isList("al")
 
     currentIndentation = @editor.indentationForBufferRow(cursor.row)
-    return e.abortKeyBinding() if currentIndentation < 1
+    return e.abortKeyBinding() if currentIndentation <= 0
 
     parentLineMeta = @_findListLineBackward(cursor.row, currentIndentation)
     if !parentLineMeta && lineMeta.isList("ul")
-      bullet = config.get("templateVariables.ulBullet#{Math.floor(currentIndentation-1)}")
+      bullet = config.get("templateVariables.ulBullet#{Math.round(currentIndentation-1)}")
       bullet = bullet || config.get("templateVariables.ulBullet") || lineMeta.defaultHead
 
       newline = "#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
-      newline = newline.substring(Math.min(lineMeta.indent.length, 2)) # remove one indent
+      newline = newline.substring(Math.min(lineMeta.indent.length, @editor.getTabLength())) # remove one indent
       newcursor = [cursor.row, Math.max(cursor.column + newline.length - line.length, 0)]
       @_replaceLine(selection, newline, newcursor)
       return
