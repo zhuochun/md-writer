@@ -77,7 +77,7 @@ class EditLine
   # when a list line is indented, we need to look backward (go up) lines to find
   # its parent list line if possible and use that line as reference for new indentation etc
   _findListLineBackward: (currentRow, currentIndentation) ->
-    return if currentRow < 1 || currentIndentation < 1
+    return if currentRow < 1 || currentIndentation <= 0
 
     emptyLineSkipped = 0
     for row in [(currentRow - 1)..0]
@@ -87,13 +87,19 @@ class EditLine
         return if emptyLineSkipped > MAX_SKIP_EMPTY_LINE_ALLOWED
         emptyLineSkipped += 1
 
-      else # find parent list line with indentation < current indentation
+      else # find parent list line
         indentation = @editor.indentationForBufferRow(row)
-        continue if indentation >= currentIndentation
-        continue unless LineMeta.isList(line)
+        continue if indentation >= currentIndentation # ignore larger indentation
+
+        # handle case when the line is not a list line
+        if indentation == 0
+          return unless LineMeta.isList(line) # early stop on a paragraph
+        else
+          continue unless LineMeta.isList(line) # skip on a paragraph in a list
 
         lineMeta = new LineMeta(line)
-        indentation = (lineMeta.indent.length + lineMeta.indentLineTabLength()) / @editor.getTabLength()
+        # divide by 2 spaces assuming tab -> 2 spaces
+        indentation = (lineMeta.indent.length + lineMeta.indentLineTabLength()) / 2
         # return iff the line is the immediate parent
         if indentation >= currentIndentation
           return lineMeta
@@ -193,7 +199,7 @@ class EditLine
       bullet = bullet || config.get("templateVariables.ulBullet") || lineMeta.defaultHead
 
       newline = "#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
-      newline = newline.substring(Math.min(@editor.getTabText().length, lineMeta.indent.length)) # remove one indent
+      newline = newline.substring(Math.min(lineMeta.indent.length, 2)) # remove one indent
       newcursor = [cursor.row, Math.max(cursor.column + newline.length - line.length, 0)]
       @_replaceLine(selection, newline, newcursor)
       return
