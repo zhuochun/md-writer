@@ -34,7 +34,10 @@ class EditLine
       # when cursor is at middle of line, do a normal insert line
       # unless inline continuation is enabled
       if cursor.column < line.length && !config.get("inlineNewLineContinuation")
-        return e.abortKeyBinding()
+        @editor.insertText("\n")
+        @editor.insertText(lineMeta.indent)
+        @editor.insertText(lineMeta.indentLineTabText())
+        return
 
       if lineMeta.isEmptyBody()
         @_insertNewlineWithoutContinuation(cursor)
@@ -55,42 +58,53 @@ class EditLine
 
   _insertNewlineWithContinuation: (lineMeta) ->
     nextLine = lineMeta.nextLine
-    # don't continue numbers in OL
+    # use default head and do not increase numbers in OL when disabled continuation
     if lineMeta.isList("ol") && !config.get("orderedNewLineNumberContinuation")
       nextLine = lineMeta.lineHead(lineMeta.defaultHead)
 
     @editor.insertText("\n#{nextLine}")
 
   _insertNewlineWithoutContinuation: (cursor) ->
-    currentIndentation = @editor.indentationForBufferRow(cursor.row)
-
     nextLine = "\n"
-    # if this is an list without indentation, or at beginning of the file
-    if currentIndentation < 1 || cursor.row < 1
-      @editor.selectToBeginningOfLine()
-      @editor.insertText(nextLine)
-      return
 
-    emptyLineSkipped = 0
-    # if this is an indented empty list, we will go up lines and try to find
-    # its parent's list prefix and use that if possible
-    for row in [(cursor.row - 1)..0]
-      line = @editor.lineTextForBufferRow(row)
-
-      if line.trim() == "" # skip empty lines in case of list paragraphs
-        break if emptyLineSkipped > MAX_SKIP_EMPTY_LINE_ALLOWED
-        emptyLineSkipped += 1
-      else # find parent with indentation = current indentation - 1
-        indentation = @editor.indentationForBufferRow(row)
-        continue if indentation >= currentIndentation
-
-        if indentation == currentIndentation - 1 && LineMeta.isList(line)
-          lineMeta = new LineMeta(line)
-          nextLine = lineMeta.nextLine unless lineMeta.isList("al") && !lineMeta.isIndented()
-        break
+    currentIndentation = @editor.indentationForBufferRow(cursor.row)
+    parentLineMeta = @_findListLineBackward(cursor.row, currentIndentation)
+    nextLine = parentLineMeta.nextLine if parentLineMeta && !parentLineMeta.isList("al")
 
     @editor.selectToBeginningOfLine()
     @editor.insertText(nextLine)
+
+  # when a list line is indented, we need to look backward (go up) lines to find
+  # its parent list line if possible and use that line as reference for new indentation etc
+  _findListLineBackward: (currentRow, currentIndentation) ->
+    return if currentRow < 1 || currentIndentation <= 0
+
+    emptyLineSkipped = 0
+    for row in [(currentRow - 1)..0]
+      line = @editor.lineTextForBufferRow(row)
+
+      if line.trim() == "" # skip empty lines which could be list paragraphs
+        return if emptyLineSkipped > MAX_SKIP_EMPTY_LINE_ALLOWED
+        emptyLineSkipped += 1
+
+      else # find parent list line
+        indentation = @editor.indentationForBufferRow(row)
+        continue if indentation >= currentIndentation # ignore larger indentation
+
+        # handle case when the line is not a list line
+        if indentation == 0
+          return unless LineMeta.isList(line) # early stop on a paragraph
+        else
+          continue unless LineMeta.isList(line) # skip on a paragraph in a list
+
+        lineMeta = new LineMeta(line)
+        # calculate the expected indentation
+        indentation = (lineMeta.indent.length + lineMeta.indentLineTabLength()) / @editor.getTabLength()
+        # return iff the line is the immediate parent (within 1 indentation)
+        if currentIndentation > indentation-1 && currentIndentation < indentation+1
+          return lineMeta
+        else
+          return
 
   _isTableRow: (cursor, line) ->
     return false if !config.get("tableNewLineContinuation")
@@ -127,26 +141,30 @@ class EditLine
 
     cursor = selection.getHeadBufferPosition()
     line = @editor.lineTextForBufferRow(cursor.row)
-
+    # don't care about non-list or alpha list
     lineMeta = new LineMeta(line)
-    # don't care about alpha list
-    return e.abortKeyBinding() if lineMeta.isList("al")
+    return e.abortKeyBinding() if !lineMeta.isList() || lineMeta.isList("al")
+
+    currentIndentation = @editor.indentationForBufferRow(cursor.row) + 1 # add 1 to identify the parent list
+    parentLineMeta = @_findListLineBackward(cursor.row, currentIndentation)
+    return e.abortKeyBinding() unless parentLineMeta
 
     if lineMeta.isList("ol")
-      newline = "#{@editor.getTabText()}#{lineMeta.lineHead(lineMeta.defaultHead)}#{lineMeta.body}"
+      newline = "#{parentLineMeta.indentLineTabText()}#{lineMeta.lineHead(lineMeta.defaultHead)}#{lineMeta.body}"
       newcursor = [cursor.row, cursor.column + newline.length - line.length]
       @_replaceLine(selection, newline, newcursor)
+      return
 
-    else if lineMeta.isList("ul")
-      bullet = config.get("templateVariables.ulBullet#{@editor.indentationForBufferRow(cursor.row)+1}")
+    if lineMeta.isList("ul")
+      bullet = @_ulBullet(@editor, currentIndentation)
       bullet = bullet || config.get("templateVariables.ulBullet") || lineMeta.defaultHead
 
-      newline = "#{@editor.getTabText()}#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
+      newline = "#{parentLineMeta.indentLineTabText()}#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
       newcursor = [cursor.row, cursor.column + newline.length - line.length]
       @_replaceLine(selection, newline, newcursor)
+      return
 
-    else
-      e.abortKeyBinding()
+    e.abortKeyBinding() # unmatched line
 
   _isRangeSelection: (selection) ->
     head = selection.getHeadBufferPosition()
@@ -163,32 +181,53 @@ class EditLine
   _isAtLineBeginning: (line, col) ->
     col == 0 || line.substring(0, col).trim() == ""
 
+  # FIXME this is a hack to handle different tab length. to fix we need to change to parse
+  # the complete list items to know the correct indentation and rewrite all logic in this file
+  _ulBullet: (editor, indentation) ->
+    label = ""
+    # best effort to be correct in the first 3 levels
+    if editor.getTabLength() <= 2
+      label = Math.floor(indentation)
+    else
+      label = Math.round(indentation)
+
+    config.get("templateVariables.ulBullet#{label}")
+
   undentListLine: (e, selection) ->
     return e.abortKeyBinding() if @_isRangeSelection(selection)
 
     cursor = selection.getHeadBufferPosition()
-    currentIndentation = @editor.indentationForBufferRow(cursor.row)
-    return e.abortKeyBinding() if currentIndentation < 1
-
     line = @editor.lineTextForBufferRow(cursor.row)
+    # don't care about non-list or alpha list
     lineMeta = new LineMeta(line)
-    # don't care about alpha list
-    return e.abortKeyBinding() if lineMeta.isList("al")
+    return e.abortKeyBinding() if !lineMeta.isList() || lineMeta.isList("al")
 
-    if lineMeta.isList("ol")
-      newline = "#{lineMeta.lineHead(lineMeta.defaultHead)}#{lineMeta.body}"
-      newline = newline.substring(@editor.getTabText().length) # remove one indent
-      newcursor = [cursor.row, Math.max(cursor.column + newline.length - line.length, 0)]
-      @_replaceLine(selection, newline, newcursor)
+    currentIndentation = @editor.indentationForBufferRow(cursor.row)
+    return e.abortKeyBinding() if currentIndentation <= 0
 
-    else if lineMeta.isList("ul")
-      bullet = config.get("templateVariables.ulBullet#{currentIndentation-1}")
+    parentLineMeta = @_findListLineBackward(cursor.row, currentIndentation)
+    if !parentLineMeta && lineMeta.isList("ul")
+      bullet = @_ulBullet(@editor, currentIndentation-1)
       bullet = bullet || config.get("templateVariables.ulBullet") || lineMeta.defaultHead
 
       newline = "#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
-      newline = newline.substring(@editor.getTabText().length) # remove one indent
+      newline = newline.substring(Math.min(lineMeta.indent.length, @editor.getTabLength())) # remove one indent
       newcursor = [cursor.row, Math.max(cursor.column + newline.length - line.length, 0)]
       @_replaceLine(selection, newline, newcursor)
+      return
+    # treat as normal undent if no parent found
+    return e.abortKeyBinding() unless parentLineMeta
 
-    else
-      e.abortKeyBinding()
+    if parentLineMeta.isList("ol")
+      newline = "#{parentLineMeta.lineHead(parentLineMeta.defaultHead)}#{lineMeta.body}"
+      newcursor = [cursor.row, Math.max(cursor.column + newline.length - line.length, 0)]
+      @_replaceLine(selection, newline, newcursor)
+      return
+
+    if parentLineMeta.isList("ul")
+      newline = "#{parentLineMeta.lineHead(parentLineMeta.head)}#{lineMeta.body}"
+      newcursor = [cursor.row, Math.max(cursor.column + newline.length - line.length, 0)]
+      @_replaceLine(selection, newline, newcursor)
+      return
+
+    e.abortKeyBinding()
