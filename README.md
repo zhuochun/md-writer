@@ -45,7 +45,7 @@ More GIFs Here: [Create New Post](http://i.imgur.com/BwntxhB.gif), [Insert Refer
 > cd ~/.atom/packages
 > git clone https://github.com/chenghm123/md-writer-qiniu.git markdown-writer
 > ```
-> 如果有任何BUG可以联系我修改、联系方式： [QQ邮箱](mailto:xxxxx@qq.com)
+> 如果有任何BUG可以联系我修改、联系方式： [QQ邮箱](mailto:chenghm123@qq.com)
 
 ### Blogging
 
