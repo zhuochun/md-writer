@@ -87,11 +87,11 @@
   },
   "dependencies": {
     "atom-space-pen-views": "^2.0.0",
-    "anchor-markdown-header": "0.5.7",
     "fs-plus": "^3.0.0",
     "js-yaml": "^3.0.0",
     "guid": "0.0.12",
     "season": "^6.0.0",
+    "emoji-regex": "^8.0.0",
     "wcwidth": "^1.0.0"
   }
 }
