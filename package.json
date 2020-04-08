@@ -1,7 +1,7 @@
 {
   "name": "markdown-writer",
   "main": "./lib/markdown-writer",
-  "version": "2.11.9",
+  "version": "2.11.10",
   "description": "Make Atom a better Markdown editor and an easier static blogging tool.",
   "keywords": [
     "Markdown",
@@ -86,13 +86,13 @@
     "atom": ">=1.9.0 <2.0.0"
   },
   "dependencies": {
-    "atom-space-pen-views": "^2.0.3",
-    "anchor-markdown-header": "0.5.7",
-    "fs-plus": "^2.0.0",
-    "js-yaml": "^3.13.1",
+    "atom-space-pen-views": "^2.0.0",
+    "fs-plus": "^3.0.0",
+    "js-yaml": "^3.0.0",
     "guid": "0.0.12",
     "qiniu": "^7.1.7",
-    "season": "^5.1.0",
+    "season": "^6.0.0",
+    "emoji-regex": "^8.0.0",
     "wcwidth": "^1.0.0"
   }
 }

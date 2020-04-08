@@ -50,13 +50,15 @@ getFileRelativeDir = (filePath) ->
   path.relative(siteDir, fileDir)
 
 getEditor = (editor) ->
+  filePath = editor.getPath() || "" # getPath is undefined when editor opens in an empty window/workspace
   frontMatter = new FrontMatter(editor, { silent: true })
+
   data = frontMatter.getContent()
   data["category"] = frontMatter.getArray(config.get("frontMatterNameCategories", allow_blank: false))[0]
   data["tag"] = frontMatter.getArray(config.get("frontMatterNameTags", allow_blank: false))[0]
-  data["directory"] = getFileRelativeDir(editor.getPath())
-  data["slug"] = getFileSlug(editor.getPath()) || utils.slugize(data["title"], config.get("slugSeparator"))
-  data["extension"] = path.extname(editor.getPath()) || config.get("fileExtension")
+  data["directory"] = getFileRelativeDir(filePath)
+  data["slug"] = getFileSlug(filePath) || utils.slugize(data["title"], config.get("slugSeparator"))
+  data["extension"] = path.extname(filePath) || config.get("fileExtension")
   data
 
 module.exports =

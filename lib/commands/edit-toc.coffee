@@ -1,4 +1,4 @@
-anchor = require "anchor-markdown-header"
+anchor = require "../helpers/markdown-header"
 
 config = require "../config"
 heading = require "../helpers/heading"
@@ -31,10 +31,15 @@ class EditToc
     toc = { found: false, opts: Object.assign({}, config.get("toc")) }
 
     # find first TOC head tag
-    @editor.buffer.scan /^<!-- +TOC +(.+? +)-->$/, (match) ->
+    @editor.buffer.scan /^<!-- +TOC +(.+? +)?-->$/, (match) ->
       toc.head = { pos: match.range.start, text: match.match[0] }
-      # parse TOC options: depthFrom, depthTo, insertAnchor, anchorMode
-      for opt in match.match[1].split(" ")
+
+      options = match.match[1] || ""
+      # parse TOC options:
+      # - depthFrom:int[1-7], depthTo:int[1-7]
+      # - insertAnchor:bool[true]
+      # - anchorMode:string[github|gitlab]
+      for opt in options.split(" ")
         [k, v] = opt.split(":")
 
         if k in ["depthFrom", "depthTo"]

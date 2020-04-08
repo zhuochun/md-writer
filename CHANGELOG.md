@@ -1,3 +1,9 @@
+## 2.11.10
+
+- Update dependencies ([b588aaa](https://github.com/zhuochun/md-writer/commit/b588aaafa5890f7be21cea3d005a242ea0a492b2))
+- Fix path.extname warning ([#298](https://github.com/zhuochun/md-writer/issues/298))
+- Improve TOC generation ([#283](https://github.com/zhuochun/md-writer/issues/283))
+
 ## 2.11.9
 
 - Improve edit-line command in different TabLength ([#293](https://github.com/zhuochun/md-writer/issues/293))
