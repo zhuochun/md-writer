@@ -220,7 +220,7 @@ class EditLine
     return e.abortKeyBinding() unless parentLineMeta
 
     if parentLineMeta.isList("ol")
-      newline = "#{parentLineMeta.lineHead(parentLineMeta.defaultHead)}#{lineMeta.body}"
+      newline = "#{parentLineMeta.nextLine}#{lineMeta.body}"
       newcursor = [cursor.row, Math.max(cursor.column + newline.length - line.length, 0)]
       @_replaceLine(selection, newline, newcursor)
       return
