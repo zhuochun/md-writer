@@ -102,6 +102,7 @@ class LineMeta
         break
 
   lineHead: (head) -> @type.lineHead({ indent: @indent, head: head, suffix: @suffix })
+  lineHeadWithoutSuffix: (head) -> @type.lineHead({ indent: @indent, head: head, suffix: "" })
 
   # If line to be indented
   indentLineTabText: -> " ".repeat(@indentLineTabLength())
