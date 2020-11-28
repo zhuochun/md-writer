@@ -2,6 +2,8 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
 path = require "path"
 fs = require "fs-plus"
+# https://discuss.atom.io/t/how-to-create-a-file-dialog/
+# https://github.com/electron/electron/blob/master/docs/api/remote.md
 remote = require "remote"
 dialog = remote.dialog || remote.require "dialog"
 
@@ -114,8 +116,9 @@ class InsertImageFileView extends View
 
     @updateImageSource(img.src)
 
+  # https://github.com/electron/electron/blob/master/docs/api/dialog.md
   openImageDialog: ->
-    files = dialog.showOpenDialog
+    files = dialog.showOpenDialogSync
       properties: ['openFile']
       defaultPath: lastInsertImageDir || @siteLocalDir()
     return unless files && files.length > 0

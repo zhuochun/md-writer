@@ -150,15 +150,17 @@ class EditLine
     return e.abortKeyBinding() unless parentLineMeta
 
     if lineMeta.isList("ol")
-      newline = "#{parentLineMeta.indentLineTabText()}#{lineMeta.lineHead(lineMeta.defaultHead)}#{lineMeta.body}"
+      lineHead = lineMeta.lineHead(lineMeta.defaultHead)
+      bullet = @_getNextBullet(@editor, "olBullet", currentIndentation)
+      lineHead = lineMeta.lineHeadWithoutSuffix(bullet) if bullet
+
+      newline = "#{parentLineMeta.indentLineTabText()}#{lineHead}#{lineMeta.body}"
       newcursor = [cursor.row, cursor.column + newline.length - line.length]
       @_replaceLine(selection, newline, newcursor)
       return
 
     if lineMeta.isList("ul")
-      bullet = @_ulBullet(@editor, currentIndentation)
-      bullet = bullet || config.get("templateVariables.ulBullet") || lineMeta.defaultHead
-
+      bullet = @_getNextBullet(@editor, "ulBullet", currentIndentation) || lineMeta.defaultHead
       newline = "#{parentLineMeta.indentLineTabText()}#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
       newcursor = [cursor.row, cursor.column + newline.length - line.length]
       @_replaceLine(selection, newline, newcursor)
@@ -183,7 +185,7 @@ class EditLine
 
   # FIXME this is a hack to handle different tab length. to fix we need to change to parse
   # the complete list items to know the correct indentation and rewrite all logic in this file
-  _ulBullet: (editor, indentation) ->
+  _getNextBullet: (editor, configKey, indentation) ->
     label = ""
     # best effort to be correct in the first 3 levels
     if editor.getTabLength() <= 2
@@ -191,7 +193,8 @@ class EditLine
     else
       label = Math.round(indentation)
 
-    config.get("templateVariables.ulBullet#{label}")
+    key = "templateVariables.#{configKey}"
+    config.get("#{key}#{label}") || config.get(key)
 
   undentListLine: (e, selection) ->
     return e.abortKeyBinding() if @_isRangeSelection(selection)
@@ -207,9 +210,7 @@ class EditLine
 
     parentLineMeta = @_findListLineBackward(cursor.row, currentIndentation)
     if !parentLineMeta && lineMeta.isList("ul")
-      bullet = @_ulBullet(@editor, currentIndentation-1)
-      bullet = bullet || config.get("templateVariables.ulBullet") || lineMeta.defaultHead
-
+      bullet = @_getNextBullet(@editor, "ulBullet", currentIndentation-1) || lineMeta.defaultHead
       newline = "#{lineMeta.lineHead(bullet)}#{lineMeta.body}"
       newline = newline.substring(Math.min(lineMeta.indent.length, @editor.getTabLength())) # remove one indent
       newcursor = [cursor.row, Math.max(cursor.column + newline.length - line.length, 0)]
@@ -219,7 +220,7 @@ class EditLine
     return e.abortKeyBinding() unless parentLineMeta
 
     if parentLineMeta.isList("ol")
-      newline = "#{parentLineMeta.lineHead(parentLineMeta.defaultHead)}#{lineMeta.body}"
+      newline = "#{parentLineMeta.nextLine}#{lineMeta.body}"
       newcursor = [cursor.row, Math.max(cursor.column + newline.length - line.length, 0)]
       @_replaceLine(selection, newline, newcursor)
       return
