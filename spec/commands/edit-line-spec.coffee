@@ -437,6 +437,20 @@ describe "EditLine", ->
           ].join("\n")
         expect(editor.getCursorBufferPosition().toString()).toBe("(2, 8)")
 
+      it "indent 2nd line with olBullet config", ->
+        atom.config.set("markdown-writer.templateVariables.olBullet1", "*")
+
+        editor.setCursorBufferPosition([1, 5])
+        editLine.trigger(event)
+        expect(editor.getText()).toBe [
+            "1. list"
+            "   * list line 2"
+            "3. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
+            ""
+            "This behaviour is not observed when the list item does not extend to the next line."
+          ].join("\n")
+        expect(editor.getCursorBufferPosition().toString()).toBe("(1, 7)")
+
     describe "mixed ordered list", ->
       beforeEach ->
         editor.setText [
@@ -545,7 +559,7 @@ describe "EditLine", ->
         editLine.trigger(event)
         expect(editor.getText()).toBe [
             "1. list"
-            "1. list line 2"
+            "2. list line 2"
             "     1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
             ""
             "This behaviour is not observed when the list item does not extend to the next line."
@@ -556,7 +570,7 @@ describe "EditLine", ->
         editLine.trigger(event)
         expect(editor.getText()).toBe [
             "1. list"
-            "1. list line 2"
+            "2. list line 2"
             "     1. Consider a (ordered or unordered) markdown list. On pressing tab to indent the item, if the item spans over more than one line, then the text of the item alters. See the below gif in https://github.com/zhuochun/md-writer/issues/222"
             ""
             "This behaviour is not observed when the list item does not extend to the next line."
