@@ -2,7 +2,7 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
 path = require "path"
 fs = require "fs-plus"
-# https://discuss.atom.io/t/how-to-create-a-file-dialog/11151/6
+# https://discuss.atom.io/t/how-to-create-a-file-dialog/
 # https://github.com/electron/electron/blob/master/docs/api/remote.md
 remote = require "remote"
 dialog = remote.dialog || remote.require "dialog"
