@@ -1,6 +1,7 @@
 ## 2.11.11
 
 - Fix dialog.showOpenDialog usage ([#303](https://github.com/zhuochun/md-writer/issues/302))
+- Support templateVariables.olBullet ([#299](https://github.com/zhuochun/md-writer/issues/299))
 
 ## 2.11.10
 
