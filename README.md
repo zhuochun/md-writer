@@ -2,8 +2,6 @@
 
 [![Apm Version](https://img.shields.io/apm/v/markdown-writer.svg)](https://atom.io/packages/markdown-writer)
 [![Apm Downloads](https://img.shields.io/apm/dm/markdown-writer.svg)](https://atom.io/packages/markdown-writer)
-[![Travis Build Status](https://travis-ci.org/zhuochun/md-writer.svg?branch=master)](https://travis-ci.org/zhuochun/md-writer)
-[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/fv1unuiac1umt44f?svg=true)](https://ci.appveyor.com/project/zhuochun/md-writer)
 [![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 Adds tons of features to make [Atom](https://atom.io/) a better Markdown/AsciiDoc editor!
