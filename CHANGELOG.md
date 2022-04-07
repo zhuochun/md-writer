@@ -1,3 +1,9 @@
+## 2.11.12
+
+- Fix create task command is broken
+- Fix slug in front matter is not respected ([#312](https://github.com/zhuochun/md-writer/issues/312))
+- Fix CI script and pinned the supported Atom version (with no deprecation)
+
 ## 2.11.11
 
 - Fix dialog.showOpenDialog usage ([#303](https://github.com/zhuochun/md-writer/issues/302))
