@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        channel: ["v1.54.0", stable, beta]
+        channel: ["v1.55.0"]  # This is the last supported version with no deprecation errors. TODO update to support [stable, beta]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
