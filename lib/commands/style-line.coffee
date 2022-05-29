@@ -99,6 +99,9 @@ class StyleLine
     selection.setBufferRange(range) # reselect the spreviously selected range
 
   insertEmptyStyle: (selection, data) ->
+    if @style.captureBefore
+      data["captureBefore"] = data[@style.captureBefore]
+
     selection.insertText(utils.template(@style.before, data))
     position = selection.cursor.getBufferPosition()
     selection.insertText(utils.template(@style.after, data))

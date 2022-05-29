@@ -54,10 +54,11 @@ getEditor = (editor) ->
   frontMatter = new FrontMatter(editor, { silent: true })
 
   data = frontMatter.getContent()
-  data["category"] = frontMatter.getArray(config.get("frontMatterNameCategories", allow_blank: false))[0]
-  data["tag"] = frontMatter.getArray(config.get("frontMatterNameTags", allow_blank: false))[0]
+  data["category"] = data["category"] || frontMatter.getArray(config.get("frontMatterNameCategories", allow_blank: false))[0]
+  data["tag"] = data["tag"] || frontMatter.getArray(config.get("frontMatterNameTags", allow_blank: false))[0]
+  data["slug"] = data["slug"] || utils.slugize(getFileSlug(filePath) || data["title"], config.get("slugSeparator"))
   data["directory"] = getFileRelativeDir(filePath)
-  data["slug"] = getFileSlug(filePath) || utils.slugize(data["title"], config.get("slugSeparator"))
+  data["filename"] = getFileSlug(filePath) || ""
   data["extension"] = path.extname(filePath) || config.get("fileExtension")
   data
 
